@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import sklearn
 
 
 class HierarchicalClustering:
@@ -10,29 +11,23 @@ class HierarchicalClustering:
 
     # Calculate the distance matrix using the Euclidean metric with infinity on the diagonal
     def euclidean_distance(self, X):
-        n_samples = np.size(X, 0)
-        # Initialize the distance matrix of size nxn with 0s
-        self.distances = np.zeros((n_samples, n_samples))
-        for i in range(n_samples):
-            for j in range(n_samples):
-                self.distances[i, j] = math.dist(X[i, :], X[j, :])
+        self.distances = sklearn.metrics.pairwise_distances(X)
         np.fill_diagonal(self.distances, np.inf)
         return self.distances
 
     # Algorithm based on https://github.com/hhundiwala/hierarchical-clustering/tree/master
+    # TODO: Does not work for all data sizes (e.g. 50 data points), analyze and fix
     def fit(self, X):
         self.euclidean_distance(X)
         n_samples = np.size(X, 0)
         self.labels = np.arange(0, n_samples, step=1)
+        print(n_samples - self.n_clusters)
 
         for it in range(n_samples - self.n_clusters):
             min_unraveled_index = np.argmin(self.distances)
             # The matrix is symmetric so the row/col distinction is not important
             # This variable assignment makes it an upper triangular matrix (row < col)
             row, col = np.unravel_index(min_unraveled_index, (n_samples, n_samples))
-            print(row)
-            print(col)
-            print(self.distances)
 
             # Iterate over one axis, change the row values to the minimum
             for i in range(n_samples):
@@ -47,4 +42,6 @@ class HierarchicalClustering:
             for i in range(n_samples):
                 if self.labels[i] == max(row, col):
                     self.labels[i] = min(row, col)
-            print(self.labels)
+
+        to_map = np.unique(self.labels)
+        print(to_map)
