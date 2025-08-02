@@ -16,18 +16,18 @@ class HierarchicalClustering:
         return self.distances
 
     # Algorithm based on https://github.com/hhundiwala/hierarchical-clustering/tree/master
-    # TODO: Does not work for all data sizes (e.g. 50 data points), analyze and fix
     def fit(self, X):
         self.euclidean_distance(X)
         n_samples = np.size(X, 0)
         self.labels = np.arange(0, n_samples, step=1)
-        print(n_samples - self.n_clusters)
 
         for it in range(n_samples - self.n_clusters):
             min_unraveled_index = np.argmin(self.distances)
             # The matrix is symmetric so the row/col distinction is not important
-            # This variable assignment makes it an upper triangular matrix (row < col)
+            # However, for the later part of the algorithm to work, row < col
             row, col = np.unravel_index(min_unraveled_index, (n_samples, n_samples))
+            if row > col:
+                row, col = col, row
 
             # Iterate over one axis, change the row values to the minimum
             for i in range(n_samples):
@@ -44,4 +44,5 @@ class HierarchicalClustering:
                     self.labels[i] = min(row, col)
 
         to_map = np.unique(self.labels)
-        print(to_map)
+        for i in range(self.labels.size):
+            self.labels[i] = np.where(to_map == self.labels[i])[0][0]
