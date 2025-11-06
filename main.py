@@ -2,13 +2,12 @@ import matplotlib.pyplot as plt
 import sklearn
 import numpy as np
 import math
-
-import hierarchy
-from hierarchy import HierarchicalClustering
+from hierarchy import HierarchicalClustering, Granule, FuzzyNumber
 from fuzzy_cmeans import FuzzyCMeans
 
 # Constants
 seed = 42
+n_granules = 50
 
 
 def calculate_fcm_variance(fuzz, m=2):
@@ -25,61 +24,39 @@ def calculate_fcm_variance(fuzz, m=2):
     return variances
 
 
-def fuzzy_distance(centers, variances):
-    n_granules = centers.shape[0]
-    distances = np.zeros(shape=(n_granules, n_granules))
-    for row in range(n_granules):
-        for col in range(row):
-            # Use the variances to compute a fuzzy distance between points
-            # The coordinates of the edges is a sum of the center and the variance in a given dimension
-            # The distances between the centers and the variance edges are summed
-            # TODO this does not make sense with the ellipse visualization, might not be correct
-            euclidean_dist = math.dist(centers[row, :], centers[col, :])
-            fuzzy_dist = math.dist(centers[row, :] + variances[row, :], centers[col, :] + variances[col, :])
-            distances[row, col] = euclidean_dist + fuzzy_dist
-            distances[col, row] = euclidean_dist + fuzzy_dist
-    return distances
-
-
 # Generate data
-data, labels = sklearn.datasets.make_blobs(n_samples=1000, centers=4, cluster_std=[0.5, 2, 1.5, 1], random_state=seed)
+#data, labels = sklearn.datasets.make_blobs(n_samples=1000, centers=4, cluster_std=[0.5, 2, 1.5, 1], random_state=seed)
+data, labels = sklearn.datasets.make_blobs(n_samples=1000, centers=4, random_state=100)
 
 # A small data set for manual verification from https://www.w3schools.com/python/python_ml_hierarchial_clustering.asp
-data_small = np.array([[4, 21], [5, 19], [10, 24], [4, 17], [3, 16], [11, 25], [14, 24], [6, 22], [10, 21], [12, 21]])
+# data_small = np.array([[4, 21], [5, 19], [10, 24], [4, 17], [3, 16], [11, 25], [14, 24], [6, 22], [10, 21], [12, 21]])
+# data_small, labels = sklearn.datasets.make_blobs(n_samples=50, centers=4)
+# ac = sklearn.cluster.AgglomerativeClustering(n_clusters=4, linkage='single')
+# ac.fit(data_small)
 
-ac = sklearn.cluster.AgglomerativeClustering(n_clusters=4, linkage='single')
-ac.fit(data)
-
-# Use fuzzy c-means
-fcm = FuzzyCMeans(n_clusters=50, random_state=seed)
+# ac = sklearn.cluster.AgglomerativeClustering(n_clusters=4, linkage='single')
+# ac.fit(data)
+#
+# # Use fuzzy c-means
+fcm = FuzzyCMeans(n_clusters=n_granules, random_state=seed)
 fcm.fit(data)
 
 fuzziness = calculate_fcm_variance(fcm)
-dist = fuzzy_distance(fcm.cluster_centers_, fuzziness)
-acf = sklearn.cluster.AgglomerativeClustering(n_clusters=4, metric='precomputed', linkage='single')
-acf.fit(dist)
+granules = []
+for i in range(n_granules):
+    granules.append(Granule(fcm.cluster_centers_[i], fuzziness[i]))
+hc = HierarchicalClustering(n_clusters=4)
+hc.fuzzy_fit(granules, 0.1)
 
 # Visualize data
 plt.figure()
-plt.scatter(data[:, 0], data[:, 1], c=ac.labels_)
-plt.scatter(fcm.cluster_centers_[:, 0], fcm.cluster_centers_[:, 1], c=acf.labels_, cmap='cool')
+plt.scatter(data[:, 0], data[:, 1], c='lightgray')
+plt.scatter(fcm.cluster_centers_[:, 0], fcm.cluster_centers_[:, 1], c=hc.labels, cmap='cool')
 
-t = np.linspace(0, 2 * np.pi)
-for clust in range(fcm.n_clusters):
-    plt.plot(fcm.cluster_centers_[clust, 0] + 2 * fuzziness[clust][0] * np.cos(t),
-             fcm.cluster_centers_[clust, 1] + 2 * fuzziness[clust][1] * np.sin(t),
-             color='crimson')
-
-plt.show()
-
-# plt.figure()
-# plt.scatter(data_small[:, 0], data_small[:, 1], c=hc.labels)
-# plt.show()
-
-hc = hierarchy.HierarchicalClustering(n_clusters=4)
-hc.fit(data)
-
-plt.figure()
-plt.scatter(data[:, 0], data[:, 1], c=hc.labels)
+# t = np.linspace(0, 2 * np.pi)
+# for clust in range(fcm.n_clusters):
+#     plt.plot(fcm.cluster_centers_[clust, 0] + 2 * fuzziness[clust][0] * np.cos(t),
+#              fcm.cluster_centers_[clust, 1] + 2 * fuzziness[clust][1] * np.sin(t),
+#              color='crimson')
 
 plt.show()
