@@ -11,12 +11,21 @@ class FuzzyNumber:
     def __repr__(self):
         return f"{self.x}({self.p})"
 
+    def equal_t(self, other):
+        return max(1 - (abs(self.x - other.x) / max(self.p, other.p)), 0)
+
+    def equal_e(self, other):
+        return math.exp(-abs(self.x - other.x) / max(self.p, other.p))
+
+    def equal_g(self, other):
+        return math.exp(-((self.x - other.x)**2) / (2 * (max(self.p, other.p) ** 2)))
+
     def equal(self, other):
         if self.p == 0 and other.p == 0:
             if self.x == other.x:
                 return 1
             return 0
-        return max(1 - (abs(self.x - other.x)/max(self.p, other.p)), 0)
+        return self.equal_t(other)
 
     def less(self, other):
         if self.x > other.x:
