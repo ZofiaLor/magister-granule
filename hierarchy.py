@@ -25,26 +25,38 @@ class FuzzyNumber:
             if self.x == other.x:
                 return 1
             return 0
-        return self.equal_t(other)
+        return self.equal_g(other)
 
     def less(self, other):
         if self.x > other.x:
             return 0
         return 1 - self.equal(other)
 
+    def add(self, other):
+        return FuzzyNumber(self.x + other.x, max(self.p, other.p))
+
+    def subtract(self, other):
+        return FuzzyNumber(self.x - other.x, max(self.p, other.p))
+
+    def pow(self, power):
+        return FuzzyNumber(self.x ** power, self.p)
+
+    def sqrt(self):
+        return FuzzyNumber(math.sqrt(self.x), self.p)
+
 
 class Granule:
     def __init__(self, center, fuzziness):
-        self.center = center
-        self.fuzziness = fuzziness
+        self.fuzzy_dims = []
+        for i in range(len(center)):
+            self.fuzzy_dims.append(FuzzyNumber(center[i], fuzziness[i]))
 
     def fuzzy_distance(self, other):
-        distance = 0
-        for i in range(self.center.shape[0]):
-            distance += (self.center[i] - other.center[i]) ** 2
-        distance = math.sqrt(distance)
-        fuzz = np.max([self.fuzziness, other.fuzziness])
-        return FuzzyNumber(x=distance, p=fuzz)
+        fdist = FuzzyNumber(0, 0)
+        for i in range(len(self.fuzzy_dims)):
+            fdist = fdist.add((self.fuzzy_dims[i].subtract(other.fuzzy_dims[i])).pow(2))
+        fdist = fdist.sqrt()
+        return fdist
 
 
 class HierarchicalClustering:
