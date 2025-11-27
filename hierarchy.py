@@ -20,17 +20,22 @@ class FuzzyNumber:
     def equal_g(self, other):
         return math.exp(-((self.x - other.x)**2) / (2 * (max(self.p, other.p) ** 2)))
 
-    def equal(self, other):
+    def equal(self, other, relation_type='t'):
         if self.p == 0 and other.p == 0:
             if self.x == other.x:
                 return 1
             return 0
-        return self.equal_g(other)
+        if relation_type == 't':
+            return self.equal_t(other)
+        elif relation_type == 'e':
+            return self.equal_e(other)
+        else:
+            return self.equal_g(other)
 
-    def less(self, other):
+    def less(self, other, relation_type='t'):
         if self.x > other.x:
             return 0
-        return 1 - self.equal(other)
+        return 1 - self.equal(other, relation_type)
 
     def add(self, other):
         return FuzzyNumber(self.x + other.x, max(self.p, other.p))
@@ -77,7 +82,7 @@ class HierarchicalClustering:
         #         print(repr(self.distances[i, j]), end="\t")
         #     print()
 
-    def fuzzy_fit(self, granules, ksi):
+    def fuzzy_fit(self, granules, ksi, relation_type='t'):
         self.fuzzy_distance(granules)
         n_samples = np.size(granules, 0)
         self.labels = np.arange(0, n_samples, step=1)
@@ -88,7 +93,7 @@ class HierarchicalClustering:
             col = 0
             for i in range(n_samples - 1):
                 for j in range(i + 1, n_samples):
-                    if self.distances[i, j].less(min_num) > ksi:
+                    if self.distances[i, j].less(min_num, relation_type) > ksi:
                         min_num = self.distances[i, j]
                         row = i
                         col = j
@@ -97,7 +102,7 @@ class HierarchicalClustering:
             for i in range(n_samples):
                 if i != row:
                     min_distance = FuzzyNumber(0, 0)
-                    if self.distances[row, i].less(self.distances[i, col]) > ksi:
+                    if self.distances[row, i].less(self.distances[i, col], relation_type) > ksi:
                         min_distance = self.distances[row, i]
                     else:
                         min_distance = self.distances[i, col]
@@ -153,3 +158,17 @@ class HierarchicalClustering:
         to_map = np.unique(self.labels)
         for i in range(self.labels.size):
             self.labels[i] = np.where(to_map == self.labels[i])[0][0]
+
+
+def calculate_fcm_variance(fuzz, m=2):
+    n_granules = fuzz.n_clusters
+    n_attributes = fuzz.X_.shape[1]
+    n_samples = fuzz.X_.shape[0]
+    variances = np.empty(shape=(n_granules, n_attributes))
+    for c in range(n_granules):
+        for a in range(n_attributes):
+            numerator = sum(
+                (fuzz.U_[i, c] ** m) * (fuzz.X_[i, a] - fuzz.cluster_centers_[c, a]) ** 2 for i in range(n_samples))
+            denominator = sum((fuzz.U_[i, c] ** m) for i in range(n_samples))
+            variances[c, a] = np.sqrt(numerator / denominator)
+    return variances
