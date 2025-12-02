@@ -10,7 +10,7 @@ import skfuzzy as fuzz
 
 # Constants
 seed = 42
-n_granules = 200
+n_granules = 100
 n_iterations = 80
 repeats = 4
 s = 3
@@ -211,24 +211,25 @@ print(counts)
 #
 # # Use fuzzy c-means
 fcm = FuzzyCMeans(n_clusters=n_granules, random_state=seed)
-fcm.fit(data)
+fcm.fit(fullData['corners50000'].data)
 
 fuzziness = calculate_fcm_variance(fcm)
+print(fuzziness)
 granules = []
 for i in range(n_granules):
     granules.append(Granule(fcm.cluster_centers_[i], fuzziness[i]))
 hc = HierarchicalClustering(n_clusters=4)
-hc.fuzzy_fit(granules, 0.8)
-
+hc.fuzzy_fit(granules, 0.05)
+# hc.fit(fcm.cluster_centers_)
 # Visualize data
 plt.figure()
-plt.scatter(data[:, 0], data[:, 1], c='lightgray')
+plt.scatter(fullData['corners1000'].data[:, 0], fullData['corners1000'].data[:, 1], c='lightgray')
 plt.scatter(fcm.cluster_centers_[:, 0], fcm.cluster_centers_[:, 1], c=hc.labels, cmap='cool')
 
-# t = np.linspace(0, 2 * np.pi)
-# for clust in range(fcm.n_clusters):
-#     plt.plot(fcm.cluster_centers_[clust, 0] + 2 * fuzziness[clust][0] * np.cos(t),
-#              fcm.cluster_centers_[clust, 1] + 2 * fuzziness[clust][1] * np.sin(t),
-#              color='crimson')
+t = np.linspace(0, 2 * np.pi)
+for clust in range(fcm.n_clusters):
+    plt.plot(fcm.cluster_centers_[clust, 0] + 2 * fuzziness[clust][0] * np.cos(t),
+             fcm.cluster_centers_[clust, 1] + 2 * fuzziness[clust][1] * np.sin(t),
+             color='crimson')
 
 plt.show()
