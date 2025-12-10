@@ -3,14 +3,14 @@ import sklearn
 import numpy as np
 import math
 from hierarchy import HierarchicalClustering, Granule, calculate_fcm_variance
-from fuzzy_cmeans_lib import FuzzyCMeans
+from fuzzy_cmeans import FuzzyCMeans
 import os
 import time
 import skfuzzy as fuzz
 
 # Constants
 seed = 42
-n_granules = 100
+n_granules = 50
 n_iterations = 80
 repeats = 4
 s = 3
@@ -195,10 +195,6 @@ for folder in os.scandir("dane"):
 # Generate data
 data, labels = sklearn.datasets.make_blobs(n_samples=1000, centers=4, cluster_std=[0.5, 2, 1.5, 1], random_state=seed)
 # data, labels = sklearn.datasets.make_blobs(n_samples=1000, centers=4, random_state=100)
-counts = { 0: 0, 1: 0, 2: 0, 3: 0}
-for label in labels:
-    counts[label] += 1
-print(counts)
 
 # A small data set for manual verification from https://www.w3schools.com/python/python_ml_hierarchial_clustering.asp
 # data_small = np.array([[4, 21], [5, 19], [10, 24], [4, 17], [3, 16], [11, 25], [14, 24], [6, 22], [10, 21], [12, 21]])
@@ -211,20 +207,63 @@ print(counts)
 #
 # # Use fuzzy c-means
 fcm = FuzzyCMeans(n_clusters=n_granules, random_state=seed)
-fcm.fit(fullData['corners50000'].data)
+fcm.fit(fullData['corners1000'].data)
 
 fuzziness = calculate_fcm_variance(fcm)
-print(fuzziness)
+# print(fuzziness)
 granules = []
 for i in range(n_granules):
     granules.append(Granule(fcm.cluster_centers_[i], fuzziness[i]))
 hc = HierarchicalClustering(n_clusters=4)
-hc.fuzzy_fit(granules, 0.05)
 # hc.fit(fcm.cluster_centers_)
+hc.fit(fullData['corners1000'].data)
+nonfuzzy_labels = list(hc.labels)
+print("not fuzzy")
+print(nonfuzzy_labels)
+plt.figure()
+plt.scatter(fullData['corners1000'].data[:, 0], fullData['corners1000'].data[:, 1], c=hc.labels)
+plt.show()
+
+hc.fuzzy_fit(granules, 0.05)
+print("fuzzy")
+print(hc.labels)
+granule_membership = []
+granule_member_labels = []
+for sample in fcm.U_:
+    membership = int(np.argmax(sample))
+    granule_membership.append(membership)
+    granule_member_labels.append(int(hc.labels[membership]))
+print(granule_membership)
+print(granule_member_labels)
+
+l_matrix = np.zeros(shape=(4, 4))
+for d in range(len(granule_member_labels)):
+    l_matrix[nonfuzzy_labels[d], granule_member_labels[d]] = l_matrix[nonfuzzy_labels[d], granule_member_labels[d]] + 1
+print(l_matrix)
+
+for row in range(4):
+    # for Nth row swap Nth column with N+ith column (i >= 0) that has the largest value
+    # TODO check Cuthill–McKee algorithm?
+    maximum = l_matrix[row, row]
+    to_swap = row
+    for col in range(4):
+        if l_matrix[row, col] > maximum:
+            maximum = l_matrix[row, col]
+            to_swap = col
+    if to_swap != row:
+        l_matrix[:, [row, to_swap]] = l_matrix[:, [to_swap, row]]
+
+print(l_matrix)
+
+sum_diagonal = 0
+for i in range(4):
+    sum_diagonal = sum_diagonal + l_matrix[i, i]
+print("accuracy: ", sum_diagonal/len(granule_member_labels))
+
 # Visualize data
 plt.figure()
 plt.scatter(fullData['corners1000'].data[:, 0], fullData['corners1000'].data[:, 1], c='lightgray')
-plt.scatter(fcm.cluster_centers_[:, 0], fcm.cluster_centers_[:, 1], c=hc.labels, cmap='cool')
+plt.scatter(fcm.cluster_centers_[:, 0], fcm.cluster_centers_[:, 1], c=hc.labels)
 
 t = np.linspace(0, 2 * np.pi)
 for clust in range(fcm.n_clusters):
