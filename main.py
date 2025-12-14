@@ -81,6 +81,7 @@ class DataEntry(object):
         print(self.name)
         labels = []
         centers = []
+        fuzz = []
         for n in self.granules_number:
             fcm = FuzzyCMeans(n_clusters=n, random_state=seed, max_iter=n_iterations)
             granules = []
@@ -90,6 +91,7 @@ class DataEntry(object):
             fuzziness = calculate_fcm_variance(fcm)
             for i in range(n):
                 granules.append(Granule(fcm.cluster_centers_[i], fuzziness[i]))
+            fuzz.append(fuzziness)
 
             labels_n = []
             for k in self.ksi:
@@ -108,19 +110,33 @@ class DataEntry(object):
                     ax[i, j].scatter(self.data[:, 0], self.data[:, 1], c='lightgray')
                     ax[i, j].scatter(centers[i][:, 0], centers[i][:, 1], c=labels[i][j], cmap='cool')
                     ax[i, j].set_title(str(self.granules_number[i]) + " granules, ksi = " + str(self.ksi[j]))
-            # plt.savefig(folderPath + self.name + relation_type + ".pdf")
-            plt.show()
+                    t = np.linspace(0, 2 * np.pi)
+                    for clust in range(self.granules_number[i]):
+                        ax[i, j].plot(centers[i][clust, 0] + 2 * fuzz[i][clust][0] * np.cos(t),
+                                      centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(t),
+                                      color='crimson', alpha=0.5)
+            plt.savefig(folderPath + self.name + relation_type + ".pdf")
+            # plt.show()
             plt.close()
         else:
             fig = plt.figure(figsize=(12, 10))
             for i in range(len(self.granules_number)):
                 for j in range(len(self.ksi)):
-                    ax = fig.add_subplot(len(self.granules_number), len(self.ksi), i*len(self.granules_number) + j + 1, projection='3d')
+                    t = np.linspace(0, 2 * np.pi, num=10)
+                    p = np.linspace(0, np.pi, num=10)
+                    t, p = np.meshgrid(t, p)
+                    ax = fig.add_subplot(len(self.granules_number), len(self.ksi),
+                                         i * len(self.granules_number) + j + 1, projection='3d')
                     # ax.scatter3D(self.data[:, 0], self.data[:, 1], self.data[:, 2], c='lightgray')
                     ax.scatter3D(centers[i][:, 0], centers[i][:, 1], centers[i][:, 2], c=labels[i][j], cmap='cool')
                     ax.set_title(str(self.granules_number[i]) + " granules, ksi = " + str(self.ksi[j]))
-            # plt.savefig(folderPath + self.name + relation_type + ".pdf")
-            plt.show()
+                    for clust in range(self.granules_number[i]):
+                        ax.plot_surface(centers[i][clust, 0] + 2 * fuzz[i][clust][0] * np.sin(p) * np.cos(t),
+                                        centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(p) * np.sin(t),
+                                        centers[i][clust, 2] + 2 * fuzz[i][clust][2] * np.cos(p),
+                                        color='crimson', alpha=0.5)
+            plt.savefig(folderPath + self.name + relation_type + ".pdf")
+            # plt.show()
             plt.close()
 
 
@@ -148,7 +164,7 @@ for folder in os.scandir("dane"):
                     fullData[file.name[:-5]].clusters_number = value
                     break
 
-# fullData['blobs2000'].fit_plot_fuzzy_labels('t')
+# fullData['spheres2000'].fit_plot_fuzzy_labels('t')
 
 # data = fullData['blobs1000'].data
 # cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(np.transpose(data), 100, 1.2, error=1e-4, maxiter=150, init=None)
@@ -158,11 +174,10 @@ for folder in os.scandir("dane"):
 # plt.scatter(cntr[:, 0], cntr[:, 1], c=np.argmax(u, axis=1), cmap='cool')
 # plt.show()
 
-# for name in names:
-#     if 'spheres' in name:
-#         fullData[name].fit_plot_fuzzy_labels('t')
-#         fullData[name].fit_plot_fuzzy_labels('e')
-#         fullData[name].fit_plot_fuzzy_labels('g')
+for name in names:
+    fullData[name].fit_plot_fuzzy_labels('t')
+    fullData[name].fit_plot_fuzzy_labels('e')
+    fullData[name].fit_plot_fuzzy_labels('g')
 # for nr in names_roots:
 #     for dsp in data_size_presets:
 #         print("Measure ", nr, str(dsp))
@@ -241,24 +256,38 @@ for d in range(len(granule_member_labels)):
     l_matrix[nonfuzzy_labels[d], granule_member_labels[d]] = l_matrix[nonfuzzy_labels[d], granule_member_labels[d]] + 1
 print(l_matrix)
 
-for row in range(4):
-    # for Nth row swap Nth column with N+ith column (i >= 0) that has the largest value
-    # TODO check Cuthill–McKee algorithm?
-    maximum = l_matrix[row, row]
-    to_swap = row
-    for col in range(4):
-        if l_matrix[row, col] > maximum:
-            maximum = l_matrix[row, col]
-            to_swap = col
-    if to_swap != row:
-        l_matrix[:, [row, to_swap]] = l_matrix[:, [to_swap, row]]
+# for row in range(4):
+#     # for Nth row swap Nth column with N+ith column (i >= 0) that has the largest value
+#     # TODO check Cuthill–McKee algorithm?
+#     maximum = l_matrix[row, row]
+#     to_swap = row
+#     for col in range(4):
+#         if l_matrix[row, col] > maximum:
+#             maximum = l_matrix[row, col]
+#             to_swap = col
+#     if to_swap != row:
+#         l_matrix[:, [row, to_swap]] = l_matrix[:, [to_swap, row]]
+print("col")
+for i in range(4):
+    for j in range(i, 4):
+        if np.max(l_matrix[:, j]) > np.max(l_matrix[:, i]):
+            l_matrix[:, [i, j]] = l_matrix[:, [j, i]]
+            print(i, j)
+            print(l_matrix)
+print("row")
+for i in range(4):
+    for j in range(i, 4):
+        if np.max(l_matrix[j, :]) > np.max(l_matrix[i, :]):
+            l_matrix[[i, j], :] = l_matrix[[j, i], :]
+            print(i, j)
+            print(l_matrix)
 
 print(l_matrix)
 
 sum_diagonal = 0
 for i in range(4):
     sum_diagonal = sum_diagonal + l_matrix[i, i]
-print("accuracy: ", sum_diagonal/len(granule_member_labels))
+print("accuracy: ", sum_diagonal / len(granule_member_labels))
 
 # Visualize data
 plt.figure()
