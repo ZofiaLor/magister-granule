@@ -18,7 +18,7 @@ class FuzzyNumber:
         return math.exp(-abs(self.x - other.x) / max(self.p, other.p))
 
     def equal_g(self, other):
-        return math.exp(-((self.x - other.x)**2) / (2 * (max(self.p, other.p) ** 2)))
+        return math.exp(-((self.x - other.x) ** 2) / (2 * (max(self.p, other.p) ** 2)))
 
     def equal(self, other, relation_type='t'):
         if self.p == 0 and other.p == 0:
@@ -69,12 +69,14 @@ class HierarchicalClustering:
         self.n_clusters = n_clusters
         self.distances = None
         self.labels = None
+        self.linkage_matrix = []
+        self.linkage_clusters = []
 
     def fuzzy_distance(self, granules):
         n_samples = np.size(granules, 0)
         self.distances = np.full((n_samples, n_samples), FuzzyNumber(np.inf, 0))
-        for row in range(n_samples-1):
-            for col in range(row+1, n_samples):
+        for row in range(n_samples - 1):
+            for col in range(row + 1, n_samples):
                 self.distances[row, col] = granules[row].fuzzy_distance(granules[col])
         return self.distances
         # for i in range(n_samples):
@@ -120,7 +122,6 @@ class HierarchicalClustering:
         for i in range(self.labels.size):
             self.labels[i] = np.where(to_map == self.labels[i])[0][0]
 
-
     # Calculate the distance matrix using the Euclidean metric with infinity on the diagonal
     def euclidean_distance(self, X):
         self.distances = sklearn.metrics.pairwise_distances(X)
@@ -132,14 +133,22 @@ class HierarchicalClustering:
         self.euclidean_distance(X)
         n_samples = np.size(X, 0)
         self.labels = np.arange(0, n_samples, step=1)
+        self.linkage_matrix = []  #
+        self.linkage_clusters = [[x, 1] for x in range(n_samples)]  #
+        new_cluster_label = n_samples  #
 
         for it in range(n_samples - self.n_clusters):
+            min_distance = np.min(self.distances)  #
             min_unraveled_index = np.argmin(self.distances)
             # The matrix is symmetric so the row/col distinction is not important
             # However, for the later part of the algorithm to work, row < col
             row, col = np.unravel_index(min_unraveled_index, (n_samples, n_samples))
             if row > col:
                 row, col = col, row
+            new_size = self.linkage_clusters[row][1] + self.linkage_clusters[col][1]  #
+            self.linkage_matrix.append([self.linkage_clusters[row][0], self.linkage_clusters[col][0], min_distance, new_size])  #
+            self.linkage_clusters[row] = [new_cluster_label, new_size]  #
+            new_cluster_label += 1  #
 
             # Iterate over one axis, change the row values to the minimum
             for i in range(n_samples):
@@ -155,6 +164,7 @@ class HierarchicalClustering:
                 if self.labels[i] == max(row, col):
                     self.labels[i] = min(row, col)
 
+        self.linkage_matrix = np.array(self.linkage_matrix)  #
         to_map = np.unique(self.labels)
         for i in range(self.labels.size):
             self.labels[i] = np.where(to_map == self.labels[i])[0][0]
