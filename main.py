@@ -8,6 +8,7 @@ import os
 import time
 import skfuzzy as fuzz
 import pandas
+from scipy.cluster.hierarchy import dendrogram
 
 # Constants
 seed = 42
@@ -215,13 +216,13 @@ for folder in os.scandir("dane"):
 
 # fullData['spheres2000'].fit_plot_fuzzy_labels('t')
 # fullData['corners1000'].measure_accuracy()
-for root in names_roots:
-    accuracy_results = pandas.DataFrame()
-    for data_size in data_size_presets:
-        print(root + str(data_size))
-        result = fullData[root + str(data_size)].measure_accuracy()
-        accuracy_results = pandas.concat([accuracy_results, result], ignore_index=True)
-    accuracy_results.to_csv("wyniki/" + root + "_accuracy.csv")
+# for root in names_roots:
+#     accuracy_results = pandas.DataFrame()
+#     for data_size in data_size_presets:
+#         print(root + str(data_size))
+#         result = fullData[root + str(data_size)].measure_accuracy()
+#         accuracy_results = pandas.concat([accuracy_results, result], ignore_index=True)
+#     accuracy_results.to_csv("wyniki/" + root + "_accuracy.csv")
 
 
 
@@ -278,8 +279,8 @@ data, labels = sklearn.datasets.make_blobs(n_samples=1000, centers=4, cluster_st
 
 # ac = sklearn.cluster.AgglomerativeClustering(n_clusters=4, linkage='single')
 # ac.fit(data)
-tested_data = 'corners1000'
-shape = 4
+tested_data = 'blobs1000'
+shape = 3
 # # Use fuzzy c-means
 fcm = FuzzyCMeans(n_clusters=n_granules, random_state=seed)
 fcm.fit(fullData[tested_data].data)
@@ -344,4 +345,8 @@ for clust in range(fcm.n_clusters):
              fcm.cluster_centers_[clust, 1] + 2 * fuzziness[clust][1] * np.sin(t),
              color='crimson')
 
+plt.show()
+
+hc.fuzzy_fit(granules, 0.95, generateLinkageMatrix=True)
+dendrogram(hc.linkage_matrix, truncate_mode="level", p=10)
 plt.show()
