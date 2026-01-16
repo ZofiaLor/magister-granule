@@ -716,23 +716,23 @@ Co już przeanalizowano
 \item Porównanie czasu wykonania grupowania oryginalnych danych oraz danych zgranulowanych (tylko dane o rozmiarze 1000, 2000 i 5000). Wynik: znaczne przyspieszenie grupowania przy zastosowaniu granulacji (złożoność grupowania hierarchicznego to $O(n^3)$, złożoność algorytmu fuzzy C-means to $O(n)$).
 \item Wyznaczenie dokładności (accuracy) grupowania danych rozmytych poprzez utworzenie macierzy pomyłek. Wynik: dokładność jest gorsza, niż w przypadku danych oryginalnych. Zależność dokładności od:
 	\begin{itemize}
-	\item Kształtu zbioru danych (blobs, corners itd.): Algorytm działa najlepiej, gdy docelowe klastry mają zbliżoną liczebność i równomierną gęstość. 
+	\item Kształtu zbioru danych (blobs, corners itd.): Algorytm (nasz) działa najlepiej, gdy docelowe klastry mają zbliżoną liczebność i równomierną gęstość. 
 	Klastry w danych blobs1000 posiadają liczebność 960, 20, 20 (większe zbiory danych blobs zachowują tę proporcję). Algorytm fuzzy C-means często nie znajduje ani jednej granuli w mniejszych klastrach. Dokładność grupowania mimo to wynosi powyżej 96\% dzięki dysproporcji danych.
 	Dane corners mają większą gęstość w rogach klastrów. W związku z tym, w rogach znajduje się więcej granul o małym rozmyciu, a na poza nimi - mniej, o większym rozmyciu. Duże rozmycie wiąże się z błędnym grupowaniem hierarchicznym.
 	\item Liczby danych w zbiorze (1000, 2000, 5000, 10000, 20000, 30000, 40000, 50000): Im większa liczba danych, tym wyższa dokładność.
 	\item Liczby granul (50, 100, 200): Im większa liczba granul, tym wyższa dokładność.
-	\item Typu relacji (t, e, g): Wynik niekonkluzywny, ale w wielu przypadkach relacja trójkątna skutkuje wyższą dokładnością.
-	\item Parametru ksi (0.05, 0.1, ... , 0.9, 0.95): Wynik niekonkluzywny, lepsze wyniki zazwyczaj uzyskiwane są dla niższych wartości parametru, ale dokładność znacznie fluktuuje.
+	\item Typu relacji (t, e, g): Wynik niekonkluzywny, ale w wielu przypadkach relacja trójkątna skutkuje wyższą dokładnością. \ksremark{Czy to jest spowodowane tym, że T ma skończony nośnik?}
+	\item Parametru ksi (0.05, 0.1, ... , 0.9, 0.95): Wynik niekonkluzywny, lepsze wyniki zazwyczaj uzyskiwane są dla niższych \ksremark{bardziej rozmyte czy bardziej ostre?} wartości parametru, ale dokładność znacznie fluktuuje.
 	\end{itemize}
 \item Wyznaczenie dendrogramu dla grupowania hierarchicznego. Wynik: zweryfikowanie poprawności działania algorytmu hierarchicznego?
 \end{itemize}
 
 Co jeszcze można zrobić
 \begin{itemize}
-\item Porównanie czasu wykonania grupowania dla danych o mniejszych różnicach (np. co 500: 500, 1000, 1500, ... 5000).
-\item Różne liczby iteracji algorytmu fuzzy C-means (teraz wyniki są tylko dla 80 iteracji).
-\item Dokładniejsze porównanie wpływu typu relacji na dokładność grupowania.
-\item Duże zbiory danych, np. gowalla i brightkite.
+\item Porównanie czasu wykonania grupowania dla danych o mniejszych różnicach (np. co 500: 500, 1000, 1500, ... 5000). \ksremark{TAK}
+\item Różne liczby iteracji algorytmu fuzzy C-means (teraz wyniki są tylko dla 80 iteracji). \ksremark{FCM jest dość stabilny. Klastry na większej liczby iteracji będą podobne.} \ksremark{Blobsy?}
+\item Dokładniejsze porównanie wpływu typu relacji na dokładność grupowania. 
+\item Duże zbiory danych, np. gowalla i brightkite. \ksremark{TAK}
 \end{itemize}
 %
 % 
