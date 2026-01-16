@@ -713,7 +713,7 @@ Tekst dokumentu powinien również zawierać odniesienia do tabel (tab. \ref{id:
 
 Co już przeanalizowano
 \begin{itemize}
-\item Porównanie czasu wykonania grupowania oryginalnych danych oraz danych zgranulowanych (tylko dane o rozmiarze 1000, 2000 i 5000). Wynik: znaczne przyspieszenie grupowania przy zastosowaniu granulacji (złożoność grupowania hierarchicznego to O(n^3), złożoność algorytmu fuzzy C-means to O(n)).
+\item Porównanie czasu wykonania grupowania oryginalnych danych oraz danych zgranulowanych (tylko dane o rozmiarze 1000, 2000 i 5000). Wynik: znaczne przyspieszenie grupowania przy zastosowaniu granulacji (złożoność grupowania hierarchicznego to $O(n^3)$, złożoność algorytmu fuzzy C-means to $O(n)$).
 \item Wyznaczenie dokładności (accuracy) grupowania danych rozmytych poprzez utworzenie macierzy pomyłek. Wynik: dokładność jest gorsza, niż w przypadku danych oryginalnych. Zależność dokładności od:
 	\begin{itemize}
 	\item Kształtu zbioru danych (blobs, corners itd.): Algorytm działa najlepiej, gdy docelowe klastry mają zbliżoną liczebność i równomierną gęstość. 
