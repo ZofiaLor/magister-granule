@@ -16,7 +16,7 @@ seed = 42
 n_granules = 50
 n_iterations = 80
 repeats = 4
-s = 3
+s = 10
 folderPath = "img/iter80/"
 
 
@@ -27,8 +27,8 @@ names = []
 num_of_clusters = {"blobs": 3, "circles": 2, "corners": 4, "crescents": 2, "laguna": 3, "spheres": 2}
 names_roots = ["blobs", "circles", "corners", "crescents", "laguna", "spheres"]
 # blobs10000 -> 7 minutes of clustering
-data_size_presets = [1000, 2000, 5000, 10000, 20000, 30000, 40000, 50000]
-# data_size_presets = [1000, 2000, 5000]
+# data_size_presets = [1000, 2000, 5000, 10000, 20000, 30000, 40000, 50000]
+data_size_presets = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
 
 for folder in os.scandir("dane"):
     for file in os.scandir(folder.path):
@@ -69,39 +69,51 @@ for folder in os.scandir("dane"):
 #     fullData[name].fit_plot_fuzzy_labels('e')
 #     fullData[name].fit_plot_fuzzy_labels('g')
 
-# data10000 = {}
-# for nr in names_roots:
-#     for i in range(500, 5500, 500):
-#         if "spheres" in nr:
-#             data10000[nr + str(i)] = DataEntry(fullData[nr + "5000"].data[:i], nr + str(i), 3)
-#         else:
-#             data10000[nr + str(i)] = DataEntry(fullData[nr + "5000"].data[:i], nr + str(i), 2)
-#         print("Measure ", nr, str(i))
-#         data10000[nr + str(i)].measure_times()
-#
-# regular_avg = {"blobs": np.empty(shape=s), "circles": np.empty(shape=s), "corners": np.empty(shape=s), "crescents": np.empty(shape=s), "laguna": np.empty(shape=s), "spheres": np.empty(shape=s)}
-# granule50_avg = {"blobs": np.empty(shape=s), "circles": np.empty(shape=s), "corners": np.empty(shape=s), "crescents": np.empty(shape=s), "laguna": np.empty(shape=s), "spheres": np.empty(shape=s)}
-# granule100_avg = {"blobs": np.empty(shape=s), "circles": np.empty(shape=s), "corners": np.empty(shape=s), "crescents": np.empty(shape=s), "laguna": np.empty(shape=s), "spheres": np.empty(shape=s)}
-# granule200_avg = {"blobs": np.empty(shape=s), "circles": np.empty(shape=s), "corners": np.empty(shape=s), "crescents": np.empty(shape=s), "laguna": np.empty(shape=s), "spheres": np.empty(shape=s)}
-#
-# for nr in names_roots:
-#     for i in range(len(data_size_presets)):
-#         regular_avg[nr][i] = np.mean(fullData[nr + str(data_size_presets[i])].strict_number_times)
-#         granule50_avg[nr][i] = np.mean(fullData[nr + str(data_size_presets[i])].fuzzy_number_times[50])
-#         granule100_avg[nr][i] = np.mean(fullData[nr + str(data_size_presets[i])].fuzzy_number_times[100])
-#         granule200_avg[nr][i] = np.mean(fullData[nr + str(data_size_presets[i])].fuzzy_number_times[200])
-#
-# for name in names_roots:
-#     plt.figure()
-#     plt.plot(data_size_presets, regular_avg[name])
-#     plt.plot(data_size_presets, granule50_avg[name])
-#     plt.plot(data_size_presets, granule100_avg[name])
-#     plt.plot(data_size_presets, granule200_avg[name])
-#     plt.xlabel("Number of data")
-#     plt.ylabel("Time [ms]")
-#     plt.title("Clustering times of " + name + " data")
-#     legend = plt.legend(["Hierarchical clustering of non-granulated data", "Hierarchical clustering of 50 granules", "Hierarchical clustering of 100 granules", "Hierarchical clustering of 200 granules"], bbox_to_anchor =(0.5,-0.3), loc='lower center')
-#     plt.savefig(folderPath + name + "_times.pdf", bbox_extra_artists=[legend], bbox_inches='tight')
+data10000 = {}
+for nr in names_roots:
+    for i in range(500, 5500, 500):
+        if "spheres" in nr:
+            data10000[nr + str(i)] = DataEntry(fullData[nr + "5000"].data[:i], nr + str(i), 3)
+        else:
+            data10000[nr + str(i)] = DataEntry(fullData[nr + "5000"].data[:i], nr + str(i), 2)
+        print("Measure ", nr, str(i))
+        data10000[nr + str(i)].measure_times()
+
+regular_avg = {"blobs": np.empty(shape=s), "circles": np.empty(shape=s), "corners": np.empty(shape=s), "crescents": np.empty(shape=s), "laguna": np.empty(shape=s), "spheres": np.empty(shape=s)}
+granule50_avg = {"blobs": np.empty(shape=s), "circles": np.empty(shape=s), "corners": np.empty(shape=s), "crescents": np.empty(shape=s), "laguna": np.empty(shape=s), "spheres": np.empty(shape=s)}
+granule100_avg = {"blobs": np.empty(shape=s), "circles": np.empty(shape=s), "corners": np.empty(shape=s), "crescents": np.empty(shape=s), "laguna": np.empty(shape=s), "spheres": np.empty(shape=s)}
+granule200_avg = {"blobs": np.empty(shape=s), "circles": np.empty(shape=s), "corners": np.empty(shape=s), "crescents": np.empty(shape=s), "laguna": np.empty(shape=s), "spheres": np.empty(shape=s)}
+
+for nr in names_roots:
+    for i in range(len(data_size_presets)):
+        regular_avg[nr][i] = np.mean(data10000[nr + str(data_size_presets[i])].strict_number_times)
+        granule50_avg[nr][i] = np.mean(data10000[nr + str(data_size_presets[i])].fuzzy_number_times[50])
+        granule100_avg[nr][i] = np.mean(data10000[nr + str(data_size_presets[i])].fuzzy_number_times[100])
+        granule200_avg[nr][i] = np.mean(data10000[nr + str(data_size_presets[i])].fuzzy_number_times[200])
+
+# with open("Measure time.txt") as f:
+#     lines = f.read()
+#     lines = lines.splitlines()
+#     i = 0
+#     while i < 6 * len(data_size_presets) * 9:
+#         name = lines[i].split(" ")
+#         regular_avg[name[2]][(i // 9) % 10] = float(lines[i+5])
+#         granule50_avg[name[2]][(i // 9) % 10] = float(lines[i + 6])
+#         granule100_avg[name[2]][(i // 9) % 10] = float(lines[i + 7])
+#         granule200_avg[name[2]][(i // 9) % 10] = float(lines[i + 8])
+#         i += 9
+
+for name in names_roots:
+    plt.figure()
+    plt.plot(data_size_presets, regular_avg[name])
+    plt.plot(data_size_presets, granule50_avg[name])
+    plt.plot(data_size_presets, granule100_avg[name])
+    plt.plot(data_size_presets, granule200_avg[name])
+    plt.xlabel("Number of data")
+    plt.ylabel("Time [ms]")
+    plt.title("Clustering times of " + name + " data")
+    legend = plt.legend(["Hierarchical clustering of non-granulated data", "Hierarchical clustering of 50 granules", "Hierarchical clustering of 100 granules", "Hierarchical clustering of 200 granules"], bbox_to_anchor =(0.5,-0.38), loc='lower center')
+    plt.savefig(folderPath + name + "_times.pdf", bbox_extra_artists=[legend], bbox_inches='tight')
 
 # # Generate data
 # data, labels = sklearn.datasets.make_blobs(n_samples=1000, centers=4, cluster_std=[0.5, 2, 1.5, 1], random_state=seed)
