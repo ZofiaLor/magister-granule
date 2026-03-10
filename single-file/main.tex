@@ -580,9 +580,60 @@ y = \frac{\partial x}{\partial t}
 
 \section{Algorytmy grupowania hierarchicznego}
 
+Ogólna idea działania algorytmu.
+Typy algorytmu (single linkage, complete linkage...)
+
+Grupowanie hierarchiczne polega na utworzeniu sekwencji zagnieżdżonych podziałów danych \cite{bib:hierarchical-clustering}.
+
+Algorytm aglomeracyjnego grupowania hierarchicznego iteracyjnie scala mniejsze klastry danych w większe, zaczynając od klastrów jednoelementowych (każdy punkt danych jest klastrem), kończąc na jednym wspólnym klastrze. 
+Kolejne 2 klastry, które mają zostać scalone w danej iteracji, wybierane są na podstawie metryki odległości między nimi oraz łączności (\english{linkage}).
+
+Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (\english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych.
+
+Często wybierana euklidesowa metryka odległości \cite{bib:hierarchical-overview} zdefiniowana jest jako
+\begin{align}
+d(x_{i}, x_{j}) = \sqrt{\sum_{k=0}^{n}(x_{i,k} - x_{j,k})^{2}},
+\end{align}
+gdzie $n=$ liczba atrybutów punktu danych $x$, $x_{i,k}$ oznacza $k$-ty atrybut $i$-tego punktu.
+
+Metryka ta jest uszczegółowieniem metryki Minkowskiego
+\begin{align}
+d(x_{i}, x_{j}) = (\sum_{k=0}^{n}|x_{i,k} - x_{j,k}|^{p})^{1/p},
+\end{align}
+dla $p=2$. Inną popularną metryką jest odległość Manhattan, również należąca do rodziny metryk Minkowskiego, dla $p=1$.
+
+Łączność określa, jak na podstawie odległości pomiędzy poszczególnymi punktami należącymi do klastrów wyznaczyć odległość pomiędzy tymi klastrami.
+Do łączności zaimplementowanych w popularnych bibliotekach należą \english{single-linkage} (najbliższe sąsiedztwo), \english{complete linkage} (najdalsze sąsiedztwo), \english{average linkage} (średnie sąsiedztwo) oraz metoda Warda (minimalna wariancja).
+
 \subsection{Single Linkage}
 
+Na czym polega
+Wizualizacja, dendrogram
+Typy implementacji (naiwna, SLINK...)
+
+W algorytmie \english{single linkage} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
+Oznacza to, że w momencie złączenia klastrów $A_{1}$ i $A_{2}$ w jeden klaster $A$, odległość tego klastra do innego klastra $B$ zdefiniowana jest jako:
+\begin{align}
+d(A, B) = min(d(A_{1}, B), d(A_{2}, B))
+\end{align}
+
+%rysunek?
+
+Algorytm ten jest wrażliwy na szumy, dobrze działa dla wyraźnie oddzielonych klastrów.
+
+Możliwe implementacje algorytmu przedstawione są w \cite{bib:hierarchical-algorithms}.
+
+%przepisać, przekopiować pseudokody?
+Algorytm ogólny (\texttt{GENERAL\_LINKAGE()}) może być wykorzystany dla każdej łączności. Jego wadą jest pesymistyczna złożoność czasowa wynosząca $O(n^{3})$.
+
+Dla \english{single linkage} wykorzystać można szybsze, dedykowane algorytmy, na przykład algorytm minimalnego drzewa rozpinającego (\texttt{MST\_LINKAGE()}).
+
 \section{Obliczenia granularne}
+
+Liczby rozmyte
+Granule
+Kształty (trójkątne, wykładnicze, gaussowskie)
+Relacje między liczbami (arytmetyka, porównanie)
 
 % TODO
 
@@ -743,12 +794,18 @@ Co jeszcze można zrobić
 
 Dane znajdują się w plikach \texttt{.data} zlokalizowanych w folderze dane, pogrupowanych w podfoldery według kształtów.
 Dla każdego kształtu zbiory mają liczebność 1000, 2000, 5000, 10000, 20000, 30000, 40000 oraz 50000 wierszy.
-W tabeli \ref{id:tab:zbiory} przedstawiono charakterystykę wykorzystanych kształtów zbiorów danych.
-\ksremark{rysunek z przykładami tych zbiorów}
+Wykresy danych przedstawiono na rys. \ref{fig:data-shapes}, a w tabeli \ref{id:tab:zbiory} -- dodatkowo ich charakterystykę.
 
 % czy 2011 to dobra data dla tych stron?
 Wykorzystano również zbiory danych Brightkite \cite{bib:brightkite} (4491143 wierszy) oraz Gowalla \cite{bib:gowalla} (6442890 wierszy).
 Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude''. Dane przedstawiają współrzędne lokalizacji logowania użytkowników platform społecznościowych.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./data_shapes.pdf}
+\caption{Wykresy danych o różnych kształtach z folderu \texttt{dane} o rozmiarze 1000 punktów.}
+\label{fig:data-shapes}
+\end{figure}
 
 \begin{table}
 \centering
@@ -756,11 +813,10 @@ Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude''.
 \label{id:tab:zbiory}
 \begin{tabular}{rrrrrrr}
 \toprule
-	& blobs & circles & crescents & corners & laguna & spheres \\
+	& blobs & circles & corners & crescents & laguna & spheres \\
 \midrule
-	    liczba klastrów & 3 & 2 & 2 & 4 & 3 & 2 \\
+	    liczba klastrów & 3 & 2 & 4 & 2 & 3 & 2 \\
 	    liczba wymiarów & 2 & 2 & 2 & 2 & 2 & 3 \\
-	    % opis & obiekty wygenerowane funkcją sklearn.datasets.make_blobs o proporcji rozmiarów 48:1:1 & okręgi wygenerowane funkcją sklearn.datasets.make_circles, mniejszy okrąg wewnątrz większego & łuki wygenerowane funkcją sklearn.datasets.make_moons & cztery obiekty, z których każdy składa się z dwóch nachodzących na siebie prostokątnych obiektów & dwa koliste obiekty otoczone wycinkiem okręgu & dwie sfery, mniejsza zawarta w większej \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -826,9 +882,9 @@ Najlepszą dokładność zaobserwowano dla danych ,,crescents'', a najgorszą --
 \label{id:tab:acc-ksztalt}
 \begin{tabular}{rrrrrrr}
 \toprule
-	& blobs & circles & crescents & corners & laguna & spheres \\
+	& blobs & circles & corners & crescents & laguna & spheres \\
 \midrule
-	    dokładność & 97,931\% & 87,911\% & 99,915\% & 80,708\% & 79,749\% & 97,210\% \\
+	    dokładność & 97,931\% & 87,911\% & 80,708\% & 99,915\% & 79,749\% & 97,210\% \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -839,10 +895,10 @@ Zawierają one jednak jedynie 4\% danych, dlatego dokładność grupowania pozos
 
 W przypadku danych ,,circles'' (rys. \ref{fig:circles1000e}) największe znaczenie dla dokładności ma liczba granul. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe, niż między okręgiem zewnętrznym a wewnętrznym.
 
-Dane ,,crescents'' tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność ich grupowania jest najlepsza (rys. \ref{fig:crescents1000e}). Ze względu na bliskie położenie końców łuków, przy dużym rozmyciu wciąż możliwe są błędy, jak w przypadku 50 granul, $\xi=0,9$.
-
 Klastry dla danych ,,corners'' mają nierównomierną gęstość, przez co algorytm fuzzy C-means tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000e}).
 Wiąże się to z większym rozmyciem granul na ,,ramionach'' klastrów.
+
+Dane ,,crescents'' tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność ich grupowania jest najlepsza (rys. \ref{fig:crescents1000e}). Ze względu na bliskie położenie końców łuków, przy dużym rozmyciu wciąż możliwe są błędy, jak w przypadku 50 granul, $\xi=0,9$.
 
 Dla danych ,,laguna'' (rys. \ref{fig:laguna1000e}), podobnie jak w przypadku ,,circles'', błędy wynikają z większego rozmycia granul położonych na otaczającym pozostałe dwa klastry okręgu.
 
@@ -864,16 +920,16 @@ W przypadku danych ,,spheres'' (rys. \ref{fig:spheres1000e}) można zauważyć, 
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./crescents1000e.pdf}
-\caption{Efekty wykonania grupowania hierarchicznego granul dla danych crescents o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
-\label{fig:crescents1000e}
+\includegraphics[width=\textwidth]{./corners1000e.pdf}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych corners o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
+\label{fig:corners1000e}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./corners1000e.pdf}
-\caption{Efekty wykonania grupowania hierarchicznego granul dla danych corners o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
-\label{fig:corners1000e}
+\includegraphics[width=\textwidth]{./crescents1000e.pdf}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych crescents o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
+\label{fig:crescents1000e}
 \end{figure}
 
 \begin{figure}
