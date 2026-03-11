@@ -823,15 +823,15 @@ Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude''.
 
 \section{Metodyka badań}
 
-Algorytm zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami algorytmów non-fuzzy.
+Algorytm zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami algorytmu ostrego.
 
 \subsection{Badanie szybkości algorytmu}
 
 Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od ilości danych, przygotowano dane o rozmiarach 500-10000 z krokiem 500.
 W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 10000. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
 
-Czas pojedynczego wykonania algorytmu non-fuzzy zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja algorytmu grupowania, analogiczna do wersji fuzzy.
-W czasie pojedynczego wykonania algorytmu fuzzy zawarto czas wykonania algorytmu fuzzy C-means, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
+Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja algorytmu grupowania, analogiczna do wersji rozmytej.
+W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu fuzzy C-means, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
 
 Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtórzono czterokrotnie i obliczono średnią arytmetyczną wyników.
 
@@ -839,13 +839,42 @@ Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtór
 
 Dokładność zmierzono poprzez porówanie wyników algorytmu AgglomerativeClustering biblioteki scikit-learn z własną implementacją.
 
-Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu fuzzy, pomiary przeprowadzono również dla różnych liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi$ (0,05-0,95 z krokiem 0,05).
+Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi$ (0,05-0,95 z krokiem 0,05).
+
+\subsubsection{Miara dokładności}
 
 Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Określono więc, że na potrzeby porównania, punkt należy do granuli, dla której jego wartość w tablicy $U$ jest maksymalna.
 
-Obliczenie dokładności polegało na wyznaczeniu jej z macierzy pomyłek $l$ przy założeniu, że algorytm non-fuzzy posiada dokładność 100\%.
-W celu uzyskania macierzy pomyłek, do każdego elementu $l_{ij}$ przypisano liczbę punktów należących do klastra $i$ według algorytmu non-fuzzy i do klastra $j$ według algorytmu fuzzy, gdzie $i, j \in \langle 0, N-1 \rangle , N = \text{liczba klastrów}$.
-Wyznaczono taką permutację kolumn i wierszy macierzy, która maksymalizuje wartości na przekątnej.
+Wykorzystana miara dokładności przyjmuje, że algorytm ostry posiada dokładność 100\% -- każdy punkt zostaje przypisany do oczekiwanego klastra.
+
+Wyznaczono macierz $l$, w której wartość elementu $l_{ij}$ jest równa liczbie punktów należących do klastra $i$ wyznaczonego przez algorytm ostry i do klastra $j$ wyznaczonego przez algorytm rozmyty:
+\begin{align}
+l_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j]
+\end{align}
+
+Numeracja klastrów wyznaczonych przez obydwa algorytmy może być inna ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na listingu \ref{lst:max-matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $l$, która maksymalizuje wartości na przekątnej. 
+
+\begin{figure}
+\begin{lstlisting}
+for i in range(liczba_klastrow - 1):
+	(w, k) = wspolrzedne maksymalnej wartosci w podmacierzy l[i:, i:]
+	zamien kolejnoscia wiersze w oraz i
+	zamien kolejnoscia kolumny k oraz i
+\end{lstlisting}
+\caption{Algorytm maksymalizujący wartości na przekątnej macierzy}
+\label{lst:max-matrix}
+\end{figure}
+
+Z uzyskanej w ten sposób macierzy pomyłek, dokładność wyznaczana jest jako suma wartości na przekątnej macierzy podzielona przez całkowitą liczbę danych:
+
+\begin{align}
+acc = \frac{\sum_{i=0}^{X}l_{ii}}{N} * 100\%
+\end{align}
+lub
+\begin{align}
+acc = \frac{\sum_{i=0}^{X}l_{ii}}{\sum_{i=0}^{X}\sum_{j=0}^{X}l_{ij}} * 100\%,
+\end{align}
+gdzie $X=$ liczba klastrów.
 
 \section{Wyniki}
 
@@ -857,11 +886,11 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 \begin{figure}
 \centering
 \includegraphics{./circles_times.pdf}
-\caption{Charakterystyka czasu wykonania algorytmów non-fuzzy i fuzzy dla różnej liczby granul od liczby danych wejściowych (circles).}
+\caption{Charakterystyka czasu wykonania algorytmów ostrego i rozmytego dla różnej liczby granul od liczby danych wejściowych (circles).}
 \label{fig:circles-times}
 \end{figure}
 
-Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$, jednak w przypadku algorytmu fuzzy dotyczy ona tylko granul, których liczba jest stała.
+Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba jest stała.
 Złożoność czasowa algorytmu fuzzy C-means wynosi $O(n)$, więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych.
 
 \subsection{Jakość grupowania}
