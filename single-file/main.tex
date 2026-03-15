@@ -322,7 +322,7 @@
 
 % Tutaj proszę umieszczać swoje pakiety, makra, ustawienia itd.
 
-
+\input{oznaczenia.tex}
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % listingi i fragmentu kodu źródłowego 
@@ -537,23 +537,25 @@ escapeinside={@*}{*@},%
 \chapter{Granularne algortymy grupowania hierarchicznego}  % Analiza tematu
 % 
 
+\ksremark{zagajenie, 3-4 wiersze}
+
 %\begin{itemize}
 %\item Jaki problem chcę (muszę :-) rozwiązać?
 %\item Dlaczego rozwiązanie problemu jest ważne?
 %\item Jak inni rozwiązują ten problem?
 %\item Jakie są zalety i wady tych rozwiązań?
 %\end{itemize}
+%
+%Odwołania do literatury: 
+%książek \cite{bib:ksiazka},
+%artykułów w czasopismach \cite{bib:artykul}, 
+%materiałów konferencyjnych \cite{bib:konferencja}
+%i stron www \cite{bib:internet}.
 
-Odwołania do literatury: 
-książek \cite{bib:ksiazka},
-artykułów w czasopismach \cite{bib:artykul}, 
-materiałów konferencyjnych \cite{bib:konferencja}
-i stron www \cite{bib:internet}.
-
-Równania powinny być numerowane
-\begin{align}
-y = \frac{\partial x}{\partial t}
-\end{align}
+%Równania powinny być numerowane
+%\begin{align}
+%y = \frac{\partial x}{\partial t}
+%\end{align}
 
 %
 %\begin{itemize}
@@ -578,6 +580,12 @@ y = \frac{\partial x}{\partial t}
 %Przykładem generalizacji jest para: zwierzę i pies. Pies jest zwierzęciem. Pies jest uszczegółowieniem pojęcia zwierzę. Zwierzę jest uogólnieniem pojęcia pies.
 %\end{Example}
 
+\section{Grupowanie danych}
+\label{sec:grupowanie}
+\ksremark{Co to jest grupowanie danych?}
+
+\ksremark{Jakie są rodziny algorytmów grupowania danych?}
+
 \section{Algorytmy grupowania hierarchicznego}
 
 Ogólna idea działania algorytmu.
@@ -586,15 +594,20 @@ Typy algorytmu (single linkage, complete linkage...)
 Grupowanie hierarchiczne polega na utworzeniu sekwencji zagnieżdżonych podziałów danych \cite{bib:hierarchical-clustering}.
 
 Algorytm aglomeracyjnego grupowania hierarchicznego iteracyjnie scala mniejsze klastry danych w większe, zaczynając od klastrów jednoelementowych (każdy punkt danych jest klastrem), kończąc na jednym wspólnym klastrze. 
-Kolejne 2 klastry, które mają zostać scalone w danej iteracji, wybierane są na podstawie metryki odległości między nimi oraz łączności (\english{linkage}).
+Kolejne 2 \ksremark{słownie: dwa} klastry, które mają zostać scalone w danej iteracji, wybierane są na podstawie metryki odległości między nimi oraz łączności (\ksremark{ang.} \english{linkage}).
 
-Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (\english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych.
+Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (\english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych. \ksremark{$\gets$ Do będzie w rozdziale \ref{sec:grupowanie}}
 
 Często wybierana euklidesowa metryka odległości \cite{bib:hierarchical-overview} zdefiniowana jest jako
 \begin{align}
 d(x_{i}, x_{j}) = \sqrt{\sum_{k=0}^{n}(x_{i,k} - x_{j,k})^{2}},
+\label{eq:odleglosc:euklidesowa}
 \end{align}
-gdzie $n=$ liczba atrybutów punktu danych $x$, $x_{i,k}$ oznacza $k$-ty atrybut $i$-tego punktu.
+gdzie $n$ to liczba atrybutów punktu danych $x$, $x_{i,k}$ oznacza $k$-ty atrybut $i$-tego punktu.
+\ksremark{Dołączyłem plik \texttt{oznaczenia.tex}. Są w nim makra, które dla jednego elementu generują kilka makr, np. jeżeli $\Przyklad$ to jakiś przykładowy skalar, to $\wPrzyklad = [\Przyklad_1, \Przyklad_2, \ldots, \Przyklad_\nPrzyklad]$ to wektor, $\zPrzyklad = \{\Przyklad_1, \Przyklad_2, \ldots, \Przyklad_\nPrzyklad\}$ to zbiór, a $\mPrzyklad$ to macierz,  $\nPrzyklad$ to liczba elementów wektora, liczba elementów zbioru $|\zPrzyklad| = \nPrzyklad$ itd. Nowy element i całą rodzinę makr dla niego tworzy się poprzez \texttt{newItem}. Co nie miara przykładów jest w pliku \texttt{oznaczenia.tex}. Taki sposób pisania jest trochę uciążliwy, ale zapobiegniemy chaosowi oznaczeń. Przy takich oznaczeniach wzór \eqref{eq:odleglosc:euklidesowa} wygląda tak:}
+\begin{align}
+\Odleglosc \left(\wX_{i}, \wX_{j}\right) = \sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\X_{i\Atrybut} - \X_{j\Atrybut})^{2}}.
+\end{align}
 
 Metryka ta jest uszczegółowieniem metryki Minkowskiego
 \begin{align}
@@ -611,10 +624,10 @@ Na czym polega
 Wizualizacja, dendrogram
 Typy implementacji (naiwna, SLINK...)
 
-W algorytmie \english{single linkage} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
+W algorytmie \english{single linkage} \ksremark{cytowanie} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
 Oznacza to, że w momencie złączenia klastrów $A_{1}$ i $A_{2}$ w jeden klaster $A$, odległość tego klastra do innego klastra $B$ zdefiniowana jest jako:
 \begin{align}
-d(A, B) = min(d(A_{1}, B), d(A_{2}, B))
+d(A, B) = min(d(A_{1}, B), d(A_{2}, B)) \ksremark{kropka na końcu, bo wzór kończy zdanie}
 \end{align}
 
 %rysunek?
@@ -628,12 +641,23 @@ Algorytm ogólny (\texttt{GENERAL\_LINKAGE()}) może być wykorzystany dla każd
 
 Dla \english{single linkage} wykorzystać można szybsze, dedykowane algorytmy, na przykład algorytm minimalnego drzewa rozpinającego (\texttt{MST\_LINKAGE()}).
 
-\section{Obliczenia granularne}
 
-Liczby rozmyte
-Granule
-Kształty (trójkątne, wykładnicze, gaussowskie)
-Relacje między liczbami (arytmetyka, porównanie)
+\ksremark{Więcej, trzeba napisać więcej!}
+
+\section{Obliczenia ziarniste}
+
+\subsection{Ziarna informacyjne}
+\ksremark{Co to jest?}
+\ksremark{Jak są reprezentowane?}
+\ksremark{Jak się tworzy ziarna obliczeniowe?}
+
+\subsection{Liczby rozmyte}
+\ksremark{Liczby rozmyte}
+\ksremark{Kształty (trójkątne, wykładnicze, gaussowskie)}
+\ksremark{Relacje między liczbami (arytmetyka, porównanie)}
+
+
+
 
 % TODO
 
