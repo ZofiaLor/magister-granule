@@ -584,7 +584,22 @@ escapeinside={@*}{*@},%
 \label{sec:grupowanie}
 \ksremark{Co to jest grupowanie danych?}
 
+Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne ze względu na określoną metrykę \cite{bib:fcm-for-optimizing,bib:clustering-alg-survey}. Algorytmy grupowania są algorytmami nienadzorowanymi -- posiadają jedynie informacje o podobieństwie między poszczególnymi elementami.
+
 \ksremark{Jakie są rodziny algorytmów grupowania danych?}
+
+Do głównych rodzin algorytmów grupowania zaliczane są \cite{bib:clustering-alg-survey}:
+\begin{itemize}
+	\item Algorytmy hierarchiczne: grupowanie polega na utworzeniu sekwencji zagnieżdżonych podziałów danych \cite{bib:hierarchical-clustering}.
+	\item Algorytmy oparte na partycjonowaniu: związane z iteracyjnym wyznaczaniem środków klastrów do momentu spełnienia kryterium zatrzymania.
+	\item Algorytmy rozmyte: przyjmują, że każdy element może być częścią wielu klas z pewnym stopniem przynależności.
+	\item Algorytmy oparte o rozkład danych
+	\item Algorytmy gęstościowe: obszary o dużej gęstości danych tworzą klastry, pozostałe uznawane są za szumy
+	\item Algorytmy grafowe
+	\item Algorytmy siatkowe
+	\item Algorytmy fraktalne
+	\item Algorytmy modelowe: dla każdej klasy znajdowany jest najlepszy model.
+\end{itemize}
 
 \section{Algorytmy grupowania hierarchicznego}
 
@@ -594,9 +609,9 @@ Typy algorytmu (single linkage, complete linkage...)
 Grupowanie hierarchiczne polega na utworzeniu sekwencji zagnieżdżonych podziałów danych \cite{bib:hierarchical-clustering}.
 
 Algorytm aglomeracyjnego grupowania hierarchicznego iteracyjnie scala mniejsze klastry danych w większe, zaczynając od klastrów jednoelementowych (każdy punkt danych jest klastrem), kończąc na jednym wspólnym klastrze. 
-Kolejne 2 \ksremark{słownie: dwa} klastry, które mają zostać scalone w danej iteracji, wybierane są na podstawie metryki odległości między nimi oraz łączności (\ksremark{ang.} \english{linkage}).
+Kolejne dwa klastry, które mają zostać scalone w danej iteracji, wybierane są na podstawie metryki odległości między nimi oraz łączności (ang. \english{linkage}).
 
-Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (\english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych. \ksremark{$\gets$ Do będzie w rozdziale \ref{sec:grupowanie}}
+Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych. \ksremark{$\gets$ Do będzie w rozdziale \ref{sec:grupowanie}}
 
 Często wybierana euklidesowa metryka odległości \cite{bib:hierarchical-overview} zdefiniowana jest jako
 \begin{align}
@@ -611,12 +626,12 @@ gdzie $n$ to liczba atrybutów punktu danych $x$, $x_{i,k}$ oznacza $k$-ty atryb
 
 Metryka ta jest uszczegółowieniem metryki Minkowskiego
 \begin{align}
-d(x_{i}, x_{j}) = (\sum_{k=0}^{n}|x_{i,k} - x_{j,k}|^{p})^{1/p},
+\Odleglosc \left(\wX_{i}, \wX_{j}\right) = \left(\sum_{\Atrybut=0}^{\nAtrybut}|\X_{i\Atrybut} - \X_{j\Atrybut}|^{p}\right)^{1/p},
 \end{align}
 dla $p=2$. Inną popularną metryką jest odległość Manhattan, również należąca do rodziny metryk Minkowskiego, dla $p=1$.
 
 Łączność określa, jak na podstawie odległości pomiędzy poszczególnymi punktami należącymi do klastrów wyznaczyć odległość pomiędzy tymi klastrami.
-Do łączności zaimplementowanych w popularnych bibliotekach należą \english{single-linkage} (najbliższe sąsiedztwo), \english{complete linkage} (najdalsze sąsiedztwo), \english{average linkage} (średnie sąsiedztwo) oraz metoda Warda (minimalna wariancja).
+Do łączności zaimplementowanych w popularnych bibliotekach należą \english{single linkage} (najbliższe sąsiedztwo), \english{complete linkage} (najdalsze sąsiedztwo), \english{average linkage} (średnie sąsiedztwo) oraz metoda Warda (minimalna wariancja) \cite{bib:ward-linkage}.
 
 \subsection{Single Linkage}
 
@@ -624,20 +639,28 @@ Na czym polega
 Wizualizacja, dendrogram
 Typy implementacji (naiwna, SLINK...)
 
-W algorytmie \english{single linkage} \ksremark{cytowanie} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
+W algorytmie \english{single linkage} \cite{bib:hierarchical-clustering} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
 Oznacza to, że w momencie złączenia klastrów $A_{1}$ i $A_{2}$ w jeden klaster $A$, odległość tego klastra do innego klastra $B$ zdefiniowana jest jako:
 \begin{align}
-d(A, B) = min(d(A_{1}, B), d(A_{2}, B)) \ksremark{kropka na końcu, bo wzór kończy zdanie}
+\Odleglosc \left(A, B\right) = min(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
 \end{align}
 
 %rysunek?
 
 Algorytm ten jest wrażliwy na szumy, dobrze działa dla wyraźnie oddzielonych klastrów.
 
-Możliwe implementacje algorytmu przedstawione są w \cite{bib:hierarchical-algorithms}.
+Implementacje algorytmu przedstawione są w \cite{bib:hierarchical-algorithms} Wykorzystywane one są przez bibliotekę \english{SciPy} języka Python \cite{bib:scipy-linkage}.
 
 %przepisać, przekopiować pseudokody?
-Algorytm ogólny (\texttt{GENERAL\_LINKAGE()}) może być wykorzystany dla każdej łączności. Jego wadą jest pesymistyczna złożoność czasowa wynosząca $O(n^{3})$.
+Algorytm naiwny (\texttt{PRIMITIVE\_CLUSTERING()}) może być wykorzystany dla każdej łączności, jednak jego wadą jest złożoność czasowa wynosząca $O(n^{3})$.
+Jego parametrami wejściowymi są lista etykiet danych oraz macierz podobieństwa między danymi. W algorytmie naiwnym, iteracyjnie wykonywane są trzy kroki:
+\begin{enumerate}
+	\item Znalezienie w macierzy podobieństwa minimalnej wartości -- znalezienie najbliższej sobie pary klastrów,
+	\item Scalenie odnalezionych klastrów,
+	\item Aktualizacja wartości podobieństw w macierzy według wybranej łączności.
+\end{enumerate}
+
+Algorytm ogólny \texttt{GENERAL\_LINKAGE()} zawiera dodatkową optymalizację w stosunku do algorytmu naiwnego: wykorzystywana jest kolejka priorytetowa zawierająca kandydatów na najbliższych sąsiadów klastrów, co pozwala ograniczyć czas poszukiwania minimum macierzy w kroku 1. Optymistyczna złożoność czasowa tego algorytmu wynosi $\Omega(n^{2})$, pesymistyczna -- nadal $O(n^{3})$.
 
 Dla \english{single linkage} wykorzystać można szybsze, dedykowane algorytmy, na przykład algorytm minimalnego drzewa rozpinającego (\texttt{MST\_LINKAGE()}).
 
@@ -651,10 +674,21 @@ Dla \english{single linkage} wykorzystać można szybsze, dedykowane algorytmy, 
 \ksremark{Jak są reprezentowane?}
 \ksremark{Jak się tworzy ziarna obliczeniowe?}
 
-\subsection{Liczby rozmyte}
+Jednym z podstawowych pojęć związanych z obliczeniami ziarnistymi są ziarna informacyjne. 
+Są one encjami o pewnej semantyce, kolekcjami obiektów o określonym w pewien sposób podobieństwie \cite{bib:general-framework-information-granules,bib:designing-higher-order-information-granules}.
+
+W zależności od znaczenia i zastosowania ziaren, mogą one być reprezentowane na różne sposoby: jako zbiory klasyczne, przedziały liczb, zbiory rozmyte, zbiory cieniowane, zbiory przybliżone, czy funkcje prawdopodobieństwa \cite{bib:general-framework-information-granules}.
+
+\subsection{Zbiory rozmyte (?)}
+
+\subsection{Liczby rozmyte (?)}
+
+\subsection{Rozszerzalne liczby rozmyte}
 \ksremark{Liczby rozmyte}
 \ksremark{Kształty (trójkątne, wykładnicze, gaussowskie)}
 \ksremark{Relacje między liczbami (arytmetyka, porównanie)}
+
+Rozszerzalne liczby rozmyte (ang. \english{extensional fuzzy numbers}) są uogólnieniem liczb rzeczywistych. Są to zbiory rozmyte, które modelują semantykę taką, jak ,,około 5'', ,,prawie 10'', ,,ponad 20'', czyli odpowiadają rzeczywistym liczbom ostrym z pewną tolerancją \cite{bib:arithmetics-extensional-fuzzy-numbers,bib:mathematics-fuzzy-sets-logic}.
 
 
 
