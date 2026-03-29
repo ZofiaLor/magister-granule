@@ -590,15 +590,11 @@ Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pew
 
 Do głównych rodzin algorytmów grupowania zaliczane są \cite{bib:clustering-alg-survey}:
 \begin{itemize}
-	\item Algorytmy hierarchiczne: grupowanie polega na utworzeniu sekwencji zagnieżdżonych podziałów danych \cite{bib:hierarchical-clustering}.
-	\item Algorytmy oparte na partycjonowaniu: związane z iteracyjnym wyznaczaniem środków klastrów do momentu spełnienia kryterium zatrzymania.
-	\item Algorytmy rozmyte: przyjmują, że każdy element może być częścią wielu klas z pewnym stopniem przynależności.
-	\item Algorytmy oparte o rozkład danych
-	\item Algorytmy gęstościowe: obszary o dużej gęstości danych tworzą klastry, pozostałe uznawane są za szumy
-	\item Algorytmy grafowe
-	\item Algorytmy siatkowe
-	\item Algorytmy fraktalne
-	\item Algorytmy modelowe: dla każdej klasy znajdowany jest najlepszy model.
+	\item Algorytmy hierarchiczne: grupowanie polega na utworzeniu sekwencji zagnieżdżonych podziałów danych \cite{bib:hierarchical-clustering},
+	\item Algorytmy oparte o minimalizację funkcji kryterialnej: związane z iteracyjnym wyznaczaniem środków klastrów do momentu spełnienia kryterium zatrzymania (na przykład: k-means, fuzzy c-means),
+	\item Algorytmy gęstościowe: obszary o dużej gęstości danych tworzą klastry, pozostałe uznawane są za szumy (na przykład: DBSCAN \cite{bib:dbscan-algorithm}),
+	\item Algorytmy grafowe: dane uznawane są za wierzchołki grafów, a podobieństwa między nimi -- za krawędzie,
+	\item Inne algorytmy.
 \end{itemize}
 
 \section{Algorytmy grupowania hierarchicznego}
@@ -611,7 +607,7 @@ Grupowanie hierarchiczne polega na utworzeniu sekwencji zagnieżdżonych podzia�
 Algorytm aglomeracyjnego grupowania hierarchicznego iteracyjnie scala mniejsze klastry danych w większe, zaczynając od klastrów jednoelementowych (każdy punkt danych jest klastrem), kończąc na jednym wspólnym klastrze. 
 Kolejne dwa klastry, które mają zostać scalone w danej iteracji, wybierane są na podstawie metryki odległości między nimi oraz łączności (ang. \english{linkage}).
 
-Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych. \ksremark{$\gets$ Do będzie w rozdziale \ref{sec:grupowanie}}
+Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych.
 
 Często wybierana euklidesowa metryka odległości \cite{bib:hierarchical-overview} zdefiniowana jest jako
 \begin{align}
@@ -667,6 +663,39 @@ Dla \english{single linkage} wykorzystać można szybsze, dedykowane algorytmy, 
 
 \ksremark{Więcej, trzeba napisać więcej!}
 
+\section{Algorytm fuzzy c-means}
+\label{sec:fcm}
+
+Algorytm fuzzy c-means (FCM) należy do rodziny algorytmów opartych o minimalizację funkcji kryterialnej. Algorytm wyznacza klastry, dla których przynależność każdego punktu danych jest liczbą z przedziału $\left[ 0,1 \right]$. Wynikiem klasteryzacji FCM jest macierz środków klastrów $\mCentre$ oraz macierz przynależności $\mClusterMembership$. Złożoność czasowa ze względu na liczbę danych tego algorytmu wynosi $O(n)$ \cite{bib:fcm-kmeans-comparison}.
+
+Funkcja kryterialna algorytmu fuzzy c-means ma postać:
+
+\begin{align}
+	J(\mCentre, \mClusterMembership) = \sum_{\Iteracja=1}^{N} \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster}^{m} ||\wX_{\Iteracja} - \wCentre_{\klaster}||^{m},
+\end{align}
+%\sum_{\size=1}^{\nSize}  \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\size\klaster}^{m}
+%nie działa z \nSize ani \nLen
+gdzie $\wX_{\Iteracja}$ -- współrzędne $\Iteracja$-tego punktu danych, $\wCentre_{\klaster}$ -- współrzędne środka $\klaster$-tego klastra danych, $\ClusterMembership_{\Iteracja\klaster} \in \left[ 0,1 \right]$ -- wartość przynależności $\Iteracja$-tego punktu do $\klaster$-tego klastra. Parametr $m \in \left( 1,+\infty \right]$ jest współczynnikiem rozmycia algorytmu, najczęściej wykorzystuje się wartość 2 \cite{bib:implementation-of-fcm-pcm-algs,bib:scikit-fuzzy-cmeans-docs-fcm}.
+
+W każdej iteracji algorytmu obliczane są najpierw nowe współrzędne środków klastrów:
+\begin{align}
+	\wCentre_{\klaster} = \frac{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m} \wX_{\Iteracja}}{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m}},
+\end{align}
+
+a następnie wartości elementów macierzy przynależności:
+
+\begin{align}
+	\ClusterMembership_{\Iteracja\klaster} = \frac{1}{\sum_{j=1}^{\nKlaster}\left( \frac{||\wX_{\Iteracja} - \wCentre_{\klaster}||}{||\wX_{\Iteracja} - \wCentre_{j}||} \right)^{\frac{2}{m - 1}}}.
+\end{align}
+
+Kroki powtarzane są do momentu spełnienia warunku zatrzymania, na przykład:
+
+\begin{align}
+	||\mClusterMembership^{(t)} - \mClusterMembership^{(t-1)}|| < \epsilon,
+\end{align}
+
+gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warunkiem zatrzymania może też być z góry określona maksymalna liczba iteracji \cite{bib:scikit-fuzzy-cmeans-docs-fcm, bib:skfuzzy-docs-fcm}.
+
 \section{Obliczenia ziarniste}
 
 \subsection{Ziarna informacyjne}
@@ -679,18 +708,36 @@ Są one encjami o pewnej semantyce, kolekcjami obiektów o określonym w pewien 
 
 W zależności od znaczenia i zastosowania ziaren, mogą one być reprezentowane na różne sposoby: jako zbiory klasyczne, przedziały liczb, zbiory rozmyte, zbiory cieniowane, zbiory przybliżone, czy funkcje prawdopodobieństwa \cite{bib:general-framework-information-granules}.
 
-\subsection{Zbiory rozmyte (?)}
-
-\subsection{Liczby rozmyte (?)}
+Ziarna informacyjne utworzyć można poprzez grupowanie danych. W przypadku ziaren reprezentowanych przez zbiory rozmyte, typowym algorytmem grupowania jest fuzzy c-means \ref{sec:fcm}.
+% TODO link do rozdziału o FCM
 
 \subsection{Rozszerzalne liczby rozmyte}
 \ksremark{Liczby rozmyte}
 \ksremark{Kształty (trójkątne, wykładnicze, gaussowskie)}
 \ksremark{Relacje między liczbami (arytmetyka, porównanie)}
 
-Rozszerzalne liczby rozmyte (ang. \english{extensional fuzzy numbers}) są uogólnieniem liczb rzeczywistych. Są to zbiory rozmyte, które modelują semantykę taką, jak ,,około 5'', ,,prawie 10'', ,,ponad 20'', czyli odpowiadają rzeczywistym liczbom ostrym z pewną tolerancją \cite{bib:arithmetics-extensional-fuzzy-numbers,bib:mathematics-fuzzy-sets-logic}.
+Zbiory klasyczne są pojęciem pierwotnym: obiekt $\X$ (liczba, punkt, dana, itp.) należy do zbioru $\zA$ ($\X \in \zA$) lub do niego nie należy ($\X \notin \zA$). W przypadku zbiorów rozmytych, obiekt $\X$ należy do zbioru $\zA$ z pewnym stopniem przynależności z przedziału $\left[ 0,1 \right]$, gdzie 0 oznacza całkowity brak przynależności, a 1 -- całkowitą przynależność \cite{bib:theory-applications-ordered-fuzzy-numbers}. Zbiór rozmyty opisać można poprzez funkcję przynależności $\ClusterMembership_{\zA}: \zX \to \left[ 0,1 \right]$.
 
+Rozszerzalne liczby rozmyte (ang. \english{extensional fuzzy numbers}) są uogólnieniem liczb rzeczywistych. Są to zbiory rozmyte, które modelują semantykę taką, jak ,,około 5'', ,,prawie 10'', ,,ponad 20'', czyli odpowiadają rzeczywistym liczbom ostrym z pewną tolerancją \cite{bib:arithmetics-extensional-fuzzy-numbers,bib:mathematics-fuzzy-sets-logic}. Definiowana jest dla nich rozmyta relacja $\ast$-podobieństwa $\nPodobienstwo$.
 
+\begin{Definition}
+	\cite{bib:arithmetics-extensional-fuzzy-numbers} Rozmyta relacja $\ast$-podobieństwa, gdzie $\ast$ jest lewostronnie ciągłą t-normą, spełnia warunki:
+	\begin{align}
+		\nPodobienstwo(\X,\X) = 1
+	\end{align}
+	\begin{align}
+		\nPodobienstwo(\X,\Y) = \nPodobienstwo(\Y,\X)
+	\end{align}
+	\begin{align}
+		\nPodobienstwo(\X,\Y) \ast \nPodobienstwo(\Y,\Z) \le \nPodobienstwo(\X,\Z)
+	\end{align}
+\end{Definition}
+
+Rozszerzalne liczby rozmyte to liczby ostre rozszerzone o relację $\ast$-podobieństwa. Dla dowolnego $\Y \in \zRzeczywista$ liczbę rozmytą można przedstawić jako \cite{bib:arithmetics-extensional-fuzzy-numbers}:
+
+\begin{align}
+	\X_{\nPodobienstwo}(\Y) = \nPodobienstwo(\X, \Y)
+\end{align}
 
 
 % TODO
@@ -1245,12 +1292,9 @@ Wstępna granulacja fuzzy C-means pozwoliła na eliminację szumów, na które w
 \chapter{Spis skrótów i symboli}
 
 \begin{itemize}
-\item[DNA] kwas deoksyrybonukleinowy (ang. \english{deoxyribonucleic acid})
-\item[MVC] model -- widok -- kontroler (ang. \english{model--view--controller}) 
 \item[$N$] liczebność zbioru danych
 \item[$\mu$] stopnień przyleżności do zbioru
-\item[$\mathbb{E}$] zbiór krawędzi grafu
-\item[$\mathcal{L}$] transformata Laplace'a 
+\item[FCM] algorytm fuzzy-c means 
 \end{itemize}
 
 % TODO
