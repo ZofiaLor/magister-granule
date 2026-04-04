@@ -721,7 +721,8 @@ Zbiory klasyczne są pojęciem pierwotnym: obiekt $\X$ (liczba, punkt, dana, itp
 Rozszerzalne liczby rozmyte (ang. \english{extensional fuzzy numbers}) są uogólnieniem liczb rzeczywistych. Są to zbiory rozmyte, które modelują semantykę taką, jak ,,około 5'', ,,prawie 10'', ,,ponad 20'', czyli odpowiadają rzeczywistym liczbom ostrym z pewną tolerancją \cite{bib:arithmetics-extensional-fuzzy-numbers,bib:mathematics-fuzzy-sets-logic}. Definiowana jest dla nich rozmyta relacja $\ast$-podobieństwa $\nPodobienstwo$.
 
 \begin{Definition}
-	\cite{bib:arithmetics-extensional-fuzzy-numbers} Rozmyta relacja $\ast$-podobieństwa, gdzie $\ast$ jest lewostronnie ciągłą t-normą, spełnia warunki:
+\label{def:fuzzy-similarity}
+	\cite{bib:arithmetics-extensional-fuzzy-numbers} Rozmyta relacja $\ast$-podobieństwa $\nPodobienstwo(\X,\Y)$, gdzie $\ast$ jest lewostronnie ciągłą t-normą, spełnia warunki:
 	\begin{align}
 		\nPodobienstwo(\X,\X) = 1
 	\end{align}
@@ -737,6 +738,123 @@ Rozszerzalne liczby rozmyte to liczby ostre rozszerzone o relację $\ast$-podobi
 
 \begin{align}
 	\X_{\nPodobienstwo}(\Y) = \nPodobienstwo(\X, \Y)
+\end{align}
+
+\subsubsection{Kształty liczb rozmytych}
+\label{sec:ksztalty-liczb-rozmytych}
+
+Kształt rozszerzalnej liczby rozmytej określony jest przez relację $\ast$-podobieństwa. Może on być dowolny, o ile spełnia warunki określone w definicji \ref{def:fuzzy-similarity}. W pracy wykorzystywane są trzy kształty, opisane w \cite{bib:fuzzy-numbers-revisited-logic-operations}:
+
+\paragraph{Liczby trójkątne}
+
+Dla liczb trójkątnych relacja $\ast$-podobieństwa $\nPodobienstwo_{t}$ definiowana jest jako:
+
+\begin{align}
+	\nPodobienstwo_{t}(\X,\Y) = max \left\{1 - \frac{|\X-\Y|}{p}, 0 \right\},
+\end{align}
+
+gdzie $p > 0$, a $\ast$ to t-norma Łukasiewicza.
+
+\paragraph{Liczby wykładnicze}
+
+Dla liczb wykładniczych relacja $\ast$-podobieństwa $\nPodobienstwo_{e}$ definiowana jest jako:
+
+\begin{align}
+	\nPodobienstwo_{e}(\X,\Y) = exp \left(- \frac{|\X-\Y|}{p} \right),
+\end{align}
+
+gdzie $p > 1$, a $\ast$ to t-norma iloczynowa.
+
+\paragraph{Liczby gaussowskie}
+
+Dla liczb gaussowskich relacja $\ast$-podobieństwa $\nPodobienstwo_{g}$ definiowana jest jako:
+
+\begin{align}
+	\nPodobienstwo_{g}(\X,\Y) = exp \left(- \frac{(\X-\Y)^{2}}{2p^{2}} \right),
+\end{align}
+
+gdzie $p > 0$, a $\ast$ to t-norma iloczynowa.
+
+\subsubsection{Operacje arytmetyczne}
+
+Operacje arytmetyczne na rozszerzalnych liczbach rozmytych są proste obliczeniowo i nie zwiększają rozmycia. Wynikiem operacji arytmetycznej na rozszerzalnej liczbie lub liczbach rozmytych jest rozszerzalna liczba rozmyta.
+
+Operacje arytmetyczne jednoargumentowe można zapisać w ogólny sposób jako:
+
+\begin{align}
+	\mathbf{op}(\X_{\nPodobienstwo}) = \mathbf{op}(\X)_{\nPodobienstwo},
+\end{align}
+
+na przykład:
+
+\begin{align}
+	(\X_{\nPodobienstwo})^{2} = (\X^{2})_{\nPodobienstwo}.
+\end{align}
+
+Operacje arytmetyczne dwuargumentowe można zapisać jako:
+
+\begin{align}
+	\X_{\nPodobienstwo_{\X}} \; \mathbf{op} \; \Y_{\nPodobienstwo_{\Y}} = (\X \; \mathbf{op} \; \Y)_{cl(\nPodobienstwo_{\X} \cup \nPodobienstwo_{\Y})},
+\end{align}
+
+gdzie $cl(\nPodobienstwo_{\X} \cup \nPodobienstwo_{\Y})$ jest domknięciem relacji $\nPodobienstwo_{\X}$ i $\nPodobienstwo_{\Y}$. Dla zdefiniowanych w podsekcji \ref{sec:ksztalty-liczb-rozmytych} kształtów ($\nPodobienstwo \in \{ \nPodobienstwo_{t}, \nPodobienstwo_{e}, \nPodobienstwo_{g}\}$) przyjąć można, że
+
+\begin{align}
+	cl(\nPodobienstwo(p_{\X}) \cup \nPodobienstwo(p_{\Y})) = max\{p_{\X}, p_{\Y}\}.
+\end{align}
+
+Przykładowo, odległość euklidesową między dwoma punktami, będącymi dwuwymiarowymi trójkątnymi liczbami rozmytymi, zapisać można jako:
+
+\begin{multline}
+	\Odleglosc ((5_{\nPodobienstwo_{t}(2,5)}, -2_{\nPodobienstwo_{t}(0,5)}), (8_{\nPodobienstwo_{t}(1,25)}, 2_{\nPodobienstwo_{t}(4)})) = \\
+	= \sqrt{(5_{\nPodobienstwo_{t}(2,5)} - 8_{\nPodobienstwo_{t}(1,25)})^{2} + (-2_{\nPodobienstwo_{t}(0,5)} - 2_{\nPodobienstwo_{t}(4)})^{2}} = 5_{\nPodobienstwo_{t}(4)}.
+\end{multline}
+
+\subsubsection{Operacje logiczne}
+
+Operacje porównania na rozszerzalnych liczbach rozmytych oparte są o operator równości rozmytej \cite{bib:fuzzy-numbers-revisited-logic-operations}:
+
+\begin{Definition}
+	Operator równości rozmytej $=_{\nPodobienstwo}: \zRozszerzalna \times \zRozszerzalna \to [0,1]$ zdefiniowany jest przy pomocy rozmytej relacji $\ast$-podobieństwa $\nPodobienstwo$:
+	\begin{align}
+		\left(\X_{\nPodobienstwo(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) = \nPodobienstwo_{max\{p_{\X},p_{\Y}\}}(\X, \Y)
+	\end{align}
+\end{Definition}
+
+Przykładowo, dla liczb z relacją trójkątną:
+
+\begin{align}
+	\left(\X_{\nPodobienstwo_{t}(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo_{t}(p_{\Y})}\right) = max \left\{1 - \frac{|\X-\Y|}{max\{p_{\X},p_{\Y}\}}, 0 \right\}
+\end{align}
+
+Operatory nierówności wyznaczane są w następujący sposób:
+
+\begin{align}
+	\left(\X_{\nPodobienstwo(p_{\X})} <_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) = \left\{ \begin{array}{cl}
+	1 -  \left(\X_{\nPodobienstwo(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) & : \  \X \le \Y \\
+	0 & : \ \X > \Y
+	\end{array} \right.
+\end{align}
+
+\begin{align}
+	\left(\X_{\nPodobienstwo(p_{\X})} \le_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) = \left\{ \begin{array}{cl}
+	1 & : \  \X \le \Y \\
+	\left(\X_{\nPodobienstwo(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) & : \ \X > \Y
+	\end{array} \right.
+\end{align}
+
+\begin{align}
+	\left(\X_{\nPodobienstwo(p_{\X})} >_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) = \left\{ \begin{array}{cl}
+	1 -  \left(\X_{\nPodobienstwo(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) & : \  \X \ge \Y \\
+	0 & : \ \X < \Y
+	\end{array} \right.
+\end{align}
+
+\begin{align}
+	\left(\X_{\nPodobienstwo(p_{\X})} \ge_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) = \left\{ \begin{array}{cl}
+	1 & : \  \X \ge \Y \\
+	\left(\X_{\nPodobienstwo(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) & : \ \X < \Y
+	\end{array} \right.
 \end{align}
 
 
