@@ -37,6 +37,11 @@ class FuzzyNumber:
             return 0
         return 1 - self.equal(other, relation_type)
 
+    def more(self, other, relation_type='t'):
+        if self.x < other.x:
+            return 0
+        return 1 - self.equal(other, relation_type)
+
     def add(self, other):
         return FuzzyNumber(self.x + other.x, max(self.p, other.p))
 
@@ -64,6 +69,24 @@ class Granule:
         return fdist
 
 
+def _single_linkage(left, right, ksi, relation_type):
+    if left.less(right, relation_type) > ksi:
+        return left
+    else:
+        return right
+
+
+def _complete_linkage(left, right, ksi, relation_type):
+    if left.x == np.inf:
+        return right
+    if right.x == np.inf:
+        return left
+    if left.more(right, relation_type) > ksi:
+        return left
+    else:
+        return right
+
+
 class HierarchicalClustering:
     def __init__(self, n_clusters=2):
         self.n_clusters = n_clusters
@@ -84,10 +107,19 @@ class HierarchicalClustering:
         #         print(repr(self.distances[i, j]), end="\t")
         #     print()
 
-    def fuzzy_fit(self, granules, ksi, relation_type='t', generateLinkageMatrix=False):
+    def fuzzy_fit(self, granules, ksi, relation_type='t', linkage='single', generateLinkageMatrix=False):
         self.fuzzy_distance(granules)
         n_samples = np.size(granules, 0)
         self.labels = np.arange(0, n_samples, step=1)
+        formula = None
+        if linkage == 'single':
+            formula = _single_linkage
+        elif linkage == 'complete':
+            formula = _complete_linkage
+        else:
+            print("Invalid linkage")
+            return
+
         if generateLinkageMatrix:
             self.n_clusters = 1  # scipy dendrogram requires a single result cluster
             self.linkage_matrix = []  #
@@ -106,18 +138,15 @@ class HierarchicalClustering:
                         col = j
             if generateLinkageMatrix:
                 new_size = self.linkage_clusters[row][1] + self.linkage_clusters[col][1]  #
-                self.linkage_matrix.append([self.linkage_clusters[row][0], self.linkage_clusters[col][0], min_num.x, new_size])  #
+                self.linkage_matrix.append(
+                    [self.linkage_clusters[row][0], self.linkage_clusters[col][0], min_num.x, new_size])  #
                 self.linkage_clusters[row] = [new_cluster_label, new_size]  #
                 new_cluster_label += 1  #
 
             # Iterate over one axis, change the row values to the minimum
             for i in range(n_samples):
                 if i != row:
-                    min_distance = FuzzyNumber(0, 0)
-                    if self.distances[row, i].less(self.distances[i, col], relation_type) > ksi:
-                        min_distance = self.distances[row, i]
-                    else:
-                        min_distance = self.distances[i, col]
+                    min_distance = formula(self.distances[row, i], self.distances[i, col], ksi, relation_type)
                     self.distances[i, row] = min_distance
                     self.distances[row, i] = min_distance
                 self.distances[i, col] = FuzzyNumber(np.inf, 0)
@@ -162,7 +191,8 @@ class HierarchicalClustering:
                 row, col = col, row
             if generateLinkageMatrix:
                 new_size = self.linkage_clusters[row][1] + self.linkage_clusters[col][1]  #
-                self.linkage_matrix.append([self.linkage_clusters[row][0], self.linkage_clusters[col][0], min_distance, new_size])  #
+                self.linkage_matrix.append(
+                    [self.linkage_clusters[row][0], self.linkage_clusters[col][0], min_distance, new_size])  #
                 self.linkage_clusters[row] = [new_cluster_label, new_size]  #
                 new_cluster_label += 1  #
 

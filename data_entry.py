@@ -6,7 +6,6 @@ from fuzzy_cmeans import FuzzyCMeans
 import time
 import pandas
 
-
 # Constants
 seed = 42
 n_granules = 50
@@ -93,7 +92,8 @@ class DataEntry(object):
                 d]] + 1
 
         for i in range(self.clusters_number - 1):
-            (row, col) = np.unravel_index(np.argmax(l_matrix[i:, i:]), (self.clusters_number - i, self.clusters_number - i))
+            (row, col) = np.unravel_index(np.argmax(l_matrix[i:, i:]),
+                                          (self.clusters_number - i, self.clusters_number - i))
             row = row + i
             col = col + i
             l_matrix[[i, row], :] = l_matrix[[row, i], :]
@@ -104,7 +104,7 @@ class DataEntry(object):
             sum_diagonal = sum_diagonal + l_matrix[i, i]
         return sum_diagonal / len(granule_member_labels)
 
-    def measure_accuracy(self):
+    def measure_accuracy(self, linkage='single'):
         result_list = []
         ac = sklearn.cluster.AgglomerativeClustering(n_clusters=self.clusters_number, linkage='single')
         ac.fit(self.data)
@@ -121,9 +121,10 @@ class DataEntry(object):
                 for k100 in range(5, 100, 5):
                     k = k100 / 100
                     print("n " + str(n) + " type " + relation_type + " ksi " + str(k))
-                    hc.fuzzy_fit(granules, k, relation_type)
+                    hc.fuzzy_fit(granules, k, relation_type, linkage=linkage)
                     acc = self.calculate_accuracy(fcm, hc, ac.labels_)
-                    results = {"data size": self.length, "granules number": n, "relation type": relation_type, "ksi": k, "accuracy": acc}
+                    results = {"data size": self.length, "granules number": n, "relation type": relation_type, "ksi": k,
+                               "accuracy": acc}
                     result_list.append(results)
         return pandas.DataFrame(result_list)
 
