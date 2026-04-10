@@ -537,7 +537,7 @@ escapeinside={@*}{*@},%
 \chapter{Granularne algortymy grupowania hierarchicznego}  % Analiza tematu
 % 
 
-\ksremark{zagajenie, 3-4 wiersze}
+ 
 
 Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danych. Umożliwiają znalezienie podobieństw między rozpatrywanymi obiektami i sklasyfikowanie ich. Połączenie tych dwóch podejść może wydobyć zalety każdego z nich. 
 
@@ -586,30 +586,30 @@ Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danyc
 \label{sec:grupowanie}
 \ksremark{Co to jest grupowanie danych?}
 
-Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne ze względu na określoną metrykę \cite{bib:fcm-for-optimizing,bib:clustering-alg-survey}. Algorytmy grupowania są algorytmami nienadzorowanymi -- posiadają jedynie informacje o podobieństwie między poszczególnymi elementami.
+Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne ze względu na określoną metrykę \cite{bib:fcm-for-optimizing,bib:clustering-alg-survey} \ksremark{, a równocześnie niepodobne do obiektów z innych grup}. Algorytmy grupowania są algorytmami nienadzorowanymi -- mają jedynie informacje o podobieństwie między poszczególnymi elementami.
 
 \ksremark{Jakie są rodziny algorytmów grupowania danych?}
 
 Do głównych rodzin algorytmów grupowania zaliczane są \cite{bib:clustering-alg-survey}:
 \begin{itemize}
 	\item Algorytmy hierarchiczne: grupowanie polega na utworzeniu sekwencji zagnieżdżonych podziałów danych \cite{bib:hierarchical-clustering},
-	\item Algorytmy oparte o minimalizację funkcji kryterialnej: związane z iteracyjnym wyznaczaniem środków klastrów do momentu spełnienia kryterium zatrzymania (na przykład: k-means, fuzzy c-means),
-	\item Algorytmy gęstościowe: obszary o dużej gęstości danych tworzą klastry, pozostałe uznawane są za szumy (na przykład: DBSCAN \cite{bib:dbscan-algorithm}),
-	\item Algorytmy grafowe: dane uznawane są za wierzchołki grafów, a podobieństwa między nimi -- za krawędzie,
-	\item Inne algorytmy.
+	\item Algorytmy oparte o minimalizację funkcji kryterialnej: związane z iteracyjnym wyznaczaniem środków klastrów do momentu spełnienia kryterium zatrzymania (na przykład: k-means \ksremark{$k$-means, fuzzy $c$-means}, fuzzy c-means),
+	\item Algorytmy gęstościowe: obszary o dużej gęstości danych tworzą klastry, pozostałe uznawane są za szumy (na przykład: DBSCAN \cite{bib:dbscan-algorithm}), \ksremark{jeszcze jakiś przykład}
+	\item Algorytmy grafowe: dane uznawane są za wierzchołki grafów, a podobieństwa między nimi -- za krawędzie, \ksremark{jakiś przykład}
+	\item Inne algorytmy. \ksremark{jakiś przykład}
 \end{itemize}
 
 \section{Algorytmy grupowania hierarchicznego}
 
-Ogólna idea działania algorytmu.
-Typy algorytmu (single linkage, complete linkage...)
+%Ogólna idea działania algorytmu.
+%Typy algorytmu (single linkage, complete linkage...)
 
 Grupowanie hierarchiczne polega na utworzeniu sekwencji zagnieżdżonych podziałów danych \cite{bib:hierarchical-clustering}.
 
 Algorytm aglomeracyjnego grupowania hierarchicznego iteracyjnie scala mniejsze klastry danych w większe, zaczynając od klastrów jednoelementowych (każdy punkt danych jest klastrem), kończąc na jednym wspólnym klastrze. 
-Kolejne dwa klastry, które mają zostać scalone w danej iteracji, wybierane są na podstawie metryki odległości między nimi oraz łączności (ang. \english{linkage}).
+Kolejne dwa klastry, które mają zostać scalone w danej iteracji, wybierane są na podstawie metryki odległości między nimi oraz łączności (ang. \english{linkage}). \ksremark{przykład algorytmu}
 
-Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych.
+Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych. \ksremark{przykład algorytmu}
 
 Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizować jako dendrogram (rys. \ref{fig:dendrogram-iris}). 
 
@@ -622,15 +622,12 @@ Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizowa
 
 Często wybierana euklidesowa metryka odległości \cite{bib:hierarchical-overview} zdefiniowana jest jako
 \begin{align}
-d(x_{i}, x_{j}) = \sqrt{\sum_{k=0}^{n}(x_{i,k} - x_{j,k})^{2}},
-\label{eq:odleglosc:euklidesowa}
+	\Odleglosc \left(\wX_{i}, \wX_{j}\right) = \sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\X_{i\Atrybut} - \X_{j\Atrybut})^{2}},
+	\label{eq:odleglosc:euklidesowa}
 \end{align}
-gdzie $n$ to liczba atrybutów punktu danych $x$, $x_{i,k}$ oznacza $k$-ty atrybut $i$-tego punktu.
-\ksremark{Dołączyłem plik \texttt{oznaczenia.tex}. Są w nim makra, które dla jednego elementu generują kilka makr, np. jeżeli $\Przyklad$ to jakiś przykładowy skalar, to $\wPrzyklad = [\Przyklad_1, \Przyklad_2, \ldots, \Przyklad_\nPrzyklad]$ to wektor, $\zPrzyklad = \{\Przyklad_1, \Przyklad_2, \ldots, \Przyklad_\nPrzyklad\}$ to zbiór, a $\mPrzyklad$ to macierz,  $\nPrzyklad$ to liczba elementów wektora, liczba elementów zbioru $|\zPrzyklad| = \nPrzyklad$ itd. Nowy element i całą rodzinę makr dla niego tworzy się poprzez \texttt{newItem}. Co nie miara przykładów jest w pliku \texttt{oznaczenia.tex}. Taki sposób pisania jest trochę uciążliwy, ale zapobiegniemy chaosowi oznaczeń. Przy takich oznaczeniach wzór \eqref{eq:odleglosc:euklidesowa} wygląda tak:}
-\begin{align}
-\Odleglosc \left(\wX_{i}, \wX_{j}\right) = \sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\X_{i\Atrybut} - \X_{j\Atrybut})^{2}}.
-\end{align}
-
+gdzie $\X$ to liczba atrybutów punktu danych $\wX$, 
+a $\wX_{i\Atrybut}$ oznacza $\Atrybut$-ty atrybut $i$-tego punktu.
+%
 Metryka ta jest uszczegółowieniem metryki Minkowskiego
 \begin{align}
 \Odleglosc \left(\wX_{i}, \wX_{j}\right) = \left(\sum_{\Atrybut=0}^{\nAtrybut}|\X_{i\Atrybut} - \X_{j\Atrybut}|^{p}\right)^{1/p},
@@ -639,6 +636,8 @@ dla $p=2$. Inną popularną metryką jest odległość Manhattan, również nale
 
 Łączność określa, jak na podstawie odległości pomiędzy poszczególnymi punktami należącymi do klastrów wyznaczyć odległość pomiędzy tymi klastrami.
 Do łączności zaimplementowanych w popularnych bibliotekach należą \english{single linkage} (najbliższe sąsiedztwo), \english{complete linkage} (najdalsze sąsiedztwo), \english{average linkage} (średnie sąsiedztwo) oraz metoda Warda (minimalna wariancja) \cite{bib:ward-linkage}.
+
+\ksremark{dotąd}
 
 \subsection{Single Linkage}
 
@@ -649,7 +648,7 @@ Typy implementacji (naiwna, SLINK...)
 W algorytmie \english{single linkage} \cite{bib:hierarchical-clustering} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
 Oznacza to, że w momencie złączenia klastrów $A_{1}$ i $A_{2}$ w jeden klaster $A$, odległość tego klastra do innego klastra $B$ zdefiniowana jest jako:
 \begin{align}
-\Odleglosc \left(A, B\right) = min(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
+\Odleglosc \left(A, B\right) = \min(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
 \end{align}
 
 Przykład takiego przypisania ilustruje rys. \ref{fig:single-linkage-example}.
