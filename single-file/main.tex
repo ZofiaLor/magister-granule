@@ -120,6 +120,8 @@
 \usepackage[utf8]{inputenc}                                      
 \usepackage[T1]{fontenc}  
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
+
+
 \usepackage[british,polish]{babel} 
 \usepackage{indentfirst}
 \usepackage{xurl}
@@ -373,7 +375,17 @@ escapeinside={@*}{*@},%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newcommand{\dataset}[1]{`#1'}
+\newcommand{\iris}{\dataset{iris}}
 
+\newcommand{\procedura}[1]{\textsc{#1}}
+\newcommand{\SingleLinkage}{\procedura{SingleLinkage}}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+
+\floatname{algorithm}{Algorytm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                             %
@@ -534,7 +546,7 @@ escapeinside={@*}{*@},%
 
 
 % TODO
-\chapter{Granularne algortymy grupowania hierarchicznego}  % Analiza tematu
+\chapter{Granularne algorytmy grupowania hierarchicznego}  % Analiza tematu
 % 
 
  
@@ -584,11 +596,12 @@ Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danyc
 
 \section{Grupowanie danych}
 \label{sec:grupowanie}
-\ksremark{Co to jest grupowanie danych?}
+ 
 
-Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne ze względu na określoną metrykę \cite{bib:fcm-for-optimizing,bib:clustering-alg-survey} \ksremark{, a równocześnie niepodobne do obiektów z innych grup}. Algorytmy grupowania są algorytmami nienadzorowanymi -- mają jedynie informacje o podobieństwie między poszczególnymi elementami.
+Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne %ze względu na określoną metrykę
+\cite{bib:fcm-for-optimizing,bib:clustering-alg-survey} \ksremark{, a równocześnie niepodobne do obiektów z innych grup}. Algorytmy grupowania są algorytmami nienadzorowanymi -- mają jedynie informacje o podobieństwie między poszczególnymi elementami.
 
-\ksremark{Jakie są rodziny algorytmów grupowania danych?}
+ 
 
 Do głównych rodzin algorytmów grupowania zaliczane są \cite{bib:clustering-alg-survey}:
 \begin{itemize}
@@ -611,30 +624,58 @@ Kolejne dwa klastry, które mają zostać scalone w danej iteracji, wybierane s�
 
 Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych. \ksremark{przykład algorytmu}
 
-Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizować jako dendrogram (rys. \ref{fig:dendrogram-iris}). 
+Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizować jako dendrogram (rys. \ref{fig:dendrogram-iris}). \ksremark{Trzeba napisać trochę szerzej o dendrogramie. Co oznacza wysokość łączenia itd. itp.}
+
+
+\ksremark{No i tutaj dajemy pseudokod – coś w styku alg. \ref{alg:cascade_inference}.}
+
+\begin{algorithm}
+	\caption{tytuł}
+	\label{alg:cascade_inference}
+	\begin{algorithmic}[1]
+		\Require $a$: parametr procedury
+		\Procedure{nazwa}{$a$}
+		\Comment{komentarz}
+		\For{$i = 1$ to $\infty$} \label{alg:etykieta} \Comment{komentarz}
+		\State instrukcja
+		\If{warunek} 
+		\State instrukcja
+		\EndIf
+		\While{warunek}
+		\State \Call{funkcja}{parametr}  \Comment{wywołanie funkcji / procedury} 
+		\EndWhile 
+		\EndFor
+		\State \Return wynik
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./dendrogram_iris.pdf}
-\caption{Dendrogram otrzymany na podstawie grupowania hierarchicznego o łączności \english{single linkage} przykładowego zbioru danych ,,\english{iris}''.}
+\caption{Dendrogram otrzymany na podstawie grupowania hierarchicznego o łączności \english{single linkage} przykładowego zbioru danych ,,\english{iris}'' \ksremark{\iris}.}
 \label{fig:dendrogram-iris}
 \end{figure}
 
 Często wybierana euklidesowa metryka odległości \cite{bib:hierarchical-overview} zdefiniowana jest jako
 \begin{align}
-	\Odleglosc \left(\wX_{i}, \wX_{j}\right) = \sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\X_{i\Atrybut} - \X_{j\Atrybut})^{2}},
+	\Odleglosc_e \left(\wX_{i}, \wX_{j}\right) = \sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\X_{i\Atrybut} - \X_{j\Atrybut})^{2}},
 	\label{eq:odleglosc:euklidesowa}
 \end{align}
-gdzie $\X$ to liczba atrybutów punktu danych $\wX$, 
-a $\wX_{i\Atrybut}$ oznacza $\Atrybut$-ty atrybut $i$-tego punktu.
+gdzie $\nAtrybut$ to liczba atrybutów punktu danych $\wX$, 
+a $\X_{i\Atrybut}$ oznacza $\Atrybut$-ty atrybut $i$-tego punktu.
 %
 Metryka ta jest uszczegółowieniem metryki Minkowskiego
 \begin{align}
-\Odleglosc \left(\wX_{i}, \wX_{j}\right) = \left(\sum_{\Atrybut=0}^{\nAtrybut}|\X_{i\Atrybut} - \X_{j\Atrybut}|^{p}\right)^{1/p},
+\Odleglosc_m \left(\wX_{i}, \wX_{j}\right) = \left(\sum_{\Atrybut=0}^{\nAtrybut}|\X_{i\Atrybut} - \X_{j\Atrybut}|^{p}\right)^{1/p},
 \end{align}
 dla $p=2$. Inną popularną metryką jest odległość Manhattan, również należąca do rodziny metryk Minkowskiego, dla $p=1$.
 
 Łączność określa, jak na podstawie odległości pomiędzy poszczególnymi punktami należącymi do klastrów wyznaczyć odległość pomiędzy tymi klastrami.
+
+
+
+
 Do łączności zaimplementowanych w popularnych bibliotekach należą \english{single linkage} (najbliższe sąsiedztwo), \english{complete linkage} (najdalsze sąsiedztwo), \english{average linkage} (średnie sąsiedztwo) oraz metoda Warda (minimalna wariancja) \cite{bib:ward-linkage}.
 
 \ksremark{dotąd}
@@ -645,7 +686,7 @@ Na czym polega
 Wizualizacja, dendrogram
 Typy implementacji (naiwna, SLINK...)
 
-W algorytmie \english{single linkage} \cite{bib:hierarchical-clustering} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
+W algorytmie \english{single linkage} \ksremark{Proponowałbym użycie makr do formatowania nazw algortymów, np. \SingleLinkage.} \cite{bib:hierarchical-clustering} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
 Oznacza to, że w momencie złączenia klastrów $A_{1}$ i $A_{2}$ w jeden klaster $A$, odległość tego klastra do innego klastra $B$ zdefiniowana jest jako:
 \begin{align}
 \Odleglosc \left(A, B\right) = \min(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
@@ -684,20 +725,20 @@ Dla \english{single linkage} wykorzystać można szybsze, dedykowane algorytmy, 
 \subsection{Complete Linkage}
 
 Algorytm \english{complete linkage} jest odwrotnością \english{single linkage}: odległość między klastrami jest równa maksymalnej odległości między dwoma punktami należącymi do tych klastrów. W momencie złączenia dwóch klastrów w jeden, jego odległość od pozostałych klastrów określa się więc jako:
-
 \begin{align}
-\Odleglosc \left(A, B\right) = max(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
+\Odleglosc \left(A, B\right) = \max(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
 \end{align}
 
 Algorytm dobrze działa dla kulistych, gęstych klastrów, ale, w porównaniu z \english{single linkage}, zwraca gorsze wyniki dla danych o innych kształtach \cite{bib:hierarchical-clustering, bib:sklearn-linkage-comparison}
 
-\section{Algorytm fuzzy c-means}
+\section{Algorytm rozmytych $c$ średnich}
 \label{sec:fcm}
 
-Algorytm fuzzy c-means (FCM) należy do rodziny algorytmów opartych o minimalizację funkcji kryterialnej. Algorytm wyznacza klastry, dla których przynależność każdego punktu danych jest liczbą z przedziału $\left[ 0,1 \right]$. Wynikiem klasteryzacji FCM jest macierz środków klastrów $\mCentre$ oraz macierz przynależności $\mClusterMembership$. Złożoność czasowa ze względu na liczbę danych tego algorytmu wynosi $O(n)$ \cite{bib:fcm-kmeans-comparison}.
+Algorytm rozmytych $c$ średnich (ang. \english{fuzzy $c$-means}, FCM) należy do rodziny algorytmów opartych o minimalizację funkcji kryterialnej. Algorytm wyznacza klastry, dla których przynależność każdego punktu danych jest liczbą z przedziału $\left[ 0,1 \right]$. Wynikiem klasteryzacji FCM jest macierz środków klastrów $\mCentre$ oraz macierz przynależności $\mClusterMembership$. Złożoność czasowa ze względu na liczbę danych tego algorytmu wynosi $O(n)$ \cite{bib:fcm-kmeans-comparison}.
+
+\ksremark{Tu też damy pseudokod.}
 
 Funkcja kryterialna algorytmu fuzzy c-means ma postać:
-
 \begin{align}
 	J(\mCentre, \mClusterMembership) = \sum_{\Iteracja=1}^{N} \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster}^{m} ||\wX_{\Iteracja} - \wCentre_{\klaster}||^{m},
 \end{align}
@@ -709,15 +750,11 @@ W każdej iteracji algorytmu obliczane są najpierw nowe współrzędne środkó
 \begin{align}
 	\wCentre_{\klaster} = \frac{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m} \wX_{\Iteracja}}{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m}},
 \end{align}
-
 a następnie wartości elementów macierzy przynależności:
-
 \begin{align}
 	\ClusterMembership_{\Iteracja\klaster} = \frac{1}{\sum_{j=1}^{\nKlaster}\left( \frac{||\wX_{\Iteracja} - \wCentre_{\klaster}||}{||\wX_{\Iteracja} - \wCentre_{j}||} \right)^{\frac{2}{m - 1}}}.
 \end{align}
-
 Kroki powtarzane są do momentu spełnienia warunku zatrzymania, na przykład:
-
 \begin{align}
 	||\mClusterMembership^{(t)} - \mClusterMembership^{(t-1)}|| < \epsilon,
 \end{align}
@@ -726,16 +763,18 @@ gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warun
 
 \section{Obliczenia ziarniste}
 
+\ksremark{zagajenie}
+
 \subsection{Ziarna informacyjne}
 \ksremark{Co to jest?}
 \ksremark{Jak są reprezentowane?}
 \ksremark{Jak się tworzy ziarna obliczeniowe?}
 
 Jednym z podstawowych pojęć związanych z obliczeniami ziarnistymi są ziarna informacyjne. 
-Są one encjami o pewnej semantyce, kolekcjami obiektów o określonym w pewien sposób podobieństwie \cite{bib:general-framework-information-granules,bib:designing-higher-order-information-granules}.
-
+Są one encjami o pewnej semantyce, kolekcjami obiektów o określonym w~pewien sposób podobieństwie \cite{bib:general-framework-information-granules,bib:designing-higher-order-information-granules}.
+%
 W zależności od znaczenia i zastosowania ziaren, mogą one być reprezentowane na różne sposoby: jako zbiory klasyczne, przedziały liczb, zbiory rozmyte, zbiory cieniowane, zbiory przybliżone, czy funkcje prawdopodobieństwa \cite{bib:general-framework-information-granules}.
-
+%
 Ziarna informacyjne utworzyć można poprzez grupowanie danych. W przypadku ziaren reprezentowanych przez zbiory rozmyte, typowym algorytmem grupowania jest fuzzy c-means \ref{sec:fcm}.
 % TODO link do rozdziału o FCM
 
@@ -744,7 +783,7 @@ Ziarna informacyjne utworzyć można poprzez grupowanie danych. W przypadku ziar
 \ksremark{Kształty (trójkątne, wykładnicze, gaussowskie)}
 \ksremark{Relacje między liczbami (arytmetyka, porównanie)}
 
-Zbiory klasyczne są pojęciem pierwotnym: obiekt $\X$ (liczba, punkt, dana, itp.) należy do zbioru $\zA$ ($\X \in \zA$) lub do niego nie należy ($\X \notin \zA$). W przypadku zbiorów rozmytych, obiekt $\X$ należy do zbioru $\zA$ z pewnym stopniem przynależności z przedziału $\left[ 0,1 \right]$, gdzie 0 oznacza całkowity brak przynależności, a 1 -- całkowitą przynależność \cite{bib:theory-applications-ordered-fuzzy-numbers}. Zbiór rozmyty opisać można poprzez funkcję przynależności $\ClusterMembership_{\zA}: \zX \to \left[ 0,1 \right]$.
+Zbiory klasyczne są pojęciem pierwotnym: obiekt $\X$ (liczba, punkt, dana itp.) należy do zbioru $\zA$ ($\X \in \zA$) lub do niego nie należy ($\X \notin \zA$). W przypadku zbiorów rozmytych, obiekt $\X$ należy do zbioru $\zA$ z pewnym stopniem przynależności z przedziału $\left[ 0,1 \right]$, gdzie 0 oznacza całkowity brak przynależności, a 1 -- całkowitą przynależność \cite{bib:theory-applications-ordered-fuzzy-numbers}. Zbiór rozmyty \ksremark{$\zA$} opisać można poprzez funkcję przynależności $\ClusterMembership_{\zA}: \zX \to \left[ 0,1 \right]$.
 
 Rozszerzalne liczby rozmyte (ang. \english{extensional fuzzy numbers}) są uogólnieniem liczb rzeczywistych. Są to zbiory rozmyte, które modelują semantykę taką, jak ,,około 5'', ,,prawie 10'', ,,ponad 20'', czyli odpowiadają rzeczywistym liczbom ostrym z pewną tolerancją \cite{bib:arithmetics-extensional-fuzzy-numbers,bib:mathematics-fuzzy-sets-logic}. Definiowana jest dla nich rozmyta relacja $\ast$-podobieństwa $\nPodobienstwo$.
 
@@ -752,18 +791,13 @@ Rozszerzalne liczby rozmyte (ang. \english{extensional fuzzy numbers}) są uogó
 \label{def:fuzzy-similarity}
 	\cite{bib:arithmetics-extensional-fuzzy-numbers} Rozmyta relacja $\ast$-podobieństwa $\nPodobienstwo(\X,\Y)$, gdzie $\ast$ jest lewostronnie ciągłą t-normą, spełnia warunki:
 	\begin{align}
-		\nPodobienstwo(\X,\X) = 1
-	\end{align}
-	\begin{align}
-		\nPodobienstwo(\X,\Y) = \nPodobienstwo(\Y,\X)
-	\end{align}
-	\begin{align}
-		\nPodobienstwo(\X,\Y) \ast \nPodobienstwo(\Y,\Z) \le \nPodobienstwo(\X,\Z)
+		\nPodobienstwo(\X,\X) & = 1 \\
+		\nPodobienstwo(\X,\Y) & = \nPodobienstwo(\Y,\X)\\
+		\nPodobienstwo(\X,\Y) & \ast \nPodobienstwo(\Y,\Z) \leqslant \nPodobienstwo(\X,\Z)
 	\end{align}
 \end{Definition}
 
 Rozszerzalne liczby rozmyte to liczby ostre rozszerzone o relację $\ast$-podobieństwa. Dla dowolnego $\Y \in \zRzeczywista$ liczbę rozmytą można przedstawić jako \cite{bib:arithmetics-extensional-fuzzy-numbers}:
-
 \begin{align}
 	\X_{\nPodobienstwo}(\Y) = \nPodobienstwo(\X, \Y)
 \end{align}
@@ -776,31 +810,25 @@ Kształt rozszerzalnej liczby rozmytej określony jest przez relację $\ast$-pod
 \paragraph{Liczby trójkątne}
 
 Dla liczb trójkątnych relacja $\ast$-podobieństwa $\nPodobienstwo_{t}$ definiowana jest jako:
-
 \begin{align}
-	\nPodobienstwo_{t}(\X,\Y) = max \left\{1 - \frac{|\X-\Y|}{p}, 0 \right\},
+	\nPodobienstwo_{t}(\X,\Y) = \max \left\{1 - \frac{|\X-\Y|}{p}, 0 \right\},
 \end{align}
-
 gdzie $p > 0$, a $\ast$ to t-norma Łukasiewicza.
 
 \paragraph{Liczby wykładnicze}
 
 Dla liczb wykładniczych relacja $\ast$-podobieństwa $\nPodobienstwo_{e}$ definiowana jest jako:
-
 \begin{align}
-	\nPodobienstwo_{e}(\X,\Y) = exp \left(- \frac{|\X-\Y|}{p} \right),
+	\nPodobienstwo_{e}(\X,\Y) = \exp \left(- \frac{|\X-\Y|}{p} \right),
 \end{align}
-
 gdzie $p > 1$, a $\ast$ to t-norma iloczynowa.
 
 \paragraph{Liczby gaussowskie}
 
 Dla liczb gaussowskich relacja $\ast$-podobieństwa $\nPodobienstwo_{g}$ definiowana jest jako:
-
 \begin{align}
-	\nPodobienstwo_{g}(\X,\Y) = exp \left(- \frac{(\X-\Y)^{2}}{2p^{2}} \right),
+	\nPodobienstwo_{g}(\X,\Y) = \exp \left(- \frac{(\X-\Y)^{2}}{2p^{2}} \right),
 \end{align}
-
 gdzie $p > 0$, a $\ast$ to t-norma iloczynowa.
 
 \subsubsection{Operacje arytmetyczne}
@@ -808,40 +836,32 @@ gdzie $p > 0$, a $\ast$ to t-norma iloczynowa.
 Operacje arytmetyczne na rozszerzalnych liczbach rozmytych są proste obliczeniowo i nie zwiększają rozmycia. Wynikiem operacji arytmetycznej na rozszerzalnej liczbie lub liczbach rozmytych jest rozszerzalna liczba rozmyta.
 
 Operacje arytmetyczne jednoargumentowe można zapisać w ogólny sposób jako:
-
 \begin{align}
 	\mathbf{op}(\X_{\nPodobienstwo}) = \mathbf{op}(\X)_{\nPodobienstwo},
 \end{align}
-
 na przykład:
-
 \begin{align}
 	(\X_{\nPodobienstwo})^{2} = (\X^{2})_{\nPodobienstwo}.
 \end{align}
 
 Operacje arytmetyczne dwuargumentowe można zapisać jako:
-
 \begin{align}
 	\X_{\nPodobienstwo_{\X}} \; \mathbf{op} \; \Y_{\nPodobienstwo_{\Y}} = (\X \; \mathbf{op} \; \Y)_{cl(\nPodobienstwo_{\X} \cup \nPodobienstwo_{\Y})},
 \end{align}
-
 gdzie $cl(\nPodobienstwo_{\X} \cup \nPodobienstwo_{\Y})$ jest domknięciem relacji $\nPodobienstwo_{\X}$ i $\nPodobienstwo_{\Y}$. Dla zdefiniowanych w podsekcji \ref{sec:ksztalty-liczb-rozmytych} kształtów ($\nPodobienstwo \in \{ \nPodobienstwo_{t}, \nPodobienstwo_{e}, \nPodobienstwo_{g}\}$) przyjąć można, że
-
 \begin{align}
 	cl(\nPodobienstwo(p_{\X}) \cup \nPodobienstwo(p_{\Y})) = max\{p_{\X}, p_{\Y}\}.
 \end{align}
 
 Przykładowo, odległość euklidesową między dwoma punktami, będącymi dwuwymiarowymi trójkątnymi liczbami rozmytymi, zapisać można jako:
-
 \begin{multline}
 	\Odleglosc ((5_{\nPodobienstwo_{t}(2,5)}, -2_{\nPodobienstwo_{t}(0,5)}), (8_{\nPodobienstwo_{t}(1,25)}, 2_{\nPodobienstwo_{t}(4)})) = \\
 	= \sqrt{(5_{\nPodobienstwo_{t}(2,5)} - 8_{\nPodobienstwo_{t}(1,25)})^{2} + (-2_{\nPodobienstwo_{t}(0,5)} - 2_{\nPodobienstwo_{t}(4)})^{2}} = 5_{\nPodobienstwo_{t}(4)}.
 \end{multline}
 
 \subsubsection{Operacje logiczne}
-
+\ksremark{Tu i dalej we wzorach trzeba użyć $\max$ zamiast $max$.}
 Operacje porównania na rozszerzalnych liczbach rozmytych oparte są o operator równości rozmytej \cite{bib:fuzzy-numbers-revisited-logic-operations}:
-
 \begin{Definition}
 	Operator równości rozmytej $=_{\nPodobienstwo}: \zRozszerzalna \times \zRozszerzalna \to [0,1]$ zdefiniowany jest przy pomocy rozmytej relacji $\ast$-podobieństwa $\nPodobienstwo$:
 	\begin{align}
@@ -850,7 +870,6 @@ Operacje porównania na rozszerzalnych liczbach rozmytych oparte są o operator 
 \end{Definition}
 
 Przykładowo, dla liczb z relacją trójkątną:
-
 \begin{align}
 	\left(\X_{\nPodobienstwo_{t}(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo_{t}(p_{\Y})}\right) = max \left\{1 - \frac{|\X-\Y|}{max\{p_{\X},p_{\Y}\}}, 0 \right\}
 \end{align}
