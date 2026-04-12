@@ -627,9 +627,9 @@ Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \eng
 Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizować jako dendrogram (rys. \ref{fig:dendrogram-iris}). \ksremark{Trzeba napisać trochę szerzej o dendrogramie. Co oznacza wysokość łączenia itd. itp.}
 
 
-\ksremark{No i tutaj dajemy pseudokod – coś w styku alg. \ref{alg:cascade_inference}.}
+\ksremark{No i tutaj dajemy pseudokod – coś w stylu alg. \ref{alg:cascade_inference}.}
 
-\begin{algorithm}
+\begin{algorithm}[t]
 	\caption{tytuł}
 	\label{alg:cascade_inference}
 	\begin{algorithmic}[1]
@@ -653,9 +653,10 @@ Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizowa
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./dendrogram_iris.pdf}
-\caption{Dendrogram otrzymany na podstawie grupowania hierarchicznego o łączności \english{single linkage} przykładowego zbioru danych ,,\english{iris}'' \ksremark{\iris}.}
+\caption{Dendrogram otrzymany na podstawie grupowania hierarchicznego o łączności \english{single linkage} przykładowego zbioru danych ,,\english{iris}''.}
 \label{fig:dendrogram-iris}
 \end{figure}
+\ksremark{W opisie rys. \ref{fig:dendrogram-iris} napiszemy \iris.}
 
 Często wybierana euklidesowa metryka odległości \cite{bib:hierarchical-overview} zdefiniowana jest jako
 \begin{align}
@@ -691,8 +692,9 @@ Oznacza to, że w momencie złączenia klastrów $A_{1}$ i $A_{2}$ w jeden klast
 \begin{align}
 \Odleglosc \left(A, B\right) = \min(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
 \end{align}
-
+%
 Przykład takiego przypisania ilustruje rys. \ref{fig:single-linkage-example}.
+\ksremark{Trzeba tutaj opisać, co się na tym rysunku dzieje.}
 
 %rysunek?
 \begin{figure}
@@ -728,8 +730,10 @@ Algorytm \english{complete linkage} jest odwrotnością \english{single linkage}
 \begin{align}
 \Odleglosc \left(A, B\right) = \max(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
 \end{align}
+%
+Algorytm dobrze działa dla kulistych, gęstych klastrów, ale w porównaniu z \english{single linkage} zwraca gorsze wyniki dla danych o innych kształtach \cite{bib:hierarchical-clustering, bib:sklearn-linkage-comparison}.
 
-Algorytm dobrze działa dla kulistych, gęstych klastrów, ale, w porównaniu z \english{single linkage}, zwraca gorsze wyniki dla danych o innych kształtach \cite{bib:hierarchical-clustering, bib:sklearn-linkage-comparison}
+\ksremark{Trzeba napisać jeszcze, jaka jest różnica w wynikach \SingleLinkage\ i complete.}
 
 \section{Algorytm rozmytych $c$ średnich}
 \label{sec:fcm}
@@ -758,7 +762,7 @@ Kroki powtarzane są do momentu spełnienia warunku zatrzymania, na przykład:
 \begin{align}
 	||\mClusterMembership^{(t)} - \mClusterMembership^{(t-1)}|| < \epsilon,
 \end{align}
-
+%
 gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warunkiem zatrzymania może też być z góry określona maksymalna liczba iteracji \cite{bib:scikit-fuzzy-cmeans-docs-fcm, bib:skfuzzy-docs-fcm}.
 
 \section{Obliczenia ziarniste}
@@ -1036,40 +1040,44 @@ Tekst dokumentu powinien również zawierać odniesienia do tabel (tab. \ref{id:
 % TODO
 \chapter{Badania}
 
-Co już przeanalizowano
-\begin{itemize}
-\item Porównanie czasu wykonania grupowania oryginalnych danych oraz danych zgranulowanych (tylko dane o rozmiarze 1000, 2000 i 5000). Wynik: znaczne przyspieszenie grupowania przy zastosowaniu granulacji (złożoność grupowania hierarchicznego to $O(n^3)$, złożoność algorytmu fuzzy C-means to $O(n)$).
-\item Wyznaczenie dokładności (accuracy) grupowania danych rozmytych poprzez utworzenie macierzy pomyłek. Wynik: dokładność jest gorsza, niż w przypadku danych oryginalnych. Zależność dokładności od:
-	\begin{itemize}
-	\item Kształtu zbioru danych (blobs, corners itd.): Algorytm (nasz) działa najlepiej, gdy docelowe klastry mają zbliżoną liczebność i równomierną gęstość. 
-	Klastry w danych blobs1000 posiadają liczebność 960, 20, 20 (większe zbiory danych blobs zachowują tę proporcję). Algorytm fuzzy C-means często nie znajduje ani jednej granuli w mniejszych klastrach. Dokładność grupowania mimo to wynosi powyżej 96\% dzięki dysproporcji danych.
-	Dane corners mają większą gęstość w rogach klastrów. W związku z tym, w rogach znajduje się więcej granul o małym rozmyciu, a na poza nimi - mniej, o większym rozmyciu. Duże rozmycie wiąże się z błędnym grupowaniem hierarchicznym.
-	\item Liczby danych w zbiorze (1000, 2000, 5000, 10000, 20000, 30000, 40000, 50000): Im większa liczba danych, tym wyższa dokładność.
-	\item Liczby granul (50, 100, 200): Im większa liczba granul, tym wyższa dokładność.
-	\item Typu relacji (t, e, g): Wynik niekonkluzywny, ale w wielu przypadkach relacja trójkątna skutkuje wyższą dokładnością. \ksremark{Czy to jest spowodowane tym, że T ma skończony nośnik?}
-	\item Parametru ksi (0.05, 0.1, ... , 0.9, 0.95): Wynik niekonkluzywny, lepsze wyniki zazwyczaj uzyskiwane są dla niższych \ksremark{bardziej rozmyte czy bardziej ostre?} wartości parametru, ale dokładność znacznie fluktuuje.
-	\end{itemize}
-\item Wyznaczenie dendrogramu dla grupowania hierarchicznego. Wynik: zweryfikowanie poprawności działania algorytmu hierarchicznego?
-\end{itemize}
+%Co już przeanalizowano
+%\begin{itemize}
+%\item Porównanie czasu wykonania grupowania oryginalnych danych oraz danych zgranulowanych (tylko dane o rozmiarze 1000, 2000 i 5000). Wynik: znaczne przyspieszenie grupowania przy zastosowaniu granulacji (złożoność grupowania hierarchicznego to $O(n^3)$, złożoność algorytmu fuzzy C-means to $O(n)$).
+%\item Wyznaczenie dokładności (accuracy) grupowania danych rozmytych poprzez utworzenie macierzy pomyłek. Wynik: dokładność jest gorsza, niż w przypadku danych oryginalnych. Zależność dokładności od:
+%	\begin{itemize}
+%	\item Kształtu zbioru danych (blobs, corners itd.): Algorytm (nasz) działa najlepiej, gdy docelowe klastry mają zbliżoną liczebność i równomierną gęstość. 
+%	Klastry w danych blobs1000 posiadają liczebność 960, 20, 20 (większe zbiory danych blobs zachowują tę proporcję). Algorytm fuzzy C-means często nie znajduje ani jednej granuli w mniejszych klastrach. Dokładność grupowania mimo to wynosi powyżej 96\% dzięki dysproporcji danych.
+%	Dane corners mają większą gęstość w rogach klastrów. W związku z tym, w rogach znajduje się więcej granul o małym rozmyciu, a na poza nimi - mniej, o większym rozmyciu. Duże rozmycie wiąże się z błędnym grupowaniem hierarchicznym.
+%	\item Liczby danych w zbiorze (1000, 2000, 5000, 10000, 20000, 30000, 40000, 50000): Im większa liczba danych, tym wyższa dokładność.
+%	\item Liczby granul (50, 100, 200): Im większa liczba granul, tym wyższa dokładność.
+%	\item Typu relacji (t, e, g): Wynik niekonkluzywny, ale w wielu przypadkach relacja trójkątna skutkuje wyższą dokładnością. \ksremark{Czy to jest spowodowane tym, że T ma skończony nośnik?}
+%	\item Parametru ksi (0.05, 0.1, ... , 0.9, 0.95): Wynik niekonkluzywny, lepsze wyniki zazwyczaj uzyskiwane są dla niższych \ksremark{bardziej rozmyte czy bardziej ostre?} wartości parametru, ale dokładność znacznie fluktuuje.
+%	\end{itemize}
+%\item Wyznaczenie dendrogramu dla grupowania hierarchicznego. Wynik: zweryfikowanie poprawności działania algorytmu hierarchicznego?
+%\end{itemize}
+%
+%Co jeszcze można zrobić
+%\begin{itemize}
+%\item Porównanie czasu wykonania grupowania dla danych o mniejszych różnicach (np. co 500: 500, 1000, 1500, ... 5000). \ksremark{TAK}
+%\item Różne liczby iteracji algorytmu fuzzy C-means (teraz wyniki są tylko dla 80 iteracji). \ksremark{FCM jest dość stabilny. Klastry na większej liczby iteracji będą podobne.} \ksremark{Blobsy?}
+%\item Dokładniejsze porównanie wpływu typu relacji na dokładność grupowania. 
+%\item Duże zbiory danych, np. gowalla i brightkite. \ksremark{TAK}
+%\end{itemize}
 
-Co jeszcze można zrobić
-\begin{itemize}
-\item Porównanie czasu wykonania grupowania dla danych o mniejszych różnicach (np. co 500: 500, 1000, 1500, ... 5000). \ksremark{TAK}
-\item Różne liczby iteracji algorytmu fuzzy C-means (teraz wyniki są tylko dla 80 iteracji). \ksremark{FCM jest dość stabilny. Klastry na większej liczby iteracji będą podobne.} \ksremark{Blobsy?}
-\item Dokładniejsze porównanie wpływu typu relacji na dokładność grupowania. 
-\item Duże zbiory danych, np. gowalla i brightkite. \ksremark{TAK}
-\end{itemize}
+\ksremark{zagajenie}
 
 \section{Zbiory danych}
 
-Dane znajdują się w plikach \texttt{.data} zlokalizowanych w folderze dane, pogrupowanych w podfoldery według kształtów.
+\ksremark{Trzeba napisać, jakie mamy zbiory: że są dwuwymiarowe (dlaczego?), czym się charakteryzują? co przedstawiają? jakie są duże? skąd mamy te zbiory?}
+
+Dane znajdują się w plikach \url{.data} zlokalizowanych w folderze \url{dane}, pogrupowanych w podfoldery według kształtów.
 Dla każdego kształtu zbiory mają liczebność 1000, 2000, 5000, 10000, 20000, 30000, 40000 oraz 50000 wierszy.
 Wykresy danych przedstawiono na rys. \ref{fig:data-shapes}, a w tabeli \ref{id:tab:zbiory} -- dodatkowo ich charakterystykę.
 
 % czy 2011 to dobra data dla tych stron?
 Wykorzystano również zbiory danych Brightkite \cite{bib:brightkite} (4491143 wierszy) oraz Gowalla \cite{bib:gowalla} (6442890 wierszy).
-Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude''. Dane przedstawiają współrzędne lokalizacji logowania użytkowników platform społecznościowych.
-
+Dane przedstawiają współrzędne lokalizacji logowania użytkowników platform społecznościowych.
+Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude''.  
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./data_shapes.pdf}
@@ -1090,10 +1098,11 @@ Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude''.
 \bottomrule
 \end{tabular}
 \end{table}  
+\ksremark{Tab. \ref{id:tab:zbiory}: Gdzieś tam wyżej zdefiniowałem przykładowy zapis dla zbioru \iris. Trzeba podobnie zrobić dla pozostałych zbiorów, żebyśmy mieli wspólny jednolity zapis dla wszystkich zbiorów danych.}
 
 \section{Metodyka badań}
 
-Algorytm zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami algorytmu ostrego.
+Algorytm \ksremark{Tu proszę wymyślić jaką chwytliwą nazwę :-)} zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami algorytmu ostrego \ksremark{konkretnie jakiego?}.
 
 \subsection{Badanie szybkości algorytmu}
 
@@ -1101,7 +1110,7 @@ Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od iloś
 W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 10000. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
 
 Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja algorytmu grupowania, analogiczna do wersji rozmytej.
-W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu fuzzy C-means, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
+W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu fuzzy C-means \ksremark{Może warto zapisać nazwę algorytmu do makra? Teraz mamy różny zapis nazwy tego samego algorytmu.}, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
 
 Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtórzono czterokrotnie i obliczono średnią arytmetyczną wyników.
 
@@ -1109,14 +1118,15 @@ Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtór
 
 Dokładność zmierzono poprzez porówanie wyników algorytmu AgglomerativeClustering biblioteki scikit-learn z własną implementacją.
 
-Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych łączności (\english{single linkage, complete linkage}), liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi$ (0,05-0,95 z krokiem 0,05).
+Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych łączności (\english{single linkage, complete linkage}), liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi$ (0,05-0,95 z krokiem 0,05) \ksremark{Można to zapisać też $\xi \in \{ 0.05, 0.10, 0.15, \ldots, 0.95 \}$}.
 
 \subsubsection{Miara dokładności}
 
-Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Określono więc, że na potrzeby porównania, punkt należy do granuli, dla której jego wartość w tablicy $U$ jest maksymalna.
+Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Określono więc, że na potrzeby porównania, punkt należy do granuli, dla której jego wartość w tablicy $U$ \ksremark{Czy na pewno mamy tablicę $U$ opisaną gdzieś wcześniej?} jest maksymalna. \ksremark{$\gets$ Czy na pewno tak robimy?}
 
-Wykorzystana miara dokładności przyjmuje, że algorytm ostry, dla łączności \english{single linkage}, posiada dokładność 100\% -- każdy punkt zostaje przypisany do oczekiwanego klastra.
+Wykorzystana miara dokładności przyjmuje, że algorytm ostry, dla łączności \english{single linkage}, posiada \ksremark{lepiej: ma} dokładność 100\% -- każdy punkt zostaje przypisany do oczekiwanego klastra.
 
+\ksremark{Tutaj dajemy pseudokod algorytmu.}
 Wyznaczono macierz $l$, w której wartość elementu $l_{ij}$ jest równa liczbie punktów należących do klastra $i$ wyznaczonego przez algorytm ostry i do klastra $j$ wyznaczonego przez algorytm rozmyty:
 \begin{align}
 l_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j]
@@ -1140,17 +1150,19 @@ Z uzyskanej w ten sposób macierzy pomyłek, dokładność wyznaczana jest jako 
 \begin{align}
 acc = \frac{\sum_{i=0}^{X}l_{ii}}{N} * 100\%
 \end{align}
+\ksremark{Lepiej jest nieużywać kilkuliterowych oznaczeń, bo formalnie $acc$ oznacza iloczyn $a \cdot c \cdot c$. Lepiej będzie prowadzić jakiś pojedynczy symbol.}
+\ksremark{`*' oznacza splot, dla mnożenia mamy $\cdot$ lub $\times$.}
 lub
 \begin{align}
 acc = \frac{\sum_{i=0}^{X}l_{ii}}{\sum_{i=0}^{X}\sum_{j=0}^{X}l_{ij}} * 100\%,
 \end{align}
-gdzie $X=$ liczba klastrów.
+gdzie $X=$ liczba klastrów. \ksremark{Nie zmieniamy oznaczeń :-) Użyjemy $\nKlaster$.}
 
 \section{Wyniki}
 
 \subsection{Szybkość algorytmu}
 
-Algorytm, który wykorzystuje wstępną granulację fuzzy C-means, posiada znacząco mniejszy czas wykonania w stosunku do algorytmu non-fuzzy.
+Algorytm, który wykorzystuje wstępną granulację fuzzy C-means, posiada \ksremark{lepiej: ma} znacząco mniejszy czas wykonania w stosunku do algorytmu non-fuzzy \ksremark{Trzeba napisać to trochę inaczej. Nie używaliśmy wcześniej frazy `algorytm non-fuzzy'.}.
 Charakterystykę czasu wykonania algorytmów w zależności od liczby danych przedstawiono na rys. \ref{fig:circles-times}.
 
 \begin{figure}
@@ -1159,9 +1171,10 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 \caption{Charakterystyka czasu wykonania algorytmów ostrego i rozmytego dla różnej liczby granul od liczby danych wejściowych (circles).}
 \label{fig:circles-times}
 \end{figure}
+\ksremark{Rys. \ref{fig:circles-times}: Opis wykresów musi być po polsku.}
 
 Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba jest stała.
-Złożoność czasowa algorytmu fuzzy C-means wynosi $O(n)$, więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych.
+Złożoność czasowa algorytmu fuzzy C-means wynosi $O(n)$, więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych. \ksremark{To napiszemy w rozdziale 3.}
 
 \subsection{Jakość grupowania}
 
@@ -1187,17 +1200,21 @@ Najlepszą dokładność zaobserwowano dla danych ,,crescents'', a najgorszą --
 \bottomrule
 \end{tabular}
 \end{table}  
+\ksremark{Tab. \ref{id:tab:acc-ksztalt}: `Dokładność' to ta miara z macierzą, prawda?}
+\ksremark{Tab. \ref{id:tab:acc-ksztalt}: Mamy jedno wykonanie algorytmu?}
+\ksremark{Moze stransponować tab. \ref{id:tab:acc-cl-ksztalt} i  \ref{id:tab:acc-cl-ksztalt} połączyć w jedną tabelę z kolumnami dla jednego i drugiego algorytmu?}
+
 
 Wykresy wyników grupowania danych ,,blobs'' (rys. \ref{fig:blobs1000e}) pokazują, że wysoka dokładność uzyskana dla nich z macierzy pomyłek nie przekłada się na zgodność wyników z oczekiwaniami.
 Ze względu na dużą dysproporcję danych pomiędzy trzema klastrami (48:1:1), algorytm fuzzy C-means często traktuje dwa mniejsze z nich jako szum i nie tworzy dla nich granul.
-Zawierają one jednak jedynie 4\% danych, dlatego dokładność grupowania pozostaje wysoka.
+Zawierają one jednak jedynie 4\% danych, dlatego dokładność grupowania pozostaje wysoka. \ksremark{Czyli będziemy musieli użyć jeszcze innej miary, np. czułości (recall).}
 
-W przypadku danych ,,circles'' (rys. \ref{fig:circles1000e}) największe znaczenie dla dokładności ma liczba granul. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe, niż między okręgiem zewnętrznym a wewnętrznym.
+W przypadku danych ,,circles'' (rys. \ref{fig:circles1000e}) największe znaczenie dla dokładności ma liczba granul. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym.
 
 Klastry dla danych ,,corners'' mają nierównomierną gęstość, przez co algorytm fuzzy C-means tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000e}).
-Wiąże się to z większym rozmyciem granul na ,,ramionach'' klastrów.
+Wiąże się to z większym rozmyciem granul na ,,ramionach'' klastrów. \ksremark{Na pewno rozmycie na ramionach jest większe?}
 
-Dane ,,crescents'' tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność ich grupowania jest najlepsza (rys. \ref{fig:crescents1000e}). Ze względu na bliskie położenie końców łuków, przy dużym rozmyciu wciąż możliwe są błędy, jak w przypadku 50 granul, $\xi=0,9$.
+Dane ,,crescents'' tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność ich grupowania jest najlepsza (rys. \ref{fig:crescents1000e}). Ze względu na bliskie położenie końców łuków, przy dużym rozmyciu wciąż możliwe są błędy, jak w przypadku 50 granul, $\xi=0.9$.
 
 Dla danych ,,laguna'' (rys. \ref{fig:laguna1000e}), podobnie jak w przypadku ,,circles'', błędy wynikają z większego rozmycia granul położonych na otaczającym pozostałe dwa klastry okręgu.
 
@@ -1316,6 +1333,41 @@ Zależność jest przeciwna dla \english{complete linkage}: najlepsze wyniki -- 
 \caption{Zależność dokładności grupowania dla łączności complete linkage od wartości parametru $\xi$}
 \label{fig:xi-acc-cl}
 \end{figure}
+
+\ksremark{Rys. \ref{fig:xi-acc}: Może tak będzie lepiej?}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.48\textwidth}
+		\includegraphics[width=\textwidth]{./xi_acc_sl.pdf}
+		\caption{\SingleLinkage}
+		\label{fig:xi-acc-sl}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.48\textwidth}
+		\includegraphics[width=\textwidth]{./xi_acc_cl.pdf}
+		\caption{complete linkage}
+	\label{fig:xi-acc-cl}
+	\end{subfigure}
+	
+%	\begin{subfigure}{0.4\textwidth}
+%		%    \includegraphics[width=\textwidth]{sciezka}
+%		tutaj rysunek
+%		\caption{Lewy dolny rysunek.}
+%		\label{fig:lewy-dolny}
+%	\end{subfigure}
+%	\hfill
+%	\begin{subfigure}{0.4\textwidth}
+%		%    \includegraphics[width=\textwidth]{sciezka}
+%		tutaj rysunek
+%		\caption{Prawy dolny rysunek.}
+%		\label{fig:prawy-dolny}
+%	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania od wartości parametru $\xi$.}
+	\label{fig:xi-acc}
+\end{figure}
+
 
 \subsubsection{Dane Brightkite i Gowalla}
 
