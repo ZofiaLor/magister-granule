@@ -389,6 +389,7 @@ escapeinside={@*}{*@},%
 \newcommand{\procedura}[1]{\textsc{#1}}
 \newcommand{\SingleLinkage}{\procedura{SingleLinkage}}
 \newcommand{\CompleteLinkage}{\procedura{CompleteLinkage}}
+\newcommand{\MojAlg}{\procedura{AggloGr}}
 
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -618,7 +619,7 @@ Do głównych rodzin algorytmów grupowania zaliczane są \cite{bib:clustering-a
 	\item Algorytmy oparte o minimalizację funkcji kryterialnej: związane z iteracyjnym wyznaczaniem środków klastrów do momentu spełnienia kryterium zatrzymania (na przykład: $k$-means, fuzzy $c$-means),
 	\item Algorytmy gęstościowe: obszary o dużej gęstości danych tworzą klastry, pozostałe uznawane są za szumy (na przykład: DBSCAN \cite{bib:dbscan-algorithm}, OPTICS \cite{bib:optics-algorithm}),
 	\item Algorytmy grafowe: dane uznawane są za wierzchołki grafów, a podobieństwa między nimi -- za krawędzie (na przykład algorytmy oparte o minimalne drzewo rozpinające), 
-	\item Inne algorytmy. \ksremark{jakiś przykład}
+	\item Inne algorytmy(na przykład: DBCLASD \cite{bib:dbclasd-algorithm}, CLIQUE \cite{bib:clique-algorithm}).
 \end{itemize}
 
 \section{Algorytmy grupowania hierarchicznego}
@@ -635,8 +636,6 @@ Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \eng
 
 Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizować jako dendrogram (rys. \ref{fig:dendrogram-iris}). Wykres dendrogramu zazwyczaj przycina się, aby pokazywał tylko kilka ostatnich scaleń. Oś pozioma reprezentuje scalane klastry: jeżeli klastrem jest pojedynczy element, to reprezentuje go jego indeks, jeżeli zawiera więcej elementów -- jego liczebność podana w nawiasach. Oś pionowa odpowiada odległości między scalanymi klastrami. \ksremark{Trzeba napisać trochę szerzej o dendrogramie. Co oznacza wysokość łączenia itd. itp.}
 
-
-\ksremark{No i tutaj dajemy pseudokod – coś w stylu alg. \ref{alg:cascade_inference}.}
 
 \begin{algorithm}[t]
 	\caption{tytuł}
@@ -724,6 +723,30 @@ Jego parametrami wejściowymi są lista etykiet danych oraz macierz podobieństw
 	\item Scalenie odnalezionych klastrów,
 	\item Aktualizacja wartości podobieństw w macierzy według wybranej łączności.
 \end{enumerate}
+Pseudokod działania algorytmu przedstawia alg. \ref{alg:single_linkage}.
+
+\begin{algorithm}[t]
+	\caption{Algorytm aglomeracyjnego grupowania hierarchicznego \SingleLinkage{}}
+	\label{alg:single_linkage}
+	\begin{algorithmic}[1]
+		\Require $X$: dane do klasteryzacji, $c$ docelowa liczba klastrów
+		\Procedure{SingleLinkage}{$X, c$}
+		\State $N \gets $ liczba danych
+		\State $d \gets $ \Call{distance}{X} \Comment{macierz NxN odległości między każdą parą danych}
+		\State $l \gets [1, 2, ..., N-1, N]$ \Comment{etykiety}
+		\For{$i = 1$ to $N - c$} 
+		\State $w, k \gets $ wiersz i kolumna $\min(d)$ \Comment{scalenie najbliższych klastrów} 
+		\For{$i = 1$ to $N$}
+		\State $d[w, i] = d[i, w] = \min(d[w, i], d[k, i]) $ \Comment{przypisanie wynikające z łączności}
+		\State $d[k, i] = d[i, k] = \infty $ \Comment{nieużywane w dalszych iteracjach}
+		\EndFor
+		\State zamień etykiety $k$ na $w$
+		\EndFor
+		\State mapowanie etykiet na kolejne liczby naturalne
+		\State \Return $l$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
 
 Algorytm ogólny \texttt{GENERAL\_LINKAGE()} zawiera dodatkową optymalizację w stosunku do algorytmu naiwnego: wykorzystywana jest kolejka priorytetowa zawierająca kandydatów na najbliższych sąsiadów klastrów, co pozwala ograniczyć czas poszukiwania minimum macierzy w kroku 1. Optymistyczna złożoność czasowa tego algorytmu wynosi $\Omega(n^{2})$, pesymistyczna -- nadal $O(n^{3})$.
 
@@ -760,22 +783,49 @@ gdzie $\wX_{\Iteracja}$ -- współrzędne $\Iteracja$-tego punktu danych, $\wCen
 
 W każdej iteracji algorytmu obliczane są najpierw nowe współrzędne środków klastrów:
 \begin{align}
+	\label{eq:center_update}
 	\wCentre_{\klaster} = \frac{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m} \wX_{\Iteracja}}{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m}},
 \end{align}
 a następnie wartości elementów macierzy przynależności:
 \begin{align}
+	\label{eq:membership_update}
 	\ClusterMembership_{\Iteracja\klaster} = \frac{1}{\sum_{j=1}^{\nKlaster}\left( \frac{||\wX_{\Iteracja} - \wCentre_{\klaster}||}{||\wX_{\Iteracja} - \wCentre_{j}||} \right)^{\frac{2}{m - 1}}}.
 \end{align}
 Kroki powtarzane są do momentu spełnienia warunku zatrzymania, na przykład:
 \begin{align}
+	\label{eq:fcm_stop_contidion}
 	||\mClusterMembership^{(t)} - \mClusterMembership^{(t-1)}|| < \epsilon,
 \end{align}
 %
 gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warunkiem zatrzymania może też być z góry określona maksymalna liczba iteracji \cite{bib:scikit-fuzzy-cmeans-docs-fcm, bib:skfuzzy-docs-fcm}.
 
+\begin{algorithm}[t]
+	\caption{Algorytm rozmytych $c$ średnich}
+	\label{alg:fcm}
+	\begin{algorithmic}[1]
+		\Require $X$: dane do klasteryzacji, $n$: liczba klastrów docelowych, $m$: współczynnik rozmycia, $i$: maksymalna liczba iteracji, $\epsilon$: tolerancja
+		\Procedure{FuzzyCMeans}{$X, n, m, i, \epsilon$}
+		\State $p \gets $ liczba próbek 
+		\State $a \gets $ liczba atrybutów \Comment{wymiary $X$}
+		\State $v \gets $ \Call{InitCenters}{X} \Comment{Inicjalizacja wektora środków klastrów}
+		\State $U \gets $ \Call{InitMembership}{} \Comment{Inicjalizacja macierzy przynależności wartościami losowymi przy zachowaniu warunku poprawności}
+		\For{$i = 1$ to $i$} 
+		\State aktualizacja wartości $v$ na podstawie wzoru \ref{eq:center_update}
+		\State aktualizacja wartości $U$ na podstawie wzoru \ref{eq:membership_update}
+		\If{spełniony warunek \ref{eq:fcm_stop_contidion}}
+		\State wyjdź z pętli
+		\EndIf
+		\EndFor
+		\State \Return $v, U$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
 \section{Obliczenia ziarniste}
 
 \ksremark{zagajenie}
+
+Obliczenia ziarniste (granularne) pozwalają na analizę danych w bardziej zbliżony do ludzkiego sposób zrozumienia. 
 
 \subsection{Ziarna informacyjne}
 \ksremark{Co to jest?}
@@ -918,41 +968,41 @@ Operatory nierówności wyznaczane są w następujący sposób:
 
 % TODO
 
-\chapter{[Tytuł rozdziału]} 
+% \chapter{[Tytuł rozdziału]} 
 
-tekst
+% tekst
 
-\section{[Tytuł podrozdziału]}
+% \section{[Tytuł podrozdziału]}
 
-\section{[Tytuł podrozdziału]}
+% \section{[Tytuł podrozdziału]}
 
-W całym dokumencie powinny znajdować się odniesienia do zawartych w nim ilustracji (rys. \ref{fig:2}).
+% W całym dokumencie powinny znajdować się odniesienia do zawartych w nim ilustracji (rys. \ref{fig:2}).
 
-\begin{figure}
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-    y tick label style={
-        /pgf/number format/.cd,
-            fixed,   % po zakomentowaniu os rzednych jest indeksowana wykladniczo
-            fixed zerofill, % 1.0 zamiast 1
-            precision=1,
-        /tikz/.cd
-    },
-    x tick label style={
-        /pgf/number format/.cd,
-            fixed,
-            fixed zerofill,
-            precision=2,
-        /tikz/.cd
-    }
-]
-\addplot [domain=0.0:0.1] {rnd};
-\end{axis} 
-\end{tikzpicture}
-\caption{Wykres przebiegu funkcji.} % Podpis jest zawsze POD rysunkiem.
-\label{fig:2}
-\end{figure}
+% \begin{figure}
+% \centering
+% \begin{tikzpicture}
+% \begin{axis}[
+%     y tick label style={
+%         /pgf/number format/.cd,
+%             fixed,   % po zakomentowaniu os rzednych jest indeksowana wykladniczo
+%             fixed zerofill, % 1.0 zamiast 1
+%             precision=1,
+%         /tikz/.cd
+%     },
+%     x tick label style={
+%         /pgf/number format/.cd,
+%             fixed,
+%             fixed zerofill,
+%             precision=2,
+%         /tikz/.cd
+%     }
+% ]
+% \addplot [domain=0.0:0.1] {rnd};
+% \end{axis} 
+% \end{tikzpicture}
+% \caption{Wykres przebiegu funkcji.} % Podpis jest zawsze POD rysunkiem.
+% \label{fig:2}
+% \end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%
@@ -1003,45 +1053,57 @@ W całym dokumencie powinny znajdować się odniesienia do zawartych w nim ilust
 %%%%%%%%%%%%%%%%%%%%%
 
 
-Tekst dokumentu powinien również zawierać odniesienia do tabel (tab. \ref{id:tab:wyniki}).
+% Tekst dokumentu powinien również zawierać odniesienia do tabel (tab. \ref{id:tab:wyniki}).
 
-\begin{table}
-\centering
-\caption{Opis tabeli nad nią.}
-\label{id:tab:wyniki}
-\begin{tabular}{rrrrrrrr}
-\toprule
-	         &                                     \multicolumn{7}{c}{metoda}                                      \\
-	         \cmidrule{2-8}
-	         &         &         &        \multicolumn{3}{c}{alg. 3}        & \multicolumn{2}{c}{alg. 4, $\gamma = 2$} \\
-	         \cmidrule(r){4-6}\cmidrule(r){7-8}
-	$\zeta$ &     alg. 1 &   alg. 2 & $\alpha= 1.5$ & $\alpha= 2$ & $\alpha= 3$ &   $\beta = 0.1$  &   $\beta = -0.1$ \\
-\midrule
-	       0 &  8.3250 & 1.45305 &       7.5791 &    14.8517 &    20.0028 & 1.16396 &                       1.1365 \\
-	       5 &  0.6111 & 2.27126 &       6.9952 &    13.8560 &    18.6064 & 1.18659 &                       1.1630 \\
-	      10 & 11.6126 & 2.69218 &       6.2520 &    12.5202 &    16.8278 & 1.23180 &                       1.2045 \\
-	      15 &  0.5665 & 2.95046 &       5.7753 &    11.4588 &    15.4837 & 1.25131 &                       1.2614 \\
-	      20 & 15.8728 & 3.07225 &       5.3071 &    10.3935 &    13.8738 & 1.25307 &                       1.2217 \\
-	      25 &  0.9791 & 3.19034 &       5.4575 &     9.9533 &    13.0721 & 1.27104 &                       1.2640 \\
-	      30 &  2.0228 & 3.27474 &       5.7461 &     9.7164 &    12.2637 & 1.33404 &                       1.3209 \\
-	      35 & 13.4210 & 3.36086 &       6.6735 &    10.0442 &    12.0270 & 1.35385 &                       1.3059 \\
-	      40 & 13.2226 & 3.36420 &       7.7248 &    10.4495 &    12.0379 & 1.34919 &                       1.2768 \\
-	      45 & 12.8445 & 3.47436 &       8.5539 &    10.8552 &    12.2773 & 1.42303 &                       1.4362 \\
-	      50 & 12.9245 & 3.58228 &       9.2702 &    11.2183 &    12.3990 & 1.40922 &                       1.3724 \\
-\bottomrule
-\end{tabular}
-\end{table}  
+% \begin{table}
+% \centering
+% \caption{Opis tabeli nad nią.}
+% \label{id:tab:wyniki}
+% \begin{tabular}{rrrrrrrr}
+% \toprule
+% 	         &                                     \multicolumn{7}{c}{metoda}                                      \\
+% 	         \cmidrule{2-8}
+% 	         &         &         &        \multicolumn{3}{c}{alg. 3}        & \multicolumn{2}{c}{alg. 4, $\gamma = 2$} \\
+% 	         \cmidrule(r){4-6}\cmidrule(r){7-8}
+% 	$\zeta$ &     alg. 1 &   alg. 2 & $\alpha= 1.5$ & $\alpha= 2$ & $\alpha= 3$ &   $\beta = 0.1$  &   $\beta = -0.1$ \\
+% \midrule
+% 	       0 &  8.3250 & 1.45305 &       7.5791 &    14.8517 &    20.0028 & 1.16396 &                       1.1365 \\
+% 	       5 &  0.6111 & 2.27126 &       6.9952 &    13.8560 &    18.6064 & 1.18659 &                       1.1630 \\
+% 	      10 & 11.6126 & 2.69218 &       6.2520 &    12.5202 &    16.8278 & 1.23180 &                       1.2045 \\
+% 	      15 &  0.5665 & 2.95046 &       5.7753 &    11.4588 &    15.4837 & 1.25131 &                       1.2614 \\
+% 	      20 & 15.8728 & 3.07225 &       5.3071 &    10.3935 &    13.8738 & 1.25307 &                       1.2217 \\
+% 	      25 &  0.9791 & 3.19034 &       5.4575 &     9.9533 &    13.0721 & 1.27104 &                       1.2640 \\
+% 	      30 &  2.0228 & 3.27474 &       5.7461 &     9.7164 &    12.2637 & 1.33404 &                       1.3209 \\
+% 	      35 & 13.4210 & 3.36086 &       6.6735 &    10.0442 &    12.0270 & 1.35385 &                       1.3059 \\
+% 	      40 & 13.2226 & 3.36420 &       7.7248 &    10.4495 &    12.0379 & 1.34919 &                       1.2768 \\
+% 	      45 & 12.8445 & 3.47436 &       8.5539 &    10.8552 &    12.2773 & 1.42303 &                       1.4362 \\
+% 	      50 & 12.9245 & 3.58228 &       9.2702 &    11.2183 &    12.3990 & 1.40922 &                       1.3724 \\
+% \bottomrule
+% \end{tabular}
+% \end{table}  
 
-%\chapter{[Przedmiot pracy]}
-%
-%\begin{itemize}
-%\item  Jak ja rozwiązuję problem?
-%\begin{itemize}
-%\item rozwiązanie zaproponowane przez dyplomanta
-%\item analiza teoretyczna rozwiązania
-%\item uzasadnienie wyboru zastosowanych metod, algorytmów, narzędzi
-%\end{itemize}
-%\end{itemize}
+\chapter{Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego}
+
+\begin{itemize}
+\item  Jak ja rozwiązuję problem?
+\begin{itemize}
+\item rozwiązanie zaproponowane przez dyplomanta
+\item analiza teoretyczna rozwiązania
+\item uzasadnienie wyboru zastosowanych metod, algorytmów, narzędzi
+\end{itemize}
+\end{itemize}
+
+\section{Plan rozwiązania}
+
+Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasową -- w przypadku algorytmu ogólnego aż do $O(n^{3})$. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(N)$).
+
+Algorytm taki, nazwany \MojAlg, składa się z trzech głównych kroków:
+
+\begin{enumerate}
+	\item Granulacja oryginalnych danych przy pomocy algorytmy rozmytych $c$-średnich
+	\item Przekształcenie otrzymanych wyników w granule o potrzebnych parametrach
+	\item Aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia
+\end{enumerate}
 
 
 % TODO
@@ -1163,13 +1225,11 @@ for i in range(liczba_klastrow - 1):
 Z uzyskanej w ten sposób macierzy pomyłek, dokładność wyznaczana jest jako suma wartości na przekątnej macierzy podzielona przez całkowitą liczbę danych:
 
 \begin{align}
-acc = \frac{\sum_{i=0}^{\nKlaster}l_{ii}}{N} * 100\%
+\Accuracy = \frac{\sum_{i=0}^{\nKlaster}l_{ii}}{N} * 100\%
 \end{align}
-\ksremark{Lepiej jest nieużywać kilkuliterowych oznaczeń, bo formalnie $acc$ oznacza iloczyn $a \cdot c \cdot c$. Lepiej będzie prowadzić jakiś pojedynczy symbol.}
-\ksremark{`*' oznacza splot, dla mnożenia mamy $\cdot$ lub $\times$.}
 lub
 \begin{align}
-acc = \frac{\sum_{i=0}^{\nKlaster}l_{ii}}{\sum_{i=0}^{\nKlaster}\sum_{j=0}^{\nKlaster}l_{ij}} * 100\%,
+\Accuracy = \frac{\sum_{i=0}^{\nKlaster}l_{ii}}{\sum_{i=0}^{\nKlaster}\sum_{j=0}^{\nKlaster}l_{ij}} * 100\%,
 \end{align}
 gdzie $\nKlaster=$ liczba klastrów.
 
@@ -1227,7 +1287,7 @@ Zawierają one jednak jedynie 4\% danych, dlatego dokładność grupowania pozos
 W przypadku danych \circles (rys. \ref{fig:circles1000e}) największe znaczenie dla dokładności ma liczba granul. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym.
 
 Klastry dla danych \corners mają nierównomierną gęstość, przez co algorytm fuzzy C-means tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000e}).
-Wiąże się to z większym rozmyciem granul na ,,ramionach'' klastrów. \ksremark{Na pewno rozmycie na ramionach jest większe?}
+Odległości między granulami położonymi na ,,ramionach'' i w ,,środkach'' klastrów są na tyle duże, że odległości ,,środków'' różnych klastrów mogą być od nich mniejsze. \ksremark{Na pewno rozmycie na ramionach jest większe?}
 
 Dane \crescents tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność ich grupowania jest najlepsza (rys. \ref{fig:crescents1000e}). Ze względu na bliskie położenie końców łuków, przy dużym rozmyciu wciąż możliwe są błędy, jak w przypadku 50 granul, $\xi=0.9$.
 
