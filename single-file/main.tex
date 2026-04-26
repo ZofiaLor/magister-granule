@@ -841,6 +841,7 @@ Ziarna informacyjne utworzyć można poprzez grupowanie danych. W przypadku ziar
 % TODO link do rozdziału o FCM
 
 \subsection{Rozszerzalne liczby rozmyte}
+\label{sec:rozszerzalne-liczby-rozmyte}
 \ksremark{Liczby rozmyte}
 \ksremark{Kształty (trójkątne, wykładnicze, gaussowskie)}
 \ksremark{Relacje między liczbami (arytmetyka, porównanie)}
@@ -1105,6 +1106,64 @@ Algorytm taki, nazwany \MojAlg, składa się z trzech głównych kroków:
 	\item Aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia
 \end{enumerate}
 
+\subsection{Granulacja danych oryginalnych}
+
+W pierwszym kroku oryginalne dane są granulowane przez algorytm rozmytych $c$-średnich. Dane mają postać macierzy liczb rzeczywistych o wymiarach $\nX \times \nAtrybut$, gdzie $\nX$ -- liczba danych, $\nAtrybut$ -- liczba atrybutów. Wartość parametru rozmycia $m$ algorytmu określona jest na stałe jako 2. Liczba docelowych klastrów $\nKlaster$ jest jednym z parametrów badawczych i jest znacznie mniejsza od $\nX$.
+
+\subsection{Przekształcenie granul}
+
+Granule wykorzystywane do grupowania hierarchicznego mają postać wielowymiarowych rozszerzalnych liczb rozmytych. Dla każdego wymiaru musi zostać określona wartość ostra liczby $x$ oraz jej rozmycie $p$.
+
+Wartości ostre są tożsame ze środkami klastrów będących wynikiem algorytmu rozmytych $c$-średnich, czyli z wektorem $\wCentre$.
+
+Wartościom rozmycia nie odpowiada bezpośrednio żadna ze struktur zwracanych przez FCM. Dla każdego klastra $\Klaster$ i wymiaru (atrybutu) $\Atrybut$, rozmycie oblicza się jako następującą wariancję:
+
+\begin{align}
+	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m} (\X_{\Iteracja\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m}}}.
+\end{align}
+
+Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytych, które składają się na ich wymiary. Kształt jest więc parametrem dla operacji logicznych na nich wykonywanych.
+
+\subsection{Rozmyte grupowanie hierarchiczne}
+
+Zbiór granul oraz ich kształt są parametrami wejściowymi algorytmu rozmytego aglomeracyjnego grupowania hierarchicznego.
+
+Na początku wyznaczane są rozmyte odległości euklidesowe \ref{eq:odleglosc:euklidesowa} między każdą parą granul, przy pomocy operacji arytmetycznych określonych w sekcji \ref{sec:rozszerzalne-liczby-rozmyte}. Wynikiem obliczeń jest symetryczna macierz odległości $\mDistance$ o wymiarach $\nX \times \nX$, gdzie $\Distance_{ij} = \Distance(\wX_{i}, \wX_{j})$.
+
+Grupowanie hierarchiczne ma postać zmodyfikowanego algorytmu naiwnego \texttt{PRIMITIVE\_CLUSTERING()}, o złożoności czasowej $O(n^{3})$. Zmieniony musi zostać sposób wyznaczania kolejnych minimalnych odległości w macierzy $\mDistance$ oraz, zależne od łączności, aktualizacje odległości do nowo-scalonego klastra. 
+
+Minimum i maksimum wyznacza się przy pomocy operacji porównania. W przypadku rozszerzalnych liczb rozmytych, wynikami takich operacji są liczby z przedziału $[0, 1]$. W celu określenia, która z liczb rozmytych jest większa lub mniejsza, wprowadzony zostaje parametr $\xi$, będący paramtetrem badawczym. Algorytmy rozmytego minimum i maksimum przedstawiają pseudokody \ref{alg:fuzzy-min} i \ref{alg:fuzzy-max}.
+
+\begin{algorithm}[t]
+	\caption{Minimum rozmyte}
+	\label{alg:fuzzy-min}
+	\begin{algorithmic}[1]
+		\Require $a, b$: porównywane rozszerzalne liczby rozmyte, $\xi$: parametr porównania 
+		\Procedure{FuzzyMinimum}{$a, b, \xi$}
+		\If{$(a <_{\nPodobienstwo} b) > \xi$}
+		\State \Return $a$
+		\Else
+		\State \Return $b$
+		\EndIf
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+	\caption{Maksimum rozmyte}
+	\label{alg:fuzzy-max}
+	\begin{algorithmic}[1]
+		\Require $a, b$: porównywane rozszerzalne liczby rozmyte, $\xi$: parametr porównania 
+		\Procedure{FuzzyMaximum}{$a, b, \xi$}
+		\If{$(a >_{\nPodobienstwo} b) > \xi$}
+		\State \Return $a$
+		\Else
+		\State \Return $b$
+		\EndIf
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
 
 % TODO
 \chapter{Badania}
@@ -1139,7 +1198,7 @@ Algorytm taki, nazwany \MojAlg, składa się z trzech głównych kroków:
 
 \ksremark{Trzeba napisać, jakie mamy zbiory: że są dwuwymiarowe (dlaczego?), czym się charakteryzują? co przedstawiają? jakie są duże? skąd mamy te zbiory?}
 
-Dane znajdują się w plikach \url{.data} zlokalizowanych w folderze \url{dane}, pogrupowanych w podfoldery według kształtów. 
+Pierwszym zbiorem danych są dane syntetyczne, które znajdują się w plikach \url{.data} zlokalizowanych w folderze \url{dane}, pogrupowanych w podfoldery według kształtów. 
 Dla każdego kształtu zbiory mają liczebność 1000, 2000, 5000, 10000, 20000, 30000, 40000 oraz 50000 wierszy.
 
 Dane mają postać współrzędnych punktów w dwóch lub trzech wymiarach -- każdy wiersz w pliku reprezentuje współrzędne jednego punktu. Taka liczba wymiarów pozwala na wizualizację całości danych w postaci wykresu. W zależności od kształtu, dla danego zbioru można na podstawie wykresu wyróżnić 2, 3 lub 4 wyraźnie odseparowane klastry.
@@ -1179,14 +1238,14 @@ Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' 
 
 \section{Metodyka badań}
 
-Algorytm \ksremark{Tu proszę wymyślić jaką chwytliwą nazwę :-)} zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami algorytmu ostrego \ksremark{konkretnie jakiego?}.
+Algorytm \MojAlg zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami ostrego algorytmu aglomeracyjnego grupowania hierarchicznego \ksremark{konkretnie jakiego?}.
 
 \subsection{Badanie szybkości algorytmu}
 
 Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od ilości danych, przygotowano dane o rozmiarach 500-10000 z krokiem 500.
 W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 10000. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
 
-Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja algorytmu grupowania, analogiczna do wersji rozmytej.
+Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej.
 W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu fuzzy C-means \ksremark{Może warto zapisać nazwę algorytmu do makra? Teraz mamy różny zapis nazwy tego samego algorytmu.}, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
 
 Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtórzono czterokrotnie i obliczono średnią arytmetyczną wyników.
