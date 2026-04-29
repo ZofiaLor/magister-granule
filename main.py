@@ -45,14 +45,14 @@ for folder in os.scandir("dane"):
                     break
 
 # fullData['spheres2000'].fit_plot_fuzzy_labels('t')
-# fullData['corners1000'].measure_accuracy()
+# fullData['blobs1000'].measure_accuracy()
 for root in names_roots:
     accuracy_results = pandas.DataFrame()
     for data_size in data_size_presets:
         print(root + str(data_size))
-        result = fullData[root + str(data_size)].measure_accuracy('complete')
+        result = fullData[root + str(data_size)].measure_accuracy('single')
         accuracy_results = pandas.concat([accuracy_results, result], ignore_index=True)
-    accuracy_results.to_csv("wyniki/" + root + "_cl_accuracy.csv")
+    accuracy_results.to_csv("wyniki/" + root + "_sl_accuracy.csv")
 
 
 

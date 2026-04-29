@@ -100,9 +100,18 @@ class DataEntry(object):
             l_matrix[:, [i, col]] = l_matrix[:, [col, i]]
 
         sum_diagonal = 0
+        recall = 0
+        precision = 0
+        recall_denominators = np.sum(l_matrix, axis=1).tolist()
+        precision_denominators = np.sum(l_matrix, axis=0).tolist()
         for i in range(self.clusters_number):
             sum_diagonal = sum_diagonal + l_matrix[i, i]
-        return sum_diagonal / len(granule_member_labels)
+            recall += l_matrix[i, i] / recall_denominators[i]
+            precision += l_matrix[i, i] / precision_denominators[i]
+        accuracy = sum_diagonal / len(granule_member_labels)
+        recall /= self.clusters_number
+        precision /= self.clusters_number
+        return accuracy, recall, precision
 
     def measure_accuracy(self, linkage='single'):
         result_list = []
@@ -122,9 +131,9 @@ class DataEntry(object):
                     k = k100 / 100
                     print("n " + str(n) + " type " + relation_type + " ksi " + str(k))
                     hc.fuzzy_fit(granules, k, relation_type, linkage=linkage)
-                    acc = self.calculate_accuracy(fcm, hc, ac.labels_)
+                    acc, rec, pre = self.calculate_accuracy(fcm, hc, ac.labels_)
                     results = {"data size": self.length, "granules number": n, "relation type": relation_type, "ksi": k,
-                               "accuracy": acc}
+                               "accuracy": acc, "recall": rec, "precision": pre}
                     result_list.append(results)
         return pandas.DataFrame(result_list)
 
