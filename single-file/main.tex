@@ -389,7 +389,7 @@ escapeinside={@*}{*@},%
 \newcommand{\procedura}[1]{\textsc{#1}}
 \newcommand{\SingleLinkage}{\procedura{SingleLinkage}}
 \newcommand{\CompleteLinkage}{\procedura{CompleteLinkage}}
-\newcommand{\MojAlg}{\procedura{AggloGr}}
+\newcommand{\MojAlg}{\procedura{GrAgglo}}
 
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -724,25 +724,27 @@ Jego parametrami wejściowymi są lista etykiet danych oraz macierz podobieństw
 	\item Aktualizacja wartości podobieństw w macierzy według wybranej łączności.
 \end{enumerate}
 Pseudokod działania algorytmu przedstawia alg. \ref{alg:single_linkage}.
+\ksremark{W treści mamy general\_linkage, primitive\_linkage, a w Alg. \ref{alg:single_linkage} – SingleLinkage. Trzeba to ujednolicić, wyjaśnić, …}
 
 \begin{algorithm}[t]
 	\caption{Algorytm aglomeracyjnego grupowania hierarchicznego \SingleLinkage{}}
 	\label{alg:single_linkage}
 	\begin{algorithmic}[1]
-		\Require $X$: dane do klasteryzacji, $c$ docelowa liczba klastrów
+		\Require $X$: dane do klasteryzacji
+		\Require $c$: docelowa liczba klastrów \ksremark{Proponowałbym stosować te same oznaczenia: $\zX$: dane do klasteryzacji, $\nKlaster$: liczba klastrów}
 		\Procedure{SingleLinkage}{$X, c$}
-		\State $N \gets $ liczba danych
-		\State $d \gets $ \Call{distance}{X} \Comment{macierz NxN odległości między każdą parą danych}
+		\State $N \gets $ liczba danych \ksremark{Wtedy liczba danych będzie $\nX$.}
+		\State $d \gets $ \Call{distance}{X}\ksremark{$X$} \Comment{macierz NxN \ksremark{$N \times N$} odległości między każdą parą danych}
 		\State $l \gets [1, 2, ..., N-1, N]$ \Comment{etykiety}
 		\For{$i = 1$ to $N - c$} 
-		\State $w, k \gets $ wiersz i kolumna $\min(d)$ \Comment{scalenie najbliższych klastrów} 
+		\State $w, k \gets $ wiersz i kolumna $\min(d)$ \ksremark{$\gets$ nie rozumiem tego zapisu} \Comment{scalenie najbliższych klastrów} 
 		\For{$i = 1$ to $N$}
 		\State $d[w, i] = d[i, w] = \min(d[w, i], d[k, i]) $ \Comment{przypisanie wynikające z łączności}
 		\State $d[k, i] = d[i, k] = \infty $ \Comment{nieużywane w dalszych iteracjach}
 		\EndFor
 		\State zamień etykiety $k$ na $w$
 		\EndFor
-		\State mapowanie etykiet na kolejne liczby naturalne
+		\State mapowanie etykiet na kolejne liczby naturalne \ksremark{$\gets$ nie rozumiem}
 		\State \Return $l$
 		\EndProcedure
 	\end{algorithmic}
@@ -803,19 +805,25 @@ gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warun
 	\caption{Algorytm rozmytych $c$ średnich}
 	\label{alg:fcm}
 	\begin{algorithmic}[1]
-		\Require $X$: dane do klasteryzacji, $n$: liczba klastrów docelowych, $m$: współczynnik rozmycia, $i$: maksymalna liczba iteracji, $\epsilon$: tolerancja
+		\Require $X$: dane do klasteryzacji \ksremark{$\zX$}
+		\Require $n$: liczba klastrów docelowych \ksremark{$\nKlaster$}
+		\Require $m$: współczynnik rozmycia 
+		\Require $i$: maksymalna liczba iteracji \ksremark{$\nIteracja$}
+		\Require $\epsilon$: tolerancja \ksremark{$\varepsilon$}
 		\Procedure{FuzzyCMeans}{$X, n, m, i, \epsilon$}
-		\State $p \gets $ liczba próbek 
-		\State $a \gets $ liczba atrybutów \Comment{wymiary $X$}
-		\State $v \gets $ \Call{InitCenters}{X} \Comment{Inicjalizacja wektora środków klastrów}
-		\State $U \gets $ \Call{InitMembership}{} \Comment{Inicjalizacja macierzy przynależności wartościami losowymi przy zachowaniu warunku poprawności}
-		\For{$i = 1$ to $i$} 
-		\State aktualizacja wartości $v$ na podstawie wzoru \ref{eq:center_update}
-		\State aktualizacja wartości $U$ na podstawie wzoru \ref{eq:membership_update}
+		\State $p \gets $ liczba próbek \ksremark{$\nX$}
+		\State $a \gets $ liczba atrybutów \Comment{wymiary $X$ \ksremark{$\nAtrybut$}} 
+		\State $v \gets $ \Call{InitCenters}{X} \Comment{Inicjalizacja wektora środków klastrów \ksremark{Trzeba zdefiniować funkcje InitCenters}}
+		\State $U \gets $ \Call{InitMembership}{} \Comment{Inicjalizacja macierzy przynależności wartościami losowymi przy zachowaniu warunku poprawności \ksremark{Trzeba zdefiniować InitMembership}}
+		\State $i\gets 1$
+		\State koniec $\gets$ false
+		\While{$i < i$ $\land$ $\lnot$ koniec} 
+		\State aktualizacja wartości $v$ na podstawie wzoru \ref{eq:center_update}  \ksremark{Mamy różne oznaczenia: tutaj jest $v$, a we wzorze \eqref{eq:center_update}: $\wCentre$.}
+		\State aktualizacja wartości $U$ \ksremark{$\mMembership$} na podstawie wzoru \ref{eq:membership_update}
 		\If{spełniony warunek \ref{eq:fcm_stop_contidion}}
-		\State wyjdź z pętli
+		\State  koniec $\gets$ true
 		\EndIf
-		\EndFor
+		\EndWhile
 		\State \Return $v, U$
 		\EndProcedure
 	\end{algorithmic}
@@ -1085,39 +1093,38 @@ Operatory nierówności wyznaczane są w następujący sposób:
 
 \chapter{Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego}
 
-\begin{itemize}
-\item  Jak ja rozwiązuję problem?
-\begin{itemize}
-\item rozwiązanie zaproponowane przez dyplomanta
-\item analiza teoretyczna rozwiązania
-\item uzasadnienie wyboru zastosowanych metod, algorytmów, narzędzi
-\end{itemize}
-\end{itemize}
+%\begin{itemize}
+%\item  Jak ja rozwiązuję problem?
+%\begin{itemize}
+%\item rozwiązanie zaproponowane przez dyplomanta
+%\item analiza teoretyczna rozwiązania
+%\item uzasadnienie wyboru zastosowanych metod, algorytmów, narzędzi
+%\end{itemize}
+%\end{itemize}
 
-\section{Plan rozwiązania}
+%\section{Plan rozwiązania}
 
-Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasową -- w przypadku algorytmu ogólnego aż do $O(n^{3})$. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(N)$).
+Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasową -- w przypadku algorytmu ogólnego aż do $O(n^{3})$. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(N)$). \ksremark{Czy $N$ oznacza coś innego niż $n$?}
 
 Algorytm taki, nazwany \MojAlg, składa się z trzech głównych kroków:
 
 \begin{enumerate}
-	\item Granulacja oryginalnych danych przy pomocy algorytmy rozmytych $c$-średnich
-	\item Przekształcenie otrzymanych wyników w granule o potrzebnych parametrach
-	\item Aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia
+	\item Granulacja oryginalnych danych przy pomocy algorytmy rozmytych $c$-średnich.
+	\item Przekształcenie otrzymanych wyników w granule o potrzebnych parametrach.
+	\item Aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia.
 \end{enumerate}
 
-\subsection{Granulacja danych oryginalnych}
+\section{Granulacja danych oryginalnych}
 
 W pierwszym kroku oryginalne dane są granulowane przez algorytm rozmytych $c$-średnich. Dane mają postać macierzy liczb rzeczywistych o wymiarach $\nX \times \nAtrybut$, gdzie $\nX$ -- liczba danych, $\nAtrybut$ -- liczba atrybutów. Wartość parametru rozmycia $m$ algorytmu określona jest na stałe jako 2. Liczba docelowych klastrów $\nKlaster$ jest jednym z parametrów badawczych i jest znacznie mniejsza od $\nX$.
 
-\subsection{Przekształcenie granul}
+\section{Przekształcenie granul}
 
 Granule wykorzystywane do grupowania hierarchicznego mają postać wielowymiarowych rozszerzalnych liczb rozmytych. Dla każdego wymiaru musi zostać określona wartość ostra liczby $x$ oraz jej rozmycie $p$.
 
 Wartości ostre są tożsame ze środkami klastrów będących wynikiem algorytmu rozmytych $c$-średnich, czyli z wektorem $\wCentre$.
 
 Wartościom rozmycia nie odpowiada bezpośrednio żadna ze struktur zwracanych przez FCM. Dla każdego klastra $\Klaster$ i wymiaru (atrybutu) $\Atrybut$, rozmycie oblicza się jako następującą wariancję:
-
 \begin{align}
 	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m} (\X_{\Iteracja\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m}}}.
 \end{align}
@@ -1127,12 +1134,12 @@ Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytyc
 \subsection{Rozmyte grupowanie hierarchiczne}
 
 Zbiór granul oraz ich kształt są parametrami wejściowymi algorytmu rozmytego aglomeracyjnego grupowania hierarchicznego.
+%
+Na początku wyznaczane są rozmyte odległości euklidesowe \ref{eq:odleglosc:euklidesowa} \ksremark{(wzór \eqref{eq:odleglosc:euklidesowa})} między każdą parą granul, przy pomocy operacji arytmetycznych określonych w sekcji \ref{sec:rozszerzalne-liczby-rozmyte}. Wynikiem obliczeń jest symetryczna macierz odległości $\mDistance$ o wymiarach $\nX \times \nX$, gdzie $\Distance_{ij} = \Distance(\wX_{i}, \wX_{j})$.
 
-Na początku wyznaczane są rozmyte odległości euklidesowe \ref{eq:odleglosc:euklidesowa} między każdą parą granul, przy pomocy operacji arytmetycznych określonych w sekcji \ref{sec:rozszerzalne-liczby-rozmyte}. Wynikiem obliczeń jest symetryczna macierz odległości $\mDistance$ o wymiarach $\nX \times \nX$, gdzie $\Distance_{ij} = \Distance(\wX_{i}, \wX_{j})$.
+Grupowanie hierarchiczne ma postać zmodyfikowanego algorytmu naiwnego \texttt{PRIMITIVE\_CLUSTERING()} \ksremark{$\gets$ dałbym do makra}, o złożoności czasowej $O(n^{3})$. Zmieniony musi zostać sposób wyznaczania kolejnych minimalnych odległości w macierzy $\mDistance$ oraz, zależne od łączności, aktualizacje odległości do nowo-scalonego \ksremark{nowo scalonego} klastra. 
 
-Grupowanie hierarchiczne ma postać zmodyfikowanego algorytmu naiwnego \texttt{PRIMITIVE\_CLUSTERING()}, o złożoności czasowej $O(n^{3})$. Zmieniony musi zostać sposób wyznaczania kolejnych minimalnych odległości w macierzy $\mDistance$ oraz, zależne od łączności, aktualizacje odległości do nowo-scalonego klastra. 
-
-Minimum i maksimum wyznacza się przy pomocy operacji porównania. W przypadku rozszerzalnych liczb rozmytych, wynikami takich operacji są liczby z przedziału $[0, 1]$. W celu określenia, która z liczb rozmytych jest większa lub mniejsza, wprowadzony zostaje parametr $\xi$, będący paramtetrem badawczym. Algorytmy rozmytego minimum i maksimum przedstawiają pseudokody \ref{alg:fuzzy-min} i \ref{alg:fuzzy-max}.
+Minimum i maksimum wyznacza się przy pomocy operacji porównania. W przypadku rozszerzalnych liczb rozmytych, wynikami takich operacji są liczby z przedziału $[0, 1]$. W celu określenia, która z liczb rozmytych jest większa lub mniejsza, wprowadzony zostaje parametr $\xi$, będący paramtetrem badawczym. Algorytmy rozmytego minimum i maksimum przedstawiają \ksremark{odpowiednio} pseudokody \ref{alg:fuzzy-min} i \ref{alg:fuzzy-max}.
 
 \begin{algorithm}[t]
 	\caption{Minimum rozmyte}
