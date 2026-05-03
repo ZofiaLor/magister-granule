@@ -137,7 +137,7 @@ class DataEntry(object):
                     result_list.append(results)
         return pandas.DataFrame(result_list)
 
-    def fit_plot_fuzzy_labels(self, relation_type):
+    def fit_plot_fuzzy_labels(self, relation_type, save_to_file=True):
         print(self.name)
         labels = []
         centers = []
@@ -175,9 +175,11 @@ class DataEntry(object):
                         ax[i, j].plot(centers[i][clust, 0] + 2 * fuzz[i][clust][0] * np.cos(t),
                                       centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(t),
                                       color='crimson', alpha=0.5)
-            # plt.savefig(folderPath + self.name + relation_type + ".pdf")
-            plt.show()
-            # plt.close()
+            if save_to_file:
+                plt.savefig(folderPath + self.name + relation_type + ".pdf")
+                plt.close()
+            else:
+                plt.show()
         else:
             fig = plt.figure(figsize=(12, 10))
             for i in range(len(self.granules_number)):
@@ -195,6 +197,8 @@ class DataEntry(object):
                                         centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(p) * np.sin(t),
                                         centers[i][clust, 2] + 2 * fuzz[i][clust][2] * np.cos(p),
                                         color='crimson', alpha=0.5)
-            # plt.savefig(folderPath + self.name + relation_type + ".pdf")
-            plt.show()
-            # plt.close()
+            if save_to_file:
+                plt.savefig(folderPath + self.name + relation_type + ".pdf")
+                plt.close()
+            else:
+                plt.show()
