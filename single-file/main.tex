@@ -390,6 +390,7 @@ escapeinside={@*}{*@},%
 \newcommand{\SingleLinkage}{\procedura{SingleLinkage}}
 \newcommand{\CompleteLinkage}{\procedura{CompleteLinkage}}
 \newcommand{\MojAlg}{\procedura{GrAgglo}}
+\newcommand{\MojHierAlg}{\procedura{FuzzyAgglo}}
 
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -783,6 +784,12 @@ Funkcja kryterialna algorytmu fuzzy c-means ma postać:
 %nie działa z \nSize ani \nLen
 gdzie $\wX_{\Iteracja}$ -- współrzędne $\Iteracja$-tego punktu danych, $\wCentre_{\klaster}$ -- współrzędne środka $\klaster$-tego klastra danych, $\ClusterMembership_{\Iteracja\klaster} \in \left[ 0,1 \right]$ -- wartość przynależności $\Iteracja$-tego punktu do $\klaster$-tego klastra. Parametr $m \in \left( 1,+\infty \right]$ jest współczynnikiem rozmycia algorytmu, najczęściej wykorzystuje się wartość 2 \cite{bib:implementation-of-fcm-pcm-algs,bib:scikit-fuzzy-cmeans-docs-fcm}.
 
+Dla każdego punktu, suma jego wartości przynależności do wszystkich klastrów wynosi 1:
+
+\begin{align}
+	\forall \Iteracja \in [1, N] \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster} = 1
+\end{align}
+
 W każdej iteracji algorytmu obliczane są najpierw nowe współrzędne środków klastrów:
 \begin{align}
 	\label{eq:center_update}
@@ -845,7 +852,7 @@ Są one encjami o pewnej semantyce, kolekcjami obiektów o określonym w~pewien 
 %
 W zależności od znaczenia i zastosowania ziaren, mogą one być reprezentowane na różne sposoby: jako zbiory klasyczne, przedziały liczb, zbiory rozmyte, zbiory cieniowane, zbiory przybliżone, czy funkcje prawdopodobieństwa \cite{bib:general-framework-information-granules}.
 %
-Ziarna informacyjne utworzyć można poprzez grupowanie danych. W przypadku ziaren reprezentowanych przez zbiory rozmyte, typowym algorytmem grupowania jest fuzzy c-means \ref{sec:fcm}.
+Ziarna informacyjne utworzyć można poprzez grupowanie danych. W przypadku ziaren reprezentowanych przez zbiory rozmyte, typowym algorytmem grupowania jest algorytm rozmytych $c$-średnich \ref{sec:fcm}.
 % TODO link do rozdziału o FCM
 
 \subsection{Rozszerzalne liczby rozmyte}
@@ -1111,7 +1118,7 @@ Algorytm taki, nazwany \MojAlg, składa się z trzech głównych kroków:
 \begin{enumerate}
 	\item Granulacja oryginalnych danych przy pomocy algorytmu rozmytych $c$-średnich.
 	\item Przekształcenie otrzymanych wyników w granule o potrzebnych parametrach.
-	\item Aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia.
+	\item Aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia: \MojHierAlg.
 \end{enumerate}
 
 \section{Granulacja danych oryginalnych}
@@ -1137,7 +1144,7 @@ Zbiór granul oraz ich kształt są parametrami wejściowymi algorytmu rozmytego
 %
 Na początku wyznaczane są rozmyte odległości euklidesowe (wzór \eqref{eq:odleglosc:euklidesowa})między każdą parą granul, przy pomocy operacji arytmetycznych określonych w sekcji \ref{sec:rozszerzalne-liczby-rozmyte}. Wynikiem obliczeń jest symetryczna macierz odległości $\mDistance$ o wymiarach $\nX \times \nX$, gdzie $\Distance_{ij} = \Distance(\wX_{i}, \wX_{j})$.
 
-Grupowanie hierarchiczne ma postać zmodyfikowanego algorytmu naiwnego \texttt{PRIMITIVE\_CLUSTERING()} \ksremark{$\gets$ dałbym do makra}, o złożoności czasowej $O(n^{3})$. Zmieniony musi zostać sposób wyznaczania kolejnych minimalnych odległości w macierzy $\mDistance$ oraz, zależne od łączności, aktualizacje odległości do nowo scalonego klastra. 
+Grupowanie hierarchiczne \MojHierAlg{} ma postać zmodyfikowanego algorytmu naiwnego \texttt{PRIMITIVE\_CLUSTERING()} \ksremark{$\gets$ dałbym do makra}, o złożoności czasowej $O(n^{3})$. Zmieniony musi zostać sposób wyznaczania kolejnych minimalnych odległości w macierzy $\mDistance$ oraz, zależne od łączności, aktualizacje odległości do nowo scalonego klastra. 
 
 Minimum i maksimum wyznacza się przy pomocy operacji porównania. W przypadku rozszerzalnych liczb rozmytych, wynikami takich operacji są liczby z przedziału $[0, 1]$. W celu określenia, która z liczb rozmytych jest większa lub mniejsza, wprowadzony zostaje parametr $\xi$, będący paramtetrem badawczym. Algorytmy rozmytego minimum i maksimum przedstawiają odpowiednio pseudokody \ref{alg:fuzzy-min} i \ref{alg:fuzzy-max}.
 
@@ -1253,7 +1260,7 @@ Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' 
 
 \section{Metodyka badań}
 
-Algorytm \MojAlg zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami ostrego algorytmu aglomeracyjnego grupowania hierarchicznego \ksremark{konkretnie jakiego?}.
+Algorytm \MojAlg{} zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami ostrego algorytmu aglomeracyjnego grupowania hierarchicznego \ksremark{konkretnie jakiego?}.
 
 \subsection{Badanie szybkości algorytmu}
 
@@ -1261,7 +1268,7 @@ Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od iloś
 W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 10000. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
 
 Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej.
-W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu fuzzy C-means \ksremark{Może warto zapisać nazwę algorytmu do makra? Teraz mamy różny zapis nazwy tego samego algorytmu.}, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
+W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu rozmytych $c$-średnich \ksremark{Może warto zapisać nazwę algorytmu do makra? Teraz mamy różny zapis nazwy tego samego algorytmu.}, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
 
 Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtórzono czterokrotnie i obliczono średnią arytmetyczną wyników.
 
@@ -1279,24 +1286,50 @@ Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów gran
 
 Wykorzystana miara dokładności przyjmuje, że algorytm ostry, dla łączności \SingleLinkage{}, ma dokładność 100\% -- każdy punkt zostaje przypisany do oczekiwanego klastra.
 
-\ksremark{Tutaj dajemy pseudokod algorytmu.}
+\begin{algorithm}[t]
+	\caption{Wyznaczenie macierzy $l$}
+	\label{alg:calc_l_matrix}
+	\begin{algorithmic}[1]
+		\Require $\mClusterMembership$: macierz $\nX \times \nX$ przynależności danych do klastrów
+		\Require $\wEtykieta_{r}$: wektor o długości $\nX$ etykiet wyznaczonych dla wszystkich punktów przez algorytm ostry
+		\Require $\wEtykieta_{g}$: wektor o długości $\nKlaster$ etykiet wyznaczonych dla wszystkich granul przez algorytm \MojAlg
+		\Procedure{CalculateLMatrix}{$\mClusterMembership, \wEtykieta_{r}, \wEtykieta_{g}$}
+		\State $l \gets$ macierz zerowa $\nKlaster \times \nKlaster$
+		\For{$i = 1$ to $\nX$}
+		\State $\ClusterMembership \gets$ \Call{argmax}{$\mClusterMembership[i]$} \Comment{Indeks identyfikujący granulę, dla której przynależność punktu $i$-tego jest największa}
+		\State inkrementacja $l[\wEtykieta_{r}[i]][\wEtykieta_{g}[\ClusterMembership]]$
+		\EndFor
+		\State \Return $l$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+	\caption{Permutacja macierzy $l$}
+	\label{alg:perm_l_matrix}
+	\begin{algorithmic}[1]
+		\Require $l$: macierz $\nKlaster \times \nKlaster$, wyznaczona przez algorytm \ref{alg:calc_l_matrix}
+		\Procedure{PermuteLMatrix}{$l$}
+		\For{$i = 1$ to $\nKlaster - 1$}
+		\State $(w, k) \gets$ \Call{argmax}{$l[i:][i:]$} \Comment{Indeksy wiersza i kolumny, w których znajduje się maksymalna wartość podmacierzy $l[i:][i:]$}
+		\State $w := w + i$
+		\State $k := k + i$
+		\State zamiana kolejnością wiersza $i$-tego i $w$-tego macierzy $l$
+		\State zamiana kolejnością kolumny $i$-tej i $k$-tej macierzy $l$
+		\EndFor
+		\State \Return $l$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
 Wyznaczono macierz $l$, w której wartość elementu $l_{ij}$ jest równa liczbie punktów należących do klastra $i$ wyznaczonego przez algorytm ostry i do klastra $j$ wyznaczonego przez algorytm rozmyty:
 \begin{align}
 l_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j]
 \end{align}
 
-Numeracja klastrów wyznaczonych przez obydwa algorytmy może być inna ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na listingu \ref{lst:max-matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $l$, która maksymalizuje wartości na przekątnej. 
+Sposób wyznaczenia tej macierzy przedstawiono również na pseudokodzie \ref{alg:calc_l_matrix}.
 
-\begin{figure}
-\begin{lstlisting}
-for i in range(liczba_klastrow - 1):
-	(w, k) = wspolrzedne maksymalnej wartosci w podmacierzy l[i:, i:]
-	zamien kolejnoscia wiersze w oraz i
-	zamien kolejnoscia kolumny k oraz i
-\end{lstlisting}
-\caption{Algorytm maksymalizujący wartości na przekątnej macierzy}
-\label{lst:max-matrix}
-\end{figure}
+Numeracja klastrów wyznaczonych przez obydwa algorytmy może być inna ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na pseudokodzie \ref{alg:perm_l_matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $l$, która maksymalizuje wartości na przekątnej. 
 
 Z uzyskanej w ten sposób macierzy pomyłek, dokładność wyznaczana jest jako suma wartości na przekątnej macierzy podzielona przez całkowitą liczbę danych:
 
@@ -1335,7 +1368,7 @@ Tak obliczona średnia oznacza, że każdy klaster ma jednakową wagę dla ostat
 
 \subsection{Szybkość algorytmu}
 
-Algorytm, który wykorzystuje wstępną granulację fuzzy C-means, ma znacząco mniejszy czas wykonania w stosunku do algorytmu ostrego.
+Algorytm \MojAlg{}, który wykorzystuje wstępną granulację FCM, ma znacząco mniejszy czas wykonania w stosunku do algorytmu ostrego.
 Charakterystykę czasu wykonania algorytmów w zależności od liczby danych przedstawiono na rys. \ref{fig:circles-times}.
 
 \begin{figure}
@@ -1347,7 +1380,7 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 \ksremark{Rys. \ref{fig:circles-times}: Opis wykresów musi być po polsku.}
 
 Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba jest stała.
-Złożoność czasowa algorytmu fuzzy C-means wynosi $O(n)$, więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych. \ksremark{To napiszemy w rozdziale 3.}
+Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(n)$, więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych. \ksremark{To napiszemy w rozdziale 3.}
 
 \subsection{Jakość grupowania}
 
@@ -1574,19 +1607,19 @@ Zależność jest przeciwna dla \CompleteLinkage{}: najlepsze wyniki -- dokładn
 
 Algorytm grupowania hierarchicznego dostarczony przez bibliotekę scikit-learn nie odnajduje oczekiwanych klastrów (rys. \ref{fig:brightkite-nonfuzzy}).
 Przedstawione na rys. \ref{fig:brightkite-fuzzy} wyniki algorytmu rozmytego są bliższe oczekiwaniom, klastry zlokalizowane są we współrzędnych odpowiadającym kontynentom.
-Wstępna granulacja fuzzy C-means pozwoliła na eliminację szumów, na które wrażliwy jest algorytm grupowania hierarchicznego.
+Wstępna granulacja FCM pozwoliła na eliminację szumów, na które wrażliwy jest algorytm grupowania hierarchicznego.
 
 \begin{figure}
 \centering
 \includegraphics{./brightkite_nonfuzzy.png}
-\caption{Dane \brightkite (próbka 100000 współrzędnych) zgrupowane do 6 klastrów algorytmem non-fuzzy.}
+\caption{Dane \brightkite (próbka 100000 współrzędnych) zgrupowane do 6 klastrów algorytmem ostrym (AgglomerativeClustering biblioteki scikit-learn).}
 \label{fig:brightkite-nonfuzzy}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics{./brightkite_fuzzy.png}
-\caption{Dane \brightkite (próbka 100000 współrzędnych) zgrupowane do 6 klastrów algorytmem fuzzy.}
+\caption{Dane \brightkite (próbka 100000 współrzędnych) zgrupowane do 6 klastrów algorytmem \MojAlg{}.}
 \label{fig:brightkite-fuzzy}
 \end{figure}
 
