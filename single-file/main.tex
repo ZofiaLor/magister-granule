@@ -1148,7 +1148,7 @@ Na początku wyznaczane są rozmyte odległości euklidesowe (wzór \eqref{eq:od
 
 Grupowanie hierarchiczne \MojHierAlg{} ma postać zmodyfikowanego algorytmu naiwnego \texttt{PRIMITIVE\_CLUSTERING()} \ksremark{$\gets$ dałbym do makra}, o złożoności czasowej $O(n^{3})$ \ksremark{Tu musimy uważać: $O(\nGranula^3)$}. Zmieniony musi zostać sposób wyznaczania kolejnych minimalnych odległości w macierzy $\mDistance$ oraz, zależne od łączności, aktualizacje odległości do nowo scalonego klastra. 
 
-Minimum i maksimum wyznacza się przy pomocy operacji porównania. W przypadku rozszerzalnych liczb rozmytych, wynikami takich operacji są liczby z przedziału $[0, 1]$. W celu określenia, która z liczb rozmytych jest większa lub mniejsza, wprowadzony zostaje parametr $\xi$, będący paramtetrem badawczym. Algorytmy rozmytego minimum i maksimum przedstawiają odpowiednio pseudokody \ref{alg:fuzzy-min} i \ref{alg:fuzzy-max}.
+Minimum i maksimum wyznacza się przy pomocy operacji porównania. W przypadku rozszerzalnych liczb rozmytych, wynikami takich operacji są liczby z przedziału $[0, 1]$. W celu określenia, która z liczb rozmytych jest większa lub mniejsza, wprowadzony zostaje parametr $\xi$, będący parametrem badawczym. Algorytmy rozmytego minimum i maksimum przedstawiają odpowiednio pseudokody \ref{alg:fuzzy-min} i \ref{alg:fuzzy-max}.
 
 \begin{algorithm}[t]
 	\caption{Minimum rozmyte}
@@ -1229,7 +1229,7 @@ Dane mają postać współrzędnych punktów w dwóch lub trzech wymiarach -- ka
 Wykresy danych przedstawiono na rys. \ref{fig:data-shapes}, a w tabeli \ref{id:tab:zbiory} -- dodatkowo ich charakterystykę (liczbę wymiarów i klastrów).
 
 % czy 2011 to dobra data dla tych stron?
-Wykorzystano również zbiory danych \brightkite \cite{bib:brightkite} (4491143 wierszy) oraz \gowalla \cite{bib:gowalla} (6442890 wierszy).
+Wykorzystano również zbiory danych \brightkite\ \cite{bib:brightkite} (4491143 wierszy) oraz \gowalla\ \cite{bib:gowalla} (6442890 wierszy).
 Dane przedstawiają informacje o logowaniach się użytkowników platform społecznościowych.
 Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' -- dwuwymiarowe współrzędne lokalizacji logowań. Dane nie są sklasyfikowane. Analiza wykresów (rys. \ref{fig:gowalla-brightkite-shapes}) pozwala zauważyć kształty kontynentów -- można uznać je za docelowe klastry.
 \begin{figure}
@@ -1245,7 +1245,7 @@ Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' 
 \label{id:tab:zbiory}
 \begin{tabular}{rrrrrrr}
 \toprule
-	& \blobs & \circles & \corners & \crescents & \laguna & \spheres \\
+	& \blobs  & \circles & \corners  & \crescents  & \laguna  & \spheres  \\
 \midrule
 	    liczba klastrów & 3 & 2 & 4 & 2 & 3 & 2 \\
 	    liczba wymiarów & 2 & 2 & 2 & 2 & 2 & 3 \\
@@ -1264,7 +1264,7 @@ Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' 
 
 Algorytm \MojAlg{} zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami ostrego algorytmu aglomeracyjnego grupowania hierarchicznego \ksremark{konkretnie jakiego?}.
 
-\subsection{Badanie szybkości algorytmu}
+\subsection{Czas grupowania}
 
 Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od ilości danych, przygotowano dane o rozmiarach 500-10000 z krokiem 500.
 W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 10000. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
@@ -1274,17 +1274,18 @@ W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algor
 
 Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtórzono czterokrotnie i obliczono średnią arytmetyczną wyników.
 
-\subsection{Badanie jakości grupowania}
+\subsection{Jakość grupowania}
 
-Jakość zmierzono poprzez porówanie wyników algorytmu AgglomerativeClustering biblioteki scikit-learn z własną implementacją.
+Jakość zmierzono poprzez porówanie wyników algorytmu AgglomerativeClustering \ksremark{$\gets$ trzeba ujednolicić zapis nazwy algorytmu} biblioteki scikit-learn z własną implementacją.
 
 Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych łączności (\SingleLinkage{}, \CompleteLinkage{}), liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi \in \{ 0.05, 0.10, 0.15, \ldots, 0.95 \}$.
 
 \subsubsection{Miara jakości}
 
+\ksremark{Trzeba napisać, na czym polega użyta miara. Opisałbym tę miarę w formie algorytmu. Przyznam się, że z tego opisu nie bardzo bym wiedział, jak to działa.}
 Wybranymi miarami jakości grupowania są dokładność, trafność i precyzja.
 
-Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Określono więc, że na potrzeby porównania, punkt należy do granuli, dla której jego wartość w tablicy $\mClusterMembership$ jest maksymalna.
+Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Określono więc, że na potrzeby porównania, punkt należy do tej granuli, dla której jego wartość w tablicy $\mClusterMembership$ jest maksymalna.
 
 Wykorzystana miara dokładności przyjmuje, że algorytm ostry, dla łączności \SingleLinkage{}, ma dokładność 100\% -- każdy punkt zostaje przypisany do oczekiwanego klastra.
 
@@ -1324,7 +1325,7 @@ Wykorzystana miara dokładności przyjmuje, że algorytm ostry, dla łączności
 	\end{algorithmic}
 \end{algorithm}
 
-Wyznaczono macierz $l$, w której wartość elementu $l_{ij}$ jest równa liczbie punktów należących do klastra $i$ wyznaczonego przez algorytm ostry i do klastra $j$ wyznaczonego przez algorytm rozmyty:
+Wyznaczono macierz $l$ \ksremark{Musimy trzymać się spójnego zapisu. Dotychczas macierze oznaczaliśmy wielkimi wytłuszczonymi symbolami.}, w której wartość elementu $l_{ij}$ jest równa liczbie punktów należących do klastra $i$ wyznaczonego przez algorytm ostry i do klastra $j$ wyznaczonego przez algorytm rozmyty:
 \begin{align}
 l_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j]
 \end{align}
@@ -1333,8 +1334,7 @@ Sposób wyznaczenia tej macierzy przedstawiono również na pseudokodzie \ref{al
 
 Numeracja klastrów wyznaczonych przez obydwa algorytmy może być inna ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na pseudokodzie \ref{alg:perm_l_matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $l$, która maksymalizuje wartości na przekątnej. 
 
-Z uzyskanej w ten sposób macierzy pomyłek, dokładność wyznaczana jest jako suma wartości na przekątnej macierzy podzielona przez całkowitą liczbę danych:
-
+Z uzyskanej w ten sposób macierzy pomyłek, dokładność wyznaczana jest jako suma wartości na przekątnej macierzy podzielona przez całkowitą liczbę danych: \ksremark{bez mnożenia przez 100\%}
 \begin{align}
 \accuracy = \frac{\sum_{i=0}^{\nKlaster}l_{ii}}{N} * 100\%
 \end{align}
@@ -1342,7 +1342,7 @@ lub
 \begin{align}
 \accuracy = \frac{\sum_{i=0}^{\nKlaster}l_{ii}}{\sum_{i=0}^{\nKlaster}\sum_{j=0}^{\nKlaster}l_{ij}} * 100\%,
 \end{align}
-gdzie $\nKlaster=$ liczba klastrów.
+gdzie $\nKlaster$ to liczba klastrów.
 
 Trafność ($\recall$) i precyzja ($\precision$) wyznaczane są najpierw osobno dla każdego klastra $\klaster$:
 
@@ -1368,7 +1368,7 @@ Tak obliczona średnia oznacza, że każdy klaster ma jednakową wagę dla ostat
 
 \section{Wyniki}
 
-\subsection{Szybkość algorytmu}
+\subsection{Czas grupowania}
 
 Algorytm \MojAlg{}, który wykorzystuje wstępną granulację FCM, ma znacząco mniejszy czas wykonania w stosunku do algorytmu ostrego.
 Charakterystykę czasu wykonania algorytmów w zależności od liczby danych przedstawiono na rys. \ref{fig:circles-times}.
@@ -1381,8 +1381,11 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 \end{figure}
 \ksremark{Rys. \ref{fig:circles-times}: Opis wykresów musi być po polsku.}
 
+
 Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba jest stała.
 Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(n)$, więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych. \ksremark{To napiszemy w rozdziale 3.}
+
+\ksremark{Jak jakość grupowania zależy do liczby granul?}
 
 \subsection{Jakość grupowania}
 
@@ -1391,31 +1394,37 @@ Czerwone elipsy (elipsoidy dla \spheres) wizualizują rozmycie granul, gdzie dł
 
 \subsubsection{Dane generowane}
 
+\paragraph{Wpływ liczby granul}
+\ksremark{todo}
 \paragraph{Zależność od kształtu danych}
 
 Dokładność grupowania danych w zależności od ich kształtu dla łączności \SingleLinkage{} i \CompleteLinkage{} przedstawiono w tabeli \ref{id:tab:acc-ksztalt}, trafność -- w tabeli \ref{id:tab:rec-ksztalt}, a precyzję -- w tabeli \ref{id:tab:prec-ksztalt}.
 
 W przypadku \SingleLinkage{}, najlepszą dokładność, trafność i precyzję zaobserwowano dla danych \crescents, a najgorszą -- dla danych \laguna. Wyniki przeanalizowano również na podstawie wykresów.
 
+
 \begin{table}
 \centering
 \caption{Dokładność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności}
 \label{id:tab:acc-ksztalt}
-\begin{tabular}{rrr}
+\begin{tabular}{lcc}
 \toprule
-	kształt & dokładność \SingleLinkage{} & dokładność \CompleteLinkage{} \\
+            & \multicolumn{2}{c}{dokładność}\\
+            \cmidrule{2-3}
+	kształt & \SingleLinkage{} &  \CompleteLinkage{} \\
 \midrule
-	    \blobs & 97,931\% & 86,663\% \\
-		\circles & 87,911\% & 56,908\% \\
-		\corners & 80,708\% & 51,514\% \\
-		\crescents & 99,915\% & 95,702\% \\
-		\laguna & 79,749\% & 44,209\% \\
-		\spheres & 97,210\% & 70,242\% \\
+	    \blobs\  & 97,931\% & 86,663\% \\
+		\circles\ & 87,911\% & 56,908\% \\
+		\corners\  & 80,708\% & 51,514\% \\
+		\crescents\  & 99,915\% & 95,702\% \\
+		\laguna\  & 79,749\% & 44,209\% \\
+		\spheres\  & 97,210\% & 70,242\% \\
 \bottomrule
 \end{tabular}
 \end{table}  
 \ksremark{Tab. \ref{id:tab:acc-ksztalt}: `Dokładność' to ta miara z macierzą, prawda?}
 \ksremark{Tab. \ref{id:tab:acc-ksztalt}: Mamy jedno wykonanie algorytmu?}
+\ksremark{Jak się zmienia dokładność w zależności od liczby granul?}
 
 \begin{table}
 \centering
@@ -1425,12 +1434,12 @@ W przypadku \SingleLinkage{}, najlepszą dokładność, trafność i precyzję z
 \toprule
 	kształt & trafność \SingleLinkage{} & trafność \CompleteLinkage{} \\
 \midrule
-	    \blobs & 73,257\% & 75,492\% \\
-		\circles & 82,430\% & 49,790\% \\
-		\corners & 80,708\% & 51,514\% \\
-		\crescents & 99,915\% & 95,702\% \\
-		\laguna & 61,674\% & 45,171\% \\
-		\spheres & 89,581\% & 40,323\% \\
+	    \blobs\  & 73,257\% & 75,492\% \\
+		\circles\ & 82,430\% & 49,790\% \\
+		\corners\  & 80,708\% & 51,514\% \\
+		\crescents\  & 99,915\% & 95,702\% \\
+		\laguna\  & 61,674\% & 45,171\% \\
+		\spheres\  & 89,581\% & 40,323\% \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -1443,76 +1452,76 @@ W przypadku \SingleLinkage{}, najlepszą dokładność, trafność i precyzję z
 \toprule
 	kształt & precyzja \SingleLinkage{} & precyzja \CompleteLinkage{} \\
 \midrule
-	    \blobs & 72,061\% & 68,967\% \\
-		\circles & 79,112\% & 49,623\% \\
-		\corners & 84,673\% & 48,214\% \\
-		\crescents & 99,948\% & 96,579\% \\
-		\laguna & 58,617\% & 37,230\% \\
-		\spheres & 88,814\% & 44,232\% \\
+	    \blobs\  & 72,061\% & 68,967\% \\
+		\circles\ & 79,112\% & 49,623\% \\
+		\corners\  & 84,673\% & 48,214\% \\
+		\crescents\  & 99,948\% & 96,579\% \\
+		\laguna\  & 58,617\% & 37,230\% \\
+		\spheres\  & 88,814\% & 44,232\% \\
 \bottomrule
 \end{tabular}
 \end{table}  
 
-Wykresy wyników grupowania danych \blobs (rys. \ref{fig:blobs1000e}) pokazują, że wysoka dokładność uzyskana dla nich z macierzy pomyłek nie przekłada się na zgodność wyników z oczekiwaniami.
+Wykresy wyników grupowania danych \blobs\  (rys. \ref{fig:blobs1000e}) pokazują, że wysoka dokładność uzyskana dla nich z macierzy pomyłek nie przekłada się na zgodność wyników z oczekiwaniami.
 Ze względu na dużą dysproporcję danych pomiędzy trzema klastrami (48:1:1), algorytm fuzzy C-means często traktuje dwa mniejsze z nich jako szum i nie tworzy dla nich granul.
 Zawierają one jednak jedynie 4\% danych, dlatego dokładność grupowania pozostaje wysoka. 
 Trafność i precyzja lepiej odzwierciedlają zgodność z oczekiwaniami -- są znacznie niższe od dokładności. Mniejsze klastry mają tę samą wagę, co większy klaster, dlatego niepoprawne grupowania wyraźnie wpływają na wartość metryki.
 
-W przypadku danych \circles (rys. \ref{fig:circles1000e}) największe znaczenie dla dokładności ma liczba granul. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym. Okrąg zewnętrzny jest też bardziej liczny, niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest tak duża, jak w przypadku \blobs, więc różnica między wartością dokładności a wartościami trafności i precyzji jest mniejsza.
+W przypadku danych \circles\ (rys. \ref{fig:circles1000e}) największe znaczenie dla dokładności ma liczba granul. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym. Okrąg zewnętrzny jest też bardziej liczny, \nocomma\ niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest tak duża, jak w przypadku \blobs, więc różnica między wartością dokładności a wartościami trafności i precyzji jest mniejsza.
 
-Klastry dla danych \corners mają nierównomierną gęstość, przez co algorytm fuzzy C-means tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000e}).
+Klastry dla danych \corners\  mają nierównomierną gęstość, przez co algorytm fuzzy C-means \ksremark{Trzeba ujednolicić zapis nazwy algorytmu.} tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000e}).
 Odległości między granulami położonymi na ,,ramionach'' i w ,,środkach'' klastrów są na tyle duże, że odległości ,,środków'' różnych klastrów mogą być od nich mniejsze.
 Wszystkie klastry mają tę samą liczebność, wartości dokładności, trafności i precyzji są zbliżone do siebie.
 
-Dane \crescents tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność, trafność i precyzja ich grupowania są najlepsze (rys. \ref{fig:crescents1000e}). Ze względu na bliskie położenie końców łuków, przy dużym rozmyciu wciąż możliwe są błędy, jak w przypadku 50 granul, $\xi=0.9$.
+Dane \crescents\  tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność, trafność i precyzja ich grupowania są najlepsze (rys. \ref{fig:crescents1000e}). Ze względu na bliskie położenie końców łuków, przy dużym rozmyciu wciąż możliwe są błędy, jak w przypadku 50 granul, $\xi=0.9$.
 
-Dla danych \laguna (rys. \ref{fig:laguna1000e}), podobnie jak w przypadku \circles, błędy wynikają z większego rozmycia granul położonych na otaczającym pozostałe dwa klastry okręgu. Okrąg ma większą od nich liczebność, proporcja danych wynosi 8:1:1. Przekłada się to na znacznie niższe wartości trafności i precyzji w porównaniu z dokładnością.
+Dla danych \laguna\  (rys. \ref{fig:laguna1000e}), podobnie jak w przypadku \circles, błędy wynikają z większego rozmycia granul położonych na otaczającym pozostałe dwa klastry okręgu. Okrąg ma większą od nich liczebność, proporcja danych wynosi 8:1:1. Przekłada się to na znacznie niższe wartości trafności i precyzji w porównaniu z dokładnością.
 
-W przypadku danych \spheres (rys. \ref{fig:spheres1000e}) można zauważyć, że wyniki poprawiają się wraz ze zwiększeniem liczby granul i zmniejszeniem wartości parametru $\xi$. Proporcja liczebności klastrów wynosi 9:1, więc trafność i precyzja różnią się znacznie od dokładności.
+W przypadku danych \spheres\  (rys. \ref{fig:spheres1000e}) można zauważyć, że wyniki poprawiają się wraz ze zwiększeniem liczby granul i zmniejszeniem wartości parametru $\xi$. Proporcja liczebności klastrów wynosi 9:1, więc trafność i precyzja różnią się znacznie od dokładności.
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./blobs1000e.pdf}
-\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \blobs o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \blobs\  o~rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
 \label{fig:blobs1000e}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./circles1000e.pdf}
-\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \circles o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \circles\ o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
 \label{fig:circles1000e}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./corners1000e.pdf}
-\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \corners o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \corners\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
 \label{fig:corners1000e}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./crescents1000e.pdf}
-\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \crescents o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \crescents\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
 \label{fig:crescents1000e}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./laguna1000e.pdf}
-\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \laguna o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
 \label{fig:laguna1000e}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./spheres1000e.pdf}
-\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
 \label{fig:spheres1000e}
 \end{figure}
 
-Podobnie jak w przypadku \SingleLinkage{}, najlepsze wyniki dla łączności \CompleteLinkage{} uzyskano dla danych \crescents, a najgorsze -- dla danych \laguna. Wszystkie wyniki są znacznie gorsze od uzyskanych dla \SingleLinkage{}.
+Podobnie jak w przypadku \SingleLinkage{}, najlepsze wyniki dla łączności \CompleteLinkage{} uzyskano dla danych \crescents\ , a najgorsze -- dla danych \laguna\ . Wszystkie wyniki są znacznie gorsze od uzyskanych dla \SingleLinkage{}.
 
 \paragraph{Zależność od typu relacji}
 
@@ -1534,6 +1543,7 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 \bottomrule
 \end{tabular}
 \end{table} 
+\ksremark{Dokładność w tab. \ref{id:tab:acc-rt} jest układa się dokładnie odwrotnie dla \SingleLinkage\ i dla \CompleteLinkage. Tzn. tam gdzie \SingleLinkage\ jest najlepszy, tam \CompleteLinkage\ jest najgorszy i odwrotnie. Dlaczego tak się dzieje?}
 
 \begin{table}
 \centering
@@ -1571,7 +1581,7 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 
 Dla \SingleLinkage{}, najwyższą dokładność -- 93,7716\% -- osiągnięto dla $\xi=0,1$, wartości metryk spadają wraz ze wzrostem wartości parametru.
 Zależność jest przeciwna dla \CompleteLinkage{}: najlepsze wyniki -- dokładność 69,546\% -- osiągnięto dla $\xi=0,95$.
-
+\ksremark{Trzeba skomentować te wyniki.}
 \begin{figure}
 	\centering
 	\begin{subfigure}{0.48\textwidth}
