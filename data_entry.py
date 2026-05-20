@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import sklearn
 import numpy as np
-from hierarchy import HierarchicalClustering, Granule, calculate_fcm_variance
+from hierarchy import HierarchicalClustering, Granule, calculate_fcm_variance, FuzzyNumber
 from fuzzy_cmeans import FuzzyCMeans
 import time
 import pandas
@@ -78,18 +78,35 @@ class DataEntry(object):
         for n in self.granules_number:
             print(np.mean(self.fuzzy_number_times[n]))
 
-    def calculate_accuracy(self, fcm, hc, nonfuzzy_labels):
-        granule_membership = []
+    def calculate_accuracy(self, fcm, hc, granules, nonfuzzy_labels, relation_type, shape_dependent_membership):
         granule_member_labels = []
-        for sample in fcm.U_:
-            membership = int(np.argmax(sample))
-            granule_membership.append(membership)
-            granule_member_labels.append(int(hc.labels[membership]))
+        noise = 0
+
+        if shape_dependent_membership:
+            for point in self.data:
+                membership_value = 0
+                membership = 0
+                for i in range(len(granules)):
+                    total = granules[i].fuzzy_dims[0].equal(FuzzyNumber(point[0], 0), relation_type)
+                    for j in range(1, len(point)):
+                        total *= granules[i].fuzzy_dims[j].equal(FuzzyNumber(point[j], 0), relation_type)
+                    if total > membership_value:
+                        membership_value = total
+                        membership = i
+                if membership_value > 0:
+                    granule_member_labels.append(int(hc.labels[membership]))
+                else:
+                    noise += 1
+                    granule_member_labels.append(-1)
+        else:
+            for sample in fcm.U_:
+                membership = int(np.argmax(sample))
+                granule_member_labels.append(int(hc.labels[membership]))
 
         l_matrix = np.zeros(shape=(self.clusters_number, self.clusters_number))
         for d in range(len(granule_member_labels)):
-            l_matrix[nonfuzzy_labels[d], granule_member_labels[d]] = l_matrix[nonfuzzy_labels[d], granule_member_labels[
-                d]] + 1
+            if granule_member_labels[d] > -1:
+                l_matrix[nonfuzzy_labels[d], granule_member_labels[d]] = l_matrix[nonfuzzy_labels[d], granule_member_labels[d]] + 1
 
         for i in range(self.clusters_number - 1):
             (row, col) = np.unravel_index(np.argmax(l_matrix[i:, i:]),
@@ -106,14 +123,17 @@ class DataEntry(object):
         precision_denominators = np.sum(l_matrix, axis=0).tolist()
         for i in range(self.clusters_number):
             sum_diagonal = sum_diagonal + l_matrix[i, i]
-            recall += l_matrix[i, i] / recall_denominators[i]
-            precision += l_matrix[i, i] / precision_denominators[i]
-        accuracy = sum_diagonal / len(granule_member_labels)
+            if recall_denominators[i] != 0:
+                recall += l_matrix[i, i] / recall_denominators[i]
+            if precision_denominators[i] != 0:
+                precision += l_matrix[i, i] / precision_denominators[i]
+        accuracy = sum_diagonal / (len(granule_member_labels) - noise)
         recall /= self.clusters_number
         precision /= self.clusters_number
-        return accuracy, recall, precision
+        noise_percentage = noise / self.length
+        return accuracy, recall, precision, noise_percentage
 
-    def measure_accuracy(self, linkage='single'):
+    def measure_accuracy(self, shape_dependent_membership, linkage='single'):
         result_list = []
         ac = sklearn.cluster.AgglomerativeClustering(n_clusters=self.clusters_number, linkage='single')
         ac.fit(self.data)
@@ -131,9 +151,9 @@ class DataEntry(object):
                     k = k100 / 100
                     print("n " + str(n) + " type " + relation_type + " ksi " + str(k))
                     hc.fuzzy_fit(granules, k, relation_type, linkage=linkage)
-                    acc, rec, pre = self.calculate_accuracy(fcm, hc, ac.labels_)
+                    acc, rec, pre, noi = self.calculate_accuracy(fcm, hc, granules, ac.labels_, relation_type, shape_dependent_membership)
                     results = {"data size": self.length, "granules number": n, "relation type": relation_type, "ksi": k,
-                               "accuracy": acc, "recall": rec, "precision": pre}
+                               "accuracy": acc, "recall": rec, "precision": pre, "noise percentage": noi}
                     result_list.append(results)
         return pandas.DataFrame(result_list)
 

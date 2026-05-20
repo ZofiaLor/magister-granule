@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import sklearn
 import numpy as np
 import math
-from hierarchy import HierarchicalClustering, Granule, calculate_fcm_variance
+from hierarchy import HierarchicalClustering, Granule, calculate_fcm_variance, FuzzyNumber
 from fuzzy_cmeans import FuzzyCMeans
 import os
 import time
@@ -30,20 +30,20 @@ data_size_presets = [1000, 2000, 5000, 10000, 20000, 30000, 40000, 50000]
 data_size_presets_for_time_measurement = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
 
 
-def measure_accuracy_recall_precision(linkage, specific_file=None, print_to_console=False):
-    linkages = {"single": "sl", "complete": "cl"}
+def measure_accuracy_recall_precision(linkage, specific_file=None, print_to_console=False, shape_dependent=False):
+    linkages = {"single": "sl_shape_dep", "complete": "cl_shape_dep"}
     if linkages.get(linkage) is None:
         linkage = "single"
     if specific_file is not None:
         data_to_measure = fullData.get(specific_file)
         if data_to_measure is not None:
-            print(data_to_measure.measure_accuracy(linkage))
+            print(data_to_measure.measure_accuracy(shape_dependent, linkage))
     else:
         for root in names_roots:
             accuracy_results = pandas.DataFrame()
             for data_size in data_size_presets:
                 print(root + str(data_size))
-                result = fullData[root + str(data_size)].measure_accuracy(linkage)
+                result = fullData[root + str(data_size)].measure_accuracy(shape_dependent_membership=shape_dependent, linkage=linkage)
                 accuracy_results = pandas.concat([accuracy_results, result], ignore_index=True)
             if print_to_console:
                 print(root)
@@ -115,6 +115,71 @@ for folder in os.scandir("dane"):
                     fullData[file.name[:-5]].clusters_number = value
                     break
 
+test_data = fullData["corners1000"].data
+fcm = FuzzyCMeans(n_clusters=10, random_state=seed, max_iter=n_iterations)
+hc = HierarchicalClustering(n_clusters=4)
+granules = []
+fcm.fit(test_data)
+fuzziness = calculate_fcm_variance(fcm)
+for i in range(10):
+    granules.append(Granule(fcm.cluster_centers_[i], fuzziness[i]))
+hc.fuzzy_fit(granules, 0.1, 'e')
+
+granule_member_labels = []
+noise = 0
+member_cluster = [[], [], [], []]
+
+# for i in range(1000):
+#     m = [0, 0, 0, 0]
+#     for j in range(len(granules)):
+#         m[hc.labels[j]] += fcm.U_[i][j]
+#     member_cluster[0].append(m[0])
+#     member_cluster[1].append(m[1])
+#     member_cluster[2].append(m[2])
+#     member_cluster[3].append(m[3])
+# fig, ax = plt.subplots(2, 2)
+# ax[0, 0].scatter(test_data[:, 0], test_data[:, 1], c=member_cluster[0], cmap="Blues")
+# ax[0, 0].set_title("Cluster 0")
+# ax[0, 1].scatter(test_data[:, 0], test_data[:, 1], c=member_cluster[1], cmap="Blues")
+# ax[0, 1].set_title("Cluster 1")
+# ax[1, 0].scatter(test_data[:, 0], test_data[:, 1], c=member_cluster[2], cmap="Blues")
+# ax[1, 0].set_title("Cluster 2")
+# ax[1, 1].scatter(test_data[:, 0], test_data[:, 1], c=member_cluster[3], cmap="Blues")
+# ax[1, 1].set_title("Cluster 3")
+# plt.show()
+
+for point in test_data:
+    membership_value = 0
+    # membership_value = FuzzyNumber(np.inf, 0)
+    membership = 0
+    point_granule = Granule(point, [0, 0])
+    for i in range(len(granules)):
+        total = granules[i].fuzzy_dims[0].equal(FuzzyNumber(point[0], 0), 'g')
+        for j in range(1, len(point)):
+            # total = max(total + granules[i].fuzzy_dims[j].equal(FuzzyNumber(point[j], 0), 'g') - 1, 0)
+            total *= granules[i].fuzzy_dims[j].equal(FuzzyNumber(point[j], 0), 'g')
+        # dist = point_granule.fuzzy_distance(granules[i])
+        # if dist.less(membership_value, 'g') > 0.05:
+        #     membership_value = dist
+        #     membership = i
+        if total > membership_value:
+            membership_value = total
+            membership = i
+    if membership_value > 0:
+        granule_member_labels.append(membership)
+    else:
+        noise += 1
+        granule_member_labels.append(-1)
+    # if membership_value.x > 0 or membership_value.p > 0:
+    #     granule_member_labels.append(membership)
+    # else:
+    #     noise += 1
+    #     granule_member_labels.append(-1)
+plt.figure()
+plt.scatter(test_data[:, 0], test_data[:, 1], c=granule_member_labels)
+plt.scatter(fcm.cluster_centers_[:, 0], fcm.cluster_centers_[:, 1], c="red")
+plt.show()
+
 user_input = ""
 while True:
     user_input = ""
@@ -131,9 +196,9 @@ while True:
             while user_input not in ["1", "2"]:
                 user_input = input("Select linkage:\n1. Single\n2. Complete\n")
             if user_input == "1":
-                measure_accuracy_recall_precision("single")
+                measure_accuracy_recall_precision("single", shape_dependent=True)
             elif user_input == "2":
-                measure_accuracy_recall_precision("complete")
+                measure_accuracy_recall_precision("complete", shape_dependent=True)
         elif user_input == "2":
             user_input = ""
             while user_input not in ["1", "2"]:
@@ -149,7 +214,7 @@ while True:
                 user_input = input("Select linkage:\n1. Single\n2. Complete\n")
             filename = input("Input file name\n")
             if user_input == "1":
-                measure_accuracy_recall_precision("single", specific_file=filename, print_to_console=True)
+                measure_accuracy_recall_precision("single", specific_file=filename, print_to_console=True, shape_dependent=False)
             elif user_input == "2":
                 measure_accuracy_recall_precision("complete", specific_file=filename, print_to_console=True)
     elif user_input == "2":
