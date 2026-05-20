@@ -77,10 +77,6 @@ def _single_linkage(left, right, ksi, relation_type):
 
 
 def _complete_linkage(left, right, ksi, relation_type):
-    if left.x == np.inf:
-        return right
-    if right.x == np.inf:
-        return left
     if left.more(right, relation_type) > ksi:
         return left
     else:
@@ -100,7 +96,7 @@ class HierarchicalClustering:
         self.distances = np.full((n_samples, n_samples), FuzzyNumber(np.inf, 0))
         for row in range(n_samples - 1):
             for col in range(row + 1, n_samples):
-                self.distances[row, col] = granules[row].fuzzy_distance(granules[col])
+                self.distances[row, col] = self.distances[col, row] = granules[row].fuzzy_distance(granules[col])
         return self.distances
         # for i in range(n_samples):
         #     for j in range(n_samples):
@@ -112,6 +108,7 @@ class HierarchicalClustering:
         n_samples = np.size(granules, 0)
         self.labels = np.arange(0, n_samples, step=1)
         formula = None
+        valid_indices = list(range(n_samples))
         if linkage == 'single':
             formula = _single_linkage
         elif linkage == 'complete':
@@ -130,12 +127,13 @@ class HierarchicalClustering:
             min_num = FuzzyNumber(np.inf, 0)
             row = 0
             col = 0
-            for i in range(n_samples - 1):
-                for j in range(i + 1, n_samples):
-                    if self.distances[i, j].less(min_num, relation_type) > ksi:
-                        min_num = self.distances[i, j]
-                        row = i
-                        col = j
+            for i in range(len(valid_indices) - 1):
+                for j in range(i + 1, len(valid_indices)):
+                    r, c = valid_indices[i], valid_indices[j]
+                    if self.distances[r, c].less(min_num, relation_type) > ksi:
+                        min_num = self.distances[r, c]
+                        row = r
+                        col = c
             if generateLinkageMatrix:
                 new_size = self.linkage_clusters[row][1] + self.linkage_clusters[col][1]  #
                 self.linkage_matrix.append(
@@ -144,13 +142,14 @@ class HierarchicalClustering:
                 new_cluster_label += 1  #
 
             # Iterate over one axis, change the row values to the minimum
-            for i in range(n_samples):
+            valid_indices.remove(col)
+            for i in valid_indices:
                 if i != row:
                     min_distance = formula(self.distances[row, i], self.distances[i, col], ksi, relation_type)
                     self.distances[i, row] = min_distance
                     self.distances[row, i] = min_distance
-                self.distances[i, col] = FuzzyNumber(np.inf, 0)
-                self.distances[col, i] = FuzzyNumber(np.inf, 0)
+                # self.distances[i, col] = FuzzyNumber(np.inf, 0)
+                # self.distances[col, i] = FuzzyNumber(np.inf, 0)
 
             # This does not ensure that the labels are consecutive
             for i in range(n_samples):
