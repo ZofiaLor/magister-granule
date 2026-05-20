@@ -410,7 +410,7 @@ escapeinside={@*}{*@},%
 
 
 \begin{document}
-%\kslistofremarks
+\kslistofremarks
 
 \frontmatter
 
@@ -1144,7 +1144,7 @@ Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytyc
 
 Zbiór granul \ksremark{$\zGranula$} oraz ich kształt są parametrami wejściowymi algorytmu rozmytego aglomeracyjnego grupowania hierarchicznego \ksremark{nazwa algorytmu}.
 %
-Na początku wyznaczane są rozmyte odległości euklidesowe (wzór \eqref{eq:odleglosc:euklidesowa})między każdą parą granul, przy pomocy operacji arytmetycznych określonych w sekcji \ref{sec:rozszerzalne-liczby-rozmyte}. Wynikiem obliczeń jest symetryczna macierz odległości $\mDistance$ o wymiarach $\nX \times \nX$, gdzie $\Distance_{ij} \ksremark{= \Distance_{ji}} = \Distance(\wX_{i}, \wX_{j})$.
+Na początku wyznaczane są rozmyte odległości euklidesowe (wzór \eqref{eq:odleglosc:euklidesowa})między każdą parą granul, przy pomocy operacji arytmetycznych określonych w sekcji \ref{sec:rozszerzalne-liczby-rozmyte}. Wynikiem obliczeń jest symetryczna macierz odległości $\mDistance$ o wymiarach $\nX \times \nX$, gdzie $\Distance_{ij} = \Distance_{ji} = \Distance(\wX_{i}, \wX_{j})$.
 
 Grupowanie hierarchiczne \MojHierAlg{} ma postać zmodyfikowanego algorytmu naiwnego \texttt{PRIMITIVE\_CLUSTERING()} \ksremark{$\gets$ dałbym do makra}, o złożoności czasowej $O(n^{3})$ \ksremark{Tu musimy uważać: $O(\nGranula^3)$}. Zmieniony musi zostać sposób wyznaczania kolejnych minimalnych odległości w macierzy $\mDistance$ oraz, zależne od łączności, aktualizacje odległości do nowo scalonego klastra. 
 
@@ -1345,25 +1345,23 @@ lub
 gdzie $\nKlaster$ to liczba klastrów.
 
 Trafność ($\recall$) i precyzja ($\precision$) wyznaczane są najpierw osobno dla każdego klastra $\klaster$:
-
+%
 \begin{align}
 	\recall_{\klaster} = \frac{l_{\klaster\klaster}}{\sum_{i=0}^{\nKlaster}l_{\klaster i}},
 \end{align}
-
+%
 \begin{align}
 	\precision_{\klaster} = \frac{l_{\klaster\klaster}}{\sum_{i=0}^{\nKlaster}l_{i \klaster}}.
 \end{align}
-
+%
 Trafność i precyzja dla całości wyników otrzymywane są jako średnia arytmetyczna metryk częściowych:
-
 \begin{align}
-	\recall = \frac{\sum_{i=0}^{\nKlaster}\recall_{i}}{\nKlaster}
+	\recall = \frac{\sum_{i=0}^{\nKlaster}\recall_{i}}{\nKlaster},
 \end{align}
-
 \begin{align}
-	\precision = \frac{\sum_{i=0}^{\nKlaster}\precision_{i}}{\nKlaster}
+	\precision = \frac{\sum_{i=0}^{\nKlaster}\precision_{i}}{\nKlaster}.
 \end{align}
-
+%
 Tak obliczona średnia oznacza, że każdy klaster ma jednakową wagę dla ostatecznego wyniku. Trafność i precyzja będą więc bardziej niż dokładność czułe na błędy przy klasyfikacji danych dla klastrów o różnej docelowej liczności. 
 
 \section{Wyniki}
