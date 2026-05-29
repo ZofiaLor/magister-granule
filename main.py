@@ -101,7 +101,7 @@ def plot_results(specific_name=None, save_plot=True):
             data_to_plot.fit_plot_fuzzy_labels('g', save_to_file=save_plot)
 
 
-for folder in os.scandir("dane"):
+for folder in os.scandir("dane_labelled"):
     for file in os.scandir(folder.path):
         with open(file.path) as f:
             # Assumption: all folders contain only files with .data extension
@@ -115,28 +115,33 @@ for folder in os.scandir("dane"):
                     fullData[file.name[:-5]].clusters_number = value
                     break
 
-test_data = fullData["corners1000"].data
+test_data = fullData["laguna40000"].data
 fcm = FuzzyCMeans(n_clusters=50, random_state=seed, max_iter=n_iterations)
-hc = HierarchicalClustering(n_clusters=4)
+hc = HierarchicalClustering(n_clusters=3)
 granules = []
 fcm.fit(test_data)
 fuzziness = calculate_fcm_variance(fcm)
 for i in range(50):
     granules.append(Granule(fcm.cluster_centers_[i], fuzziness[i]))
-hc.fuzzy_fit(granules, 0.1, 'e', linkage="complete")
+hc.fuzzy_fit(granules, 0.1, 'e', linkage="single")
+
+# ac = sklearn.cluster.AgglomerativeClustering(3, linkage="single")
+# ac.fit(test_data)
+# plt.plot()
+# plt.scatter(test_data[:, 0], test_data[:, 1], c=ac.labels_)
+# plt.show()
 
 granule_member_labels = []
 noise = 0
-member_cluster = [[], [], [], []]
+member_cluster = [[], [], []]
 
-for i in range(1000):
-    m = [0, 0, 0, 0]
+for i in range(40000):
+    m = [0, 0, 0]
     for j in range(len(granules)):
         m[hc.labels[j]] += fcm.U_[i][j]
     member_cluster[0].append(m[0])
     member_cluster[1].append(m[1])
     member_cluster[2].append(m[2])
-    member_cluster[3].append(m[3])
 fig, ax = plt.subplots(2, 2)
 ax[0, 0].scatter(test_data[:, 0], test_data[:, 1], c=member_cluster[0], cmap="Blues")
 ax[0, 0].set_title("Cluster 0")
@@ -144,41 +149,39 @@ ax[0, 1].scatter(test_data[:, 0], test_data[:, 1], c=member_cluster[1], cmap="Bl
 ax[0, 1].set_title("Cluster 1")
 ax[1, 0].scatter(test_data[:, 0], test_data[:, 1], c=member_cluster[2], cmap="Blues")
 ax[1, 0].set_title("Cluster 2")
-ax[1, 1].scatter(test_data[:, 0], test_data[:, 1], c=member_cluster[3], cmap="Blues")
-ax[1, 1].set_title("Cluster 3")
 plt.show()
-
-for point in test_data:
-    membership_value = 0
-    # membership_value = FuzzyNumber(np.inf, 0)
-    membership = 0
-    point_granule = Granule(point, [0, 0])
-    for i in range(len(granules)):
-        total = granules[i].fuzzy_dims[0].equal(FuzzyNumber(point[0], 0), 't')
-        for j in range(1, len(point)):
-            # total = max(total + granules[i].fuzzy_dims[j].equal(FuzzyNumber(point[j], 0), 'g') - 1, 0)
-            total *= granules[i].fuzzy_dims[j].equal(FuzzyNumber(point[j], 0), 't')
-        # dist = point_granule.fuzzy_distance(granules[i])
-        # if dist.less(membership_value, 'g') > 0.05:
-        #     membership_value = dist
-        #     membership = i
-        if total > membership_value:
-            membership_value = total
-            membership = i
-    if membership_value > 0:
-        granule_member_labels.append(membership)
-    else:
-        noise += 1
-        granule_member_labels.append(-1)
-    # if membership_value.x > 0 or membership_value.p > 0:
-    #     granule_member_labels.append(membership)
-    # else:
-    #     noise += 1
-    #     granule_member_labels.append(-1)
-plt.figure()
-plt.scatter(test_data[:, 0], test_data[:, 1], c=granule_member_labels)
-plt.scatter(fcm.cluster_centers_[:, 0], fcm.cluster_centers_[:, 1], c="red")
-plt.show()
+#
+# for point in test_data:
+#     membership_value = 0
+#     # membership_value = FuzzyNumber(np.inf, 0)
+#     membership = 0
+#     point_granule = Granule(point, [0, 0])
+#     for i in range(len(granules)):
+#         total = granules[i].fuzzy_dims[0].equal(FuzzyNumber(point[0], 0), 't')
+#         for j in range(1, len(point)):
+#             # total = max(total + granules[i].fuzzy_dims[j].equal(FuzzyNumber(point[j], 0), 'g') - 1, 0)
+#             total *= granules[i].fuzzy_dims[j].equal(FuzzyNumber(point[j], 0), 't')
+#         # dist = point_granule.fuzzy_distance(granules[i])
+#         # if dist.less(membership_value, 'g') > 0.05:
+#         #     membership_value = dist
+#         #     membership = i
+#         if total > membership_value:
+#             membership_value = total
+#             membership = i
+#     if membership_value > 0:
+#         granule_member_labels.append(membership)
+#     else:
+#         noise += 1
+#         granule_member_labels.append(-1)
+#     # if membership_value.x > 0 or membership_value.p > 0:
+#     #     granule_member_labels.append(membership)
+#     # else:
+#     #     noise += 1
+#     #     granule_member_labels.append(-1)
+# plt.figure()
+# plt.scatter(test_data[:, 0], test_data[:, 1], c=granule_member_labels)
+# plt.scatter(fcm.cluster_centers_[:, 0], fcm.cluster_centers_[:, 1], c="red")
+# plt.show()
 
 user_input = ""
 while True:

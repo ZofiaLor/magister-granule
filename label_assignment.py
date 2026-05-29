@@ -102,6 +102,11 @@ if __name__ == '__main__':
         plt.plot()
         plt.scatter(data[:, 0], data[:, 1], c=labels)
         plt.show()
+
+        with open("dane_labelled/" + filename + ".data", "w") as f:
+            for i in range(len(labels)):
+                f.write("\t".join([str(data[i, 0]), str(data[i, 1]), str(int(labels[i]))]))
+                f.write("\n")
     elif "spheres" in filename:
         label1 = 0
         for i in range(len(data)):
@@ -120,7 +125,9 @@ if __name__ == '__main__':
         ax.scatter3D(data[:, 0], data[:, 1], data[:, 2], c=labels)
         plt.show()
 
-    with open("dane_labelled/" + filename + ".data", "w") as f:
-        for i in range(len(labels)):
-            f.write("\t".join([str(data[i, 0]), str(data[i, 1]), str(int(labels[i]))]))
-            f.write("\n")
+        with open("dane_labelled/" + filename + ".data", "w") as f:
+            for i in range(len(labels)):
+                f.write("\t".join([str(data[i, 0]), str(data[i, 1]), str(data[i, 2]), str(int(labels[i]))]))
+                f.write("\n")
+
+

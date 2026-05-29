@@ -16,7 +16,9 @@ folderPath = "img/iter80/"
 
 class DataEntry(object):
     def __init__(self, data, name, dim=2):
+        self.labels = []
         if isinstance(data, np.ndarray):
+            # handle labels
             self.data = data
         else:
             data = data.splitlines()
@@ -29,6 +31,7 @@ class DataEntry(object):
                 y.append(float(coords[1]))
                 if dim > 2:
                     z.append(float(coords[2]))
+                self.labels.append(int(coords[-1]))
             if dim > 2:
                 self.data = np.array(list(zip(x, y, z)))
             else:
@@ -78,7 +81,7 @@ class DataEntry(object):
         for n in self.granules_number:
             print(np.mean(self.fuzzy_number_times[n]))
 
-    def calculate_accuracy(self, fcm, hc, granules, nonfuzzy_labels, relation_type, shape_dependent_membership):
+    def calculate_accuracy(self, fcm, hc, granules, relation_type, shape_dependent_membership):
         granule_member_labels = []
         noise = 0
 
@@ -106,7 +109,7 @@ class DataEntry(object):
         l_matrix = np.zeros(shape=(self.clusters_number, self.clusters_number))
         for d in range(len(granule_member_labels)):
             if granule_member_labels[d] > -1:
-                l_matrix[nonfuzzy_labels[d], granule_member_labels[d]] = l_matrix[nonfuzzy_labels[d], granule_member_labels[d]] + 1
+                l_matrix[self.labels[d], granule_member_labels[d]] = l_matrix[self.labels[d], granule_member_labels[d]] + 1
 
         for i in range(self.clusters_number - 1):
             (row, col) = np.unravel_index(np.argmax(l_matrix[i:, i:]),
@@ -135,8 +138,6 @@ class DataEntry(object):
 
     def measure_accuracy(self, shape_dependent_membership, linkage='single'):
         result_list = []
-        ac = sklearn.cluster.AgglomerativeClustering(n_clusters=self.clusters_number, linkage='single')
-        ac.fit(self.data)
         for n in self.granules_number:
             fcm = FuzzyCMeans(n_clusters=n, random_state=seed, max_iter=n_iterations)
             hc = HierarchicalClustering(n_clusters=self.clusters_number)
@@ -151,7 +152,7 @@ class DataEntry(object):
                     k = k100 / 100
                     print("n " + str(n) + " type " + relation_type + " ksi " + str(k))
                     hc.fuzzy_fit(granules, k, relation_type, linkage=linkage)
-                    acc, rec, pre, noi = self.calculate_accuracy(fcm, hc, granules, ac.labels_, relation_type, shape_dependent_membership)
+                    acc, rec, pre, noi = self.calculate_accuracy(fcm, hc, granules, relation_type, shape_dependent_membership)
                     results = {"data size": self.length, "granules number": n, "relation type": relation_type, "ksi": k,
                                "accuracy": acc, "recall": rec, "precision": pre, "noise percentage": noi}
                     result_list.append(results)
@@ -188,13 +189,13 @@ class DataEntry(object):
             for i in range(len(self.granules_number)):
                 for j in range(len(self.ksi)):
                     ax[i, j].scatter(self.data[:, 0], self.data[:, 1], c='lightgray')
-                    ax[i, j].scatter(centers[i][:, 0], centers[i][:, 1], c=labels[i][j], cmap='cool')
+                    ax[i, j].scatter(centers[i][:, 0], centers[i][:, 1], c=labels[i][j])
                     ax[i, j].set_title(str(self.granules_number[i]) + " granules, ksi = " + str(self.ksi[j]))
                     t = np.linspace(0, 2 * np.pi)
                     for clust in range(self.granules_number[i]):
                         ax[i, j].plot(centers[i][clust, 0] + 2 * fuzz[i][clust][0] * np.cos(t),
                                       centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(t),
-                                      color='crimson', alpha=0.5)
+                                      color='magenta', alpha=0.5)
             if save_to_file:
                 plt.savefig(folderPath + self.name + relation_type + ".pdf")
                 plt.close()
@@ -210,13 +211,13 @@ class DataEntry(object):
                     ax = fig.add_subplot(len(self.granules_number), len(self.ksi),
                                          i * len(self.granules_number) + j + 1, projection='3d')
                     # ax.scatter3D(self.data[:, 0], self.data[:, 1], self.data[:, 2], c='lightgray')
-                    ax.scatter3D(centers[i][:, 0], centers[i][:, 1], centers[i][:, 2], c=labels[i][j], cmap='cool')
+                    ax.scatter3D(centers[i][:, 0], centers[i][:, 1], centers[i][:, 2], c=labels[i][j])
                     ax.set_title(str(self.granules_number[i]) + " granules, ksi = " + str(self.ksi[j]))
                     for clust in range(self.granules_number[i]):
                         ax.plot_surface(centers[i][clust, 0] + 2 * fuzz[i][clust][0] * np.sin(p) * np.cos(t),
                                         centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(p) * np.sin(t),
                                         centers[i][clust, 2] + 2 * fuzz[i][clust][2] * np.cos(p),
-                                        color='crimson', alpha=0.5)
+                                        color='magenta', alpha=0.5)
             if save_to_file:
                 plt.savefig(folderPath + self.name + relation_type + ".pdf")
                 plt.close()
