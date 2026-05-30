@@ -1209,15 +1209,16 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 	\caption{Rozmyta funkcja $\arg\min$}
 	\label{alg:fuzzy-argmin}
 	\begin{algorithmic}[1]
-		\Require $\mX$: macierz liczb rozmytych, $r$: typ relacji (trójkątna, wykładnicza, gaussowska), $\xi$: parametr porównania 
+		\Require $\mX$: macierz liczb rozmytych, $\wPunkt$: wektor indeksów, dla których znajdowane jest minimum, $r$: typ relacji (trójkątna, wykładnicza, gaussowska), $\xi$: parametr porównania 
 		\Procedure{FuzzyArgMin}{$\mX, r, \xi$}
 		\State result $\gets \infty_{S(0)}$  \Comment{liczba rozmyta, dla której $x=\infty, p=0$}
 		\State $(w, k) \gets (0, 0)$
-		\For{$i = 1$ to $\nX - 1$}
-		\For{$j = i + 1$ to $\nX$}  
-		\If{($\mX[i, j] <_{\nPodobienstwo_r}$ result) > $\xi$}
-		\State result $\gets \mX[i, j]$
-		\State $(w, k) \gets (i, j)$
+		\For{$i = 1$ to $\nPunkt - 1$}
+		\For{$j = i + 1$ to $\nPunkt$}
+		\State $pi, pj \gets \wPunkt[i], \wPunkt[j]$  
+		\If{($\mX[pi, pj] <_{\nPodobienstwo_r}$ result) > $\xi$}
+		\State result $\gets \mX[pi, pj]$
+		\State $(w, k) \gets (pi, pj)$
 		\EndIf
 		\EndFor
 		\EndFor
@@ -1236,20 +1237,21 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 		\Require $\xi$: parametr porównania
 		\Procedure{\MojHierAlg}{$\zX, \nKlaster, r, \xi$}
 		\State $\nX \gets $ liczba danych
-		\State $\mDistance \gets $ \Call{distance}{$\zX$} \Comment{macierz $\nX \times \nX$ odległości między każdą parą danych}
+		\State $\mDistance \gets $ \Call{distance}{$\zX$} \Comment{symetryczna macierz $\nX \times \nX$ rozmytych odległości euklidesowych między każdą parą danych}
+		\State $\wPunkt \gets [1, 2, ..., \nX-1, \nX]$ \Comment{wektor indeksów, które będą sprawdzane}
 		\State $\wEtykieta \gets [1, 2, ..., \nX-1, \nX]$ \Comment{etykiety}
 		\For{$i = 1$ to $\nX - \nKlaster$} 
-		\State $w, k \gets $ \Call{FuzzyArgMin}{$\mDistance$} \Comment{scalenie najbliższych klastrów} 
-		\For{$i = 1$ to $\nX$}
-		\State $\mDistance[w, i] = \mDistance[i, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, i], \mDistance[k, i]$} \Comment{przypisanie wynikające z łączności}
-		\State $\mDistance[k, i] = \mDistance[i, k] = \infty_{S(0)} $ \Comment{nieużywane w dalszych iteracjach}
+		\State $w, k \gets $ \Call{FuzzyArgMin}{$\mDistance, \wPunkt, r, \xi$} \Comment{scalenie najbliższych klastrów} 
+		\State $\wPunkt \gets \wPunkt \setminus {k}$ \Comment{nieużywane w dalszych iteracjach}
+		\For{$\Punkt \in \wPunkt$}
+		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności}
 		\EndFor
-		\State zamień etykiety $k$ na $w$
+		\State zamień etykiety o wartości $k$ na $w$
 		\EndFor
 		\State $\wEtykieta = [0, …, \nKlaster - 1] \gets$ przemianiowanie etykiet $\wEtykieta$ na kolejne wartości
 		\State mapa $\gets$ lista unikalnych wartości w $\wEtykieta$
 		\For{$i = 1$ to $\nX$} 
-		\State $\wEtykieta[i] \gets$ indeks $\wEtykieta[i]$ w tablicy mapa \Comment{mapowanie etykiet na kolejne liczby naturalne} \ksremark{$\gets$ nie rozumiem}
+		\State $\wEtykieta[i] \gets$ indeks $\wEtykieta[i]$ w tablicy mapa \Comment{mapowanie etykiet na kolejne liczby naturalne}
 		\EndFor
 		\State \Return $\wEtykieta$
 		\EndProcedure
@@ -1479,6 +1481,37 @@ Trafność i precyzja dla całości wyników otrzymywane są jako średnia arytm
 \end{align}
 %
 Tak obliczona średnia oznacza, że każdy klaster ma jednakową wagę dla ostatecznego wyniku. Trafność i precyzja będą więc bardziej niż dokładność czułe na błędy przy klasyfikacji danych dla klastrów o różnej docelowej liczności. 
+
+Sposób obliczenia metryk jakości przedstawia również pseudokod \ref{alg:calc_quality}.
+
+\begin{algorithm}[t]
+	\caption{Wyznaczenie dokładności, trafności i precyzji}
+	\label{alg:calc_quality}
+	\begin{algorithmic}[1]
+		\Require $\mConfusionMatrix$: macierz $\nKlaster \times \nKlaster$, otrzymana na podstawie algorytmu \ref{alg:perm_l_matrix}
+		\Require $\nX$: liczba danych
+		\Procedure{CalculateQualityMetrics}{$\mConfusionMatrix, \nX$}
+		\State $diag \gets 0$ \Comment{Suma wartości na przekątnej macierzy $\mConfusionMatrix$}
+		\State $\recall \gets 0$
+		\State $\precision \gets 0$
+		\State $mian\_\recall \gets $ sumy wartości dla każdego wiersza macierzy $\mConfusionMatrix$
+		\State $mian\_\precision \gets $ sumy wartości dla każdej kolumny macierzy $\mConfusionMatrix$
+		\For{$i = 1$ to $\nKlaster$}
+		\State $diag \gets diag + \mConfusionMatrix[i, i]$
+		\If {$mian\_\recall[i] > 0 $}
+			\State $\recall \gets \recall + \mConfusionMatrix[i, i] / mian\_\recall[i]$
+		\EndIf
+		\If {$mian\_\precision[i] > 0 $}
+			\State $\precision \gets \precision + \mConfusionMatrix[i, i] / mian\_\precision[i]$
+		\EndIf
+		\EndFor
+		\State $\accuracy \gets diag / \nX$
+		\State $\recall \gets \recall / \nKlaster$
+		\State $\precision \gets \precision / \nKlaster$
+		\State \Return $\accuracy, \recall, \precision$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
 
 \section{Wyniki}
 
