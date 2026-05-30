@@ -158,7 +158,7 @@ class DataEntry(object):
                     result_list.append(results)
         return pandas.DataFrame(result_list)
 
-    def fit_plot_fuzzy_labels(self, relation_type, save_to_file=True):
+    def fit_plot_fuzzy_labels(self, relation_type, linkage="single", save_to_file=True):
         print(self.name)
         labels = []
         centers = []
@@ -177,7 +177,7 @@ class DataEntry(object):
             labels_n = []
             for k in self.ksi:
                 hc = HierarchicalClustering(n_clusters=self.clusters_number)
-                hc.fuzzy_fit(granules, k, relation_type)
+                hc.fuzzy_fit(granules, k, relation_type, linkage=linkage)
                 labels_n.append(hc.labels)
             labels.append(labels_n)
 
@@ -197,7 +197,7 @@ class DataEntry(object):
                                       centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(t),
                                       color='magenta', alpha=0.5)
             if save_to_file:
-                plt.savefig(folderPath + self.name + relation_type + ".pdf")
+                plt.savefig(folderPath + self.name + relation_type + "_" + linkage[0] + ".pdf")
                 plt.close()
             else:
                 plt.show()
@@ -219,7 +219,7 @@ class DataEntry(object):
                                         centers[i][clust, 2] + 2 * fuzz[i][clust][2] * np.cos(p),
                                         color='magenta', alpha=0.5)
             if save_to_file:
-                plt.savefig(folderPath + self.name + relation_type + ".pdf")
+                plt.savefig(folderPath + self.name + relation_type + "_" + linkage[0] + ".pdf")
                 plt.close()
             else:
                 plt.show()

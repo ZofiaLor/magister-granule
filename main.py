@@ -87,18 +87,18 @@ def compare_time_complexity(name="circles"):
     plt.savefig(folderPath + "comparing_times.pdf", bbox_extra_artists=[legend], bbox_inches='tight')
 
 
-def plot_results(specific_name=None, save_plot=True):
+def plot_results(specific_name=None, save_plot=True, linkage="single"):
     if specific_name is None:
         for name in names:
-            fullData[name].fit_plot_fuzzy_labels('t')
-            fullData[name].fit_plot_fuzzy_labels('e')
-            fullData[name].fit_plot_fuzzy_labels('g')
+            fullData[name].fit_plot_fuzzy_labels('t', linkage=linkage)
+            fullData[name].fit_plot_fuzzy_labels('e', linkage=linkage)
+            fullData[name].fit_plot_fuzzy_labels('g', linkage=linkage)
     else:
         data_to_plot = fullData.get(specific_name)
         if data_to_plot is not None:
-            data_to_plot.fit_plot_fuzzy_labels('t', save_to_file=save_plot)
-            data_to_plot.fit_plot_fuzzy_labels('e', save_to_file=save_plot)
-            data_to_plot.fit_plot_fuzzy_labels('g', save_to_file=save_plot)
+            data_to_plot.fit_plot_fuzzy_labels('t', linkage=linkage, save_to_file=save_plot)
+            data_to_plot.fit_plot_fuzzy_labels('e', linkage=linkage, save_to_file=save_plot)
+            data_to_plot.fit_plot_fuzzy_labels('g', linkage=linkage, save_to_file=save_plot)
 
 
 for folder in os.scandir("dane_labelled"):
@@ -232,7 +232,13 @@ while True:
             user_input = input("Select an action:\n1. Plot all data, save to file\n2. Plot specific data, save to "
                                "file\n3. Plot specific data, show plots\n4. Exit\n")
         if user_input == "1":
-            plot_results()
+            user_input = ""
+            while user_input not in ["1", "2"]:
+                user_input = input("Select linkage:\n1. Single\n2. Complete\n")
+            if user_input == "1":
+                plot_results(linkage="single")
+            elif user_input == "2":
+                plot_results(linkage="complete")
         elif user_input == "2":
             user_input = input("Input file name\n")
             plot_results(user_input, True)
