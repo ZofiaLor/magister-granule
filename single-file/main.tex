@@ -1508,8 +1508,6 @@ Elipsy (elipsoidy dla \spheres) w kolorze magenta wizualizują rozmycie granul, 
 
 \subsubsection{Dane generowane}
 
-\paragraph{Wpływ liczby granul}
-\ksremark{todo}
 \paragraph{Zależność od kształtu danych}
 
 Dokładność grupowania danych w zależności od ich kształtu dla łączności \SingleLinkage{} i \CompleteLinkage{} przedstawiono w tabeli \ref{id:tab:acc-ksztalt}, trafność -- w tabeli \ref{id:tab:rec-ksztalt}, a precyzję -- w tabeli \ref{id:tab:prec-ksztalt}.
@@ -1636,6 +1634,62 @@ W przypadku danych \spheres\  (rys. \ref{fig:spheres1000e}) można zauważyć, �
 \end{figure}
 
 Podobnie jak w przypadku \SingleLinkage{}, najlepsze wyniki dla łączności \CompleteLinkage{} uzyskano dla danych \crescents{}. Inaczej jest w przypadku najgorszych wyników: dane \laguna\ mają najgorszą dokładność i precyzję, a dane \spheres\ -- najgorszą trafność. Wszystkie wyniki są znacznie gorsze od uzyskanych dla \SingleLinkage{}, za wyjątkiem trafności dla danych \blobs{}.
+
+
+\paragraph{Zależność od liczby granul}
+
+Średnią dokładność, trafność i precyzję grupowania danych w zależności od liczby granul przedstawiono odpowiednio w tabelach \ref{id:tab:acc-gn}, \ref{id:tab:rec-gn} i \ref{id:tab:prec-gn}. W przypadku łączności \SingleLinkage{} najlepsze wyniki osiągane są dla 100 granul, a dla \CompleteLinkage{} -- dla 50.
+
+Dla danych takich, jak \circles{} (rys. \ref{fig:circles20000g}) czy \crescents{} (rys. \ref{fig:crescents1000t}), gdzie klastry mają podobną liczebność i gęstość, zwiększenie liczby granul powoduje ich zagęszczenie, przy równomiernym rozłożeniu.
+
+Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla większych liczebności granul, możliwe jest, że algorytm rozmytych $c$-średnich nie wyznacza ani jednego środka granuli w dwóch mniejszych klastrach, przez co niemożliwe jest poprawne grupowanie.
+
+% TODO tu można zrobić analizę przynależności (niebieskie wykresy)
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych w zależności od liczby granul i łączności}
+\label{id:tab:acc-gn}
+\begin{tabular}{rrr}
+\toprule
+	liczba granul & dokładność \SingleLinkage{} & dokładność \CompleteLinkage{} \\
+\midrule
+	50 & 97,7201\% & 70,1218\% \\
+	100 & 98,8127\% & 68,1147\% \\
+	200 & 98,6939\% & 65,7058\% \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych w zależności od liczby granul i łączności}
+\label{id:tab:rec-gn}
+\begin{tabular}{rrr}
+\toprule
+	liczba granul & trafność \SingleLinkage{} & trafność \CompleteLinkage{} \\
+\midrule
+	50 & 95,9457\% & 65,1262\% \\
+	100 & 96,6480\% & 63,5260\% \\
+	200 & 94,3459\% & 61,8105\% \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych w zależności od liczby granul i łączności}
+\label{id:tab:prec-gn}
+\begin{tabular}{rrr}
+\toprule
+	liczba granul & precyzja \SingleLinkage{} & precyzja \CompleteLinkage{} \\
+\midrule
+	50 & 95,9749\% & 62,6649\% \\
+	100 & 96,4913\% & 59,9919\% \\
+	200 & 94,1259\% & 56,8863\% \\
+\bottomrule
+\end{tabular}
+\end{table} 
 
 \paragraph{Zależność od typu relacji}
 
