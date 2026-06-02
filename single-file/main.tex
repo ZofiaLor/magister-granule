@@ -877,13 +877,79 @@ W zależności od znaczenia i zastosowania ziaren, mogą one być reprezentowane
 Ziarna informacyjne utworzyć można poprzez grupowanie danych. W przypadku ziaren reprezentowanych przez zbiory rozmyte, typowym algorytmem grupowania jest algorytm rozmytych $c$-średnich \ref{sec:fcm}.
 % TODO link do rozdziału o FCM
 
+\subsection{Zbiory rozmyte}
+
+Zbiory klasyczne są pojęciem pierwotnym: obiekt $\X$ (liczba, punkt, dana itp.) należy do zbioru $\zA$ ($\X \in \zA$) lub do niego nie należy ($\X \notin \zA$). 
+
+W przypadku zbiorów rozmytych, obiekt $\X$ należy do zbioru $\zA$ z pewnym stopniem przynależności z przedziału $\left[ 0,1 \right]$, gdzie 0 oznacza całkowity brak przynależności, a 1 -- całkowitą przynależność \cite{bib:introduction-to-fuzzy-sets}. Zbiór rozmyty $\zA$ opisać można poprzez funkcję przynależności $\ClusterMembership_{\zA}: \zX \to \left[ 0,1 \right]$.
+
+Dla zbioru rozmytego można wyróżnić jego rdzeń oraz nośnik:
+
+\begin{Definition}
+	\cite{bib:introduction-to-fuzzy-sets} Rdzeń zbioru rozmytego $\zA$ to taki jego podzbiór $\zA_{C}$, dla którego $\ClusterMembership_{\zA_{C}} = 1$
+\end{Definition}
+
+\begin{Definition}
+	\cite{bib:introduction-to-fuzzy-sets} Nośnik zbioru rozmytego $\zA$ to taki jego podzbiór $\zA_{S}$, dla którego $\ClusterMembership_{\zA_{S}} > 0$
+\end{Definition}
+
+Graficzną interpretację tych charakterystyk przedstawiono na rys. \ref{fig:core-support-example}. Zbiór rozmyty może nie posiadać rdzenia ($\forall \X \in \zA  \ClusterMembership(\X)_{\zA} < 1$), może mieć nieskończony nośnik ($\forall \X \in \zA  \ClusterMembership(\X)_{\zA} > 0$).
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./core_support_example.pdf}
+\caption{Wykres trapezowego zbioru rozmytego, ilustrujący jego rdzeń i nośnik.}
+\label{fig:core-support-example}
+\end{figure}
+
+\subsubsection{Operacje na zbiorach rozmytych}
+
+Podstawowymi operacjami na zbiorach klasycznych są iloczyn i suma. Ich odpowiednikami dla zbiorów rozmytych są odpowiednio t-norma ($\star_T$) i s-norma ($\star_S$), które spełniają warunki określone w tabeli \ref{id:tab:tnorm-snorm}.
+
+\begin{table}
+\centering
+\caption{Warunki t-norm i s-norm}
+\label{id:tab:tnorm-snorm}
+\begin{tabular}{lll}
+\toprule
+	& t-norma & s-norma  \\
+\midrule
+	    warunki graniczne & $x \star_T 1 = x, x \star_T 0 = 0$ & $x \star_S 1 = 1, x \star_S 0 = x$ \\
+	    przemienność & $x \star_T y = y \star_T x$ & $x \star_S y = y \star_S x$ \\
+		monotoniczność & jeżeli $x \le u$ to $x \star_T y \le u \star_T y$,  & jeżeli $x \le u$ to $x \star_S y \le u \star_S y$,\\ 
+		& jeżeli $y \le r$ to $x \star_T y \le x \star_T r$ & jeżeli $y \le r$ to $x \star_S y \le x \star_S r$ \\
+	    łączność & $x \star_T (y \star_T z) = (x \star_T y) \star_T z$ & $x \star_S (y \star_S z) = (x \star_S y) \star_S z$ \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+Istnieje wiele t-norm i s-norm spełniających te warunki. W ramach tej pracy, najistotniejsze są:
+
+\begin{itemize}
+	\item t-norma i s-norma algebraiczna:
+	\begin{align}
+		x \star_T y = xy \\
+		x \star_S y = x + y - xy
+	\end{align}
+	\item t-norma i s-norma Łukasiewicza:
+	\begin{align}
+		x \star_T y = \max(x + y - 1, 0) \\
+		x \star_S y = \min(x + y, 1)
+	\end{align}
+\end{itemize}
+
+Inną typową operacją na zbiorach rozmytych jest negacja. Musi ona spełniać warunki $\bar{0} = 1, \bar{1} = 0, x \le y \Rightarrow \bar{x} \ge \bar{y}$ \cite{bib:mathematics-fuzzy-sets-logic}. Najczęściej wykorzystywaną negacją jest negacja standardowa:
+\begin{align}
+	\bar{x} = 1 - x
+\end{align}
+
+Jest to negacja silna, czyli spełnia ona również warunek $\bar{\bar{x}} = x$.
+
 \subsection{Rozszerzalne liczby rozmyte}
 \label{sec:rozszerzalne-liczby-rozmyte}
 \ksremark{Liczby rozmyte}
 \ksremark{Kształty (trójkątne, wykładnicze, gaussowskie)}
 \ksremark{Relacje między liczbami (arytmetyka, porównanie)}
-
-Zbiory klasyczne są pojęciem pierwotnym: obiekt $\X$ (liczba, punkt, dana itp.) należy do zbioru $\zA$ ($\X \in \zA$) lub do niego nie należy ($\X \notin \zA$). W przypadku zbiorów rozmytych, obiekt $\X$ należy do zbioru $\zA$ z pewnym stopniem przynależności z przedziału $\left[ 0,1 \right]$, gdzie 0 oznacza całkowity brak przynależności, a 1 -- całkowitą przynależność \cite{bib:introduction-to-fuzzy-sets}. Zbiór rozmyty $\zA$ opisać można poprzez funkcję przynależności $\ClusterMembership_{\zA}: \zX \to \left[ 0,1 \right]$.
 
 Rozszerzalne liczby rozmyte (ang. \english{extensional fuzzy numbers}) są uogólnieniem liczb rzeczywistych. Są to zbiory rozmyte, które modelują semantykę taką, jak ,,około 5'', ,,prawie 10'', ,,ponad 20'', czyli odpowiadają rzeczywistym liczbom ostrym z pewną tolerancją \cite{bib:arithmetics-extensional-fuzzy-numbers,bib:mathematics-fuzzy-sets-logic}. Definiowana jest dla nich rozmyta relacja $\ast$-podobieństwa $\nPodobienstwo$.
 
