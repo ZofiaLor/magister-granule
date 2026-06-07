@@ -639,26 +639,26 @@ Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \eng
 Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizować jako dendrogram (rys. \ref{fig:dendrogram-iris}). Wykres dendrogramu zazwyczaj przycina się, aby pokazywał tylko kilka ostatnich scaleń. Oś pozioma reprezentuje scalane klastry: jeżeli klastrem jest pojedynczy element, to reprezentuje go jego indeks, jeżeli zawiera więcej elementów -- jego liczebność podana w nawiasach. Oś pionowa odpowiada odległości między scalanymi klastrami. \ksremark{Trzeba napisać trochę szerzej o dendrogramie. Co oznacza wysokość łączenia itd. itp.}
 
 
-\begin{algorithm}[t]
-	\caption{tytuł}
-	\label{alg:cascade_inference}
-	\begin{algorithmic}[1]
-		\Require $a$: parametr procedury
-		\Procedure{nazwa}{$a$}
-		\Comment{komentarz}
-		\For{$i = 1$ to $\infty$} \label{alg:etykieta} \Comment{komentarz}
-		\State instrukcja
-		\If{warunek} 
-		\State instrukcja
-		\EndIf
-		\While{warunek}
-		\State \Call{funkcja}{parametr}  \Comment{wywołanie funkcji / procedury} 
-		\EndWhile 
-		\EndFor
-		\State \Return wynik
-		\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
+%\begin{algorithm}[t]
+%	\caption{tytuł}
+%	\label{alg:cascade_inference}
+%	\begin{algorithmic}[1]
+%		\Require $a$: parametr procedury
+%		\Procedure{nazwa}{$a$}
+%		\Comment{komentarz}
+%		\For{$i = 1$ to $\infty$} \label{alg:etykieta} \Comment{komentarz}
+%		\State instrukcja
+%		\If{warunek} 
+%		\State instrukcja
+%		\EndIf
+%		\While{warunek}
+%		\State \Call{funkcja}{parametr}  \Comment{wywołanie funkcji / procedury} 
+%		\EndWhile 
+%		\EndFor
+%		\State \Return wynik
+%		\EndProcedure
+%	\end{algorithmic}
+%\end{algorithm}
 
 \begin{figure}
 \centering
@@ -682,9 +682,9 @@ Metryka ta jest uszczegółowieniem metryki Minkowskiego
 dla $p=2$. Inną popularną metryką jest odległość Manhattan, również należąca do rodziny metryk Minkowskiego, dla $p=1$.
 
 Łączność określa, jak na podstawie odległości pomiędzy poszczególnymi punktami należącymi do klastrów wyznaczyć odległość pomiędzy tymi klastrami.
-
+%
 Do łączności zaimplementowanych w popularnych bibliotekach należą \english{single linkage} (najbliższe sąsiedztwo), \english{complete linkage} (najdalsze sąsiedztwo), \english{average linkage} (średnie sąsiedztwo) oraz metoda Warda (minimalna wariancja) \cite{bib:ward-linkage}.
-
+%
 Implementacje aglometacyjnego algorytmu hierarchicznego przedstawione są w \cite{bib:hierarchical-algorithms} Wykorzystywane one są przez bibliotekę \english{SciPy} języka Python \cite{bib:scipy-linkage}.
 
 %przepisać, przekopiować pseudokody?
@@ -701,23 +701,23 @@ Pseudokod działania algorytmu przedstawia alg. \ref{alg:primitive_clustering}.
 	\caption{Naiwny algorytm aglomeracyjnego grupowania hierarchicznego \PrimitiveClustering{} \cite{bib:hierarchical-algorithms}}
 	\label{alg:primitive_clustering}
 	\begin{algorithmic}[1]
-		\Require $S$: etykiety elementów
+		\Require $S$: etykiety elementów  \Comment{\ksremark{W rozdziale 3 inaczej oznaczamy etykiety.}}
 		\Require $\mDistance$: macierz podobieństwa między każdą parą elementów 
 		\Procedure{PrimitiveClustering}{$S, \mDistance$}
 		\State $N \gets $ liczba elementów
-		\State $L \gets [] $ \Comment{Lista wynikowa}
-		\State $rozmiar[x] \gets 1$ dla wszystkich $x \in S$
+		\State $L \gets [] $ \Comment{Lista wynikowa \ksremark{Co to znaczy?}}
+		\State $rozmiar[x] \gets 1$ dla wszystkich $x \in S$  \Comment{\ksremark{for x in S ...}} \Comment{\ksremark{Czym jest rozmiar?}}
 		\For{$i = 0$ to $N-2$} 
 		\State $(a,b) \gets \arg\min_{(S \times S) \setminus \Delta}\mDistance$ \Comment{Operacja $\arg\min$ na macierzy $\mDistance$, uwzględniająca elementy ze zbioru $S$ z wyłączeniem przekątnej głównej}
-		\State $S \gets S \setminus \{a, b\}$
-		\State nowy element $n \notin S$
+		\State $S \gets S \setminus \{a, b\}$  \Comment{\ksremark{Trzeba skomentować.}}
+		\State nowy element $n \notin S$  \Comment{\ksremark{To też trzeba skomentować.}}
 		\For{$x$ in $S$}
-		\State $\mDistance[n, x] = \mDistance[x, n] \gets $ \Call{UpdateFormula}{...} \Comment{wzór dla odpowiedniej łączności}
+		\State $\mDistance[n, x] \gets \mDistance[x, n] \gets $ \Call{UpdateFormula}{...} \Comment{wzór dla odpowiedniej łączności} \Comment{\ksremark{np. alg. \ref{alg:single_linkage}, alg. \ref{alg:complete_linkage}}}
 		\EndFor
 		\State $rozmiar[n] \gets rozmiar[a] + rozmiar[b]$
 		\State $S \gets S \cup n$
 		\EndFor
-		\State \Return $L$
+		\State \Return $L$  \Comment{\ksremark{Trzeba skomentować.}}
 		\EndProcedure
 	\end{algorithmic}
 \end{algorithm}
@@ -843,11 +843,11 @@ gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warun
 		\State $\nX \gets $ liczba próbek
 		\State $\nAtrybut \gets $ liczba atrybutów \Comment{$\nX$ i $\nAtrybut$: wymiary $\zX$} 
 		\State $\wCentre \gets $ losowe wartości początkowe środków klastrów
-		\State $U \gets $ losowe wartości początkowe przynależności punktów do klastrów, spełniające warunek ze wzoru \ref{eq:cluster_mem_condition}
+		\State $U \gets $ losowe wartości początkowe przynależności punktów do klastrów, spełniające warunek ze wzoru \ref{eq:cluster_mem_condition} \Comment{\ksremark{$\mMembership$}}
 		\State $i\gets 1$
 		\State koniec $\gets$ false
 		\While{$i < \nIteracja$ $\land$ $\lnot$ koniec} 
-		\State aktualizacja wartości $\wCentre$ na podstawie wzoru \ref{eq:center_update}
+		\State aktualizacja wartości $\wCentre$ na podstawie wzoru \ref{eq:center_update} \Comment{\ksremark{Dla wzorów zawsze używamy eqref zamiast ref.}}
 		\State aktualizacja wartości $\mMembership$ na podstawie wzoru \ref{eq:membership_update}
 		\If{spełniony warunek \ref{eq:fcm_stop_contidion}}
 		\State  koniec $\gets$ true
@@ -886,14 +886,14 @@ W przypadku zbiorów rozmytych, obiekt $\X$ należy do zbioru $\zA$ z pewnym sto
 Dla zbioru rozmytego można wyróżnić jego rdzeń oraz nośnik:
 
 \begin{Definition}
-	\cite{bib:introduction-to-fuzzy-sets} Rdzeń zbioru rozmytego $\zA$ to taki jego podzbiór $\zA_{C}$, dla którego $\ClusterMembership_{\zA_{C}} = 1$
+	\cite{bib:introduction-to-fuzzy-sets} Rdzeń zbioru rozmytego $\zA$ to taki jego podzbiór $\zA_{C}$, dla którego $\ClusterMembership_{\zA_{C}} = 1$.
 \end{Definition}
 
 \begin{Definition}
-	\cite{bib:introduction-to-fuzzy-sets} Nośnik zbioru rozmytego $\zA$ to taki jego podzbiór $\zA_{S}$, dla którego $\ClusterMembership_{\zA_{S}} > 0$
+	\cite{bib:introduction-to-fuzzy-sets} Nośnik zbioru rozmytego $\zA$ to taki jego podzbiór $\zA_{S}$, dla którego $\ClusterMembership_{\zA_{S}} > 0$.
 \end{Definition}
 
-Graficzną interpretację tych charakterystyk przedstawiono na rys. \ref{fig:core-support-example}. Zbiór rozmyty może nie posiadać rdzenia ($\forall \X \in \zA  \ClusterMembership(\X)_{\zA} < 1$), może mieć nieskończony nośnik ($\forall \X \in \zA  \ClusterMembership(\X)_{\zA} > 0$).
+Graficzną interpretację tych charakterystyk przedstawiono na rys. \ref{fig:core-support-example}. Zbiór rozmyty może nie posiadać rdzenia ($\forall_{\X \in \zA}\;  \ClusterMembership(\X)_{\zA} < 1$), może mieć nieskończony nośnik ($\forall_{\X \in \zA}\;  \ClusterMembership(\X)_{\zA} > 0$).
 
 \begin{figure}
 \centering
