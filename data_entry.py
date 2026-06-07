@@ -36,9 +36,13 @@ class DataEntry(object):
                 self.data = np.array(list(zip(x, y, z)))
             else:
                 self.data = np.array(list(zip(x, y)))
+        self.labels = np.array(self.labels)
         self.dim = dim
         self.name = name
         self.length = self.data.shape[0]
+        rng = np.random.default_rng(seed)
+        p = rng.permutation(self.length)
+        self.data, self.labels = self.data[p], self.labels[p]
         self.clusters_number = 0
         self.granules_number = [50, 100, 200]
         self.ksi = [0.1, 0.5, 0.9]
