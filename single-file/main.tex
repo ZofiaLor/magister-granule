@@ -928,6 +928,7 @@ Istnieje wiele t-norm i s-norm spełniających te warunki. W ramach tej pracy, n
 \begin{itemize}
 	\item t-norma i s-norma algebraiczna:
 	\begin{align}
+		\label{eq:algebraic-norms}
 		x \star_T y = xy \\
 		x \star_S y = x + y - xy
 	\end{align}
@@ -977,6 +978,7 @@ Kształt rozszerzalnej liczby rozmytej określony jest przez relację $\ast$-pod
 
 Dla liczb trójkątnych relacja $\ast$-podobieństwa $\nPodobienstwo_{t}$ definiowana jest jako:
 \begin{align}
+	\label{eq:similarity_t}
 	\nPodobienstwo_{t}(\X,\Y) = \max \left\{1 - \frac{|\X-\Y|}{p}, 0 \right\},
 \end{align}
 gdzie $p > 0$, a $\ast$ to t-norma Łukasiewicza.
@@ -985,6 +987,7 @@ gdzie $p > 0$, a $\ast$ to t-norma Łukasiewicza.
 
 Dla liczb wykładniczych relacja $\ast$-podobieństwa $\nPodobienstwo_{e}$ definiowana jest jako:
 \begin{align}
+	\label{eq:similarity_e}
 	\nPodobienstwo_{e}(\X,\Y) = \exp \left(- \frac{|\X-\Y|}{p} \right),
 \end{align}
 gdzie $p > 1$, a $\ast$ to t-norma iloczynowa.
@@ -993,6 +996,7 @@ gdzie $p > 1$, a $\ast$ to t-norma iloczynowa.
 
 Dla liczb gaussowskich relacja $\ast$-podobieństwa $\nPodobienstwo_{g}$ definiowana jest jako:
 \begin{align}
+	\label{eq:similarity_g}
 	\nPodobienstwo_{g}(\X,\Y) = \exp \left(- \frac{(\X-\Y)^{2}}{2p^{2}} \right),
 \end{align}
 gdzie $p > 0$, a $\ast$ to t-norma iloczynowa.
@@ -1030,6 +1034,7 @@ Operacje porównania na rozszerzalnych liczbach rozmytych oparte są o operator 
 \begin{Definition}
 	Operator równości rozmytej $=_{\nPodobienstwo}: \zRozszerzalna \times \zRozszerzalna \to [0,1]$ zdefiniowany jest przy pomocy rozmytej relacji $\ast$-podobieństwa $\nPodobienstwo$:
 	\begin{align}
+		\label{eq:fuzzy-equality}
 		\left(\X_{\nPodobienstwo(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) = \nPodobienstwo_{\max\{p_{\X},p_{\Y}\}}(\X, \Y)
 	\end{align}
 \end{Definition}
@@ -1469,9 +1474,81 @@ W przypadku danych \laguna{} o liczebności 20000 i większej, dwa środkowe kla
 \ksremark{Trzeba napisać, na czym polega użyta miara. Opisałbym tę miarę w formie algorytmu. Przyznam się, że z tego opisu nie bardzo bym wiedział, jak to działa.}
 Wybranymi miarami jakości grupowania są dokładność, trafność i precyzja.
 
-Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Określono więc, że na potrzeby porównania, punkt należy do tej granuli, dla której jego wartość w tablicy $\mClusterMembership$ jest maksymalna.
+Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Na potrzeby porównania konieczne jest określenie, do której granuli należy każdy punkt. Przynależność tą wyznaczano na dwa sposoby:
 
-Wykorzystana miara dokładności przyjmuje, że algorytm ostry, dla łączności \SingleLinkage{}, ma dokładność 100\% -- każdy punkt zostaje przypisany do oczekiwanego klastra.
+\paragraph{Na podstawie macierzy $\mClusterMembership$}
+
+Dla każdego punktu $i$, znajdowana jest granula, dla której wartość odpowiedniego wiersza w macierzy przynależności $\wClusterMembership_i$ jest maksymalna.
+
+\paragraph{Na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$}
+
+Działanie tej metody przedstawia pseudokod \ref{alg:similarity_membership}.
+
+Dla każdego punktu $i$, przynależność do granuli $j$ obliczana na podstawie wartości operacji $=_\nPodobienstwo$ (wzór \ref{eq:fuzzy-equality}) dla każdego wymiaru punktu i granuli. Operacja ta jest zależna od kształtu granul, dla liczb trójkątnych, wykładniczych i gaussowskich należy wykorzystać odpowiednio wzory \ref{eq:similarity_t}, \ref{eq:similarity_e} lub \ref{eq:similarity_g} uwzględniając, że dla liczby ostrej (współrzędnej oryginalnego punktu) $p = 0$. 
+
+Wyniki dla każdej współrzędnej łączone są t-normą algebraiczną (wzór \ref{eq:algebraic-norms}). Wreszcie określa się, że punkt należy do tej granuli, dla której wynik tego złączenia jest maksymalny.
+
+Należy uwzględnić, że rozszerzalne liczby rozmyte trójkątne posiadają skończony nośnik. Oznacza to, że punkt może nie należeć do żadnej granuli -- dla każdej z nich przynależność będzie zerowa. Punkt taki uznawany jest za szum i nie bierze udziału w wyznaczaniu wartości dokładności, trafności i precyzji, jednak odsetek punktów stanowiących szum jest w tym przypadku dodatkową miarą jakości.
+
+Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów do granul, dla czytelności wykresów wyznaczono jedynie 10 granul. Wykresy dla liczb wykładniczych i gaussowskich są bardzo podobne, ponadto wszystkie punkty są przypisane do granuli. W przypadku liczb trójkątnych, duża część punktów stanowi szum.
+
+\begin{algorithm}[t]
+	\caption{Wyznaczenie przynależności punktu do granuli na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$}
+	\label{alg:similarity_membership}
+	\begin{algorithmic}[1]
+		\Require $\zX$: dane oryginalne
+		\Require $\zGranula$: granule wyznaczone przez algorytm \MojAlg{}
+		\Require $\wEtykieta_{\Granula}$: wektor o długości $\nGranula$ etykiet wyznaczonych dla wszystkich granul
+		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
+		\Procedure{CalculateSimilarityMembership}{$\zX, \zGranula, \wEtykieta, r$}
+		\State $\wEtykieta_{\X} \gets []$ \Comment{etykiety punktów}
+		\State $szum \gets 0$ \Comment{liczba punktów nieprzynależących do żadnej granuli}
+		\For{$\X$ in $\nX$}
+		\State $\Etykieta \gets 0$
+		\State $\ClusterMembership_{max} \gets 0$
+		\For{$i=1$ to $\nGranula$}
+		\State $\ClusterMembership \gets \zGranula[i][1] =_{\nPodobienstwo} \X[1]$
+		\For{$j=2$ to liczba wymiarów $\X$}
+		\State $\ClusterMembership \gets \ClusterMembership * \zGranula[i][j] =_{\nPodobienstwo} \X[j]$ \Comment{t-norma algebraiczna}
+		\EndFor
+		\If{$\ClusterMembership > \ClusterMembership_{max}$}
+		\State $\ClusterMembership_{max} \gets \ClusterMembership$
+		\State $\Etykieta \gets i$
+		\EndIf
+		\EndFor
+		\If{$\ClusterMembership_{max} > 0$}
+		\State dodaj $i$ do $\wEtykieta_{\X}$
+		\Else \Comment{punkt nie przynależy do żadnej granuli -- jest szumem}
+		\State dodaj $-1$ do $\wEtykieta_{\X}$
+		\State $szum \gets szum + 1$
+		\EndIf
+		\EndFor
+		\State \Return $\wEtykieta_{\X}, szum$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.32\textwidth}
+		\includegraphics[width=\textwidth]{./shape_dep_t.pdf}
+		\caption{Liczby trójkątne}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.32\textwidth}
+		\includegraphics[width=\textwidth]{./shape_dep_e.pdf}
+		\caption{Liczby wykładnicze}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.32\textwidth}
+		\includegraphics[width=\textwidth]{./shape_dep_g.pdf}
+		\caption{Liczby gaussowskie}
+	\end{subfigure}
+	\caption{Przynależność punktów do granul w zależności od kształtu liczb rozmytych. 10 środków granul oznaczono kolorem czerwonym, punkty należące do różnych granul oznaczone są różnymi kolorami. Kolorem szarym oznaczono punkty stanowiące szum.}
+	\label{fig:shape-dep}
+\end{figure}
+
+\paragraph{}
 
 \begin{algorithm}[t]
 	\caption{Wyznaczenie macierzy $\mConfusionMatrix$}
@@ -1509,14 +1586,14 @@ Wykorzystana miara dokładności przyjmuje, że algorytm ostry, dla łączności
 	\end{algorithmic}
 \end{algorithm}
 
-Wyznaczono macierz $\mConfusionMatrix$, w której wartość elementu $\ConfusionMatrix_{ij}$ jest równa liczbie punktów należących do klastra $i$ wyznaczonego przez algorytm ostry i do klastra $j$ wyznaczonego przez algorytm rozmyty:
+Wyznaczono macierz $\mConfusionMatrix$, w której wartość elementu $\ConfusionMatrix_{ij}$ jest równa liczbie punktów, dla których oczekiwana etykieta ma wartość $i$ i przynależących do klastra $j$ wyznaczonego przez algorytm \MojAlg{}:
 \begin{align}
 \ConfusionMatrix_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j]
 \end{align}
 
 Sposób wyznaczenia tej macierzy przedstawiono również na pseudokodzie \ref{alg:calc_l_matrix}.
 
-Numeracja klastrów wyznaczonych przez obydwa algorytmy może być inna ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na pseudokodzie \ref{alg:perm_l_matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $\mConfusionMatrix$, która maksymalizuje wartości na przekątnej. 
+Numeracja klastrów wyznaczonych przez algorytm \MojAlg{} może być inna od oczekiwanych etykiet ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na pseudokodzie \ref{alg:perm_l_matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $\mConfusionMatrix$, która maksymalizuje wartości na przekątnej. 
 
 Z uzyskanej w ten sposób macierzy pomyłek, dokładność wyznaczana jest jako suma wartości na przekątnej macierzy podzielona przez całkowitą liczbę danych:
 \begin{align}
