@@ -1510,9 +1510,9 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 		\State $\Etykieta \gets 0$
 		\State $\ClusterMembership_{max} \gets 0$
 		\For{$i=1$ to $\nGranula$}
-		\State $\ClusterMembership \gets \zGranula[i][1] =_{\nPodobienstwo} \X[1]$
+		\State $\ClusterMembership \gets (\zGranula[i][1] =_{\nPodobienstwo} \X[1])$
 		\For{$j=2$ to liczba wymiarów $\X$}
-		\State $\ClusterMembership \gets \ClusterMembership * \zGranula[i][j] =_{\nPodobienstwo} \X[j]$ \Comment{t-norma algebraiczna}
+		\State $\ClusterMembership \gets \ClusterMembership * (\zGranula[i][j] =_{\nPodobienstwo} \X[j])$ \Comment{t-norma algebraiczna}\Comment{\ksremark{Chodzi tutaj o $*$?}}
 		\EndFor
 		\If{$\ClusterMembership > \ClusterMembership_{max}$}
 		\State $\ClusterMembership_{max} \gets \ClusterMembership$
