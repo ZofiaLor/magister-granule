@@ -701,23 +701,26 @@ Pseudokod działania algorytmu przedstawia alg. \ref{alg:primitive_clustering}.
 	\caption{Naiwny algorytm aglomeracyjnego grupowania hierarchicznego \PrimitiveClustering{} \cite{bib:hierarchical-algorithms}}
 	\label{alg:primitive_clustering}
 	\begin{algorithmic}[1]
-		\Require $S$: etykiety elementów  \Comment{\ksremark{W rozdziale 3 inaczej oznaczamy etykiety.}}
+		\Require $\wEtykieta$: etykiety elementów
 		\Require $\mDistance$: macierz podobieństwa między każdą parą elementów 
 		\Procedure{PrimitiveClustering}{$S, \mDistance$}
 		\State $N \gets $ liczba elementów
-		\State $L \gets [] $ \Comment{Lista wynikowa \ksremark{Co to znaczy?}}
-		\State $rozmiar[x] \gets 1$ dla wszystkich $x \in S$  \Comment{\ksremark{for x in S ...}} \Comment{\ksremark{Czym jest rozmiar?}}
+		\State $L \gets [] $ \Comment{Lista wynikowa zawierająca trójki: para klastrów łączonych w danej iteracji i odległość między nimi}
+		\State $rozmiar \gets []$ \Comment{rozmiar klastrów o danych indeksach}
+		\For{$x$ in $\wEtykieta$}
+		\State $rozmiar[x] \gets 1$ \Comment{na początku wszystkie klastry są jednoelementowe}
+		\EndFor
 		\For{$i = 0$ to $N-2$} 
-		\State $(a,b) \gets \arg\min_{(S \times S) \setminus \Delta}\mDistance$ \Comment{Operacja $\arg\min$ na macierzy $\mDistance$, uwzględniająca elementy ze zbioru $S$ z wyłączeniem przekątnej głównej}
-		\State $S \gets S \setminus \{a, b\}$  \Comment{\ksremark{Trzeba skomentować.}}
-		\State nowy element $n \notin S$  \Comment{\ksremark{To też trzeba skomentować.}}
+		\State $(a,b) \gets \arg\min_{(\wEtykieta \times \wEtykieta) \setminus \Delta}\mDistance$ \Comment{Operacja $\arg\min$ na macierzy $\mDistance$, uwzględniająca elementy ze zbioru $\wEtykieta$ z wyłączeniem przekątnej głównej}
+		\State $\wEtykieta \gets \wEtykieta \setminus \{a, b\}$  \Comment{Klastry $a$ i $b$ usuwane są ze zbioru rozpatrywanych etykiet}
+		\State nowy element $n \notin \wEtykieta$  \Comment{Do zbioru etykiet dodawany jest nowy element, odpowiadający klastrowi powstałemu po złączeniu $a$ i $b$}
 		\For{$x$ in $S$}
-		\State $\mDistance[n, x] \gets \mDistance[x, n] \gets $ \Call{UpdateFormula}{...} \Comment{wzór dla odpowiedniej łączności} \Comment{\ksremark{np. alg. \ref{alg:single_linkage}, alg. \ref{alg:complete_linkage}}}
+		\State $\mDistance[n, x] \gets \mDistance[x, n] \gets $ \Call{UpdateFormula}{...} \Comment{wzór dla odpowiedniej łączności, np. alg. \ref{alg:single_linkage}, alg. \ref{alg:complete_linkage}} 
 		\EndFor
 		\State $rozmiar[n] \gets rozmiar[a] + rozmiar[b]$
 		\State $S \gets S \cup n$
 		\EndFor
-		\State \Return $L$  \Comment{\ksremark{Trzeba skomentować.}}
+		\State \Return $L$  \Comment{Zwracana lista zawiera zapis kolejnych scalań klastrów. }
 		\EndProcedure
 	\end{algorithmic}
 \end{algorithm}
@@ -843,12 +846,12 @@ gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warun
 		\State $\nX \gets $ liczba próbek
 		\State $\nAtrybut \gets $ liczba atrybutów \Comment{$\nX$ i $\nAtrybut$: wymiary $\zX$} 
 		\State $\wCentre \gets $ losowe wartości początkowe środków klastrów
-		\State $U \gets $ losowe wartości początkowe przynależności punktów do klastrów, spełniające warunek ze wzoru \ref{eq:cluster_mem_condition} \Comment{\ksremark{$\mMembership$}}
+		\State $\mMembership \gets $ losowe wartości początkowe przynależności punktów do klastrów, spełniające warunek ze wzoru \ref{eq:cluster_mem_condition}
 		\State $i\gets 1$
 		\State koniec $\gets$ false
 		\While{$i < \nIteracja$ $\land$ $\lnot$ koniec} 
-		\State aktualizacja wartości $\wCentre$ na podstawie wzoru \ref{eq:center_update} \Comment{\ksremark{Dla wzorów zawsze używamy eqref zamiast ref.}}
-		\State aktualizacja wartości $\mMembership$ na podstawie wzoru \ref{eq:membership_update}
+		\State aktualizacja wartości $\wCentre$ na podstawie wzoru \eqref{eq:center_update}
+		\State aktualizacja wartości $\mMembership$ na podstawie wzoru \eqref{eq:membership_update}
 		\If{spełniony warunek \ref{eq:fcm_stop_contidion}}
 		\State  koniec $\gets$ true
 		\EndIf
@@ -1007,6 +1010,7 @@ Operacje arytmetyczne na rozszerzalnych liczbach rozmytych są proste obliczenio
 
 Operacje arytmetyczne jednoargumentowe można zapisać w ogólny sposób jako:
 \begin{align}
+	\label{eq:fuzzy-arithmetics-one-argument}
 	\mathbf{op}(\X_{\nPodobienstwo}) = \mathbf{op}(\X)_{\nPodobienstwo},
 \end{align}
 na przykład:
@@ -1016,6 +1020,7 @@ na przykład:
 
 Operacje arytmetyczne dwuargumentowe można zapisać jako:
 \begin{align}
+	\label{eq:fuzzy-arithmetics-two-arguments}
 	\X_{\nPodobienstwo_{\X}} \; \mathbf{op} \; \Y_{\nPodobienstwo_{\Y}} = (\X \; \mathbf{op} \; \Y)_{cl(\nPodobienstwo_{\X} \cup \nPodobienstwo_{\Y})},
 \end{align}
 gdzie $cl(\nPodobienstwo_{\X} \cup \nPodobienstwo_{\Y})$ jest domknięciem relacji $\nPodobienstwo_{\X}$ i $\nPodobienstwo_{\Y}$. Dla zdefiniowanych w podsekcji \ref{sec:ksztalty-liczb-rozmytych} kształtów ($\nPodobienstwo \in \{ \nPodobienstwo_{t}, \nPodobienstwo_{e}, \nPodobienstwo_{g}\}$) przyjąć można, że
@@ -1204,14 +1209,14 @@ Operatory nierówności wyznaczane są w następujący sposób:
 
 %\section{Plan rozwiązania}
 
-Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasowa -- w przypadku algorytmu ogólnego aż do $O(n^{3})$. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych. \ksremark{Napisałbym tutaj, że ma złożoność $O(\nGranula^3)$, ale $\nGranula \ll n$.}
+Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasowa -- w przypadku algorytmu ogólnego aż do $O(n^{3})$. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(n)$).
 
 Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego \MojAlg\ składa się z trzech głównych kroków:
 
 \begin{enumerate}
 	\item granulacja oryginalnych danych przy pomocy algorytmu rozmytych $c$-średnich (roz. \ref{sec:granulacja-danych-oryginalnych}),
-	\item przekształcenie otrzymanych wyników w granule o potrzebnych parametrach (roz. \ref{sec:granulacja-danych-oryginalnych} \ksremark{¿czy na pewno}),
-	\item aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia: \MojHierAlg\ (roz. \ref{sec:granulacja-danych-oryginalnych} \ksremark{¿czy na pewno}).
+	\item przekształcenie otrzymanych wyników w granule o potrzebnych parametrach (roz. \ref{sec:przeksztalcenie-granul}),
+	\item aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia: \MojHierAlg\ (roz. \ref{sec:rozmyte-grupowanie-hierarchiczne}).
 \end{enumerate}
 
 Złożoność czasowa tego algorytmu może zostać określona jako $O(n + \nGranula^3)$, przy czym $\nGranula \ll n$ odpowiada liczbie granul.
@@ -1222,6 +1227,7 @@ Złożoność czasowa tego algorytmu może zostać określona jako $O(n + \nGran
 W pierwszym kroku oryginalne dane są granulowane przez algorytm rozmytych $c$-średnich. Dane mają postać macierzy liczb rzeczywistych o wymiarach $\nX \times \nAtrybut$, gdzie $\nX$ -- liczba danych, $\nAtrybut$ -- liczba atrybutów. Wartość parametru rozmycia $m$ algorytmu określona jest na stałe jako 2. Liczba docelowych klastrów $\nKlaster$ jest jednym z parametrów badawczych i jest znacznie mniejsza od $\nX$.
 
 \section{Przekształcenie granul}
+\label{sec:przeksztalcenie-granul}
 
 Granule wykorzystywane do grupowania hierarchicznego mają postać wielowymiarowych rozszerzalnych liczb rozmytych. Dla każdego wymiaru musi zostać określona wartość ostra liczby $x$ oraz jej rozmycie $p$.
 
@@ -1235,6 +1241,7 @@ Wartościom rozmycia nie odpowiada bezpośrednio żadna ze struktur zwracanych p
 Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytych, które składają się na ich wymiary. Kształt jest więc parametrem dla operacji logicznych na nich wykonywanych.
 
 \subsection{Rozmyte grupowanie hierarchiczne}
+\label{sec:rozmyte-grupowanie-hierarchiczne}
 
 Zbiór granul $\zGranula$ oraz ich kształt są parametrami wejściowymi algorytmu rozmytego aglomeracyjnego grupowania hierarchicznego \MojHierAlg.
 %
@@ -1267,7 +1274,9 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 	\caption{Maksimum rozmyte}
 	\label{alg:fuzzy-max}
 	\begin{algorithmic}[1]
-		\Require $a, b$: porównywane rozszerzalne liczby rozmyte, $r$: typ relacji (trójkątna, wykładnicza, gaussowska), $\xi$: parametr porównania \ksremark{Trzeba rozbić parametry jak w alg. \ref{alg:fuzzy-min}.}
+		\Require $a, b$: porównywane rozszerzalne liczby rozmyte
+		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
+		\Require $\xi$: parametr porównania
 		\Procedure{FuzzyMaximum}{$a, b, r, \xi$}
 		\If{$(a >_{\nPodobienstwo_r} b) > \xi$}
 		\State \Return $a$
@@ -1285,17 +1294,42 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 		\Require $\mX$: macierz liczb rozmytych, $\wPunkt$: wektor indeksów, dla których znajdowane jest minimum, $r$: typ relacji (trójkątna, wykładnicza, gaussowska), $\xi$: parametr porównania 
 		\Procedure{FuzzyArgMin}{$\mX, r, \xi$}
 		\State result $\gets \infty_{S(0)}$  \Comment{liczba rozmyta, dla której $x=\infty, p=0$}
-		\State $(w, k) \gets (0, 0)$  \Comment{\ksremark{Trzeba to skomentować.}}
-		\For{$i = 1$ to $\nPunkt - 1$} \Comment{\ksremark{Trzeba napisać, co oznacza $\nPunkt$. Może zamiast $\nPunkt$ użyć $|\wPunkt|$?}}
-		\For{$j = i + 1$ to $\nPunkt$}
-		\State $p_i, p_j \gets \wPunkt[i], \wPunkt[j]$   \Comment{\ksremark{Rozbiłbym to na dwie instrukcje.}}
-		\If{($\mX[p_i, p_j] <_{\nPodobienstwo_r}$ result) > $\xi$}\Comment{\ksremark{Trzeba napisać $\mX[p_i][p_j]$}.}
-		\State result $\gets \mX[p_i, p_j]$
-		\State $(w, k) \gets (p_i, p_j)$ \Comment{\ksremark{Skoro mamy takie przypisanie, to może zamiast $i$ użyć $w$ i zamiast $j$ – $k$?}}
+		\State $(w, k) \gets (0, 0)$  \Comment{Współrzędne (wiersz, kolumna) wartości minimalnej w przeszukiwanej części macierzy $\mX$}
+		\For{$i = 1$ to $|\wPunkt| - 1$}
+		\For{$j = i + 1$ to $|\wPunkt|$}
+		\State $p_w \gets \wPunkt[i]$
+		\State $p_k \gets \wPunkt[j]$
+		\If{($\mX[p_w][p_k] <_{\nPodobienstwo_r}$ result) > $\xi$}
+		\State result $\gets \mX[p_w][p_k]$
+		\State $(w, k) \gets (p_w, p_k)$
 		\EndIf
 		\EndFor
 		\EndFor
 		\State \Return $(w, k)$  \Comment{\ksremark{Tu napiszemy, co zwracamy.}}
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+	\caption{Rozmyte odległości euklidesowe}
+	\label{alg:fuzzy-distance}
+	\begin{algorithmic}[1]
+		\Require $\mX$: macierz liczb rozmytych 
+		\Procedure{FuzzyDistance}{$\mX$}
+		\State result $\gets \infty_{S(0)}$  \Comment{liczba rozmyta, dla której $x=\infty, p=0$}
+		\State $\nX \gets |\zX|$ \Comment{liczba danych}
+		\State $\mDistance \gets $ macierz zerowa $\nX \times \nX$
+		\For{$i = 1$ to $\nX - 1$}
+		\For{$j = i + 1$ to $\nX$}
+		\State $\Distance_{ij} \gets 0_0$ \Comment{liczba rozmyta, dla której $x=0, p=0$}
+		\For{$k$ in $|\mX[i]|$} \Comment{dla każdego wymiaru liczby rozmytej}
+		\State $\Distance_{ij} \gets \Distance_{ij} + (\mX[i][k] - \mX[j][k])^2$ \Comment{Operacje arytmetyczne na liczbach rozmytych (wzór \eqref{eq:fuzzy-arithmetics-two-arguments})}
+		\EndFor
+		\State $\Distance_{ij} \gets \sqrt{\Distance_{ij}}$ \Comment{Operacja arytmetyczna na liczbie rozmytej (wzór \eqref{eq:fuzzy-arithmetics-one-argument})}
+		\State $\mDistance[i][j] \gets \mDistance[j][i] \gets \Distance_{ij}$ \Comment{macierz jest symetryczna względem przekątnej}
+		\EndFor
+		\EndFor
+		\State \Return $\mDistance$  \Comment{macierz rozmytych odległości między parami liczb rozmytych}
 		\EndProcedure
 	\end{algorithmic}
 \end{algorithm}
@@ -1309,18 +1343,22 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
 		\Require $\xi$: parametr porównania
 		\Procedure{\MojHierAlg}{$\zX, \nKlaster, r, \xi$}
-		\State $\nX \gets $ liczba danych  \Comment{\ksremark{$\nX \gets |\zX|$ + komentarz: liczba danych}}
-		\State $\mDistance \gets $ \Call{distance}{$\zX$} \Comment{symetryczna macierz $\nX \times \nX$ rozmytych odległości euklidesowych między każdą parą danych} \Comment{\ksremark{Czy gdzieś mamy funkcje `distance'?}}
+		\State $\nX \gets |\zX|$ \Comment{liczba danych}
+		\State $\mDistance \gets $ \Call{FuzzyDistance}{$\zX$} \Comment{symetryczna macierz $\nX \times \nX$ rozmytych odległości euklidesowych między każdą parą danych}
 		\State $\wPunkt \gets [1, 2, ..., \nX-1, \nX]$ \Comment{wektor indeksów, które będą sprawdzane}
 		\State $\wEtykieta \gets [1, 2, ..., \nX-1, \nX]$ \Comment{etykiety}
 		\For{$i = 1$ to $\nX - \nKlaster$} 
-		\State $w, k \gets $ \Call{FuzzyArgMin}{$\mDistance, \wPunkt, r, \xi$} \Comment{scalenie najbliższych klastrów}  \Comment{\ksremark{Tu mamy odczyt numeru wiersza i kolumny, a nie scalenie. Czy dobrze rozumiem?}}
+		\State $w, k \gets $ \Call{FuzzyArgMin}{$\mDistance, \wPunkt, r, \xi$} \Comment{znalezienie indeksów dwóch najbliższych klastrów}
 		\State $\wPunkt \gets \wPunkt \setminus {k}$ \Comment{nieużywane w dalszych iteracjach}
 		\For{$\Punkt \in \wPunkt$}
-		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności} \Comment{\ksremark{Czy tu na pewno ma być $w, p$ i $k, p$?}}
+		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności}
 		\EndFor
 		\State  \Comment{\ksremark{Poniższy fragment pseudokodu trzeba napisać trochę jaśniej. Zasadniczo wiadomo, o co chodzi.}}
-		\State zamień etykiety o wartości $k$ na $w$  \Comment{\ksremark{Nie jestem pewien, czy rozumiem.}}
+		\For{$j$ in $1..\nX$}
+		\If{$\wEtykieta[j] == k$}
+		\State $\wEtykieta[j] = w$ \Comment{zamiana etykiet}
+		\EndIf
+		\EndFor
 		\EndFor
 		\State $\wEtykieta = [0, …, \nKlaster - 1] \gets$ przemianiowanie etykiet $\wEtykieta$ na kolejne wartości
 		\State mapa $\gets$ lista unikalnych wartości w $\wEtykieta$
