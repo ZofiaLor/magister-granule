@@ -555,10 +555,18 @@ escapeinside={@*}{*@},%
 %\item zwięzła charakterystyka rozdziałów 
 %\end{itemize}
 
+Grupowanie danych, nazywane też klasteryzacją, jest powszechnie wykorzystywane do analizy danych. Istnieje wiele rodzajów algorytmów klasteryzacyjnych, między innymi hierarchiczne, gęstościowe, grafowe. Niezależnie od typu, polegają one na łączeniu podobnych do siebie danych w grupy (klastry).
+
+Istotną z punktu widzenia tej pracy kategorią algorytmów grupowania są algorytmy rozmyte, na przykład algorytm rozmytych $c$-średnich. Uzyskiwane za ich pomocą klastry są zbiorami rozmytymi, co oznacza, że dane mogą należeć do wielu grup jednocześnie, w pewnym stopniu. Klastry te mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą. 
+
+Celem niniejszej pracy będzie opracowanie rozmytego algorytmu aglomeracyjnego grupowania hierarchicznego, który operować będzie na wynikach klasteryzacji algorytmu rozmytych $c$-średnich. Algorytm ten powinien przyspieszyć proces grupowania, jednocześnie zachowując wysoką jego jakość.
+
+W rozdziale \ref{sec:analiza-tematu} przedstawiono teoretyczną analizę zagadnień związanych z tematem. Omówione są algorytmy grupowania danych, w szczególności algorytm hierarchiczny oraz algorytm rozmytych $c$-średnich. Opisano istotne dla rozwiązania elementy logiki rozmytej, w tym rozszerzalne liczby rozmyte. Rozdział \ref{sec:wlasne-rozwiazanie} zawiera omówienie własnej implementacji rozmytego algorytmu aglomeracyjnego grupowania hierarchicznego i konieczne kroki przygotowujące dane. W rozdziale \ref{sec:badania} analizowane jest działanie tego algorytmu. Przedstawione są wykorzystane dane oraz metodyki badania czasu i jakości grupowania, a następnie w oparciu o nie omawiane są wyniki grupowania.
 
 
 % TODO
 \chapter{Granularne algorytmy grupowania hierarchicznego}  % Analiza tematu
+\label{sec:analiza-tematu}
 % 
 
  
@@ -1197,6 +1205,7 @@ Operatory nierówności wyznaczane są w następujący sposób:
 % \end{table}  
 
 \chapter{Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego}
+\label{sec:wlasne-rozwiazanie}
 
 %\begin{itemize}
 %\item  Jak ja rozwiązuję problem?
@@ -1381,6 +1390,7 @@ Pozostałymi wykorzystanymi w projekcie bibliotekami są: \texttt{matplotlib} (w
 
 % TODO
 \chapter{Badania}
+\label{sec:badania}
 
 %Co już przeanalizowano
 %\begin{itemize}
@@ -1468,7 +1478,7 @@ Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtór
 
 \subsection{Jakość grupowania}
 
-Jakość zmierzono poprzez porówanie wyników algorytmu AgglomerativeClustering \ksremark{$\gets$ trzeba ujednolicić zapis nazwy algorytmu} biblioteki scikit-learn z własną implementacją.
+Jakość zmierzono poprzez porówanie wyników algorytmu \MojAlg{} z oczekiwanymi przynależnościami punktów do klastrów, oznaczonymi etykietami.
 
 Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych łączności (\SingleLinkage{}, \CompleteLinkage{}), liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi \in \{ 0.05, 0.10, 0.15, \ldots, 0.95 \}$.
 
@@ -1716,8 +1726,6 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba jest stała.
 Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(n)$, więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych. \ksremark{To napiszemy w rozdziale 3.}
 
-\ksremark{Jak jakość grupowania zależy do liczby granul?}
-
 \subsection{Jakość grupowania}
 
 Na wykresach wyników grupowania hierarchicznego metodą rozmytą punkty szare odpowiadają współrzędnym oryginalnych danych. Wyjątkiem są wykresy danych \spheres, gdzie oryginalne punkty pominięto, aby zachować czytelność wykresu. Punkty kolorowe odpowiadają środkom granul, gdzie środki o tym samym kolorze należą do tego samego klastra. 
@@ -1753,7 +1761,6 @@ W przypadku \SingleLinkage{}, najlepszą dokładność, trafność i precyzję z
 \end{table}  
 \ksremark{Tab. \ref{id:tab:acc-ksztalt}: `Dokładność' to ta miara z macierzą, prawda?}
 \ksremark{Tab. \ref{id:tab:acc-ksztalt}: Mamy jedno wykonanie algorytmu?}
-\ksremark{Jak się zmienia dokładność w zależności od liczby granul?}
 
 \begin{table}
 \centering
