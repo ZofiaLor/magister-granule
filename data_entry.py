@@ -91,16 +91,14 @@ class DataEntry(object):
 
         if shape_dependent_membership:
             for point in self.data:
-                membership_value = 0
-                membership = 0
+                memberships = np.zeros(len(granules))
                 for i in range(len(granules)):
                     total = granules[i].fuzzy_dims[0].equal(FuzzyNumber(point[0], 0), relation_type)
                     for j in range(1, len(point)):
                         total *= granules[i].fuzzy_dims[j].equal(FuzzyNumber(point[j], 0), relation_type)
-                    if total > membership_value:
-                        membership_value = total
-                        membership = i
-                if membership_value > 0:
+                    memberships[i] = total
+                membership = np.argmax(memberships)
+                if memberships[membership] > 0:
                     granule_member_labels.append(int(hc.labels[membership]))
                 else:
                     noise += 1
