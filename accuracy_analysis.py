@@ -75,7 +75,6 @@ data = pandas.concat([data_blobs, data_circles, data_corners, data_crescents, da
 
 for name, shape in {"blobs": data_blobs, "circles": data_circles, "corners": data_corners, "crescents": data_crescents, "laguna": data_laguna, "spheres": data_spheres}.items():
     filtered_size = shape[["granules number", "relation type", "ksi", "accuracy", "recall", "precision"]].groupby(by=["granules number", "relation type", "ksi"]).mean().reset_index()
-    print(filtered_size.to_string())
 
     plt.figure(figsize=(12, 10))
     for i in range(3):
@@ -116,7 +115,7 @@ for name, shape in {"blobs": data_blobs, "circles": data_circles, "corners": dat
             plt.title(
                 "Zależność precyzji grupowania danych " + name + r" od liczby granul, typu relacji i wartości $ \xi $ przy łączności single linkage")
             plt.xlabel(r"$ \xi $")
-            plt.ylabel("precyzji")
+            plt.ylabel("precyzja")
             legend_labels.append(str(granules_numbers[i]) + " granul, typ relacji: " + relation_types[j])
     plt.legend(legend_labels)
     # plt.show()
@@ -140,14 +139,14 @@ print(grouped.to_string())
 to_group = data[["ksi", "accuracy", "recall", "precision"]]
 grouped = to_group.groupby(by=["ksi"], as_index=False).mean()
 print(grouped.to_string())
-plt.figure()
+plt.figure(figsize=(9,9))
 plt.plot(grouped["ksi"], grouped["accuracy"], marker='o')
 plt.plot(grouped["ksi"], grouped["recall"], marker='o')
 plt.plot(grouped["ksi"], grouped["precision"], marker='o')
 # plt.bar(grouped["ksi"], grouped["accuracy"], color=cmap(np.linspace(0, 1, 19)), width=0.02)
 plt.legend(["dokładność", "trafność", "precyzja"])
-plt.title('Średnia dokładność, trafność i precyzja w zależności od parametru ksi')
-plt.xlabel('ksi')
+plt.title(r'Średnia dokładność, trafność i precyzja w zależności od parametru $ \xi $')
+plt.xlabel(r'$ \xi $')
 plt.ylabel('wynik')
 plt.show()
 
