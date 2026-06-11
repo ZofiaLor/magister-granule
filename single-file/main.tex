@@ -1482,6 +1482,8 @@ Jakość zmierzono poprzez porówanie wyników algorytmu \MojAlg{} z oczekiwanym
 
 Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych łączności (\SingleLinkage{}, \CompleteLinkage{}), liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi \in \{ 0.05, 0.10, 0.15, \ldots, 0.95 \}$.
 
+Kolejność danych została przed pomiarem losowo zmieszana przy pomocy generatora liczb pseudolosowych o ustalonym ziarnie. Dzięki temu, przy każdym uruchomieniu kolejność ta jest identyczna, wystarczyły więc jednokrotne pomiary wyników działania algorytmu \MojAlg{} dla każdej kombinacji parametrów.
+
 \subsubsection{Etykietowanie danych}
 \label{sec:etykietowanie-danych}
 
@@ -1737,7 +1739,7 @@ Elipsy (elipsoidy dla \spheres) w kolorze magenta wizualizują rozmycie granul, 
 
 Dokładność grupowania danych w zależności od ich kształtu dla łączności \SingleLinkage{} i \CompleteLinkage{} przedstawiono w tabeli \ref{id:tab:acc-ksztalt}, trafność -- w tabeli \ref{id:tab:rec-ksztalt}, a precyzję -- w tabeli \ref{id:tab:prec-ksztalt}.
 
-W przypadku \SingleLinkage{}, najlepszą dokładność, trafność i precyzję zaobserwowano dla danych \crescents. Dane \corners\ mają najgorszą dokładność, a dane \blobs\ -- najgorszą trafność i precyzję. Wyniki przeanalizowano również na podstawie wykresów.
+W przypadku \SingleLinkage{}, najlepszą dokładność, trafność i precyzję zaobserwowano dla danych \circles{}. Dane \corners\ mają najgorszą dokładność, a dane \blobs\ -- najgorszą trafność i precyzję. Wyniki przeanalizowano również na podstawie wykresów.
 
 
 \begin{table}
@@ -1750,12 +1752,12 @@ W przypadku \SingleLinkage{}, najlepszą dokładność, trafność i precyzję z
             \cmidrule{2-3}
 	kształt & \SingleLinkage{} &  \CompleteLinkage{} \\
 \midrule
-	    \blobs\  & 98,6881\% & 87,1617\% \\
-		\circles\ & 99,7621\% & 56,8455\% \\
-		\corners\  & 94,5375\% & 50,9458\% \\
-		\crescents\  & 99,9536\% & 95,7456\% \\
-		\laguna\  & 98,8489\% & 46,1161\% \\
-		\spheres\  & 98,6634\% & 71,0699\% \\
+	    \blobs\  & 98,7404\% & 87,5816\% \\
+		\circles\ & 99,8159\% & 57,3777\% \\
+		\corners\  & 94,8454\% & 51,6697\% \\
+		\crescents\  & 99,4291\% & 79,7707\% \\
+		\laguna\  & 98,7580\% & 46,8501\% \\
+		\spheres\  & 98,7557\% & 70,5616\% \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -1768,14 +1770,16 @@ W przypadku \SingleLinkage{}, najlepszą dokładność, trafność i precyzję z
 \label{id:tab:rec-ksztalt}
 \begin{tabular}{rrr}
 \toprule
-	kształt & trafność \SingleLinkage{} & trafność \CompleteLinkage{} \\
+            & \multicolumn{2}{c}{trafność}\\
+            \cmidrule{2-3}
+	kształt & \SingleLinkage{} &  \CompleteLinkage{} \\
 \midrule
-	    \blobs\  & 87,9054\% & 89,5804\% \\
-		\circles\ & 99,6294\% & 49,7170\% \\
-		\corners\  & 94,5375\% & 50,9458\% \\
-		\crescents\  & 99,9536\% & 95,7456\% \\
-		\laguna\  & 97,2418\% & 54,6761\% \\
-		\spheres\  & 94,6116\% & 40,3605\% \\
+	    \blobs\  & 88,4588\% & 89,6780\% \\
+		\circles\ & 99,7088\% & 49,6957\% \\
+		\corners\  & 94,8454\% & 51,6697\% \\
+		\crescents\  & 99,4291\% & 79,7707\% \\
+		\laguna\  & 96,2464\% & 55,7066\% \\
+		\spheres\  & 95,1177\% & 40,8578\% \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -1786,14 +1790,16 @@ W przypadku \SingleLinkage{}, najlepszą dokładność, trafność i precyzję z
 \label{id:tab:prec-ksztalt}
 \begin{tabular}{rrr}
 \toprule
-	kształt & precyzja \SingleLinkage{} & precyzja \CompleteLinkage{} \\
+            & \multicolumn{2}{c}{precyzja}\\
+            \cmidrule{2-3}
+	kształt & \SingleLinkage{} &  \CompleteLinkage{} \\
 \midrule
-	    \blobs\  & 86,6801\% & 81,8197\% \\
-		\circles\ & 99,7763\% & 49,5504\% \\
-		\corners\  & 94,8456\% & 47,4230\% \\
-		\crescents\  & 99,9711\% & 96,6097\% \\
-		\laguna\  & 97,6756\% & 39,5390\% \\
-		\spheres\  & 94,2357\% & 44,1444\% \\
+	    \blobs\  & 87,2735\% & 83,2466\% \\
+		\circles\ & 99,8379\% & 49,4699\% \\
+		\corners\  & 95,2282\% & 48,3977\% \\
+		\crescents\  & 99,6430\% & 82,0669\% \\
+		\laguna\  & 98,1172\% & 40,0251\% \\
+		\spheres\  & 94,7975\% & 44,4152\% \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -1803,68 +1809,68 @@ Ze względu na dużą dysproporcję danych pomiędzy trzema klastrami (48:1:1), 
 Zawierają one jednak jedynie 4\% danych, dlatego dokładność grupowania pozostaje wysoka. 
 Trafność i precyzja lepiej odzwierciedlają zgodność z oczekiwaniami -- są znacznie niższe od dokładności. Mniejsze klastry mają tę samą wagę, co większy klaster, dlatego niepoprawne grupowania wyraźnie wpływają na wartość metryki.
 
-Dane \circles\ (rys. \ref{fig:circles20000g}) mają drugie najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($0.9, 0.95$). Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs\, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
+Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($0.9, 0.95$). Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs\, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
 
-Klastry dla danych \corners\  mają nierównomierną gęstość, przez co algorytm rozmytych $c$-średnich tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000e}).
+Klastry dla danych \corners\  mają nierównomierną gęstość, przez co algorytm rozmytych $c$-średnich tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000g}).
 Odległości między granulami położonymi na ,,ramionach'' i w ,,środkach'' klastrów są na tyle duże, że odległości ,,środków'' różnych klastrów mogą być od nich mniejsze.
 Wszystkie klastry mają tę samą liczebność, wartości dokładności, trafności i precyzji są zbliżone do siebie.
 
-Dane \crescents\  tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność, trafność i precyzja ich grupowania są najlepsze (rys. \ref{fig:crescents1000t}). Ze względu na bliskie położenie końców łuków, przy dużym rozmyciu wciąż możliwe są błędy, jednak szansa na nie jest bardzo mała. Dla 1368 kombinacji parametrów, dla których przeprowadzono pomiary, błędy pojawiły się w 3 przypadkach: przy 50 granulach o kształcie wykładniczym, parametrze $\xi=0.95$, dla liczebności danych wejściowych 20000, 40000 i 50000.
+Dane \crescents\  tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność, trafność i precyzja ich grupowania są prawie najlepsze (rys. \ref{fig:crescents5000e}). Ze względu na bliskie położenie końców łuków, błędy wciąż mogą się pojawić -- koniec jednego łuku złączony zostaje z łukiem drugim. Dzieje się tak tylko dla bardzo wysokich wartości parametru $\xi$ -- $0.9$ i $0.95$.
 
-Dla danych \laguna\, błędy mogą pojawić się, gdy pojedyncze granule utworzone zostają w większej odległości od środkowego klastra, do którego oczekiwane jest, że powinny należeć. Punkt taki może wtedy zostać zakwalifikowany, jako osobny klaster, co na rysunku \ref{fig:laguna2000g} pokazują przykłady dla 50 granul i $\xi={0.5, 0.9}$ oraz 200 granul i $\xi=0.9$. Podobny błąd przedstawia wykres dla 200 granul i $\xi=0.5$ -- pewna grupa punktów na otaczającym okręgu jest na tyle oddalona od pozostałych, że zostaje uznana za osobny klaster, dwa klastry środkowe są łączone. Powyżej liczebności 20000 punktów włącznie, dokładność nigdy nie osiąga 100\%, jednak najczęściej wynosi powyżej 99.9\%. Jak zaznaczono w sekcji dotyczącej etykietowania danych (sekcja \ref{sec:wyniki-etykietowania}), środkowe klastry są na tyle zbliżone do siebie, że na podstawie wykresu nie można definitywnie określić, które punkty pomiędzy nimi należą do którego z nich. Pojedyncze punkty mogą więc być klasyfikowane niepoprawnie z punktu widzenia przypisanych do nich etykiet. Proporcja danych wynosi 8:1:1 (otaczający okrąg ma większą liczebność), jednak jakość grupowania jest na tyle wysoka, że zarówno dokładność, jak i trafność i precyzja mają podobne wartości.
+Dla danych \laguna\, błędy mogą pojawić się, gdy pojedyncze granule utworzone zostają w większej odległości od środkowego klastra, do którego oczekiwane jest, że powinny należeć. Punkt taki może wtedy zostać zakwalifikowany, jako osobny klaster, co na rysunku \ref{fig:laguna1000e} pokazuje przykład dla 50 granul i $\xi=0.9$. Podobny błąd przedstawia wykres dla 200 granul i $\xi=0.9$ -- pewna grupa punktów na otaczającym okręgu jest na tyle oddalona od pozostałych, że zostaje uznana za osobny klaster, jeden ze środkowych klastrów jest łączony z pozostałą częścią okręgu. Powyżej liczebności 20000 punktów włącznie, dokładność nigdy nie osiąga 100\%, jednak najczęściej wynosi powyżej 99.9\%. Jak zaznaczono w sekcji dotyczącej etykietowania danych (sekcja \ref{sec:wyniki-etykietowania}), środkowe klastry są na tyle zbliżone do siebie, że na podstawie wykresu nie można definitywnie określić, które punkty pomiędzy nimi należą do którego z nich. Pojedyncze punkty mogą więc być klasyfikowane niepoprawnie z punktu widzenia przypisanych do nich etykiet. Proporcja danych wynosi 8:1:1 (otaczający okrąg ma większą liczebność), jednak jakość grupowania jest na tyle wysoka, że zarówno dokładność, jak i trafność i precyzja mają podobne wartości.
 
-W przypadku danych \spheres\  (rys. \ref{fig:spheres1000e}) można zauważyć, że wyniki poprawiają się wraz ze zwiększeniem liczby granul i zmniejszeniem wartości parametru $\xi$. Proporcja liczebności klastrów wynosi 9:1, trafność i precyzja są o około 4 punkty procentowe mniejsze od dokładności.
+W przypadku danych \spheres\  (rys. \ref{fig:spheres5000g}) można zauważyć, że wyniki poprawiają się wraz ze zwiększeniem liczby granul i zmniejszeniem wartości parametru $\xi$. Proporcja liczebności klastrów wynosi 9:1, trafność i precyzja są o około 4 punkty procentowe mniejsze od dokładności.
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./blobs1000e.pdf}
+\includegraphics[width=\textwidth]{./blobs1000e_s.pdf}
 \caption{Efekty wykonania grupowania \MojAlg\ dla danych \blobs\  o~rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
 \label{fig:blobs1000e}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./circles20000g.png}
-\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze 20000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
-\label{fig:circles20000g}
+\includegraphics[width=\textwidth]{./circles50000e_s.png}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze 50000 i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+\label{fig:circles50000e}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./corners1000e.pdf}
-\caption{Efekty wykonania grupowania \MojAlg\ dla danych \corners\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
-\label{fig:corners1000e}
+\includegraphics[width=\textwidth]{./corners1000g_s.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \corners\  o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+\label{fig:corners1000g}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./crescents1000t.pdf}
-\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 1000 i trójkątnej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
-\label{fig:crescents1000t}
+\includegraphics[width=\textwidth]{./crescents5000e_s.png}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 5000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+\label{fig:crescents5000e}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./laguna2000g.pdf}
-\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 2000 i gaussowskiej relacji między liczbami rozmytymi.}
-\label{fig:laguna2000g}
+\includegraphics[width=\textwidth]{./laguna1000e_s.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
+\label{fig:laguna1000e}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./spheres1000e.pdf}
-\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
-\label{fig:spheres1000e}
+\includegraphics[width=\textwidth]{./spheres5000g_s.pdf}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 5000 i gaussowskiej relacji między liczbami rozmytymi.}
+\label{fig:spheres5000g}
 \end{figure}
 
-Podobnie jak w przypadku \SingleLinkage{}, najlepsze wyniki dla łączności \CompleteLinkage{} uzyskano dla danych \crescents{}. Inaczej jest w przypadku najgorszych wyników: dane \laguna\ mają najgorszą dokładność i precyzję, a dane \spheres\ -- najgorszą trafność. Wszystkie wyniki są znacznie gorsze od uzyskanych dla \SingleLinkage{}, za wyjątkiem trafności dla danych \blobs{}.
+Najlepsze wyniki dla łączności \CompleteLinkage{} uzyskano dla danych \blobs{}. Inaczej jest w przypadku najgorszych wyników: dane \laguna\ mają najgorszą dokładność i precyzję, a dane \spheres\ -- najgorszą trafność. Wszystkie wyniki są znacznie gorsze od uzyskanych dla \SingleLinkage{}, za wyjątkiem trafności dla danych \blobs{}.
 
 
 \paragraph{Zależność od liczby granul}
 
 Średnią dokładność, trafność i precyzję grupowania danych w zależności od liczby granul przedstawiono odpowiednio w tabelach \ref{id:tab:acc-gn}, \ref{id:tab:rec-gn} i \ref{id:tab:prec-gn}. W przypadku łączności \SingleLinkage{} najlepsze wyniki osiągane są dla 100 granul, a dla \CompleteLinkage{} -- dla 50.
 
-Dla danych takich, jak \circles{} (rys. \ref{fig:circles20000g}) czy \crescents{} (rys. \ref{fig:crescents1000t}), gdzie klastry mają podobną liczebność i gęstość, zwiększenie liczby granul powoduje ich zagęszczenie, przy równomiernym rozłożeniu.
+Dla danych takich, jak \circles{} (rys. \ref{fig:circles50000e}) czy \crescents{} (rys. \ref{fig:crescents5000e}), gdzie klastry mają podobną liczebność i gęstość, zwiększenie liczby granul powoduje ich zagęszczenie, przy równomiernym rozłożeniu.
 
 Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla większych liczebności granul, możliwe jest, że algorytm rozmytych $c$-średnich nie wyznacza ani jednego środka granuli w dwóch mniejszych klastrach, przez co niemożliwe jest poprawne grupowanie.
 
@@ -1876,11 +1882,13 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 \label{id:tab:acc-gn}
 \begin{tabular}{rrr}
 \toprule
-	liczba granul & dokładność \SingleLinkage{} & dokładność \CompleteLinkage{} \\
+            & \multicolumn{2}{c}{dokładność}\\
+            \cmidrule{2-3}
+	liczba granul & \SingleLinkage{} &  \CompleteLinkage{} \\
 \midrule
-	50 & 97,7201\% & 70,1218\% \\
-	100 & 98,8127\% & 68,1147\% \\
-	200 & 98,6939\% & 65,7058\% \\
+	50 & 97,9193\% & 67,6764\% \\
+	100 & 98,7219\% & 66,0573\% \\
+	200 & 98,5311\% & 63,1719\% \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -1891,11 +1899,13 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 \label{id:tab:rec-gn}
 \begin{tabular}{rrr}
 \toprule
-	liczba granul & trafność \SingleLinkage{} & trafność \CompleteLinkage{} \\
+            & \multicolumn{2}{c}{trafność}\\
+            \cmidrule{2-3}
+	liczba granul & \SingleLinkage{} &  \CompleteLinkage{} \\
 \midrule
-	50 & 95,9457\% & 65,1262\% \\
-	100 & 96,6480\% & 63,5260\% \\
-	200 & 94,3459\% & 61,8105\% \\
+	50 & 96,3905\% & 62,7023\% \\
+	100 & 96,9951\% & 61,6141\% \\
+	200 & 93,5175\% & 59,3729\% \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -1906,11 +1916,13 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 \label{id:tab:prec-gn}
 \begin{tabular}{rrr}
 \toprule
-	liczba granul & precyzja \SingleLinkage{} & precyzja \CompleteLinkage{} \\
+            & \multicolumn{2}{c}{precyzja}\\
+            \cmidrule{2-3}
+	liczba granul & \SingleLinkage{} &  \CompleteLinkage{} \\
 \midrule
-	50 & 95,9749\% & 62,6649\% \\
-	100 & 96,4913\% & 59,9919\% \\
-	200 & 94,1259\% & 56,8863\% \\
+	50 & 96,5762\% & 60,6208\% \\
+	100 & 96,9830\% & 58,5948\% \\
+	200 & 93,8895\% & 54,5952\% \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -1927,11 +1939,13 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 \label{id:tab:acc-rt}
 \begin{tabular}{rrr}
 \toprule
-	typ relacji & dokładność \SingleLinkage{} & dokładność \CompleteLinkage{} \\
+            & \multicolumn{2}{c}{dokładność}\\
+            \cmidrule{2-3}
+	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} \\
 \midrule
-	trójkątna & 99,4364\% & 67,5915\% \\
-	wykładnicza & 97,9782\% & 67,9194\% \\
-	gaussowska & 97,8122\% & 68,4314\% \\
+	trójkątna & 99,5228\% & 65,1280\% \\
+	wykładnicza & 97,8022\% & 65,7017\% \\
+	gaussowska & 97,8473\% & 66,0760\% \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -1943,11 +1957,13 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 \label{id:tab:rec-rt}
 \begin{tabular}{rrr}
 \toprule
-	typ relacji & trafność \SingleLinkage{} & trafność \CompleteLinkage{} \\
+            & \multicolumn{2}{c}{trafność}\\
+            \cmidrule{2-3}
+	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} \\
 \midrule
-	trójkątna & 97,7833\% & 63,6595\% \\
-	wykładnicza & 94,1950\% & 63,4156\% \\
-	gaussowska & 94,1950\% & 63,4376\% \\
+	trójkątna & 97,7600\% & 61,2267\% \\
+	wykładnicza & 94,7597\% & 61,1654\% \\
+	gaussowska & 94,3834\% & 61,2972\% \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -1958,11 +1974,13 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 \label{id:tab:prec-rt}
 \begin{tabular}{rrr}
 \toprule
-	typ relacji & precyzja \SingleLinkage{} & precyzja \CompleteLinkage{} \\
+            & \multicolumn{2}{c}{precyzja}\\
+            \cmidrule{2-3}
+	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} \\
 \midrule
-	trójkątna & 97,5440\% & 59,9329\% \\
-	wykładnicza & 94,9921\% & 59,8046\% \\
-	gaussowska & 94,0560\% & 59,8056\% \\
+	trójkątna & 97,6227\% & 57,8388\% \\
+	wykładnicza & 95,1663\% & 57,9002\% \\
+	gaussowska & 94,6597\% & 58,0717\% \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -1971,9 +1989,9 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 
 Średnią dokładność, trafność i precyzję grupowania danych w zależności od parametru $\xi$ przedstawiono na rys. \ref{fig:xi-acc}.
 
-Dla \SingleLinkage{}, najwyższą dokładność, trafność i precyzję -- odpowiednio 99,6232\%, 98,5214\% i 98,2\% -- osiągnięto dla $\xi=0,05$, wartości metryk spadają wraz ze wzrostem wartości parametru. Powyżej $\xi=0,85$ następuje gwałtowne załamanie na wykresie wyników.
+Dla \SingleLinkage{}, najwyższą dokładność i precyzję -- odpowiednio 99,7745\% i 98,1348\% -- osiągnięto dla $\xi=0,05$, najwyższą trafność -- 98,3582\% -- dla $\xi=0,1$. Wartości metryk spadają wraz ze wzrostem wartości parametru. Powyżej $\xi=0,8$ następuje gwałtowne załamanie na wykresie wyników.
 
-Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyniki -- 69,5779\% -- osiągnięto dla $\xi=0,95$. Trafność i precyzja nie wpisują się w tą zależność -- ich wartości wahają się odpowiednio około 63-64\% i 60\%. Najwyższa wartość trafności wynosi 64,13\% dla $\xi=0,2$, a precyzji -- 60,2063\% dla $\xi=0,85$.
+Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyniki -- 67,1215\% -- osiągnięto dla $\xi=0,9$. Trafność i precyzja nie wpisują się w tą zależność -- ich wartości wahają się odpowiednio około 60-61\% i 58\%. Najwyższa wartość trafności wynosi 61,7007\% dla $\xi=0,65$, a precyzji -- 58,4605\% dla $\xi=0,7$.
 \ksremark{Trzeba skomentować te wyniki.}
 \begin{figure}
 	\centering
