@@ -670,7 +670,7 @@ Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizowa
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./dendrogram_iris.pdf}
+\includegraphics[width=\textwidth]{./img/dendrogram_iris.pdf}
 \caption{Dendrogram otrzymany na podstawie grupowania hierarchicznego o łączności \english{single linkage} przykładowego zbioru danych \iris.}
 \label{fig:dendrogram-iris}
 \end{figure}
@@ -767,7 +767,7 @@ Przykład takiego przypisania ilustruje rys. \ref{fig:single-linkage-example}. O
 %rysunek?
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./single_linkage_example.pdf}
+\includegraphics[width=\textwidth]{./img/single_linkage_example.pdf}
 \caption{Ilustracja działania algorytmu \english{single linkage}. Odległość klastra $B$ od klastrów $A_{1}$ i $A_{2}$ jest znana. Po złączeniu $A_{1}$ i $A_{2}$ w klaster $A$, nowa odległość od klastra $B$ jest równa minimalnej z poprzednich dwóch -- w tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$.}
 \label{fig:single-linkage-example}
 \end{figure}
@@ -908,7 +908,7 @@ Graficzną interpretację tych charakterystyk przedstawiono na rys. \ref{fig:cor
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./core_support_example.pdf}
+\includegraphics[width=\textwidth]{./img/core_support_example.pdf}
 \caption{Wykres trapezowego zbioru rozmytego, ilustrujący jego rdzeń i nośnik.}
 \label{fig:core-support-example}
 \end{figure}
@@ -1436,7 +1436,7 @@ Dane przedstawiają informacje o logowaniach się użytkowników platform społe
 Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' -- dwuwymiarowe współrzędne lokalizacji logowań. Dane nie są sklasyfikowane. Analiza wykresów (rys. \ref{fig:gowalla-brightkite-shapes}) pozwala zauważyć kształty kontynentów -- można uznać je za docelowe klastry.
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./data_shapes.pdf}
+\includegraphics[width=\textwidth]{./img/data_shapes.pdf}
 \caption{Wykresy danych o różnych kształtach z folderu \texttt{dane} o rozmiarze 1000 punktów.}
 \label{fig:data-shapes}
 \end{figure}
@@ -1457,7 +1457,7 @@ Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' 
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./gowalla_brightkite_shapes.png}
+\includegraphics[width=\textwidth]{./img/gowalla_brightkite_shapes.png}
 \caption{Wykresy danych \brightkite i \gowalla.}
 \label{fig:gowalla-brightkite-shapes}
 \end{figure}
@@ -1510,14 +1510,14 @@ W przypadku danych \laguna{} o liczebności 20000 i większej, dwa środkowe kla
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./data_shapes_labels.pdf}
+\includegraphics[width=\textwidth]{./img/data_shapes_labels.pdf}
 \caption{Wykresy danych o różnych kształtach z folderu \texttt{dane\_labelled} o rozmiarze 1000 punktów, o etykietach oznaczonych kolorami.}
 \label{fig:data-shapes-labels}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./laguna20000_labelled.png}
+\includegraphics[width=\textwidth]{./img/laguna20000_labelled.png}
 \caption{Wykres danych \laguna{} z folderu \texttt{dane\_labelled} o rozmiarze 20000 punktów, o etykietach oznaczonych kolorami.}
 \label{fig:laguna20000-labels}
 \end{figure}
@@ -1584,17 +1584,17 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 \begin{figure}
 	\centering
 	\begin{subfigure}{0.32\textwidth}
-		\includegraphics[width=\textwidth]{./shape_dep_t.pdf}
+		\includegraphics[width=\textwidth]{./img/shape_dep_t.pdf}
 		\caption{Liczby trójkątne}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}{0.32\textwidth}
-		\includegraphics[width=\textwidth]{./shape_dep_e.pdf}
+		\includegraphics[width=\textwidth]{./img/shape_dep_e.pdf}
 		\caption{Liczby wykładnicze}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}{0.32\textwidth}
-		\includegraphics[width=\textwidth]{./shape_dep_g.pdf}
+		\includegraphics[width=\textwidth]{./img/shape_dep_g.pdf}
 		\caption{Liczby gaussowskie}
 	\end{subfigure}
 	\caption{Przynależność punktów do granul w zależności od kształtu liczb rozmytych. 10 środków granul oznaczono kolorem czerwonym, punkty należące do różnych granul oznaczone są różnymi kolorami. Kolorem szarym oznaczono punkty stanowiące szum.}
@@ -1718,7 +1718,7 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 
 \begin{figure}
 \centering
-\includegraphics{./circles_times.pdf}
+\includegraphics{./img/circles_times.pdf}
 \caption{Charakterystyka czasu wykonania algorytmów ostrego i rozmytego dla różnej liczby granul od liczby danych wejściowych (circles).}
 \label{fig:circles-times}
 \end{figure}
@@ -1823,42 +1823,42 @@ W przypadku danych \spheres\  (rys. \ref{fig:spheres5000g}) można zauważyć, �
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./blobs1000e_s.pdf}
+\includegraphics[width=\textwidth]{./img/blobs1000e_s.pdf}
 \caption{Efekty wykonania grupowania \MojAlg\ dla danych \blobs\  o~rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
 \label{fig:blobs1000e}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./circles50000e_s.png}
+\includegraphics[width=\textwidth]{./img/circles50000e_s.png}
 \caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze 50000 i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
 \label{fig:circles50000e}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./corners1000g_s.pdf}
+\includegraphics[width=\textwidth]{./img/corners1000g_s.pdf}
 \caption{Efekty wykonania grupowania \MojAlg\ dla danych \corners\  o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
 \label{fig:corners1000g}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./crescents5000e_s.png}
+\includegraphics[width=\textwidth]{./img/crescents5000e_s.png}
 \caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 5000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
 \label{fig:crescents5000e}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./laguna1000e_s.pdf}
+\includegraphics[width=\textwidth]{./img/laguna1000e_s.pdf}
 \caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
 \label{fig:laguna1000e}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./spheres5000g_s.pdf}
+\includegraphics[width=\textwidth]{./img/spheres5000g_s.pdf}
 \caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 5000 i gaussowskiej relacji między liczbami rozmytymi.}
 \label{fig:spheres5000g}
 \end{figure}
@@ -1996,13 +1996,13 @@ Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyni
 \begin{figure}
 	\centering
 	\begin{subfigure}{0.48\textwidth}
-		\includegraphics[width=\textwidth]{./xi_acc_sl.pdf}
+		\includegraphics[width=\textwidth]{./img/xi_acc_sl.pdf}
 		\caption{\SingleLinkage}
 		\label{fig:xi-acc-sl}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}{0.48\textwidth}
-		\includegraphics[width=\textwidth]{./xi_acc_cl.pdf}
+		\includegraphics[width=\textwidth]{./img/xi_acc_cl.pdf}
 		\caption{\CompleteLinkage}
 	\label{fig:xi-acc-cl}
 	\end{subfigure}
@@ -2034,14 +2034,14 @@ Wstępna granulacja FCM pozwoliła na eliminację szumów, na które wrażliwy j
 
 \begin{figure}
 \centering
-\includegraphics{./brightkite_nonfuzzy.png}
+\includegraphics{./img/brightkite_nonfuzzy.png}
 \caption{Dane \brightkite (próbka 100000 współrzędnych) zgrupowane do 6 klastrów algorytmem ostrym (AgglomerativeClustering biblioteki scikit-learn).}
 \label{fig:brightkite-nonfuzzy}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics{./brightkite_fuzzy.png}
+\includegraphics{./img/brightkite_fuzzy.png}
 \caption{Dane \brightkite (próbka 100000 współrzędnych) zgrupowane do 6 klastrów algorytmem \MojAlg{}.}
 \label{fig:brightkite-fuzzy}
 \end{figure}
