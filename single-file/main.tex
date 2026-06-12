@@ -205,6 +205,12 @@
 \newcommand{\kolokwializm}{\ksremark{kolokwializm}}
 \newcommand{\cudzyslowy}{\ksremark{,,polskie cudzysłowy''}}
 
+\newcommand{\todo}[1]{%
+{%\marginpar{\textdbend}
+{\color{blue}{[#1]}}}%
+\addcontentsline{rks}{uwagas}{\protect{#1}}%
+}
+
 %%%%%%%%%%%%%% END OF TODO LIST GENERATOR %%%%%%%%%%%
 
 \newcommand{\printCoauthor}{%		
@@ -1874,7 +1880,7 @@ Dla danych takich, jak \circles{} (rys. \ref{fig:circles50000e}) czy \crescents{
 
 Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla większych liczebności granul, możliwe jest, że algorytm rozmytych $c$-średnich nie wyznacza ani jednego środka granuli w dwóch mniejszych klastrach, przez co niemożliwe jest poprawne grupowanie.
 
-% TODO tu można zrobić analizę przynależności (niebieskie wykresy)
+\todo{tu można zrobić analizę przynależności (niebieskie wykresy)}
 
 \begin{table}
 \centering
@@ -2025,6 +2031,147 @@ Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyni
 	\label{fig:xi-acc}
 \end{figure}
 
+\paragraph{Zależność od kombinacji parametrów}
+
+Wyniki pomiarów przeanalizowano też biorąc pod uwagę złożenie wpływu różnych parametrów -- kształtu, liczby granul, typu relacji, parametru $\xi$ -- przy ich uśrednieniu dla wszystkich liczebności danych oryginalnych.
+
+W tej sekcji zamieszczono wykresy złożonych zależności dla miary dokładności. W większości przypadków, trafność i precyzja posiadają na tyle podobne zależności, że nie jest konieczne dodatkowe opisywanie ich -- wnioski byłyby identyczne. Wszystkie wykresy zamieszczono w katalogu \todo{ścieżka do folderu, opis co oznaczają nazwy}.
+
+\paragraph{\blobs{}}
+
+Jak pokazuje rys. \ref{fig:blobs-complex}, dla dokładności grupowania danych \blobs{} zdecydowanie największe znaczenie ma liczba granul. Najlepsze wyniki -- około 100\% niezależnie od innych parametrów -- uzyskiwane są dla 50 granul. Dla takiej liczebności algorytm rozmytych $c$-średnich zazwyczaj tworzył granule we wszystkich trzech oczekiwanych klastrach.
+
+Mniejsze znaczenie ma parametr $\xi$, jednak da się zauważyć spadek dokładności dla większych jego wartości dla \SingleLinkage{} i wzrost dokładności dla \CompleteLinkage{}, co jest zgodne z ogólną tendencją, przedstawioną na rys. \ref{fig:xi-acc}. Typ relacji nie ma wyraźnego wpływu na jakość grupowania. 
+
+Jeżeli granule znalezione przez algorytm rozmytych $c$-średnich znajdą się we wszystkich trzech klastrach, to grupowanie \MojHierAlg{} przebiega poprawnie. W przeciwnym razie w centralnym klastrze, pojedyncze granule uznane zostaną za należące do innego klastra, jako że algorytm musi wyznaczyć trzy grupy (rys. \ref{fig:blobs1000e}). Parametr $\xi$ i typ relacji mogą wtedy wpłynąć na to, ile punktów danych oryginalnych znajdzie się w tych nieprawidłowych klastrach, co prowadzi do fluktuacji dokładności. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/blobs_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/blobs_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \blobs{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:blobs-complex}
+\end{figure}
+
+\paragraph{\circles{}}
+
+Wykresy dla danych \circles{} (rys. \ref{fig:circles-complex}) uwydatniają wpływ łączności na jakość grupowania.
+
+W przypadku łączności \SingleLinkage{}, dokładność jest niemal zawsze równa 100\%. Spada ona dla wysokich ($\ge0.9$) wartości parametru $\xi$. Najniższe wartości są osiągane dla relacji wykładniczej, wyższe dla gaussowskiej. Dla relacji trójkątnej, wyniki pozostają na poziomie 100\% nawet dla $\xi=0.95$.
+
+Algorytm dla łączności \CompleteLinkage{} nie odnajduje poprawnie klastrów, co widać na rys. \todo{rysunek circles, analiza kształtu dla cl}. Badane parametry nie mają znacznego wpływu na jakość.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/circles_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/circles_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \circles{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:circles-complex}
+\end{figure}
+
+\paragraph{\corners{}}
+
+Podobnie jak w przypadku \circles{}, grupowanie danych \corners{} przy łączności \CompleteLinkage{} nie zwraca poprawnych wyników. Rys. \ref{fig:corners-complex} pokazuje, że przez to pozostałe parametry nie mają zauważalnego wpływu na jakość grupowania.
+
+Dla łączności \SingleLinkage{} największe znaczenie ma parametr $\xi$. Dokładność zmniejsza się wraz ze wzrostem wartości tego parametru. Ponadto, znaczenie ma też liczba granul i typ relacji. Dokładność wcześniej zaczyna spadać dla mniejszej liczebności granul, najpierw dla relacji gaussowskiej, potem wykładniczej, na końcu trójkątnej. Dla relacji trójkątnej i większych liczebności granul -- 100 i 200 -- średnia dokładność zostaje na poziomie 100\% nawet dla $\xi=0.95$.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/corners_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/corners_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \corners{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:corners-complex}
+\end{figure}
+
+\paragraph{\crescents{}}
+
+Wnioski dla danych \crescents{} są bardzo podobne do wniosków dla danych \circles{}. Jak pokazuje rys. \ref{fig:crescents-complex}, dla łączności \SingleLinkage{} średnia dokładność spada poniżej 100\% dopiero dla wysokich ($\ge 0.9$) wartości $\xi$, najbardziej dla relacji wykładniczej. W przypadku \CompleteLinkage{}, również można zauważyć spadek dokładności dla tej relacji i wysokiego $\xi$, jednak nie ma jasnego wpływu badanych parametrów na jakość grupowania.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/crescents_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/crescents_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \crescents{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:crescents-complex}
+\end{figure}
+
+\paragraph{\laguna{}}
+
+Przy łączności \SingleLinkage{} dokładność spada wraz ze wzrostem wartości $\xi$ -- rys. \ref{fig:laguna-complex}. Najszybciej jakość zmniejsza się dla dużej liczebności granul -- 200. Ma to związek z nieprawidłową przynależnością punktów do granul na zewnątrz dwóch wewnętrznych klastrów \todo{? do weryfikacji odpowiednim wykresem}. Tak jak w przypadku innych kształtów danych, najniższe wyniki są uzyskiwane dla relacji wykładniczej.
+
+Obliczanie przynależności może też wpływać na wyniki dla \CompleteLinkage{}. Dla tej łączności znowu nie można jasno określić wpływu parametrów na dokładność grupowania, natomiast zauważyć można, że dla większych liczebności granul wyniki są bardziej zróżnicowane, natomiast dla 50 granul są one bliższe średniej. \todo{znowu do weryfikacji}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/laguna_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/laguna_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \laguna{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:laguna-complex}
+\end{figure}
+
+\paragraph{\spheres{}}
+
+Wyniki dla danych \spheres{} (rys. \ref{fig:spheres-complex}) przedstawiają inne zależności od wcześniej opisanych danych. 
+
+Przy łączności \SingleLinkage{}, dokładność zmniejsza się wraz ze wzrostem parametru $\xi$, jednak najgorsze wyniki otrzymywane są dla najmniejszej liczebności granul -- 50. Gdy jest ich mniej, granule na zewnętrznej sferze mogą być znacznie oddalone od siebie nawzajem, przez co sfera wewnętrzna łączona jest z zewnętrzną, a pojedyncza granula ze sfery zewnętrznej zostaje uznana za osobny klaster (rys. \ref{fig:spheres5000g}).
+
+Dla \CompleteLinkage{} można zauważyć wzrost średniej dokładności grupowania wraz ze wzrostem parametru $\xi$, szczególnie dla 50 granul. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/spheres_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/spheres_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \spheres{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:spheres-complex}
+\end{figure}
 
 \subsubsection{Dane Brightkite i Gowalla}
 
