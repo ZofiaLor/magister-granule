@@ -43,13 +43,36 @@ def measure_accuracy_recall_precision(linkage, specific_file=None, print_to_cons
             accuracy_results = pandas.DataFrame()
             for data_size in data_size_presets:
                 print(root + str(data_size))
-                result = fullData[root + str(data_size)].measure_accuracy(shape_dependent_membership=shape_dependent, linkage=linkage)
+                result = fullData[root + str(data_size)].measure_accuracy(shape_dependent_membership=shape_dependent,
+                                                                          linkage=linkage)
                 accuracy_results = pandas.concat([accuracy_results, result], ignore_index=True)
             if print_to_console:
                 print(root)
                 print(accuracy_results)
             else:
                 accuracy_results.to_csv("wyniki/" + root + "_" + linkages[linkage] + "_accuracy.csv")
+
+
+def measure_strict_accuracy_recall_precision(linkage, specific_file=None, print_to_console=False):
+    linkages = {"single": "sl", "complete": "cl"}
+    if linkages.get(linkage) is None:
+        linkage = "single"
+    if specific_file is not None:
+        data_to_measure = fullData.get(specific_file)
+        if data_to_measure is not None:
+            print(data_to_measure.measure_strict_accuracy(linkage))
+    else:
+        for root in names_roots:
+            accuracy_results = pandas.DataFrame()
+            for data_size in data_size_presets:
+                print(root + str(data_size))
+                result = fullData[root + str(data_size)].measure_strict_accuracy(linkage=linkage)
+                accuracy_results = pandas.concat([accuracy_results, result], ignore_index=True)
+            if print_to_console:
+                print(root)
+                print(accuracy_results)
+            else:
+                accuracy_results.to_csv("wyniki/" + root + "_" + linkages[linkage] + "_strict_accuracy.csv")
 
 
 def compare_time_complexity(name="circles"):
@@ -69,9 +92,12 @@ def compare_time_complexity(name="circles"):
 
     for i in range(len(data_size_presets_for_time_measurement)):
         regular_avg[i] = np.mean(data10000[name + str(data_size_presets_for_time_measurement[i])].strict_number_times)
-        granule50_avg[i] = np.mean(data10000[name + str(data_size_presets_for_time_measurement[i])].fuzzy_number_times[50])
-        granule100_avg[i] = np.mean(data10000[name + str(data_size_presets_for_time_measurement[i])].fuzzy_number_times[100])
-        granule200_avg[i] = np.mean(data10000[name + str(data_size_presets_for_time_measurement[i])].fuzzy_number_times[200])
+        granule50_avg[i] = np.mean(
+            data10000[name + str(data_size_presets_for_time_measurement[i])].fuzzy_number_times[50])
+        granule100_avg[i] = np.mean(
+            data10000[name + str(data_size_presets_for_time_measurement[i])].fuzzy_number_times[100])
+        granule200_avg[i] = np.mean(
+            data10000[name + str(data_size_presets_for_time_measurement[i])].fuzzy_number_times[200])
 
     plt.figure()
     plt.plot(data_size_presets, regular_avg)
@@ -115,74 +141,6 @@ for folder in os.scandir("dane_labelled"):
                     fullData[file.name[:-5]].clusters_number = value
                     break
 
-test_data = fullData["laguna40000"].data
-fcm = FuzzyCMeans(n_clusters=50, random_state=seed, max_iter=n_iterations)
-hc = HierarchicalClustering(n_clusters=3)
-granules = []
-fcm.fit(test_data)
-fuzziness = calculate_fcm_variance(fcm)
-for i in range(50):
-    granules.append(Granule(fcm.cluster_centers_[i], fuzziness[i]))
-hc.fuzzy_fit(granules, 0.1, 'e', linkage="single")
-
-# ac = sklearn.cluster.AgglomerativeClustering(3, linkage="single")
-# ac.fit(test_data)
-# plt.plot()
-# plt.scatter(test_data[:, 0], test_data[:, 1], c=ac.labels_)
-# plt.show()
-
-granule_member_labels = []
-noise = 0
-member_cluster = [[], [], []]
-
-for i in range(40000):
-    m = [0, 0, 0]
-    for j in range(len(granules)):
-        m[hc.labels[j]] += fcm.U_[i][j]
-    member_cluster[0].append(m[0])
-    member_cluster[1].append(m[1])
-    member_cluster[2].append(m[2])
-fig, ax = plt.subplots(2, 2)
-ax[0, 0].scatter(test_data[:, 0], test_data[:, 1], c=member_cluster[0], cmap="Blues")
-ax[0, 0].set_title("Cluster 0")
-ax[0, 1].scatter(test_data[:, 0], test_data[:, 1], c=member_cluster[1], cmap="Blues")
-ax[0, 1].set_title("Cluster 1")
-ax[1, 0].scatter(test_data[:, 0], test_data[:, 1], c=member_cluster[2], cmap="Blues")
-ax[1, 0].set_title("Cluster 2")
-plt.show()
-#
-# for point in test_data:
-#     membership_value = 0
-#     # membership_value = FuzzyNumber(np.inf, 0)
-#     membership = 0
-#     point_granule = Granule(point, [0, 0])
-#     for i in range(len(granules)):
-#         total = granules[i].fuzzy_dims[0].equal(FuzzyNumber(point[0], 0), 't')
-#         for j in range(1, len(point)):
-#             # total = max(total + granules[i].fuzzy_dims[j].equal(FuzzyNumber(point[j], 0), 'g') - 1, 0)
-#             total *= granules[i].fuzzy_dims[j].equal(FuzzyNumber(point[j], 0), 't')
-#         # dist = point_granule.fuzzy_distance(granules[i])
-#         # if dist.less(membership_value, 'g') > 0.05:
-#         #     membership_value = dist
-#         #     membership = i
-#         if total > membership_value:
-#             membership_value = total
-#             membership = i
-#     if membership_value > 0:
-#         granule_member_labels.append(membership)
-#     else:
-#         noise += 1
-#         granule_member_labels.append(-1)
-#     # if membership_value.x > 0 or membership_value.p > 0:
-#     #     granule_member_labels.append(membership)
-#     # else:
-#     #     noise += 1
-#     #     granule_member_labels.append(-1)
-# plt.figure()
-# plt.scatter(test_data[:, 0], test_data[:, 1], c=granule_member_labels)
-# plt.scatter(fcm.cluster_centers_[:, 0], fcm.cluster_centers_[:, 1], c="red")
-# plt.show()
-
 user_input = ""
 while True:
     user_input = ""
@@ -200,16 +158,20 @@ while True:
                 user_input = input("Select linkage:\n1. Single\n2. Complete\n")
             if user_input == "1":
                 measure_accuracy_recall_precision("single", shape_dependent=False)
+                measure_strict_accuracy_recall_precision("single")
             elif user_input == "2":
                 measure_accuracy_recall_precision("complete", shape_dependent=False)
+                measure_strict_accuracy_recall_precision("complete")
         elif user_input == "2":
             user_input = ""
             while user_input not in ["1", "2"]:
                 user_input = input("Select linkage:\n1. Single\n2. Complete\n")
             if user_input == "1":
                 measure_accuracy_recall_precision("single", print_to_console=True)
+                measure_strict_accuracy_recall_precision("single", print_to_console=True)
             elif user_input == "2":
                 measure_accuracy_recall_precision("complete", print_to_console=True)
+                measure_strict_accuracy_recall_precision("complete", print_to_console=True)
         elif user_input == "3":
             user_input = ""
             filename = ""
@@ -217,9 +179,12 @@ while True:
                 user_input = input("Select linkage:\n1. Single\n2. Complete\n")
             filename = input("Input file name\n")
             if user_input == "1":
-                measure_accuracy_recall_precision("single", specific_file=filename, print_to_console=True, shape_dependent=False)
+                measure_accuracy_recall_precision("single", specific_file=filename, print_to_console=True,
+                                                  shape_dependent=False)
+                measure_strict_accuracy_recall_precision("single", specific_file=filename, print_to_console=True)
             elif user_input == "2":
                 measure_accuracy_recall_precision("complete", specific_file=filename, print_to_console=True)
+                measure_strict_accuracy_recall_precision("complete", specific_file=filename, print_to_console=True)
     elif user_input == "2":
         user_input = input("Enter data shape name (blobs, circles, corners, crescents, laguna, spheres)\n")
         if user_input in names_roots:
@@ -247,7 +212,6 @@ while True:
             plot_results(user_input, False)
     elif user_input == "4":
         break
-
 
 # # Generate data
 # data, labels = sklearn.datasets.make_blobs(n_samples=1000, centers=4, cluster_std=[0.5, 2, 1.5, 1], random_state=seed)
