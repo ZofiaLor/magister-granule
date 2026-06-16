@@ -625,7 +625,7 @@ Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danyc
  
 
 Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne
-\cite{bib:fcm-for-optimizing,bib:clustering-alg-survey}, a równocześnie niepodobne do obiektów z innych grup. Algorytmy grupowania są algorytmami nienadzorowanymi -- mają jedynie informacje o podobieństwie między poszczególnymi elementami.
+{bib:fcm-for-optimizing,bib:clustering-alg-survey}, a równocześnie niepodobne do obiektów z innych grup. Algorytmy grupowania są algorytmami nienadzorowanymi -- mają jedynie informacje o podobieństwie między poszczególnymi elementami.
 
  
 
@@ -1741,6 +1741,132 @@ Elipsy (elipsoidy dla \spheres) w kolorze magenta wizualizują rozmycie granul, 
 
 \subsubsection{Dane generowane}
 
+Oprócz niezależnych procentowych wartości metryk dokładności, trafności i precyzji istotne jest, jakie są wyniki działania \MojAlg{} w porównaniu z algorytmem ostrym. W tym celu wykorzystano algorytm \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} aby zgrupować dane oryginalne, a także środki klastrów (w liczebnościach 50, 100, 200) wyznaczonych przez algorytm rozmytych $c$-średnich, bez uwzględnienia rozmycia, czyli macierzy $\mClusterMembership$.
+
+Do wyznaczenia metryk jakości dla tych badań, również wykorzystano algorytmy \ref{alg:calc_l_matrix}, \ref{alg:perm_l_matrix} oraz \ref{alg:calc_quality}. W przypadku oryginalnych danych, wejściem algorytmu \ref{alg:calc_l_matrix} były etykiety wyznaczone przez algorytm \texttt{AgglomerativeClustering}. Dla środków klastrów algorytmu rozmytych $c$-średnich, najpierw wyznaczono przynależności punktów do tych klastrów na podstawie macierzy $\mClusterMembership$ (tak samo jak dla \MojAlg{}).
+
+Wyniki dokładności, trafności i precyzji przedstawiają odpowienio tabele \ref{id:tab:acc-sl-strict}, \ref{id:tab:rec-sl-strict} i \ref{id:tab:prec-sl-strict} dla łączności \SingleLinkage{} oraz \ref{id:tab:acc-cl-strict}, \ref{id:tab:rec-cl-strict} i \ref{id:tab:prec-cl-strict} dla łączności \CompleteLinkage{}.
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych algorytmem ostrym o łączności \SingleLinkage{}}
+\label{id:tab:acc-sl-strict}
+\begin{tabular}{lcccc}
+\toprule
+            & \multicolumn{4}{c}{dokładność}\\
+            \cmidrule{2-5}
+	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+\midrule
+	    \blobs\ & 98,9896\% & 99,9939\% & 99,3894\% & 96,9635\% \\
+		\circles\ & 100\% & 100\% & 100\% & 100\% \\
+		\corners\ & 100\% & 100\% & 100\% & 100\% \\
+		\crescents\ & 100\% & 100\% & 100\% & 100\% \\
+		\laguna\ & 91,2538\% & 99,9697\% & 99,9842\% & 99,9907\% \\
+		\spheres\ & 100\% & 100\% & 100\% & 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych algorytmem ostrym o łączności \SingleLinkage{}}
+\label{id:tab:rec-sl-strict}
+\begin{tabular}{lcccc}
+\toprule
+            & \multicolumn{4}{c}{trafność}\\
+            \cmidrule{2-5}
+	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+\midrule
+	    \blobs\ & 83,3297\% & 99,9979\% & 95,7081\% & 74,8745\% \\
+		\circles\ & 100\% & 100\% & 100\% & 100\% \\
+		\corners\ & 100\% & 100\% & 100\% & 100\% \\
+		\crescents\ & 100\% & 100\% & 100\% & 100\% \\
+		\laguna\ & 70,8419\% & 99,8990\% & 99,9474\% & 99,9691\% \\
+		\spheres\ & 100\% & 100\% & 100\% & 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych algorytmem ostrym o łączności \SingleLinkage{}}
+\label{id:tab:prec-sl-strict}
+\begin{tabular}{lcccc}
+\toprule
+            & \multicolumn{4}{c}{precyzja}\\
+            \cmidrule{2-5}
+	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+\midrule
+	    \blobs\ & 82,9519\% & 99,8996\% & 93,9172\% & 72,8243\% \\
+		\circles\ & 100\% & 100\% & 100\% & 100\% \\
+		\corners\ & 100\% & 100\% & 100\% & 100\% \\
+		\crescents\ & 100\% & 100\% & 100\% & 100\% \\
+		\laguna\ & 83,7537\% & 99,9626\% & 99,9819\% & 99,9774\% \\
+		\spheres\ & 100\% & 100\% & 100\% & 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych algorytmem ostrym o łączności \CompleteLinkage{}}
+\label{id:tab:acc-cl-strict}
+\begin{tabular}{lcccc}
+\toprule
+            & \multicolumn{4}{c}{dokładność}\\
+            \cmidrule{2-5}
+	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+\midrule
+	    \blobs\ & 72,6066\% & 99,9939\% & 89,5644\% & 72,3716\% \\
+		\circles\ & 56,2017\% & 55,3280\% & 53,2986\% & 56,2662\% \\
+		\corners\ & 52,6533\% & 48,1830\% & 50,5334\% & 51,3014\% \\
+		\crescents\ & 79,8567\% & 80,1224\% & 80,3264\% & 78,2213\% \\
+		\laguna\ & 45,0770\% & 48,7489\% & 46,5281\% & 46,6356\% \\
+		\spheres\ & 58,5200\% & 57,1152\% & 56,4977\% & 66,1486\% \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych algorytmem ostrym o łączności \CompleteLinkage{}}
+\label{id:tab:rec-cl-strict}
+\begin{tabular}{lcccc}
+\toprule
+            & \multicolumn{4}{c}{trafność}\\
+            \cmidrule{2-5}
+	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+\midrule
+	    \blobs\ & 78,2487\% & 99,9979\% & 88,2168\% & 90,4066\% \\
+		\circles\ & 49,0029\% & 49,3986\% & 48,7550\% & 50,7111\% \\
+		\corners\ & 52,6533\% & 48,1830\% & 50,5334\% & 51,3014\% \\
+		\crescents\ & 79,8567\% & 80,1224\% & 80,3264\% & 78,2213\% \\
+		\laguna\ & 54,4682\% & 60,2569\% & 48,5567\% & 50,7216\% \\
+		\spheres\ & 54,7333\% & 37,2862\% & 48,0543\% & 58,9714\% \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych algorytmem ostrym o łączności \CompleteLinkage{}}
+\label{id:tab:prec-cl-strict}
+\begin{tabular}{lcccc}
+\toprule
+            & \multicolumn{4}{c}{precyzja}\\
+            \cmidrule{2-5}
+	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+\midrule
+	    \blobs\ & 60,5350\% & 99,8996\% & 87,5319\% & 65,9098\% \\
+		\circles\ & 48,8136\% & 49,4785\% & 48,8043\% & 50,5186\% \\
+		\corners\ & 49,5570\% & 47,7896\% & 46,3080\% & 48,2794\% \\
+		\crescents\ & 83,7208\% & 80,7172\% & 82,8527\% & 80,9327\% \\
+		\laguna\ & 39,8365\% & 43,0156\% & 35,6135\% & 38,0403\% \\
+		\spheres\ & 51,4251\% & 44,8004\% & 48,9059\% & 53,2369\% \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
 \paragraph{Zależność od kształtu danych}
 
 Dokładność grupowania danych w zależności od ich kształtu dla łączności \SingleLinkage{} i \CompleteLinkage{} przedstawiono w tabeli \ref{id:tab:acc-ksztalt}, trafność -- w tabeli \ref{id:tab:rec-ksztalt}, a precyzję -- w tabeli \ref{id:tab:prec-ksztalt}.
@@ -1811,14 +1937,14 @@ W przypadku \SingleLinkage{}, najlepszą dokładność, trafność i precyzję z
 \end{table}  
 
 Wykresy wyników grupowania danych \blobs\  (rys. \ref{fig:blobs1000e}) pokazują, że wysoka dokładność uzyskana dla nich z macierzy pomyłek nie przekłada się na zgodność wyników z oczekiwaniami.
-Ze względu na dużą dysproporcję danych pomiędzy trzema klastrami (48:1:1), algorytm fuzzy C-means często traktuje dwa mniejsze z nich jako szum i nie tworzy dla nich granul.
-Zawierają one jednak jedynie 4\% danych, dlatego dokładność grupowania pozostaje wysoka. 
+Ze względu na dużą dysproporcję danych pomiędzy trzema klastrami (48:1:1), algorytm rozmytych $c$-średnich często traktuje dwa mniejsze z nich jako szum i nie tworzy dla nich granul. Zawierają one jednak jedynie 4\% danych, dlatego dokładność grupowania pozostaje wysoka. 
 Trafność i precyzja lepiej odzwierciedlają zgodność z oczekiwaniami -- są znacznie niższe od dokładności. Mniejsze klastry mają tę samą wagę, co większy klaster, dlatego niepoprawne grupowania wyraźnie wpływają na wartość metryki.
+Jako że błędy wynikają z klasteryzacji FCM, wyniki uzyskane dla grupowania samych środków granul są bardzo zbliżone do uzyskanych przy pomocy \MojAlg{}.
 
-Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($0.9, 0.95$). Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs\, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
+Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($0.9, 0.95$). W znacznej większości przypadków, dokładność grupowania wynosi 100\%, tak jak dla grupowania ostrego. Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs\, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
 
 Klastry dla danych \corners\  mają nierównomierną gęstość, przez co algorytm rozmytych $c$-średnich tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000g}).
-Odległości między granulami położonymi na ,,ramionach'' i w ,,środkach'' klastrów są na tyle duże, że odległości ,,środków'' różnych klastrów mogą być od nich mniejsze.
+Odległości między granulami położonymi na ,,ramionach'' i w ,,środkach'' klastrów są na tyle duże, że rozmyte odległości ,,środków'' różnych klastrów mogą być od nich mniejsze. Algorytm \MojAlg{} osiąga więc średnio gorsze wyniki niż algorytm ostry, choć wiele kombinacji parametrów pozwala na uzyskanie 100-procentowej dokładności.
 Wszystkie klastry mają tę samą liczebność, wartości dokładności, trafności i precyzji są zbliżone do siebie.
 
 Dane \crescents\  tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność, trafność i precyzja ich grupowania są prawie najlepsze (rys. \ref{fig:crescents5000e}). Ze względu na bliskie położenie końców łuków, błędy wciąż mogą się pojawić -- koniec jednego łuku złączony zostaje z łukiem drugim. Dzieje się tak tylko dla bardzo wysokich wartości parametru $\xi$ -- $0.9$ i $0.95$.
@@ -1828,6 +1954,8 @@ Dla danych \laguna\, błędy mogą pojawić się, gdy pojedyncze granule utworzo
 Powyżej liczebności 20000 punktów włącznie, dokładność nigdy nie osiąga 100\%, jednak najczęściej wynosi powyżej 99.9\%. Jak zaznaczono w sekcji dotyczącej etykietowania danych (sekcja \ref{sec:wyniki-etykietowania}), środkowe klastry są na tyle zbliżone do siebie, że na podstawie wykresu nie można definitywnie określić, które punkty pomiędzy nimi należą do którego z nich. Pojedyncze punkty mogą więc być klasyfikowane niepoprawnie z punktu widzenia przypisanych do nich etykiet. 
 
 Ilustrują to wykresy \ref{fig:laguna1000-blue} oraz \ref{fig:laguna40000-blue} \todo{opisać jak tworzymy te wykresy}. Na rys. \ref{fig:laguna1000-blue} punktów jest jedynie 1000 i wszystkie klastry są wyraźnie oddzielone od siebie. Każdy punkt wyraźnie należy do granul jednego klastra. Na rys. \ref{fig:laguna40000-blue} punktów jest 40000. Klastry środkowe (o numerach 1 i 2) pokrywają się w pobliżu współrzędnych (0, 0). Punkty w bliskim otoczeniu tych współrzędnych przynależą więc w podobnym stopniu do klastra 1 i klastra 2. Ponadto, punkty położone na zewnątrz klastrów 1 i 2 są położone blisko otaczającego je okręgu, oznaczonego jako klaster 0. Można zauważyć ich wysoki stopień przynależności do tego klastra.
+
+Dzięki temu nałożeniu się klastrów, jakość grupowania tych danych jest lepsza, gdy wykorzystany zostanie algorytm \MojAlg{}, niż gdy zgrupowane zostaną dane oryginalne. Bez wstępnej klasteryzacji algorytmem rozmytych $c$-średnich, środkowe klastry są łączone ze sobą.
 
 Proporcja danych wynosi 8:1:1 (otaczający okrąg ma większą liczebność), jednak jakość grupowania jest na tyle wysoka, że zarówno dokładność, jak i trafność i precyzja mają podobne wartości.
 
@@ -1898,7 +2026,7 @@ Najlepsze wyniki dla łączności \CompleteLinkage{} uzyskano dla danych \blobs{
 
 Dla danych takich, jak \circles{} (rys. \ref{fig:circles50000e}) czy \crescents{} (rys. \ref{fig:crescents5000e}), gdzie klastry mają podobną liczebność i gęstość, zwiększenie liczby granul powoduje ich zagęszczenie, przy równomiernym rozłożeniu.
 
-Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla większych liczebności granul, możliwe jest, że algorytm rozmytych $c$-średnich nie wyznacza ani jednego środka granuli w dwóch mniejszych klastrach, przez co niemożliwe jest poprawne grupowanie.
+Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla większych liczebności granul, możliwe jest, że algorytm rozmytych $c$-średnich nie wyznacza ani jednego środka granuli w dwóch mniejszych klastrach, przez co niemożliwe jest poprawne grupowanie. Tak samo dzieje się, gdy pogrupowane zostaną same środki granul, bez uwzględnienia rozmycia.
 
 \todo{tu można zrobić analizę przynależności (niebieskie wykresy)}
 
