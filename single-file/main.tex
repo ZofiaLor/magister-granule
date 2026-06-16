@@ -646,11 +646,11 @@ Do głównych rodzin algorytmów grupowania zaliczane są \cite{bib:clustering-a
 Grupowanie hierarchiczne polega na utworzeniu sekwencji zagnieżdżonych podziałów danych \cite{bib:hierarchical-clustering}.
 
 Algorytm aglomeracyjnego grupowania hierarchicznego iteracyjnie scala mniejsze klastry danych w większe, zaczynając od klastrów jednoelementowych (każdy punkt danych jest klastrem), kończąc na jednym wspólnym klastrze. 
-Kolejne dwa klastry, które mają zostać scalone w danej iteracji, wybierane są na podstawie metryki odległości między nimi oraz łączności (ang. \english{linkage}). \ksremark{przykład algorytmu}
+Kolejne dwa klastry, które mają zostać scalone w danej iteracji, wybierane są na podstawie metryki odległości między nimi oraz łączności (ang. \english{linkage}). Przykładami tego typu algorytmów są SLINK \cite{bib:slink-algorithm} i BIRCH \cite{bib:birch-algorithm}.
 
-Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych. \ksremark{przykład algorytmu}
+Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych. Przykładem takiego algorytmu jest DIANA \cite{bib:diana-algorithm}.
 
-Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizować jako dendrogram (rys. \ref{fig:dendrogram-iris}). Wykres dendrogramu zazwyczaj przycina się, aby pokazywał tylko kilka ostatnich scaleń. Oś pozioma reprezentuje scalane klastry: jeżeli klastrem jest pojedynczy element, to reprezentuje go jego indeks, jeżeli zawiera więcej elementów -- jego liczebność podana w nawiasach. Oś pionowa odpowiada odległości między scalanymi klastrami. \ksremark{Trzeba napisać trochę szerzej o dendrogramie. Co oznacza wysokość łączenia itd. itp.}
+Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizować jako dendrogram (rys. \ref{fig:dendrogram-iris}). Wykres dendrogramu zazwyczaj przycina się, aby pokazywał tylko kilka ostatnich scaleń. Oś pozioma reprezentuje scalane klastry: jeżeli klastrem jest pojedynczy element, to reprezentuje go jego indeks, jeżeli zawiera więcej elementów -- jego liczebność podana w nawiasach. Oś pionowa odpowiada odległości między scalanymi klastrami.
 
 
 %\begin{algorithm}[t]
@@ -768,7 +768,6 @@ Wzór ten można przedstawić również w postaci pseudokodu \ref{alg:single_lin
 
 %
 Przykład takiego przypisania ilustruje rys. \ref{fig:single-linkage-example}. Odległość klastra $B$ od klastra $A_{1}$ jest znana i wynosi $\Odleglosc(A_{1}, B)$, czyli jest ona najmniejszą odległością między dowolnymi dwoma elementami klastrów $B$ i $A_{1}$. Odległość klastra $B$ od klastra $A_{2}$ również jest znana i wynosi $\Odleglosc(A_{2}, B)$. Klastry $A_{1}$ i $A_{2}$ scalane są w jeden klaster $A$, należy więc obliczyć odległość nowopowstałego klastra od pozostałych. Zamiast porównywać wszystkie możliwe kombinacje elementów klastrów $A$ i $B$, wystarczy znaleźć minimum z dwóch wartości: $\Odleglosc(A_{1}, B)$ i $\Odleglosc(A_{2}, B)$. W tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$, czyli $\Odleglosc(A, B) = \Odleglosc(A_{2}, B)$
-\ksremark{Trzeba tutaj opisać, co się na tym rysunku dzieje.}
 
 %rysunek?
 \begin{figure}
@@ -1426,8 +1425,6 @@ Pozostałymi wykorzystanymi w projekcie bibliotekami są: \texttt{matplotlib} (w
 
 \section{Zbiory danych}
 
-\ksremark{Trzeba napisać, jakie mamy zbiory: że są dwuwymiarowe (dlaczego?), czym się charakteryzują? co przedstawiają? jakie są duże? skąd mamy te zbiory?}
-
 Pierwszym zbiorem danych są dane syntetyczne, które znajdują się w plikach \url{.data} zlokalizowanych w folderze \url{dane}, pogrupowanych w podfoldery według kształtów. 
 Dla każdego kształtu zbiory mają liczebność 1000, 2000, 5000, 10000, 20000, 30000, 40000 oraz 50000 wierszy.
 
@@ -1530,7 +1527,6 @@ W przypadku danych \laguna{} o liczebności 20000 i większej, dwa środkowe kla
 
 \subsubsection{Miara jakości}
 
-\ksremark{Trzeba napisać, na czym polega użyta miara. Opisałbym tę miarę w formie algorytmu. Przyznam się, że z tego opisu nie bardzo bym wiedział, jak to działa.}
 Wybranymi miarami jakości grupowania są dokładność, trafność i precyzja.
 
 Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Na potrzeby porównania konieczne jest określenie, do której granuli należy każdy punkt. Przynależność tą wyznaczano na dwa sposoby:
