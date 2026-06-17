@@ -563,9 +563,20 @@ escapeinside={@*}{*@},%
 
 Grupowanie danych, nazywane też klasteryzacją, jest powszechnie wykorzystywane do analizy danych. Istnieje wiele rodzajów algorytmów klasteryzacyjnych, między innymi hierarchiczne, gęstościowe, grafowe. Niezależnie od typu, polegają one na łączeniu podobnych do siebie danych w grupy (klastry).
 
-Istotną z punktu widzenia tej pracy kategorią algorytmów grupowania są algorytmy rozmyte, na przykład algorytm rozmytych $c$-średnich. Uzyskiwane za ich pomocą klastry są zbiorami rozmytymi, co oznacza, że dane mogą należeć do wielu grup jednocześnie, w pewnym stopniu. Klastry te mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą. 
+\ksremark{tutaj o alg. grupowania hierarchicznego}
+\ksremark{o ich złożoności}
 
-Celem niniejszej pracy będzie opracowanie rozmytego algorytmu aglomeracyjnego grupowania hierarchicznego, który operować będzie na wynikach klasteryzacji algorytmu rozmytych $c$-średnich. Algorytm ten powinien przyspieszyć proces grupowania, jednocześnie zachowując wysoką jego jakość.
+\ksremark{tutaj o obliczeniach granularnych}
+
+%Istotną z punktu widzenia tej pracy kategorią algorytmów grupowania są algorytmy rozmyte, na przykład algorytm rozmytych $c$-średnich. Uzyskiwane za ich pomocą klastry są zbiorami rozmytymi, co oznacza, że dane mogą należeć do wielu grup jednocześnie, w pewnym stopniu. Klastry te mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą. 
+
+
+
+
+Celem niniejszej pracy będzie opracowanie i przebadanie własności granularnego algorytmu aglomeracyjnego grupowania hierarchicznego, który operować będzie na ziarnach informacyjnych uzyskanych w wyniku klasteryzacji algorytmem rozmytych $c$-średnich.
+
+\ksremark{Co na tym zyskujemy? Obniżenie złożoności}
+Algorytm ten powinien przyspieszyć proces grupowania, jednocześnie zachowując wysoką jego jakość.
 
 W rozdziale \ref{sec:analiza-tematu} przedstawiono teoretyczną analizę zagadnień związanych z tematem. Omówione są algorytmy grupowania danych, w szczególności algorytm hierarchiczny oraz algorytm rozmytych $c$-średnich. Opisano istotne dla rozwiązania elementy logiki rozmytej, w tym rozszerzalne liczby rozmyte. Rozdział \ref{sec:wlasne-rozwiazanie} zawiera omówienie własnej implementacji rozmytego algorytmu aglomeracyjnego grupowania hierarchicznego i konieczne kroki przygotowujące dane. W rozdziale \ref{sec:badania} analizowane jest działanie tego algorytmu. Przedstawione są wykorzystane dane oraz metodyki badania czasu i jakości grupowania, a następnie w oparciu o nie omawiane są wyniki grupowania.
 
@@ -1368,13 +1379,14 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności}
 		\EndFor
 		\State  \Comment{\ksremark{Poniższy fragment pseudokodu trzeba napisać trochę jaśniej. Zasadniczo wiadomo, o co chodzi.}}
-		\For{$j$ in $1..\nX$}
+		\For{$j$ in $1..\nX$}\Comment{scalenie etykiet łączonych wierszy}
 		\If{$\wEtykieta[j] == k$}
 		\State $\wEtykieta[j] = w$ \Comment{zamiana etykiet}
 		\EndIf
 		\EndFor
 		\EndFor
-		\State $\wEtykieta = [0, …, \nKlaster - 1] \gets$ przemianiowanie etykiet $\wEtykieta$ na kolejne wartości
+%		\State $\wEtykieta = [0, …, \nKlaster - 1] \gets$ przemianiowanie etykiet $\wEtykieta$ na kolejne wartości
+        \State \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne wartości:  \ksremark{przemyśleć :-)}}
 		\State mapa $\gets$ lista unikalnych wartości w $\wEtykieta$
 		\For{$i = 1$ to $\nX$} 
 		\State $\wEtykieta[i] \gets$ indeks $\wEtykieta[i]$ w tablicy mapa \Comment{mapowanie etykiet na kolejne liczby naturalne}
@@ -1564,7 +1576,7 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 		\For{$i=1$ to $\nGranula$}
 		\State $\ClusterMembership \gets (\zGranula[i][1] =_{\nPodobienstwo} \X[1])$
 		\For{$j=2$ to liczba wymiarów $\X$}
-		\State $\ClusterMembership \gets \ClusterMembership * (\zGranula[i][j] =_{\nPodobienstwo} \X[j])$ \Comment{t-norma algebraiczna}\Comment{\ksremark{Chodzi tutaj o $*$?}}
+		\State $\ClusterMembership \gets \ClusterMembership \tnorm (\zGranula[i][j] =_{\nPodobienstwo} \X[j])$ \Comment{$\tnorm$: t-norma algebraiczna}\Comment{\ksremark{Chodzi tutaj o $*$?}}
 		\EndFor
 		\If{$\ClusterMembership > \ClusterMembership_{max}$}
 		\State $\ClusterMembership_{max} \gets \ClusterMembership$
@@ -2028,7 +2040,7 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 
 \begin{table}
 \centering
-\caption{Dokładność grupowania hierarchicznego danych w zależności od liczby granul i łączności}
+\caption{Dokładność grupowania hierarchicznego danych w zależności od liczby granul i~łączności}
 \label{id:tab:acc-gn}
 \begin{tabular}{rrr}
 \toprule
@@ -2045,7 +2057,7 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 
 \begin{table}
 \centering
-\caption{Trafność grupowania hierarchicznego danych w zależności od liczby granul i łączności}
+\caption{Trafność grupowania hierarchicznego danych w zależności od liczby granul i~łączności}
 \label{id:tab:rec-gn}
 \begin{tabular}{rrr}
 \toprule
@@ -2062,7 +2074,7 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 
 \begin{table}
 \centering
-\caption{Precyzja grupowania hierarchicznego danych w zależności od liczby granul i łączności}
+\caption{Precyzja grupowania hierarchicznego danych w zależności od liczby granul i~łączności}
 \label{id:tab:prec-gn}
 \begin{tabular}{rrr}
 \toprule
@@ -2103,7 +2115,7 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 
 \begin{table}
 \centering
-\caption{Trafność grupowania hierarchicznego danych w zależności od typu relacji i łączności}
+\caption{Trafność grupowania hierarchicznego danych w zależności od typu relacji i~łączności}
 \label{id:tab:rec-rt}
 \begin{tabular}{rrr}
 \toprule
@@ -2120,7 +2132,7 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 
 \begin{table}
 \centering
-\caption{Precyzja grupowania hierarchicznego danych w zależności od typu relacji i łączności}
+\caption{Precyzja grupowania hierarchicznego danych w zależności od typu relacji i~łączności}
 \label{id:tab:prec-rt}
 \begin{tabular}{rrr}
 \toprule
