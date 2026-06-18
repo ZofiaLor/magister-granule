@@ -931,7 +931,7 @@ Graficzną interpretację tych charakterystyk przedstawiono na rys. \ref{fig:cor
 
 \subsubsection{Operacje na zbiorach rozmytych}
 
-Podstawowymi operacjami na zbiorach klasycznych są iloczyn i suma. Ich odpowiednikami dla zbiorów rozmytych są odpowiednio t-norma ($\star_T$) i s-norma ($\star_S$), które spełniają warunki określone w tabeli \ref{id:tab:tnorm-snorm}.
+Podstawowymi operacjami na zbiorach klasycznych są iloczyn i suma. Ich odpowiednikami dla zbiorów rozmytych są odpowiednio t-norma ($\tnorm$) i s-norma ($\snorm$), które spełniają warunki określone w tabeli \ref{id:tab:tnorm-snorm}.
 
 \begin{table}
 \centering
@@ -941,11 +941,11 @@ Podstawowymi operacjami na zbiorach klasycznych są iloczyn i suma. Ich odpowied
 \toprule
 	& t-norma & s-norma  \\
 \midrule
-	    warunki graniczne & $x \star_T 1 = x, x \star_T 0 = 0$ & $x \star_S 1 = 1, x \star_S 0 = x$ \\
-	    przemienność & $x \star_T y = y \star_T x$ & $x \star_S y = y \star_S x$ \\
-		monotoniczność & jeżeli $x \le u$ to $x \star_T y \le u \star_T y$,  & jeżeli $x \le u$ to $x \star_S y \le u \star_S y$,\\ 
-		& jeżeli $y \le r$ to $x \star_T y \le x \star_T r$ & jeżeli $y \le r$ to $x \star_S y \le x \star_S r$ \\
-	    łączność & $x \star_T (y \star_T z) = (x \star_T y) \star_T z$ & $x \star_S (y \star_S z) = (x \star_S y) \star_S z$ \\
+	    warunki graniczne & $x \tnorm 1 = x, x \tnorm 0 = 0$ & $x \snorm 1 = 1, x \snorm 0 = x$ \\
+	    przemienność & $x \tnorm y = y \tnorm x$ & $x \snorm y = y \snorm x$ \\
+		monotoniczność & jeżeli $x \le u$ to $x \tnorm y \le u \tnorm y$,  & jeżeli $x \le u$ to $x \snorm y \le u \snorm y$,\\ 
+		& jeżeli $y \le r$ to $x \tnorm y \le x \tnorm r$ & jeżeli $y \le r$ to $x \snorm y \le x \snorm r$ \\
+	    łączność & $x \tnorm (y \tnorm z) = (x \tnorm y) \tnorm z$ & $x \snorm (y \snorm z) = (x \snorm y) \snorm z$ \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -956,13 +956,13 @@ Istnieje wiele t-norm i s-norm spełniających te warunki. W ramach tej pracy, n
 	\item t-norma i s-norma algebraiczna:
 	\begin{align}
 		\label{eq:algebraic-norms}
-		x \star_T y = xy \\
-		x \star_S y = x + y - xy
+		x \tnorm y &= xy \\
+		x \snorm y &= x + y - xy
 	\end{align}
 	\item t-norma i s-norma Łukasiewicza:
 	\begin{align}
-		x \star_T y = \max(x + y - 1, 0) \\
-		x \star_S y = \min(x + y, 1)
+		x \tnorm y = \max(x + y - 1, 0) \\
+		x \snorm y = \min(x + y, 1)
 	\end{align}
 \end{itemize}
 
@@ -1284,7 +1284,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 	\begin{algorithmic}[1]
 		\Require $a, b$: porównywane rozszerzalne liczby rozmyte
 		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
-		\Require $\xi$: parametr porównania \ksremark{To trzeba będzie chyba nazwać jakoś inaczej.}
+		\Require $\xi$: wartość progowa
 		\Procedure{FuzzyMinimum}{$a, b, r, \xi$}
 		\If{$(a <_{\nPodobienstwo_r} b) > \xi$}
 		\State \Return $a$
@@ -1301,7 +1301,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 	\begin{algorithmic}[1]
 		\Require $a, b$: porównywane rozszerzalne liczby rozmyte
 		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
-		\Require $\xi$: parametr porównania
+		\Require $\xi$: wartość progowa
 		\Procedure{FuzzyMaximum}{$a, b, r, \xi$}
 		\If{$(a >_{\nPodobienstwo_r} b) > \xi$}
 		\State \Return $a$
@@ -1330,7 +1330,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 		\EndIf
 		\EndFor
 		\EndFor
-		\State \Return $(w, k)$  \Comment{\ksremark{Tu napiszemy, co zwracamy.}}
+		\State \Return $(w, k)$  \Comment{Współrzędne (wiersz, kolumna) wartości minimalnej w przeszukiwanej części macierzy $\mX$}
 		\EndProcedure
 	\end{algorithmic}
 \end{algorithm}
@@ -1366,7 +1366,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 		\Require $\zX$: dane do klasteryzacji
 		\Require $\nKlaster$: docelowa liczba klastrów 
 		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
-		\Require $\xi$: parametr porównania
+		\Require $\xi$: wartość progowa
 		\Procedure{\MojHierAlg}{$\zX, \nKlaster, r, \xi$}
 		\State $\nX \gets |\zX|$ \Comment{liczba danych}
 		\State $\mDistance \gets $ \Call{FuzzyDistance}{$\zX$} \Comment{symetryczna macierz $\nX \times \nX$ rozmytych odległości euklidesowych między każdą parą danych}
@@ -1385,7 +1385,6 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 		\EndIf
 		\EndFor
 		\EndFor
-%		\State $\wEtykieta = [0, …, \nKlaster - 1] \gets$ przemianiowanie etykiet $\wEtykieta$ na kolejne wartości
         \State \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne wartości:  \ksremark{przemyśleć :-)}}
 		\State mapa $\gets$ lista unikalnych wartości w $\wEtykieta$
 		\For{$i = 1$ to $\nX$} 
@@ -1479,7 +1478,7 @@ Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' 
 
 \section{Metodyka badań}
 
-Algorytm \MojAlg{} zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami ostrego algorytmu aglomeracyjnego grupowania hierarchicznego \ksremark{konkretnie jakiego?}.
+Algorytm \MojAlg{} zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami ostrego algorytmu aglomeracyjnego grupowania hierarchicznego \SingleLinkage{} i \CompleteLinkage{}.
 
 \subsection{Czas grupowania}
 
@@ -1487,7 +1486,7 @@ Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od iloś
 W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 10000. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
 
 Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej.
-W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu rozmytych $c$-średnich \ksremark{Może warto zapisać nazwę algorytmu do makra? Teraz mamy różny zapis nazwy tego samego algorytmu.}, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
+W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu rozmytych $c$-średnich, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
 
 Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtórzono czterokrotnie i obliczono średnią arytmetyczną wyników.
 
@@ -1576,7 +1575,7 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 		\For{$i=1$ to $\nGranula$}
 		\State $\ClusterMembership \gets (\zGranula[i][1] =_{\nPodobienstwo} \X[1])$
 		\For{$j=2$ to liczba wymiarów $\X$}
-		\State $\ClusterMembership \gets \ClusterMembership \tnorm (\zGranula[i][j] =_{\nPodobienstwo} \X[j])$ \Comment{$\tnorm$: t-norma algebraiczna}\Comment{\ksremark{Chodzi tutaj o $*$?}}
+		\State $\ClusterMembership \gets \ClusterMembership \tnorm (\zGranula[i][j] =_{\nPodobienstwo} \X[j])$ \Comment{$\tnorm$: t-norma algebraiczna}
 		\EndFor
 		\If{$\ClusterMembership > \ClusterMembership_{max}$}
 		\State $\ClusterMembership_{max} \gets \ClusterMembership$
