@@ -796,6 +796,7 @@ Dla \english{single linkage} wykorzystać można szybsze, dedykowane algorytmy, 
 \ksremark{Więcej, trzeba napisać więcej!}
 
 \subsection{Complete Linkage}
+\label{sec:complete-linkage}
 
 Algorytm \CompleteLinkage{} jest odwrotnością \SingleLinkage{}: odległość między klastrami jest równa maksymalnej odległości między dwoma punktami należącymi do tych klastrów. W momencie złączenia dwóch klastrów w jeden, jego odległość od pozostałych klastrów określa się więc jako:
 \begin{align}
@@ -1999,7 +2000,7 @@ W przypadku danych \spheres\  (rys. \ref{fig:spheres5000g}) można zauważyć, �
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./img/laguna1000e_s.pdf}
-\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi.}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
 \label{fig:laguna1000e}
 \end{figure}
 
@@ -2020,11 +2021,59 @@ W przypadku danych \spheres\  (rys. \ref{fig:spheres5000g}) można zauważyć, �
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./img/spheres5000g_s.pdf}
-\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 5000 i gaussowskiej relacji między liczbami rozmytymi.}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 5000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
 \label{fig:spheres5000g}
 \end{figure}
 
 Najlepsze wyniki dla łączności \CompleteLinkage{} uzyskano dla danych \blobs{}. Inaczej jest w przypadku najgorszych wyników: dane \laguna\ mają najgorszą dokładność i precyzję, a dane \spheres\ -- najgorszą trafność. Wszystkie wyniki są znacznie gorsze od uzyskanych dla \SingleLinkage{}, za wyjątkiem trafności dla danych \blobs{}.
+
+Jak widać na wykresach danych \blobs{} (rys. \ref{fig:blobs1000tc}), podobnie jak dla łączności \SingleLinkage{}, jeżeli granule zostaną wyznaczone przez algorytm rozmytych $c$-średnich we wszystkich trzech docelowych klastrach, to grupowanie \MojHierAlg{} przebiega poprawnie. Z kolei jeżeli granule utworzone zostaną tylko w największym z klastrów, to wyznaczone zostają w nim trzy klastry o podobnych liczebnościach. W takich przypadkach dokładność, trafność i precyzja grupowania będą niższe, niż dla \SingleLinkage{}, gdzie prawie wszystkie granule przypisywane są do tego samego klastra.
+
+Mimo różnic w wartościach miar jakości, wnioski dla grupowania danych \circles{} (rys. \ref{fig:circles1000gc}), \corners{} (rys. \ref{fig:corners1000ec}), \crescents{} (rys. \ref{fig:crescents1000tc}), \laguna{} (rys. \ref{fig:laguna1000gc}) i \spheres{} (rys. \ref{fig:spheres1000ec}) są podobne. Algorytm \CompleteLinkage{}, jak opisano w podsekcji \ref{sec:complete-linkage}, dobrze znajduje gęste, kuliste klastry. Wymienione dane mają inne kształty, widać, że znalezione przez algorytm klastry są w przybliżeniu owalne lub elipsoidalne. Kształt danych wydaje się nie być brany pod uwagę przez algorytm.
+
+Wyniki te należy też analizować w porównaniu z wynikami algorytmu ostrego (tabele \ref{id:tab:acc-cl-strict}, \ref{id:tab:rec-cl-strict} i \ref{id:tab:prec-cl-strict}). Dla kształtów danych \blobs{} oraz \spheres{} nastąpiła znacząca poprawa dokładności, trafności i precyzji. Dla pozostałych danych wyniki są zbliżone do wyników algorytmu ostrego.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/blobs1000t_c.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \blobs\  o~rozmiarze 1000 i trójkątnej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:blobs1000tc}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/circles1000g_c.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:circles1000gc}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/corners1000e_c.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \corners\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:corners1000ec}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/crescents1000t_c.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 1000 i trójkątnej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:crescents1000tc}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/laguna1000g_c.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:laguna1000gc}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/spheres1000e_c.pdf}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 5000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:spheres1000ec}
+\end{figure}
 
 
 \paragraph{Zależność od liczby granul}
