@@ -1749,7 +1749,7 @@ Elipsy (elipsoidy dla \spheres) w kolorze magenta wizualizują rozmycie granul, 
 
 \subsubsection{Dane generowane}
 
-Oprócz niezależnych procentowych wartości metryk dokładności, trafności i precyzji istotne jest, jakie są wyniki działania \MojAlg{} w porównaniu z algorytmem ostrym. W tym celu wykorzystano algorytm \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} aby zgrupować dane oryginalne, a także środki klastrów (w liczebnościach 50, 100, 200) wyznaczonych przez algorytm rozmytych $c$-średnich, bez uwzględnienia rozmycia, czyli macierzy $\mClusterMembership$.
+Oprócz niezależnych procentowych średnich wartości metryk dokładności, trafności i precyzji istotne jest, jakie są wyniki działania \MojAlg{} w porównaniu z algorytmem ostrym. W tym celu wykorzystano algorytm \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} aby zgrupować dane oryginalne, a także środki klastrów (w liczebnościach 50, 100, 200) wyznaczonych przez algorytm rozmytych $c$-średnich, bez uwzględnienia rozmycia, czyli macierzy $\mClusterMembership$.
 
 Do wyznaczenia metryk jakości dla tych badań, również wykorzystano algorytmy \ref{alg:calc_l_matrix}, \ref{alg:perm_l_matrix} oraz \ref{alg:calc_quality}. W przypadku oryginalnych danych, wejściem algorytmu \ref{alg:calc_l_matrix} były etykiety wyznaczone przez algorytm \texttt{AgglomerativeClustering}. Dla środków klastrów algorytmu rozmytych $c$-średnich, najpierw wyznaczono przynależności punktów do tych klastrów na podstawie macierzy $\mClusterMembership$ (tak samo jak dla \MojAlg{}).
 
@@ -1877,9 +1877,13 @@ Wyniki dokładności, trafności i precyzji przedstawiają odpowienio tabele \re
 
 \paragraph{Zależność od kształtu danych}
 
-Dokładność grupowania danych w zależności od ich kształtu dla łączności \SingleLinkage{} i \CompleteLinkage{} przedstawiono w tabeli \ref{id:tab:acc-ksztalt}, trafność -- w tabeli \ref{id:tab:rec-ksztalt}, a precyzję -- w tabeli \ref{id:tab:prec-ksztalt}.
+Średnią dokładność grupowania danych w zależności od ich kształtu dla łączności \SingleLinkage{} i \CompleteLinkage{} przedstawiono w tabeli \ref{id:tab:acc-ksztalt}, trafność -- w tabeli \ref{id:tab:rec-ksztalt}, a precyzję -- w tabeli \ref{id:tab:prec-ksztalt}.
 
-W przypadku \SingleLinkage{}, najlepszą dokładność, trafność i precyzję zaobserwowano dla danych \circles{}. Dane \corners\ mają najgorszą dokładność, a dane \blobs\ -- najgorszą trafność i precyzję. Wyniki przeanalizowano również na podstawie wykresów.
+W przypadku \SingleLinkage{}, najlepszą średnią dokładność, trafność i precyzję zaobserwowano dla danych \circles{}. Dane \corners\ mają najgorszą dokładność, a dane \blobs\ -- najgorszą trafność i precyzję. 
+
+Co istotne, dla większości plików wejściowych, za wyjątkiem niektórych danych \blobs{} i \laguna{}, maksymalne wartości wszystkich metryk jakości wynosi 100\%. Oznacza to, że istnieje przynajmniej jedna taka kombinacja parametrów (typu relacji, liczby granul, parametru $\xi$), dla których grupowanie przebiega w pełni zgodnie z oczekiwaniami.
+
+Wyniki przeanalizowano również na podstawie wykresów.
 
 
 \begin{table}
@@ -1949,6 +1953,30 @@ Ze względu na dużą dysproporcję danych pomiędzy trzema klastrami (48:1:1), 
 Trafność i precyzja lepiej odzwierciedlają zgodność z oczekiwaniami -- są znacznie niższe od dokładności. Mniejsze klastry mają tę samą wagę, co większy klaster, dlatego niepoprawne grupowania wyraźnie wpływają na wartość metryki.
 Jako że błędy wynikają z klasteryzacji FCM, wyniki uzyskane dla grupowania samych środków granul są bardzo zbliżone do uzyskanych przy pomocy \MojAlg{}.
 
+Jak pokazuje tabela \ref{id:tab:blobs-max-quality}, dla niektórych liczebności danych nie istnieje kombinacja parametrów, dla której wartości metryk jakości wynoszą 100\%. W tych przypadkach granule wyznaczane są w poprawnych miejscach, natomiast pojedyncze punkty oryginalnych danych zostają przypisane do niepoprawnej granuli. Dla tych liczebności, wartości metryk otrzymane przez algorytm ostry również nie osiągają 100\%.
+
+\begin{table}
+\centering
+\caption{Maksymalne wartości metryk jakości dla danych \blobs{} przy łączności \SingleLinkage{}.}
+\label{id:tab:blobs-max-quality}
+\begin{tabular}{lccc}
+\toprule
+            & \multicolumn{3}{c}{jakość}\\
+            \cmidrule{2-4}
+	rozmiar danych & dokładność &  trafność & precyzja \\
+\midrule
+	    1000  & 100\% & 100\% & 100\% \\
+		2000 & 100\% & 100\% & 100\% \\
+		5000  & 99,98\% & 99,9931\% & 99,67\% \\
+		10000  & 100\% & 100\% & 100\% \\
+		20000  & 100\% & 100\% & 100\% \\
+		30000  & 99,9933\% & 99,9977\% & 99,8893\% \\
+		40000  & 100\% & 100\% & 100\% \\
+		50000  & 99,98\% & 99,9993\% & 99,9667\% \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
 Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($0.9, 0.95$). W znacznej większości przypadków, dokładność grupowania wynosi 100\%, tak jak dla grupowania ostrego. Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs\, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
 
 Klastry dla danych \corners\  mają nierównomierną gęstość, przez co algorytm rozmytych $c$-średnich tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000g}).
@@ -1959,13 +1987,35 @@ Dane \crescents\  tworzą dwa klastry o identycznej liczebności i gęstości, d
 
 Dla danych \laguna\, błędy mogą pojawić się, gdy pojedyncze granule utworzone zostają w większej odległości od środkowego klastra, do którego oczekiwane jest, że powinny należeć. Punkt taki może wtedy zostać zakwalifikowany, jako osobny klaster, co na rysunku \ref{fig:laguna1000e} pokazuje przykład dla 50 granul i $\xi=0.9$. Podobny błąd przedstawia wykres dla 200 granul i $\xi=0.9$ -- pewna grupa punktów na otaczającym okręgu jest na tyle oddalona od pozostałych, że zostaje uznana za osobny klaster, jeden ze środkowych klastrów jest łączony z pozostałą częścią okręgu. 
 
-Powyżej liczebności 20000 punktów włącznie, dokładność nigdy nie osiąga 100\%, jednak najczęściej wynosi powyżej 99.9\%. Jak zaznaczono w sekcji dotyczącej etykietowania danych (sekcja \ref{sec:wyniki-etykietowania}), środkowe klastry są na tyle zbliżone do siebie, że na podstawie wykresu nie można definitywnie określić, które punkty pomiędzy nimi należą do którego z nich. Pojedyncze punkty mogą więc być klasyfikowane niepoprawnie z punktu widzenia przypisanych do nich etykiet. 
+Powyżej liczebności 20000 punktów włącznie, dokładność nigdy nie osiąga 100\% (tab. \ref{id:tab:laguna-max-quality}), jednak najczęściej wynosi powyżej 99.9\%. Jak zaznaczono w sekcji dotyczącej etykietowania danych (sekcja \ref{sec:wyniki-etykietowania}), środkowe klastry są na tyle zbliżone do siebie, że na podstawie wykresu nie można definitywnie określić, które punkty pomiędzy nimi należą do którego z nich. Pojedyncze punkty mogą więc być klasyfikowane niepoprawnie z punktu widzenia przypisanych do nich etykiet. 
 
 Ilustrują to wykresy \ref{fig:laguna1000-blue} oraz \ref{fig:laguna40000-blue} \todo{opisać jak tworzymy te wykresy}. Na rys. \ref{fig:laguna1000-blue} punktów jest jedynie 1000 i wszystkie klastry są wyraźnie oddzielone od siebie. Każdy punkt wyraźnie należy do granul jednego klastra. Na rys. \ref{fig:laguna40000-blue} punktów jest 40000. Klastry środkowe (o numerach 1 i 2) pokrywają się w pobliżu współrzędnych (0, 0). Punkty w bliskim otoczeniu tych współrzędnych przynależą więc w podobnym stopniu do klastra 1 i klastra 2. Ponadto, punkty położone na zewnątrz klastrów 1 i 2 są położone blisko otaczającego je okręgu, oznaczonego jako klaster 0. Można zauważyć ich wysoki stopień przynależności do tego klastra.
 
 Dzięki temu nałożeniu się klastrów, jakość grupowania tych danych jest lepsza, gdy wykorzystany zostanie algorytm \MojAlg{}, niż gdy zgrupowane zostaną dane oryginalne. Bez wstępnej klasteryzacji algorytmem rozmytych $c$-średnich, środkowe klastry są łączone ze sobą.
 
 Proporcja danych wynosi 8:1:1 (otaczający okrąg ma większą liczebność), jednak jakość grupowania jest na tyle wysoka, że zarówno dokładność, jak i trafność i precyzja mają podobne wartości.
+
+\begin{table}
+\centering
+\caption{Maksymalne wartości metryk jakości dla danych \laguna{} przy łączności \SingleLinkage{}.}
+\label{id:tab:laguna-max-quality}
+\begin{tabular}{lccc}
+\toprule
+            & \multicolumn{3}{c}{jakość}\\
+            \cmidrule{2-4}
+	rozmiar danych & dokładność &  trafność & precyzja \\
+\midrule
+	    1000  & 100\% & 100\% & 100\% \\
+		2000 & 100\% & 100\% & 100\% \\
+		5000  & 100\% & 100\% & 100\% \\
+		10000  & 100\% & 100\% & 100\% \\
+		20000  & 99,99\% & 99,9667\% & 99,9813\% \\
+		30000  & 99,9933\% & 99,9778\% & 99,9903\% \\
+		40000  & 99,9925\% & 99,975\% & 99,9823\% \\
+		50000  & 99,97\% & 99,9002\% & 99,9675\% \\
+\bottomrule
+\end{tabular}
+\end{table}  
 
 W przypadku danych \spheres\  (rys. \ref{fig:spheres5000g}) można zauważyć, że wyniki poprawiają się wraz ze zwiększeniem liczby granul i zmniejszeniem wartości parametru $\xi$. Proporcja liczebności klastrów wynosi 9:1, trafność i precyzja są o około 4 punkty procentowe mniejsze od dokładności.
 
