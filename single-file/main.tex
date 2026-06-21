@@ -566,17 +566,20 @@ Grupowanie danych, nazywane też klasteryzacją, jest powszechnie wykorzystywane
 \ksremark{tutaj o alg. grupowania hierarchicznego}
 \ksremark{o ich złożoności}
 
+W pracy rozważany będzie algorytm aglomeracyjnego grupowania hierarchicznego. Polega on na iteracyjnym łączeniu najbliższych sobie mniejszych klastrów w większe, aż do uzyskania z góry określonej ich liczby. Złączanie odbywa się na podstawie wybranych metryk odległości klastrów. Problemem tej rodziny algorytmów jest ich wysoka złożoność czasowa w zależności od ilości danych wejściowych -- $O(n^3)$ w implementacji naiwnej, choć istnieją specjalizowane implementacje o lepszych złożonościach.  
+
 \ksremark{tutaj o obliczeniach granularnych}
 
+Do ulepszenia takiego algorytmu można wykorzystać obliczenia granularne. Jest to szeroka dziedzina pozwalająca na analizę danych na sposób zbliżony do ludzkiego pojmowania rzeczywistości. Pozwalają na to na przykład zbiory rozmyte, czyli takie zbiory, do których dane mogą należeć w pewnym stopniu i każda dana może należeć do wielu zbiorów jednocześnie. 
+
+Takie zbiory mogą być uzyskane na przykład jako wynik działania algorytmu rozmytych $c$-średnich, który jest rodzajem algorytmu klasteryzacyjnego. Otrzymane w ten sposób rozmyte klastry mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą. 
+
 %Istotną z punktu widzenia tej pracy kategorią algorytmów grupowania są algorytmy rozmyte, na przykład algorytm rozmytych $c$-średnich. Uzyskiwane za ich pomocą klastry są zbiorami rozmytymi, co oznacza, że dane mogą należeć do wielu grup jednocześnie, w pewnym stopniu. Klastry te mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą. 
-
-
-
 
 Celem niniejszej pracy będzie opracowanie i przebadanie własności granularnego algorytmu aglomeracyjnego grupowania hierarchicznego, który operować będzie na ziarnach informacyjnych uzyskanych w wyniku klasteryzacji algorytmem rozmytych $c$-średnich.
 
 \ksremark{Co na tym zyskujemy? Obniżenie złożoności}
-Algorytm ten powinien przyspieszyć proces grupowania, jednocześnie zachowując wysoką jego jakość.
+Algorytm ten ma niższą złożoność czasową -- liniową w zależności od liczby danych -- powinien więc przyspieszyć proces grupowania. Jednocześnie zachowana powinna zostać wysoka jakość grupowania.
 
 W rozdziale \ref{sec:analiza-tematu} przedstawiono teoretyczną analizę zagadnień związanych z tematem. Omówione są algorytmy grupowania danych, w szczególności algorytm hierarchiczny oraz algorytm rozmytych $c$-średnich. Opisano istotne dla rozwiązania elementy logiki rozmytej, w tym rozszerzalne liczby rozmyte. Rozdział \ref{sec:wlasne-rozwiazanie} zawiera omówienie własnej implementacji rozmytego algorytmu aglomeracyjnego grupowania hierarchicznego i konieczne kroki przygotowujące dane. W rozdziale \ref{sec:badania} analizowane jest działanie tego algorytmu. Przedstawione są wykorzystane dane oraz metodyki badania czasu i jakości grupowania, a następnie w oparciu o nie omawiane są wyniki grupowania.
 
@@ -688,7 +691,7 @@ Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizowa
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./img/dendrogram_iris.pdf}
-\caption{Dendrogram otrzymany na podstawie grupowania hierarchicznego o łączności \english{single linkage} przykładowego zbioru danych \iris.}
+\caption{Dendrogram otrzymany na podstawie grupowania hierarchicznego o łączności \SingleLinkage{} przykładowego zbioru danych \iris.}
 \label{fig:dendrogram-iris}
 \end{figure}
 
@@ -784,13 +787,13 @@ Przykład takiego przypisania ilustruje rys. \ref{fig:single-linkage-example}. O
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./img/single_linkage_example.pdf}
-\caption{Ilustracja działania algorytmu \english{single linkage}. Odległość klastra $B$ od klastrów $A_{1}$ i $A_{2}$ jest znana. Po złączeniu $A_{1}$ i $A_{2}$ w klaster $A$, nowa odległość od klastra $B$ jest równa minimalnej z poprzednich dwóch -- w tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$.}
+\caption{Ilustracja działania algorytmu \SingleLinkage{}. Odległość klastra $B$ od klastrów $A_{1}$ i $A_{2}$ jest znana. Po złączeniu $A_{1}$ i $A_{2}$ w klaster $A$, nowa odległość od klastra $B$ jest równa minimalnej z poprzednich dwóch -- w tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$.}
 \label{fig:single-linkage-example}
 \end{figure}
 
 Algorytm ten jest wrażliwy na szumy, dobrze działa dla wyraźnie oddzielonych klastrów.
 
-Dla \english{single linkage} wykorzystać można szybsze, dedykowane algorytmy, na przykład algorytm minimalnego drzewa rozpinającego (\texttt{MST\_LINKAGE()}).
+Dla \SingleLinkage{} wykorzystać można szybsze, dedykowane algorytmy, na przykład algorytm minimalnego drzewa rozpinającego (\texttt{MST\_LINKAGE()}) o złożoności $O(n^2)$ \cite{bib:hierarchical-algorithms}.
 
 
 \ksremark{Więcej, trzeba napisać więcej!}
@@ -892,13 +895,15 @@ gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warun
 
 Obliczenia ziarniste (granularne) pozwalają na analizę danych w bardziej zbliżony do ludzkiego sposób zrozumienia. 
 
+Przykładem ilustrującym ideę obliczeń granularnych w jednym wymiarze może być subiektywna ocena temperatur jako ,,zimne'' lub ,,ciepłe''. Temperaturę $10^\circ C$ trudno jednoznacznie zaklasyfikować do jednej z tych dwóch kategorii, dla niektórych osób będzie ona ,,zimna'', dla niektórych ,,ciepła''. Temperatura $20^\circ C$ dużo bardziej pasuje do kategorii ,,ciepła'' niż ,,zimna'', jednak w mniejszym stopniu, niż $25^\circ C$. Choć w uzyskaniu bardziej szczegółowych informacji może pomóc dodanie większej liczby kategorii, na przykład ,,umiarkowana'' i ,,gorąca'', to nie odzwierciedli ono subiektywnej oceny poszczególnych wartości.
+
 \subsection{Ziarna informacyjne}
 \ksremark{Co to jest?}
 \ksremark{Jak są reprezentowane?}
 \ksremark{Jak się tworzy ziarna obliczeniowe?}
 
 Jednym z podstawowych pojęć związanych z obliczeniami ziarnistymi są ziarna informacyjne. 
-Są one encjami o pewnej semantyce, kolekcjami obiektów o określonym w~pewien sposób podobieństwie \cite{bib:general-framework-information-granules,bib:designing-higher-order-information-granules}.
+Są one encjami o pewnej semantyce, kolekcjami obiektów o określonym w~pewien sposób podobieństwie \cite{bib:general-framework-information-granules,bib:designing-higher-order-information-granules}. Semantyką taką może być na przykład ,,ciepła'' lub ,,zimna'' temperatura.
 %
 W zależności od znaczenia i zastosowania ziaren, mogą one być reprezentowane na różne sposoby: jako zbiory klasyczne, przedziały liczb, zbiory rozmyte, zbiory cieniowane, zbiory przybliżone, czy funkcje prawdopodobieństwa \cite{bib:general-framework-information-granules}.
 %
@@ -1380,16 +1385,16 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności}
 		\EndFor
 		\State  \Comment{\ksremark{Poniższy fragment pseudokodu trzeba napisać trochę jaśniej. Zasadniczo wiadomo, o co chodzi.}}
-		\For{$j$ in $1..\nX$}\Comment{scalenie etykiet łączonych wierszy}
+		\For{$j$ in $1..\nX$}\Comment{scalenie etykiet łączonych wierszy poprzez zamianę etykiet o wartości $k$ na $w$.}
 		\If{$\wEtykieta[j] == k$}
 		\State $\wEtykieta[j] = w$ \Comment{zamiana etykiet}
 		\EndIf
 		\EndFor
 		\EndFor
-        \State \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne wartości:  \ksremark{przemyśleć :-)}}
-		\State mapa $\gets$ lista unikalnych wartości w $\wEtykieta$
+        \State \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne liczby naturalne:  \ksremark{przemyśleć :-)}}
+		\State $m \gets$ lista unikalnych wartości w $\wEtykieta$
 		\For{$i = 1$ to $\nX$} 
-		\State $\wEtykieta[i] \gets$ indeks $\wEtykieta[i]$ w tablicy mapa \Comment{mapowanie etykiet na kolejne liczby naturalne}
+		\State $\wEtykieta[i] \gets$ indeks $\wEtykieta[i]$ w tablicy $m$ \Comment{mapowanie etykiet na kolejne liczby naturalne}
 		\EndFor
 		\State \Return $\wEtykieta$
 		\EndProcedure
@@ -1434,6 +1439,8 @@ Pozostałymi wykorzystanymi w projekcie bibliotekami są: \texttt{matplotlib} (w
 %\end{itemize}
 
 \ksremark{zagajenie}
+
+Działanie algorytmu musi zostać zbadane pod kątem czasu wykonania oraz jakości grupowania.
 
 \section{Zbiory danych}
 
@@ -1486,6 +1493,8 @@ Algorytm \MojAlg{} zbadano pod kątem szybkości wykonania oraz jakości grupowa
 Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od ilości danych, przygotowano dane o rozmiarach 500-10000 z krokiem 500.
 W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 10000. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
 
+Przyjęto też stałą maksymalną liczbę 80 iteracji algorytmu rozmytych $c$-średnich. Sekcja \ref{sec:wyniki-jakosc} pokazuje, że jest to wystarczająca wartość. Złożoność algorytmu jest liniowa w zależności od liczby iteracji \cite{bib:fcm-kmeans-comparison}.
+
 Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej.
 W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu rozmytych $c$-średnich, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
 
@@ -1495,7 +1504,9 @@ Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtór
 
 Jakość zmierzono poprzez porówanie wyników algorytmu \MojAlg{} z oczekiwanymi przynależnościami punktów do klastrów, oznaczonymi etykietami.
 
-Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych łączności (\SingleLinkage{}, \CompleteLinkage{}), liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi \in \{ 0.05, 0.10, 0.15, \ldots, 0.95 \}$.
+Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych łączności (\SingleLinkage{}, \CompleteLinkage{}), liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi \in \{ 0.05, 0.10, 0.15, \ldots, 0.95 \}$. 
+
+Podobnie jak w przypadku pomiarów czasu grupowania, przyjęto stałą maksymalną liczbę 80 iteracji. Sparametryzowanie tej wartości oznaczałoby badanie działania bibliotecznej funkcji FCM, zamiast własnego algorytmu.
 
 Kolejność danych została przed pomiarem losowo zmieszana przy pomocy generatora liczb pseudolosowych o ustalonym ziarnie. Dzięki temu, przy każdym uruchomieniu kolejność ta jest identyczna, wystarczyły więc jednokrotne pomiary wyników działania algorytmu \MojAlg{} dla każdej kombinacji parametrów.
 
@@ -1740,9 +1751,10 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 
 
 Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba jest stała.
-Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(n)$, więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych. \ksremark{To napiszemy w rozdziale 3.}
+Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(n)$, więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych.
 
 \subsection{Jakość grupowania}
+\label{sec:wyniki-jakosc}
 
 Na wykresach wyników grupowania hierarchicznego metodą rozmytą punkty szare odpowiadają współrzędnym oryginalnych danych. Wyjątkiem są wykresy danych \spheres, gdzie oryginalne punkty pominięto, aby zachować czytelność wykresu. Punkty kolorowe odpowiadają środkom granul, gdzie środki o tym samym kolorze należą do tego samego klastra. 
 Elipsy (elipsoidy dla \spheres) w kolorze magenta wizualizują rozmycie granul, gdzie długość każdej półosi jest równa dwukrotności rozmycia w danym wymiarze. Mnożnik ten został wybrany ze względu na dobrą czytelność wynikowych wykresów.
@@ -1904,9 +1916,7 @@ Wyniki przeanalizowano również na podstawie wykresów.
 		\spheres\  & 98,7557\% & 70,5616\% \\
 \bottomrule
 \end{tabular}
-\end{table}  
-\ksremark{Tab. \ref{id:tab:acc-ksztalt}: `Dokładność' to ta miara z macierzą, prawda?}
-\ksremark{Tab. \ref{id:tab:acc-ksztalt}: Mamy jedno wykonanie algorytmu?}
+\end{table}
 
 \begin{table}
 \centering
