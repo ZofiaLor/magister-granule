@@ -1455,7 +1455,12 @@ Dane te nie posiadają etykiet. W sposób opisany w podsekcji \ref{sec:etykietow
 % czy 2011 to dobra data dla tych stron?
 Wykorzystano również zbiory danych \brightkite\ \cite{bib:brightkite} (4491143 wierszy) oraz \gowalla\ \cite{bib:gowalla} (6442890 wierszy).
 Dane przedstawiają informacje o logowaniach się użytkowników platform społecznościowych.
-Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' -- dwuwymiarowe współrzędne lokalizacji logowań. Dane nie są sklasyfikowane. Analiza wykresów (rys. \ref{fig:gowalla-brightkite-shapes}) pozwala zauważyć kształty kontynentów -- można uznać je za docelowe klastry.
+Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' -- dwuwymiarowe współrzędne lokalizacji logowań. Dane nie są sklasyfikowane. 
+
+Analiza wykresów (rys. \ref{fig:gowalla-brightkite-shapes}) pozwala zauważyć kształty kontynentów -- można uznać je za docelowe klastry. 
+
+Dane zawierają błędne współrzędne. W danych \brightkite{}, kolumna ,,latitude'' (szerokość geograficzna) zawiera wartości z przedziału $[-163,193333, 151,198]$, podczas gdy dopuszczalnym przedziałem jest $[-90, 90]$. Dla danych \gowalla{} przedział ten wynosi $[-90, 405.658498]$. Błędne współrzędne pozostawiono w zbiorze danych.
+
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./img/data_shapes.pdf}
@@ -1734,6 +1739,13 @@ Sposób obliczenia metryk jakości przedstawia również pseudokod \ref{alg:calc
 	\end{algorithmic}
 \end{algorithm}
 
+Jeżeli dane zawierają szum, może on być interpretowany na dwa sposoby w kontekście wyznaczania metryk:
+
+\begin{enumerate}
+	\item Szum nie jest brany pod uwagę, analizowane są jedynie dane niebędące szumem.
+	\item Szum uznawany jest za błędną klasyfikację. Aby skorygować wartość metryki o szum, należy pomnożyć ją przez odsetek punktów niebędących szumem w stosunku do całości danych. Na przykład, jeżeli początkowa wartość metryki wynosi $80\%$, a $40\%$ danych stanowi szum, to ostateczna wartość tej metryki będzie równa $80\% * (100\% - 40\%) = 48\%$.
+\end{enumerate}
+
 \section{Wyniki}
 
 \subsection{Czas grupowania}
@@ -1760,6 +1772,7 @@ Na wykresach wyników grupowania hierarchicznego metodą rozmytą punkty szare o
 Elipsy (elipsoidy dla \spheres) w kolorze magenta wizualizują rozmycie granul, gdzie długość każdej półosi jest równa dwukrotności rozmycia w danym wymiarze. Mnożnik ten został wybrany ze względu na dobrą czytelność wynikowych wykresów.
 
 \subsubsection{Dane generowane}
+\label{sec:wyniki-jakosc-generowane}
 
 Oprócz niezależnych procentowych średnich wartości metryk dokładności, trafności i precyzji istotne jest, jakie są wyniki działania \MojAlg{} w porównaniu z algorytmem ostrym. W tym celu wykorzystano algorytm \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} aby zgrupować dane oryginalne, a także środki klastrów (w liczebnościach 50, 100, 200) wyznaczonych przez algorytm rozmytych $c$-średnich, bez uwzględnienia rozmycia, czyli macierzy $\mClusterMembership$.
 
@@ -1999,7 +2012,9 @@ Dla danych \laguna\, błędy mogą pojawić się, gdy pojedyncze granule utworzo
 
 Powyżej liczebności 20000 punktów włącznie, dokładność nigdy nie osiąga 100\% (tab. \ref{id:tab:laguna-max-quality}), jednak najczęściej wynosi powyżej 99.9\%. Jak zaznaczono w sekcji dotyczącej etykietowania danych (sekcja \ref{sec:wyniki-etykietowania}), środkowe klastry są na tyle zbliżone do siebie, że na podstawie wykresu nie można definitywnie określić, które punkty pomiędzy nimi należą do którego z nich. Pojedyncze punkty mogą więc być klasyfikowane niepoprawnie z punktu widzenia przypisanych do nich etykiet. 
 
-Ilustrują to wykresy \ref{fig:laguna1000-blue} oraz \ref{fig:laguna40000-blue} \todo{opisać jak tworzymy te wykresy}. Na rys. \ref{fig:laguna1000-blue} punktów jest jedynie 1000 i wszystkie klastry są wyraźnie oddzielone od siebie. Każdy punkt wyraźnie należy do granul jednego klastra. Na rys. \ref{fig:laguna40000-blue} punktów jest 40000. Klastry środkowe (o numerach 1 i 2) pokrywają się w pobliżu współrzędnych (0, 0). Punkty w bliskim otoczeniu tych współrzędnych przynależą więc w podobnym stopniu do klastra 1 i klastra 2. Ponadto, punkty położone na zewnątrz klastrów 1 i 2 są położone blisko otaczającego je okręgu, oznaczonego jako klaster 0. Można zauważyć ich wysoki stopień przynależności do tego klastra.
+Ilustrują to wykresy \ref{fig:laguna1000-blue} oraz \ref{fig:laguna40000-blue} \todo{opisać jak tworzymy te wykresy}. Wykresy tworzone są na podstawie sumarycznej przynależności punktów do granul z danego klastra. Dla każdego wykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} * \{ \Granula \in \Klaster \}$. Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie.
+
+Na rys. \ref{fig:laguna1000-blue} punktów jest jedynie 1000 i wszystkie klastry są wyraźnie oddzielone od siebie. Każdy punkt wyraźnie należy do granul jednego klastra. Na rys. \ref{fig:laguna40000-blue} punktów jest 40000. Klastry środkowe (o numerach 1 i 2) pokrywają się w pobliżu współrzędnych (0, 0). Punkty w bliskim otoczeniu tych współrzędnych przynależą więc w podobnym stopniu do klastra 1 i klastra 2. Ponadto, punkty położone na zewnątrz klastrów 1 i 2 są położone blisko otaczającego je okręgu, oznaczonego jako klaster 0. Można zauważyć ich wysoki stopień przynależności do tego klastra.
 
 Dzięki temu nałożeniu się klastrów, jakość grupowania tych danych jest lepsza, gdy wykorzystany zostanie algorytm \MojAlg{}, niż gdy zgrupowane zostaną dane oryginalne. Bez wstępnej klasteryzacji algorytmem rozmytych $c$-średnich, środkowe klastry są łączone ze sobą.
 
@@ -2135,6 +2150,76 @@ Wyniki te należy też analizować w porównaniu z wynikami algorytmu ostrego (t
 \label{fig:spheres1000ec}
 \end{figure}
 
+Wyniki dla pomiarów, gdzie przynależność punktów do granul określono na podstawie relacji $\star$-podobieństwa przedstawiono w tabelach \ref{id:tab:acc-ksztalt-shape-dep}, \ref{id:tab:rec-ksztalt-shape-dep} i \ref{id:tab:prec-ksztalt-shape-dep}. Dodatkowo, gdy szum nie jest uwzględniany, dla każdego pliku wejściowego istnieje taka kombinacja parametrów, dla której wartości metryk wynoszą 100\%. Dla relacji trójkątnej, tylko pewien podzbiór punktów najbliżej środków granul będzie uwzględniony, jest więc mniejsza szansa na niezgodne z oczekiwaniami przypisanie do granuli. Jak pokazuje rys. \ref{fig:shape-dep}, wiąże się to jednak z utratą dużego odsetka informacji.
+
+Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone do metryk dla przynależności określonej na podstawie macierzy $\mClusterMembership$ (tabele \ref{id:tab:acc-ksztalt}, \ref{id:tab:rec-ksztalt} i \ref{id:tab:prec-ksztalt}), natomiast gdy jest on uwzględniony, wyniki są niższe o nawet kilkanaście punktów procentowych.
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\label{id:tab:acc-ksztalt-shape-dep}
+\begin{tabular}{lcccc}
+\toprule
+            & \multicolumn{4}{c}{dokładność}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	kształt & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+\midrule
+	    \blobs\  & 99,0033\% & 87,5504\% & 86,3917\% & 76,0942\% \\
+		\circles\ & 99,8159\% & 55,9642\% & 81,3611\% & 46,2302\% \\
+		\corners\  & 94,8798\% & 52,4794\% & 76,9991\% & 42,8511\% \\
+		\crescents\  & 99,4289\% & 78,6924\% & 81,8781\% & 65,2166\% \\
+		\laguna\  & 98,7033\% & 47,4800\% & 79,9512\% & 38,2663\% \\
+		\spheres\  & 98,7115\% & 66,6523\% & 78,0562\% & 54,8465\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\label{id:tab:rec-ksztalt-shape-dep}
+\begin{tabular}{lcccc}
+\toprule
+            & \multicolumn{4}{c}{trafność}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	kształt & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+\midrule
+	    \blobs\  & 85,8545\% & 85,0807\% & 74,7377\% & 74,3498\% \\
+		\circles\ & 99,7088\% & 49,7552\% & 81,2541\% & 40,5606\% \\
+		\corners\  & 94,8544\% & 52,2929\% & 76,9871\% & 42,7678\% \\
+		\crescents\  & 99,4289\% & 78,6814\% & 81,8781\% & 65,2116\% \\
+		\laguna\  & 96,2867\% & 55,6583\% & 77,6934\% & 45,1308\% \\
+		\spheres\  & 95,1200\% & 40,8295\% & 74,5046\% & 32,5115\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\label{id:tab:prec-ksztalt-shape-dep}
+\begin{tabular}{lcccc}
+\toprule
+            & \multicolumn{4}{c}{precyzja}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	kształt & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+\midrule
+	    \blobs\  & 85,2487\% & 82,7817\% & 74,1242\% & 71,7945\% \\
+		\circles\ & 99,8379\% & 49,4878\% & 81,3831\% & 40,3351\% \\
+		\corners\  & 95,2396\% & 48,9359\% & 77,3953\% & 40,0577\% \\
+		\crescents\  & 99,6244\% & 81,0472\% & 82,0736\% & 67,1825\% \\
+		\laguna\  & 97,6834\% & 40,7718\% & 79,2011\% & 32,7719\% \\
+		\spheres\  & 94,7714\% & 41,5135\% & 74,1778\% & 34,1132\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 
 \paragraph{Zależność od liczby granul}
 
@@ -2255,6 +2340,67 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 \end{tabular}
 \end{table} 
 
+Wyniki dla pomiarów, gdzie przynależność punktów do granul określono na podstawie relacji $\star$-podobieństwa przedstawiono w tabelach \ref{id:tab:acc-rt-shape-dep}, \ref{id:tab:rec-rt-shape-dep} i \ref{id:tab:prec-rt-shape-dep}. Dla relacji wykładniczej i gaussowskiej nie występuje szum, dlatego wyniki nie różnią się, gdy zostanie uwzględniony. Gdy szumu nie ma, lub nie jest uwzględniony, wartości metryk są bardzo zbliżone do metryk dla przynależności określonej na podstawie macierzy $\mClusterMembership$. 
+
+W przypadku relacji trójkątnej, szum stanowi przeciętnie około 47\% danych -- wyniki, gdy zostaje on uwzględniony, są niemal o połowę niższe. 
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\label{id:tab:acc-rt-shape-dep}
+\begin{tabular}{rrrrr}
+\toprule
+            & \multicolumn{4}{c}{dokładność}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+\midrule
+	trójkątna & 99,6472\% & 62,6451\% & 46,6946\% & 29,9881\% \\
+	wykładnicza & 97,7899\% & 65,6977\% & 97,7899\% & 65,6977\% \\
+	gaussowska & 97,8342\% & 66,0665\% & 97,8342\% & 66,0665\% \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\label{id:tab:rec-rt-shape-dep}
+\begin{tabular}{rrrrr}
+\toprule
+            & \multicolumn{4}{c}{trafność}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+\midrule
+	trójkątna & 96,7141\% & 59,0667\% & 44,6149\% & 28,1838\% \\
+	wykładnicza & 94,6528\% & 60,9238\% & 94,6528\% & 60,9238\% \\
+	gaussowska & 94,2597\% & 61,1585\% & 94,2597\% & 61,1585\% \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\label{id:tab:prec-rt-shape-dep}
+\begin{tabular}{rrrrr}
+\toprule
+            & \multicolumn{4}{c}{precyzja}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+\midrule
+	trójkątna & 96,5923\% & 56,3474\% & 44,5672\% & 27,2059\% \\
+	wykładnicza & 95,0716\% & 57,8856\% & 95,0716\% & 57,8856\% \\
+	gaussowska & 94,5388\% & 58,0360\% & 94,5388\% & 58,0360\% \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
 \paragraph{Zależność od parametru $\xi$}
 
 Średnią dokładność, trafność i precyzję grupowania danych w zależności od parametru $\xi$ przedstawiono na rys. \ref{fig:xi-acc}.
@@ -2331,7 +2477,7 @@ Wykresy dla danych \circles{} (rys. \ref{fig:circles-complex}) uwydatniają wpł
 
 W przypadku łączności \SingleLinkage{}, dokładność jest niemal zawsze równa 100\%. Spada ona dla wysokich ($\ge0.9$) wartości parametru $\xi$. Najniższe wartości są osiągane dla relacji wykładniczej, wyższe dla gaussowskiej. Dla relacji trójkątnej, wyniki pozostają na poziomie 100\% nawet dla $\xi=0.95$.
 
-Algorytm dla łączności \CompleteLinkage{} nie odnajduje poprawnie klastrów, co widać na rys. \todo{rysunek circles, analiza kształtu dla cl}. Badane parametry nie mają znacznego wpływu na jakość.
+Algorytm dla łączności \CompleteLinkage{} nie odnajduje poprawnie klastrów, co widać na rys. \ref{fig:circles1000gc}. Badane parametry nie mają znacznego wpływu na jakość.
 
 \begin{figure}
 	\centering
@@ -2439,22 +2585,44 @@ Dla \CompleteLinkage{} można zauważyć wzrost średniej dokładności grupowan
 
 \subsubsection{Dane Brightkite i Gowalla}
 
-Algorytm grupowania hierarchicznego dostarczony przez bibliotekę scikit-learn nie odnajduje oczekiwanych klastrów (rys. \ref{fig:brightkite-nonfuzzy}).
-Przedstawione na rys. \ref{fig:brightkite-fuzzy} wyniki algorytmu rozmytego są bliższe oczekiwaniom, klastry zlokalizowane są we współrzędnych odpowiadającym kontynentom.
-Wstępna granulacja FCM pozwoliła na eliminację szumów, na które wrażliwy jest algorytm grupowania hierarchicznego.
+Ze względu na brak etykiet danych \brightkite{} i \gowalla{} \todo{czy na pewno nie da się ich oetykietować}, jakość grupowania można ocenić wizualnie, na podstawie wykresów -- odpowiednio rys. \ref{fig:brightkite-strict-fuzzy} i \ref{fig:gowalla-strict-fuzzy}.
+
+Podczas grupowania ostrego algorytmem \texttt{AgglomerativeClustering} wykorzystano losową próbkę 500000 współrzędnych, jako że algorytm ten nie nadaje się do grupowania bardzo dużych ilości danych. Jako parametry grupowania \MojAlg{} wybrano, w oparciu o wyniki otrzymane w sekcji \ref{sec:wyniki-jakosc-generowane}, relację trójkątną, 100 granul i $\xi=0,1$. W obydwu przypadkach jako docelową liczbę klastrów wybrano 6 -- jeden klaster to jeden kontynent.
+
+Grupowanie ostre algorytmem \texttt{AgglomerativeClustering} nie odnajduje oczekiwanych klastrów. W przypadku danych \brightkite{}, wszystkie kontynenty zostały połączone w jeden klaster, zaś elementy odstające -- wyspy, ocean, błędne współrzędne -- to pozostałe 5 klastrów. W przypadku danych \gowalla{} grupowanie jest lepsze -- Ameryki stanowią osobny klaster niż reszta kontynentów -- jednak wciąż 4 klastry odpowiadają wyłącznie danym odstającym.
+
+Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna granulacja FCM pozwoliła na eliminację szumów (w tym błędnych współrzędnych), na które wrażliwy jest algorytm grupowania hierarchicznego. Zauważyć można, że duży wpływ na rozmieszczenie granul ma zagęszczenie danych -- najwięcej granul powstało we współrzędnych odpowiadająch Europie i Ameryce Północnej. Zarówno w przypadku danych \brightkite{}, jak i \gowalla{}, Europa i Azja zostały uznane za jeden klaster. 
 
 \begin{figure}
-\centering
-\includegraphics{./img/brightkite_nonfuzzy.png}
-\caption{Dane \brightkite (próbka 100000 współrzędnych) zgrupowane do 6 klastrów algorytmem ostrym (AgglomerativeClustering biblioteki scikit-learn).}
-\label{fig:brightkite-nonfuzzy}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/brightkite_500000_strict.png}
+		\caption{Grupowanie ostre próbki losowej 500000 punktów}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/brightkite_full_100.png}
+		\caption{Grupowanie algorytmem \MojAlg{} całości danych}
+	\end{subfigure}
+	
+	\caption{Wyniki grupowania hierarchicznego algorytmem ostrym \texttt{AgglomerativeClustering} i algorytmem \MojAlg{} danych \brightkite{}}
+	\label{fig:brightkite-strict-fuzzy}
 \end{figure}
 
 \begin{figure}
-\centering
-\includegraphics{./img/brightkite_fuzzy.png}
-\caption{Dane \brightkite (próbka 100000 współrzędnych) zgrupowane do 6 klastrów algorytmem \MojAlg{}.}
-\label{fig:brightkite-fuzzy}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/gowalla_500000_strict.png}
+		\caption{Grupowanie ostre próbki losowej 500000 punktów}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/gowalla_full_100.png}
+		\caption{Grupowanie algorytmem \MojAlg{} całości danych}
+	\end{subfigure}
+	
+	\caption{Wyniki grupowania hierarchicznego algorytmem ostrym \texttt{AgglomerativeClustering} i algorytmem \MojAlg{} danych \gowalla{}}
+	\label{fig:gowalla-strict-fuzzy}
 \end{figure}
 
 %
