@@ -193,7 +193,13 @@
 \newcommand{\ksremark}[1]{%
 {%\marginpar{\textdbend}
 {\color{brickred}{[#1]}}}%
-\addcontentsline{rks}{uwagas}{\protect{#1}}%
+\addcontentsline{rks}{uwagas}{\protect{KS: #1}}%
+}
+
+\newcommand{\zlremark}[1]{%
+	{%\marginpar{\textdbend}
+		{\color{green}{[#1]}}}%
+	\addcontentsline{rks}{uwagas}{\protect{ZL: #1}}%
 }
 
 \newcommand{\comma}{\ksremark{przecinek}}
@@ -331,6 +337,8 @@
 % Tutaj proszę umieszczać swoje pakiety, makra, ustawienia itd.
 
 \input{oznaczenia.tex}
+
+\usepackage{siunitx}
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % listingi i fragmentu kodu źródłowego 
@@ -561,6 +569,7 @@ escapeinside={@*}{*@},%
 %\item zwięzła charakterystyka rozdziałów 
 %\end{itemize}
 
+\ksremark{Co to w ogóle jest grupowanie?}
 Grupowanie danych, nazywane też klasteryzacją, jest powszechnie wykorzystywane do analizy danych. Istnieje wiele rodzajów algorytmów klasteryzacyjnych, między innymi hierarchiczne, gęstościowe, grafowe. Niezależnie od typu, polegają one na łączeniu podobnych do siebie danych w grupy (klastry).
 
 \ksremark{tutaj o alg. grupowania hierarchicznego}
@@ -571,12 +580,13 @@ W pracy rozważany będzie algorytm aglomeracyjnego grupowania hierarchicznego. 
 \ksremark{tutaj o obliczeniach granularnych}
 
 Do ulepszenia takiego algorytmu można wykorzystać obliczenia granularne. Jest to szeroka dziedzina pozwalająca na analizę danych na sposób zbliżony do ludzkiego pojmowania rzeczywistości. Pozwalają na to na przykład zbiory rozmyte, czyli takie zbiory, do których dane mogą należeć w pewnym stopniu i każda dana może należeć do wielu zbiorów jednocześnie. 
-
+\ksremark{Co to jest ziarno informacyjne?}
+%
 Takie zbiory mogą być uzyskane na przykład jako wynik działania algorytmu rozmytych $c$-średnich, który jest rodzajem algorytmu klasteryzacyjnego. Otrzymane w ten sposób rozmyte klastry mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą. 
 
 %Istotną z punktu widzenia tej pracy kategorią algorytmów grupowania są algorytmy rozmyte, na przykład algorytm rozmytych $c$-średnich. Uzyskiwane za ich pomocą klastry są zbiorami rozmytymi, co oznacza, że dane mogą należeć do wielu grup jednocześnie, w pewnym stopniu. Klastry te mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą. 
 
-Celem niniejszej pracy będzie opracowanie i przebadanie własności granularnego algorytmu aglomeracyjnego grupowania hierarchicznego, który operować będzie na ziarnach informacyjnych uzyskanych w wyniku klasteryzacji algorytmem rozmytych $c$-średnich.
+Celem niniejszej pracy będzie opracowanie i przebadanie własności granularnego algorytmu aglomeracyjnego grupowania hierarchicznego, który operować będzie na ziarnach informacyjnych uzyskanych w wyniku grupowania danych algorytmem rozmytych $c$-średnich.
 
 \ksremark{Co na tym zyskujemy? Obniżenie złożoności}
 Algorytm ten ma niższą złożoność czasową -- liniową w zależności od liczby danych -- powinien więc przyspieszyć proces grupowania. Jednocześnie zachowana powinna zostać wysoka jakość grupowania.
@@ -639,7 +649,7 @@ Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danyc
  
 
 Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne
-{bib:fcm-for-optimizing,bib:clustering-alg-survey}, a równocześnie niepodobne do obiektów z innych grup. Algorytmy grupowania są algorytmami nienadzorowanymi -- mają jedynie informacje o podobieństwie między poszczególnymi elementami.
+\cite{bib:fcm-for-optimizing,bib:clustering-alg-survey}, a równocześnie niepodobne do obiektów z innych grup. Algorytmy grupowania są algorytmami nienadzorowanymi -- mają jedynie informacje o podobieństwie między poszczególnymi elementami.
 
  
 
@@ -895,7 +905,7 @@ gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warun
 
 Obliczenia ziarniste (granularne) pozwalają na analizę danych w bardziej zbliżony do ludzkiego sposób zrozumienia. 
 
-Przykładem ilustrującym ideę obliczeń granularnych w jednym wymiarze może być subiektywna ocena temperatur jako ,,zimne'' lub ,,ciepłe''. Temperaturę $10^\circ C$ trudno jednoznacznie zaklasyfikować do jednej z tych dwóch kategorii, dla niektórych osób będzie ona ,,zimna'', dla niektórych ,,ciepła''. Temperatura $20^\circ C$ dużo bardziej pasuje do kategorii ,,ciepła'' niż ,,zimna'', jednak w mniejszym stopniu, niż $25^\circ C$. Choć w uzyskaniu bardziej szczegółowych informacji może pomóc dodanie większej liczby kategorii, na przykład ,,umiarkowana'' i ,,gorąca'', to nie odzwierciedli ono subiektywnej oceny poszczególnych wartości.
+Przykładem ilustrującym ideę obliczeń granularnych w jednym wymiarze może być subiektywna ocena temperatur jako ,,zimne'' lub ,,ciepłe''. Temperaturę $10^\circ C$ \ksremark{\SI{10}{\celsius}} trudno jednoznacznie zaklasyfikować do jednej z tych dwóch kategorii, dla niektórych osób będzie ona ,,zimna'', dla niektórych ,,ciepła''. Temperatura $20^\circ C$ dużo bardziej pasuje do kategorii ,,ciepła'' niż ,,zimna'', jednak w mniejszym stopniu, niż $25^\circ C$. Choć w uzyskaniu bardziej szczegółowych informacji może pomóc dodanie większej liczby kategorii, na przykład ,,umiarkowana'' i ,,gorąca'', to nie odzwierciedli ono subiektywnej oceny poszczególnych wartości.
 
 \subsection{Ziarna informacyjne}
 \ksremark{Co to jest?}
@@ -967,8 +977,8 @@ Istnieje wiele t-norm i s-norm spełniających te warunki. W ramach tej pracy, n
 	\end{align}
 	\item t-norma i s-norma Łukasiewicza:
 	\begin{align}
-		x \tnorm y = \max(x + y - 1, 0) \\
-		x \snorm y = \min(x + y, 1)
+		x \tnorm y &= \max(x + y - 1, 0) \\
+		x \snorm y &= \min(x + y, 1)
 	\end{align}
 \end{itemize}
 
@@ -1391,10 +1401,10 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 		\EndIf
 		\EndFor
 		\EndFor
-        \State \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne liczby naturalne:  \ksremark{przemyśleć :-)}}
+        \State \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne liczby naturalne:  \ksremark{przemyśleć pseudokod :-)}}
 		\State $m \gets$ lista unikalnych wartości w $\wEtykieta$
 		\For{$i = 1$ to $\nX$} 
-		\State $\wEtykieta[i] \gets$ indeks $\wEtykieta[i]$ w tablicy $m$ \Comment{mapowanie etykiet na kolejne liczby naturalne}
+		\State $\wEtykieta[i] \gets$ indeks $\wEtykieta[i]$ w tablicy $m$ \Comment{mapowanie etykiet na kolejne liczby naturalne} 
 		\EndFor
 		\State \Return $\wEtykieta$
 		\EndProcedure
