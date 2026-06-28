@@ -801,9 +801,25 @@ Przykład takiego przypisania ilustruje rys. \ref{fig:single-linkage-example}. O
 \label{fig:single-linkage-example}
 \end{figure}
 
-Algorytm ten jest wrażliwy na dane odstające, szumy. Pojedynczy punkt znajdujący się w dużej odległości od reszty danych zostanie uznany za osobny klaster. Dodatkowym efektem tego błędnego przypisania będzie złączenie dwóch innych klastrów. \todo{może obrazek}
+Algorytm ten jest wrażliwy na dane odstające, szumy. Pojedynczy punkt znajdujący się w dużej odległości od reszty danych zostanie uznany za osobny klaster. Dodatkowym efektem tego błędnego przypisania będzie złączenie dwóch innych klastrów. 
 
-Algorytm działa dobrze, gdy klastry są wyraźnie oddzielone od siebie. Jeżeli będą zbyt blisko siebie, możliwe jest, że zostaną połączone.
+Zachowanie to ilustruje rys. \ref{fig:single-linkage-noise-example}. Gdy dane nie zawierają znacznie odstających danych, algorytm wyznacza dwa klastry zgodnie z oczekiwaniami. Po dodaniu do nich pojedynczej danej o współrzędnej (10, 10), czyli w dużej odległości od reszty danych, dana ta klasyfikowana jest jako osobny klaster.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/single_linkage_noise_example.pdf}
+\caption{Ilustracja wpływu danych odstających na działanie algorytmu \SingleLinkage{}.}
+\label{fig:single-linkage-noise-example}
+\end{figure}
+
+Algorytm działa dobrze, gdy klastry są wyraźnie oddzielone od siebie. Jeżeli będą zbyt blisko siebie, możliwe jest, że zostaną połączone, jak pokazuje przykład na rys. \ref{fig:single-linkage-close-clusters-example}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/single_linkage_close_clusters_example.pdf}
+\caption{Ilustracja działania algorytmu \SingleLinkage{}, gdy klastry są zbyt zbliżone.}
+\label{fig:single-linkage-close-clusters-example}
+\end{figure}
 
 Dla \SingleLinkage{} wykorzystać można szybsze, dedykowane algorytmy, na przykład algorytm minimalnego drzewa rozpinającego (\texttt{MST\_LINKAGE()}) o złożoności $O(n^2)$ \cite{bib:hierarchical-algorithms}.
 
@@ -2024,7 +2040,7 @@ Dla danych \laguna\, błędy mogą pojawić się, gdy pojedyncze granule utworzo
 
 Powyżej liczebności 20000 punktów włącznie, dokładność nigdy nie osiąga 100\% (tab. \ref{id:tab:laguna-max-quality}), jednak najczęściej wynosi powyżej 99.9\%. Jak zaznaczono w sekcji dotyczącej etykietowania danych (sekcja \ref{sec:wyniki-etykietowania}), środkowe klastry są na tyle zbliżone do siebie, że na podstawie wykresu nie można definitywnie określić, które punkty pomiędzy nimi należą do którego z nich. Pojedyncze punkty mogą więc być klasyfikowane niepoprawnie z punktu widzenia przypisanych do nich etykiet. 
 
-Ilustrują to wykresy \ref{fig:laguna1000-blue} oraz \ref{fig:laguna40000-blue} \todo{opisać jak tworzymy te wykresy}. Wykresy tworzone są na podstawie sumarycznej przynależności punktów do granul z danego klastra. Dla każdego wykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} * \{ \Granula \in \Klaster \}$. Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie.
+Ilustrują to wykresy \ref{fig:laguna1000-blue} oraz \ref{fig:laguna40000-blue}. Wykresy tworzone są na podstawie sumarycznej przynależności punktów do granul z danego klastra. Dla każdego wykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} * \{ \Granula \in \Klaster \}$. Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie. \zlremark{Czy to dobre miejsce na wyjaśnienie, jak tworzymy te wykresy?}
 
 Na rys. \ref{fig:laguna1000-blue} punktów jest jedynie 1000 i wszystkie klastry są wyraźnie oddzielone od siebie. Każdy punkt wyraźnie należy do granul jednego klastra. Na rys. \ref{fig:laguna40000-blue} punktów jest 40000. Klastry środkowe (o numerach 1 i 2) pokrywają się w pobliżu współrzędnych (0, 0). Punkty w bliskim otoczeniu tych współrzędnych przynależą więc w podobnym stopniu do klastra 1 i klastra 2. Ponadto, punkty położone na zewnątrz klastrów 1 i 2 są położone blisko otaczającego je okręgu, oznaczonego jako klaster 0. Można zauważyć ich wysoki stopień przynależności do tego klastra.
 
@@ -2239,9 +2255,14 @@ Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone
 
 Dla danych takich, jak \circles{} (rys. \ref{fig:circles50000e}) czy \crescents{} (rys. \ref{fig:crescents5000e}), gdzie klastry mają podobną liczebność i gęstość, zwiększenie liczby granul powoduje ich zagęszczenie, przy równomiernym rozłożeniu.
 
-Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla większych liczebności granul, możliwe jest, że algorytm rozmytych $c$-średnich nie wyznacza ani jednego środka granuli w dwóch mniejszych klastrach, przez co niemożliwe jest poprawne grupowanie. Tak samo dzieje się, gdy pogrupowane zostaną same środki granul, bez uwzględnienia rozmycia.
+Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla większych liczebności granul, możliwe jest, że algorytm rozmytych $c$-średnich nie wyznacza ani jednego środka granuli w dwóch mniejszych klastrach, przez co niemożliwe jest poprawne grupowanie. Tak samo dzieje się, gdy pogrupowane zostaną same środki granul, bez uwzględnienia rozmycia. Jak można odczytać z rys. \ref{fig:blobs1000-blue}, w takim przypadku większość punktów zostanie zaklasyfikowane do tego samego klastra. 
 
-\todo{tu można zrobić analizę przynależności (niebieskie wykresy)}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/blobs1000_blue.png}
+\caption{Przynależność punktów do klastrów dla danych \blobs{} o rozmiarze 1000.}
+\label{fig:blobs1000-blue}
+\end{figure}
 
 \begin{table}
 \centering
@@ -2551,7 +2572,7 @@ Wnioski dla danych \crescents{} są bardzo podobne do wniosków dla danych \circ
 
 \paragraph{\laguna{}}
 
-Przy łączności \SingleLinkage{} dokładność spada wraz ze wzrostem wartości $\xi$ -- rys. \ref{fig:laguna-complex}. Najszybciej jakość zmniejsza się dla dużej liczebności granul -- 200. Ma to związek z nieprawidłową przynależnością punktów do granul na zewnątrz dwóch wewnętrznych klastrów \todo{? do weryfikacji odpowiednim wykresem}. Tak jak w przypadku innych kształtów danych, najniższe wyniki są uzyskiwane dla relacji wykładniczej.
+Przy łączności \SingleLinkage{} dokładność spada wraz ze wzrostem wartości $\xi$ -- rys. \ref{fig:laguna-complex}. Najszybciej jakość zmniejsza się dla dużej liczebności granul -- 200. Ma to związek z nieprawidłową przynależnością punktów do granul na zewnątrz dwóch wewnętrznych klastrów, jak widać na rys. \ref{fig:laguna40000-blue}. Tak jak w przypadku innych kształtów danych, najniższe wyniki są uzyskiwane dla relacji wykładniczej.
 
 Obliczanie przynależności może też wpływać na wyniki dla \CompleteLinkage{}. Dla tej łączności znowu nie można jasno określić wpływu parametrów na dokładność grupowania, natomiast zauważyć można, że dla większych liczebności granul wyniki są bardziej zróżnicowane, natomiast dla 50 granul są one bliższe średniej. \todo{znowu do weryfikacji}
 
