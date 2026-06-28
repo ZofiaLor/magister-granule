@@ -14,9 +14,14 @@ __pycache__/
 *.log
 *.lot
 *.out
+*.rks
 *.run.xml
 *.synctex.gz
 *.toc
+
+# VSCode
+.vscode/
+*.code-workspace
 
 # C extensions
 *.so
