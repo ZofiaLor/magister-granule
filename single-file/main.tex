@@ -570,26 +570,26 @@ escapeinside={@*}{*@},%
 %\end{itemize}
 
 \ksremark{Co to w ogóle jest grupowanie?}
-Grupowanie danych, nazywane też klasteryzacją, jest powszechnie wykorzystywane do analizy danych. Istnieje wiele rodzajów algorytmów klasteryzacyjnych, między innymi hierarchiczne, gęstościowe, grafowe. Niezależnie od typu, polegają one na łączeniu podobnych do siebie danych w grupy (klastry).
+Grupowanie danych, nazywane też klasteryzacją, jest powszechnie wykorzystywane do analizy danych. Uogólniając, polega ono na znalezieniu takich klas (grup, klastrów) elementów, żeby elementy należące do tej samej klasy były do siebie jak najbardziej podobne według pewnej wybranej metryki, a należące do różnych klas -- niepodobne. Istnieje wiele rodzajów algorytmów klasteryzacyjnych, między innymi hierarchiczne, gęstościowe, grafowe. Wybór algorytmu zależy od charakteru danych, które mają zostać zgrupowane -- na przykład czy dane zawierają zaszumienie albo czy tworzą wyraźnie oddzielone grupy.
 
 \ksremark{tutaj o alg. grupowania hierarchicznego}
 \ksremark{o ich złożoności}
 
-W pracy rozważany będzie algorytm aglomeracyjnego grupowania hierarchicznego. Polega on na iteracyjnym łączeniu najbliższych sobie mniejszych klastrów w większe, aż do uzyskania z góry określonej ich liczby. Złączanie odbywa się na podstawie wybranych metryk odległości klastrów. Problemem tej rodziny algorytmów jest ich wysoka złożoność czasowa w zależności od ilości danych wejściowych -- $O(n^3)$ w implementacji naiwnej, choć istnieją specjalizowane implementacje o lepszych złożonościach.  
+W pracy rozważany będzie algorytm aglomeracyjnego grupowania hierarchicznego. Polega on na iteracyjnym łączeniu najbliższych sobie mniejszych klastrów (gdzie najmniejszym klastrem jest pojedynczy punkt danych) w większe, aż do uzyskania z góry określonej ich liczby. Złączanie odbywa się na podstawie wybranych metryk odległości klastrów. Problemem tej rodziny algorytmów jest ich wysoka złożoność czasowa w zależności od ilości danych wejściowych -- $O(n^3)$ w implementacji naiwnej, choć istnieją specjalizowane implementacje o lepszych złożonościach.  
 
 \ksremark{tutaj o obliczeniach granularnych}
 
-Do ulepszenia takiego algorytmu można wykorzystać obliczenia granularne. Jest to szeroka dziedzina pozwalająca na analizę danych na sposób zbliżony do ludzkiego pojmowania rzeczywistości. Pozwalają na to na przykład zbiory rozmyte, czyli takie zbiory, do których dane mogą należeć w pewnym stopniu i każda dana może należeć do wielu zbiorów jednocześnie. 
+Do ulepszenia takiego algorytmu można wykorzystać obliczenia granularne. Jest to szeroka dziedzina pozwalająca na analizę danych na sposób zbliżony do ludzkiego pojmowania rzeczywistości. Bezpośrednio związanym z nią pojęciem jest ziarno informacyjne -- encja o pewnym znaczeniu, grupa podobnych obiektów. Ziarna mogą być reprezentowane jako na przykład zbiory rozmyte, czyli takie zbiory, do których dane mogą należeć w pewnym stopniu i każda dana może należeć do wielu zbiorów jednocześnie. Szczególnym przypadkiem zbioru rozmytego jest liczba rozmyta, która modeluje daną liczbę ostrą w pewnym przybliżeniu.
 \ksremark{Co to jest ziarno informacyjne?}
 %
-Takie zbiory mogą być uzyskane na przykład jako wynik działania algorytmu rozmytych $c$-średnich, który jest rodzajem algorytmu klasteryzacyjnego. Otrzymane w ten sposób rozmyte klastry mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą. 
+Takie zbiory mogą być uzyskane na przykład jako wynik działania algorytmu rozmytych $c$-średnich, który jest rodzajem algorytmu klasteryzacyjnego. Otrzymane w ten sposób rozmyte klastry mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą, jako że zarówno operacje arytmetyczne, jak i logiczne, muszą uwzględnić rozmycie klastrów. 
 
 %Istotną z punktu widzenia tej pracy kategorią algorytmów grupowania są algorytmy rozmyte, na przykład algorytm rozmytych $c$-średnich. Uzyskiwane za ich pomocą klastry są zbiorami rozmytymi, co oznacza, że dane mogą należeć do wielu grup jednocześnie, w pewnym stopniu. Klastry te mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą. 
 
 Celem niniejszej pracy będzie opracowanie i przebadanie własności granularnego algorytmu aglomeracyjnego grupowania hierarchicznego, który operować będzie na ziarnach informacyjnych uzyskanych w wyniku grupowania danych algorytmem rozmytych $c$-średnich.
 
 \ksremark{Co na tym zyskujemy? Obniżenie złożoności}
-Algorytm ten ma niższą złożoność czasową -- liniową w zależności od liczby danych -- powinien więc przyspieszyć proces grupowania. Jednocześnie zachowana powinna zostać wysoka jakość grupowania.
+Algorytm ten ma niższą złożoność czasową -- liniową w zależności od liczby danych -- powinien więc przyspieszyć proces grupowania. Jako że wprowadzone zostanie rozmycie danych, dopuszczalne jest obniżenie jakości grupowania.
 
 W rozdziale \ref{sec:analiza-tematu} przedstawiono teoretyczną analizę zagadnień związanych z tematem. Omówione są algorytmy grupowania danych, w szczególności algorytm hierarchiczny oraz algorytm rozmytych $c$-średnich. Opisano istotne dla rozwiązania elementy logiki rozmytej, w tym rozszerzalne liczby rozmyte. Rozdział \ref{sec:wlasne-rozwiazanie} zawiera omówienie własnej implementacji rozmytego algorytmu aglomeracyjnego grupowania hierarchicznego i konieczne kroki przygotowujące dane. W rozdziale \ref{sec:badania} analizowane jest działanie tego algorytmu. Przedstawione są wykorzystane dane oraz metodyki badania czasu i jakości grupowania, a następnie w oparciu o nie omawiane są wyniki grupowania.
 
@@ -598,7 +598,7 @@ W rozdziale \ref{sec:analiza-tematu} przedstawiono teoretyczną analizę zagadni
 \chapter{Granularne algorytmy grupowania hierarchicznego}  % Analiza tematu
 \label{sec:analiza-tematu}
 % 
-
+\zlremark{To chyba nie jest dobra nazwa dla tego rozdziału}
  
 
 Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danych. Umożliwiają znalezienie podobieństw między rozpatrywanymi obiektami i sklasyfikowanie ich. Połączenie tych dwóch podejść może wydobyć zalety każdego z nich. 
@@ -801,7 +801,9 @@ Przykład takiego przypisania ilustruje rys. \ref{fig:single-linkage-example}. O
 \label{fig:single-linkage-example}
 \end{figure}
 
-Algorytm ten jest wrażliwy na szumy, dobrze działa dla wyraźnie oddzielonych klastrów.
+Algorytm ten jest wrażliwy na dane odstające, szumy. Pojedynczy punkt znajdujący się w dużej odległości od reszty danych zostanie uznany za osobny klaster. Dodatkowym efektem tego błędnego przypisania będzie złączenie dwóch innych klastrów. \todo{może obrazek}
+
+Algorytm działa dobrze, gdy klastry są wyraźnie oddzielone od siebie. Jeżeli będą zbyt blisko siebie, możliwe jest, że zostaną połączone.
 
 Dla \SingleLinkage{} wykorzystać można szybsze, dedykowane algorytmy, na przykład algorytm minimalnego drzewa rozpinającego (\texttt{MST\_LINKAGE()}) o złożoności $O(n^2)$ \cite{bib:hierarchical-algorithms}.
 
@@ -905,7 +907,7 @@ gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warun
 
 Obliczenia ziarniste (granularne) pozwalają na analizę danych w bardziej zbliżony do ludzkiego sposób zrozumienia. 
 
-Przykładem ilustrującym ideę obliczeń granularnych w jednym wymiarze może być subiektywna ocena temperatur jako ,,zimne'' lub ,,ciepłe''. Temperaturę $10^\circ C$ \ksremark{\SI{10}{\celsius}} trudno jednoznacznie zaklasyfikować do jednej z tych dwóch kategorii, dla niektórych osób będzie ona ,,zimna'', dla niektórych ,,ciepła''. Temperatura $20^\circ C$ dużo bardziej pasuje do kategorii ,,ciepła'' niż ,,zimna'', jednak w mniejszym stopniu, niż $25^\circ C$. Choć w uzyskaniu bardziej szczegółowych informacji może pomóc dodanie większej liczby kategorii, na przykład ,,umiarkowana'' i ,,gorąca'', to nie odzwierciedli ono subiektywnej oceny poszczególnych wartości.
+Przykładem ilustrującym ideę obliczeń granularnych w jednym wymiarze może być subiektywna ocena temperatur jako ,,zimne'' lub ,,ciepłe''. Temperaturę \SI{10}{\celsius} trudno jednoznacznie zaklasyfikować do jednej z tych dwóch kategorii, dla niektórych osób będzie ona ,,zimna'', dla niektórych ,,ciepła''. Temperatura \SI{20}{\celsius} dużo bardziej pasuje do kategorii ,,ciepła'' niż ,,zimna'', jednak w mniejszym stopniu, niż \SI{25}{\celsius}. Choć w uzyskaniu bardziej szczegółowych informacji może pomóc dodanie większej liczby kategorii, na przykład ,,umiarkowana'' i ,,gorąca'', to nie odzwierciedli ono subiektywnej oceny poszczególnych wartości.
 
 \subsection{Ziarna informacyjne}
 \ksremark{Co to jest?}
@@ -2743,12 +2745,32 @@ Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna
 %\item Czy mogę sformułować jakieś rekomendacje?
 %\end{itemize}
 
-\begin{itemize}
-\item syntetyczny opis wykonanych prac
-\item wnioski
-\item możliwość rozwoju, kontynuacji prac, potencjalne nowe kierunki
-\item Czy cel pracy zrealizowany? 
-\end{itemize}
+% \begin{itemize}
+% \item syntetyczny opis wykonanych prac
+% \item wnioski
+% \item możliwość rozwoju, kontynuacji prac, potencjalne nowe kierunki
+% \item Czy cel pracy zrealizowany? 
+% \end{itemize}
+
+W pracy wykorzystano obliczenia granularne do przyspieszenia działania aglomeracyjnego algorytmu hierarchicznego.
+
+Problemem standardowego algorytmu hierarchicznego jest jego wysoka złożoność czasowa -- $O(n^3)$ w zależności od liczby danych, choć dla konkretnych łączności istnieją implementacje o niższych złożonościach. Oznacza to, że algorytm źle nadaje się do grupowania większych ilości danych.
+
+Jako rozwiązanie zaproponowano algorytm \MojAlg{}, który wykorzystuje algorytm rozmytych $c$-średnich o mniejszej -- liniowej -- złożoności czasowej jako etap przygotowawczy przed właściwym grupowaniem hierarchicznym. Algorytm ten grupuje dane w klastry rozmyte, czyli takie, do których każdy punkt należy w pewnym stopniu, określonym jako liczba z przedziału $[0, 1]$.
+
+Drugim etapem algorytmu \MojAlg{} jest przekształcenie wyników tego grupowania w granule, będące wielowymiarowymi liczbami rozmytymi. Liczba rozmyta modeluje pewną ostrą wartość liczbową w jakimś przybliżeniu. Granula reprezentowana jest więc przez swój środek (środek klastra wyznaczonego przez algorytm rozmytych $c$-średnich) i jego otoczenie. Liczba rozmyta, a tym samym granula, której jest wymiarem, może mieć różne kształty, które wpływają na interpretację tej liczby w kontekście porównań. W algorytmie \MojAlg{} wykorzystano trzy kształty granul: trójkątne, wykładnicze i gaussowskie.
+
+Ostatnim etapem jest zastosowanie algorytmu hierarchicznego do zgrupowania granul w celu uzyskania ostatecznych klastrów. Algorytm ten, nazwany \MojHierAlg{}, wykorzystuje ogólną implementację o złożoności $O(n^3)$, dostosowaną do operowania na liczbach rozmytych. Modyfikacje algorytmu w stosunku do standardowej, ostrej wersji, dotyczą operacji arytmetycznych i logicznych. Odległości euklidesowe między granulami również mają postać liczb rozmytych, które są następnie porównywane. Jako że wynikiem porównań liczb rozmytych jest wartość z przedziału $[0, 1]$, wprowadzony został dodatkowy parametr progowy $\xi$, określający, dla jakiej wartości operacja logiczna będzie ewaluowana jako prawda. W \MojHierAlg{} zaimplementowano dwie łączności grupowania hierarchicznego: \SingleLinkage{} oraz \CompleteLinkage{}.
+
+Porównano czas wykonania algorytmu \MojAlg{} z czasem wykonania algorytmu ostrego o analogicznej implementacji do \MojHierAlg{} dla różnych liczebności danych. Odnotowano znaczne zmniejszenie czasu wykonania -- przykładowo, dla liczebności 5000, w zależności od liczby granul algorytm \MojAlg{} wykonywał się 1-4 sekundy, a algorytm ostry -- około 100 sekund. \todo{jak dla dużych liczebności -- gowalla i brightkite?} Udało się więc osiągnąć główny cel pracy -- znacznie zmniejszono czas wykonywania algorytmu hierarchicznego dla dużych liczebności danych.
+
+W projekcie dopuszczono pogorszenie jakości grupowania. Pomiary dokładności, trafności i precyzji algorytmu \MojAlg{} pokazały jednak, że w większości przypadków jego wyniki nie odbiegają od wyników algorytmu ostrego, a nawet mogą być lepsze.
+
+Algorytm badano dla różnych kombinacji parametrów: liczby granul, kształtu granul i parametru progowego $\xi$, dla obydwu zaimplementowanych łączności. Dla wszystkich parametrów, średnie wartości metryk jakości są zbliżone do wyników tych samych metryk dla algorytmu ostrego. Ponadto w większości przypadków można znaleźć taką kombinację tych parametrów, dla których wyniki będą lepsze, niż dla algorytmu ostrego.
+
+Analiza grupowania \MojAlg{} dla danych \brightkite{} i \gowalla{} pokazuje również, że wstępne grupowanie algorytmem rozmytych $c$-średnich pozwala na wyeliminowanie z danych elementów odstających, na które bardzo wrażliwy jest algorytm hierarchiczny. 
+
+Algorytm \MojHierAlg{} może w prosty sposób zostać rozszerzony o inne metryki odległości. Dzięki zastosowaniu ogólnej implementacji, łatwo można też dodać inne opcje łączności, takie jak łączność średnia lub Warda. Ponadto, implementację granul rozszerzyć można o inne kształty.
 
 
 
