@@ -1430,19 +1430,14 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 		\For{$\Punkt \in \wPunkt$}
 		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności}
 		\EndFor
-		\State  \Comment{\ksremark{Poniższy fragment pseudokodu trzeba napisać trochę jaśniej. Zasadniczo wiadomo, o co chodzi.}}
 		\For{$j$ in $1..\nX$}\Comment{scalenie etykiet łączonych wierszy poprzez zamianę etykiet o wartości $k$ na $w$.}
 		\If{$\wEtykieta[j] == k$}
 		\State $\wEtykieta[j] = w$ \Comment{zamiana etykiet}
 		\EndIf
 		\EndFor
 		\EndFor
-        \State \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne liczby naturalne:  \ksremark{przemyśleć pseudokod :-)}}
-		\State $m \gets$ lista unikalnych wartości w $\wEtykieta$
-		\For{$i = 1$ to $\nX$} 
-		\State $\wEtykieta[i] \gets$ indeks $\wEtykieta[i]$ w tablicy $m$ \Comment{mapowanie etykiet na kolejne liczby naturalne} 
-		\EndFor
-		\State \Return $\wEtykieta$
+        \State $\wEtykieta \gets$ \Call{przemianuj}{$\wEtykieta$} \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne liczby od 0. \ksremark{Czy tak jest?}}
+	 	\State \Return $\wEtykieta$
 		\EndProcedure
 	\end{algorithmic}
 \end{algorithm}
@@ -1501,11 +1496,11 @@ Dane te nie posiadają etykiet. W sposób opisany w podsekcji \ref{sec:etykietow
 % czy 2011 to dobra data dla tych stron?
 Wykorzystano również zbiory danych \brightkite\ \cite{bib:brightkite} (4491143 wierszy) oraz \gowalla\ \cite{bib:gowalla} (6442890 wierszy).
 Dane przedstawiają informacje o logowaniach się użytkowników platform społecznościowych.
-Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' -- dwuwymiarowe współrzędne lokalizacji logowań. Dane nie są sklasyfikowane. 
-
+Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' -- dwuwymiarowe współrzędne lokalizacji logowań. Dane nie są etykietowane i nie mają przypisanych klas. 
+%
 Analiza wykresów (rys. \ref{fig:gowalla-brightkite-shapes}) pozwala zauważyć kształty kontynentów -- można uznać je za docelowe klastry. 
-
-Dane zawierają błędne współrzędne. W danych \brightkite{}, kolumna ,,latitude'' (szerokość geograficzna) zawiera wartości z przedziału $[-163,193333, 151,198]$, podczas gdy dopuszczalnym przedziałem jest $[-90, 90]$. Dla danych \gowalla{} przedział ten wynosi $[-90, 405.658498]$. Błędne współrzędne pozostawiono w zbiorze danych.
+%
+Dane zawierają błędne współrzędne. W danych \brightkite{}, kolumna ,,latitude'' (szerokość geograficzna) zawiera wartości z przedziału $[-163.193333, 151.198]$, podczas gdy dopuszczalnym przedziałem jest $[-90, 90]$. Dla danych \gowalla{} przedział ten wynosi $[-90, 405.658498]$. Błędne współrzędne pozostawiono w zbiorze danych.
 
 \begin{figure}
 \centering
@@ -1537,23 +1532,23 @@ Dane zawierają błędne współrzędne. W danych \brightkite{}, kolumna ,,latit
 
 \section{Metodyka badań}
 
-Algorytm \MojAlg{} zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami ostrego algorytmu aglomeracyjnego grupowania hierarchicznego \SingleLinkage{} i \CompleteLinkage{}.
+Algorytm \MojAlg{} (\ksremark{Tutaj odnośnik do podrozdziału, gdzie mamy opisany alg. \MojAlg.}) zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami ostrego algorytmu aglomeracyjnego grupowania hierarchicznego \SingleLinkage{} i \CompleteLinkage{}.
 
 \subsection{Czas grupowania}
 
-Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od ilości danych, przygotowano dane o rozmiarach 500-10000 z krokiem 500.
+Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od ilości \ksremark{liczby} danych, przygotowano dane o rozmiarach 500-10000 z krokiem 500.
 W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 10000. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
 
 Przyjęto też stałą maksymalną liczbę 80 iteracji algorytmu rozmytych $c$-średnich. Sekcja \ref{sec:wyniki-jakosc} pokazuje, że jest to wystarczająca wartość. Złożoność algorytmu jest liniowa w zależności od liczby iteracji \cite{bib:fcm-kmeans-comparison}.
 
-Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej.
+Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej \ksremark{Tutaj trzeba jeszcze krótko napisać, dlaczego jest własna implementacja.}. 
 W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu rozmytych $c$-średnich, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
 
-Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtórzono czterokrotnie i obliczono średnią arytmetyczną wyników.
+Pomiary dla każdego wariantu algorytmu oraz rozmiaru i kształtu danych powtórzono czterokrotnie \ksremark{Trzeba uzasadnić, dlaczego tyle.} i obliczono średnią arytmetyczną wyników.
 
 \subsection{Jakość grupowania}
 
-Jakość zmierzono poprzez porówanie wyników algorytmu \MojAlg{} z oczekiwanymi przynależnościami punktów do klastrów, oznaczonymi etykietami.
+Jakość zmierzono poprzez porówanie wyników algorytmu \MojAlg{} z oczekiwanymi przynależnościami punktów do klastrów, oznaczonymi etykietami. \ksremark{Z jakich miar tutaj korzystamy?}
 
 Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych łączności (\SingleLinkage{}, \CompleteLinkage{}), liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi \in \{ 0.05, 0.10, 0.15, \ldots, 0.95 \}$. 
 
@@ -1572,16 +1567,16 @@ Oznaczanie etykiet dla danych dwuwymiarowych wykorzystuje widżet \texttt{LassoS
 
 Każdemu punktowi domyślnie przypisano etykietę 0. Po zaznaczeniu zbioru punktów na wykresie, naciśnięcie klawisza cyfry na klawiaturze powoduje przypisanie tym punktom etykiety o danym numerze i wyświetlenie w konsoli informacji, ilu punktom ją przypisano. Proces można powtarzać dowolną ilość razy, można go zakończyć poprzez naciśnięcie klawisza ENTER i zamknięcie wykresu.
 
-W celu ostatecznej weryfikacji pojawia się drugi wykres, na którym każdej etykiecie odpowiada inny kolor. Po zamknięciu tego wykresu, plik z etykietami jest zapisywany w folderze \texttt{dane\_labelled}. Plik ma format zgodny z oryginalnym plikiem z danymi (każdy wiersz to oddzielone znakami tabulacji współrzędne jednego punktu), z dodaną dodatkową kolumną z etykietami punktów.
+W celu ostatecznej weryfikacji pojawia się drugi wykres, na którym każdej etykiecie odpowiada inny kolor. Po zamknięciu tego wykresu, plik z etykietami jest zapisywany w folderze \texttt{dane\_labelled}. Plik ma format zgodny z oryginalnym plikiem z danymi (każdy wiersz to oddzielone znakami tabulacji współrzędne jednego punktu), z dodaną dodatkową kolumną z etykietami punktów. \ksremark{To się nie dzieje automatycznie?}
 
 \paragraph{Dane trójwymiarowe}
 
-W przypadku danych trójwymiarowych skorzystano z faktu, że jedyne dane wykorzystywane w pracy, dla których należy znaleźć etykiety, to dane \spheres{}. Punkty otrzymane z tych danych tworzą dwie sfery: mniejsza, wewnętrzna sfera jest zamknięta w sześcianie o wymiarach $1 \times 1 \times 1$ jednostek, a punkty drugiej, większej sfery znajdują się poza tym sześcianem. Wszystkim punktom, których wszystkie współrzędne mają wartości $\le 1$ przypisano etykietę 1, pozostałym -- 0. Dane z etykietami zostały zapisane w folderze \texttt{dane\_labelled}, w takim samym formacie, jak dane dwuwymiarowe.
+W przypadku danych trójwymiarowych skorzystano z faktu, że jedyne dane wykorzystywane w pracy, dla których należy znaleźć etykiety, to dane \spheres{}. Punkty otrzymane z tych danych tworzą dwie sfery: mniejsza, wewnętrzna sfera jest zamknięta w sześcianie o wymiarach $1 \times 1 \times 1$ jednostek, a punkty drugiej, większej sfery znajdują się poza tym sześcianem. Wszystkim punktom, których wszystkie współrzędne mają wartości $\le 1$ \ksremark{słownie: mniejsze lub równe} przypisano etykietę 1, pozostałym -- 0. Dane z etykietami zostały zapisane w folderze \url{dane_labelled}, w takim samym formacie, jak dane dwuwymiarowe.
 
 \paragraph{Wyniki etykietowania}
 \label{sec:wyniki-etykietowania}
 
-Na wykresie \ref{fig:data-shapes-labels} przedstawiono wyniki etykietowania danych. Punkty oznaczone tym samym kolorem posiadają te same etykiety.
+Na wykresie \ref{fig:data-shapes-labels} przedstawiono wyniki etykietowania danych. Punkty oznaczone tym samym kolorem mają te same etykiety.
 
 W przypadku danych \laguna{} o liczebności 20000 i większej, dwa środkowe klastry przestają być wyraźnie oddzielone od siebie (rys. \ref{fig:laguna20000-labels}). Liczebności tych klastrów po podziale ich narzędziem \texttt{LassoSelector} nie są równe, jak w przypadku mniejszych zbiorów o tym samym kształcie -- różnice wynoszą nie więcej niż 18 punktów. Przy tak dużych zbiorach danych wpływ pojedynczych punktów jest marginalny, należy jednak uwzględnić tę niepewność w analizie wyników jakości grupowania.
 
@@ -1601,23 +1596,25 @@ W przypadku danych \laguna{} o liczebności 20000 i większej, dwa środkowe kla
 
 \subsubsection{Miara jakości}
 
-Wybranymi miarami jakości grupowania są dokładność, trafność i precyzja.
+Wybranymi miarami jakości grupowania są dokładność, trafność i precyzja.\ksremark{Tu podamy wzory.}
 
-Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Na potrzeby porównania konieczne jest określenie, do której granuli należy każdy punkt. Przynależność tą wyznaczano na dwa sposoby:
+Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Na potrzeby porównania konieczne jest określenie, do której granuli należy każdy punkt. Przynależność tą wyznaczano na dwa sposoby na podstawie
+(1)  macierzy przynależności \ksremark{do granuli?} $\mClusterMembership$ i 
+(2)  wartości relacji $\tnorm$-podobieństwa $\nPodobienstwo$.
 
-\paragraph{Na podstawie macierzy $\mClusterMembership$}
+Pierwsze podejście 
+%\paragraph{Na podstawie macierzy $\mClusterMembership$}
+dla każdego punktu $i$, znajduje granulę, dla której wartość odpowiedniego wiersza w macierzy przynależności $\wClusterMembership_i$ jest maksymalna.
 
-Dla każdego punktu $i$, znajdowana jest granula, dla której wartość odpowiedniego wiersza w macierzy przynależności $\wClusterMembership_i$ jest maksymalna.
-
-\paragraph{Na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$}
-
-Działanie tej metody przedstawia pseudokod \ref{alg:similarity_membership}.
-
-Dla każdego punktu $i$, przynależność do granuli $j$ obliczana na podstawie wartości operacji $=_\nPodobienstwo$ (wzór \ref{eq:fuzzy-equality}) dla każdego wymiaru punktu i granuli. Operacja ta jest zależna od kształtu granul, dla liczb trójkątnych, wykładniczych i gaussowskich należy wykorzystać odpowiednio wzory \ref{eq:similarity_t}, \ref{eq:similarity_e} lub \ref{eq:similarity_g} uwzględniając, że dla liczby ostrej (współrzędnej oryginalnego punktu) $p = 0$. 
+Drugie podejście
+%\paragraph{Na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$}
+%Działanie tej metody 
+przedstawia pseudokod \ref{alg:similarity_membership}.
+Dla każdego punktu $i$, przynależność do granuli $j$ obliczana na podstawie wartości operacji $=_\nPodobienstwo$ (wzór \ref{eq:fuzzy-equality}) dla każdego wymiaru punktu i granuli. Operacja ta jest zależna od kształtu granul, dla liczb trójkątnych, wykładniczych i gaussowskich należy wykorzystać odpowiednio wzory \ref{eq:similarity_t}, \ref{eq:similarity_e} lub \ref{eq:similarity_g} uwzględniając, że dla liczby ostrej (współrzędnej oryginalnego punktu) $p = 0$ \ksremark{Czy możemy to zrobić dla gaussa?}. 
 
 Wyniki dla każdej współrzędnej łączone są t-normą algebraiczną (wzór \ref{eq:algebraic-norms}). Wreszcie określa się, że punkt należy do tej granuli, dla której wynik tego złączenia jest maksymalny.
 
-Należy uwzględnić, że rozszerzalne liczby rozmyte trójkątne posiadają skończony nośnik. Oznacza to, że punkt może nie należeć do żadnej granuli -- dla każdej z nich przynależność będzie zerowa. Punkt taki uznawany jest za szum i nie bierze udziału w wyznaczaniu wartości dokładności, trafności i precyzji, jednak odsetek punktów stanowiących szum jest w tym przypadku dodatkową miarą jakości.
+Należy uwzględnić, że rozszerzalne liczby rozmyte trójkątne posiadają \ksremark{mają} skończony nośnik. Oznacza to, że punkt może nie należeć do żadnej granuli -- dla każdej z nich przynależność będzie zerowa. Punkt taki uznawany jest za szum i nie bierze udziału w wyznaczaniu wartości dokładności, trafności i precyzji, jednak odsetek punktów stanowiących szum jest w tym przypadku dodatkową miarą jakości.
 
 Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów do granul, dla czytelności wykresów wyznaczono jedynie 10 granul. Wykresy dla liczb wykładniczych i gaussowskich są bardzo podobne, ponadto wszystkie punkty są przypisane do granuli. W przypadku liczb trójkątnych, duża część punktów stanowi szum.
 
@@ -1630,7 +1627,7 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 		\Require $\wEtykieta_{\Granula}$: wektor o długości $\nGranula$ etykiet wyznaczonych dla wszystkich granul
 		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
 		\Procedure{CalculateSimilarityMembership}{$\zX, \zGranula, \wEtykieta, r$}
-		\State $\wEtykieta_{\X} \gets []$ \Comment{etykiety punktów}
+		\State $\wEtykieta_{\X} \gets \varnothing$ \Comment{etykiety punktów}
 		\State $szum \gets 0$ \Comment{liczba punktów nieprzynależących do żadnej granuli}
 		\For{$\X$ in $\nX$}
 		\State $\Etykieta \gets 0$
@@ -1638,7 +1635,7 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 		\For{$i=1$ to $\nGranula$}
 		\State $\ClusterMembership \gets (\zGranula[i][1] =_{\nPodobienstwo} \X[1])$
 		\For{$j=2$ to liczba wymiarów $\X$}
-		\State $\ClusterMembership \gets \ClusterMembership \tnorm (\zGranula[i][j] =_{\nPodobienstwo} \X[j])$ \Comment{$\tnorm$: t-norma algebraiczna}
+		\State $\ClusterMembership \gets \ClusterMembership \tnorm (\zGranula[i][j] =_{\nPodobienstwo} \X[j])$ \Comment{$\tnorm$: t-norma}
 		\EndFor
 		\If{$\ClusterMembership > \ClusterMembership_{max}$}
 		\State $\ClusterMembership_{max} \gets \ClusterMembership$
@@ -1717,9 +1714,9 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 
 Wyznaczono macierz $\mConfusionMatrix$, w której wartość elementu $\ConfusionMatrix_{ij}$ jest równa liczbie punktów, dla których oczekiwana etykieta ma wartość $i$ i przynależących do klastra $j$ wyznaczonego przez algorytm \MojAlg{}:
 \begin{align}
-\ConfusionMatrix_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j]
+\ConfusionMatrix_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j].
 \end{align}
-
+%
 Sposób wyznaczenia tej macierzy przedstawiono również na pseudokodzie \ref{alg:calc_l_matrix}.
 
 Numeracja klastrów wyznaczonych przez algorytm \MojAlg{} może być inna od oczekiwanych etykiet ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na pseudokodzie \ref{alg:perm_l_matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $\mConfusionMatrix$, która maksymalizuje wartości na przekątnej. 
@@ -1738,10 +1735,12 @@ Trafność ($\recall$) i precyzja ($\precision$) wyznaczane są najpierw osobno 
 %
 \begin{align}
 	\recall_{\klaster} = \frac{\ConfusionMatrix_{\klaster\klaster}}{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{\klaster i}},
+	\label{eq:recall}
 \end{align}
 %
 \begin{align}
 	\precision_{\klaster} = \frac{\ConfusionMatrix_{\klaster\klaster}}{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{i \klaster}}.
+	\label{eq:precision}
 \end{align}
 %
 Trafność i precyzja dla całości wyników otrzymywane są jako średnia arytmetyczna metryk częściowych:
@@ -1766,7 +1765,7 @@ Sposób obliczenia metryk jakości przedstawia również pseudokod \ref{alg:calc
 		\State $diag \gets 0$ \Comment{Suma wartości na przekątnej macierzy $\mConfusionMatrix$}
 		\State $\recall \gets 0$
 		\State $\precision \gets 0$
-		\State $mian\_\recall \gets $ sumy wartości dla każdego wiersza macierzy $\mConfusionMatrix$
+		\State $mian\_\recall \gets $ sumy wartości dla każdego wiersza macierzy $\mConfusionMatrix$ \Comment{Skoro to sumy, to może zmienna mogłaby się nazywać coś w stylu suma itd?}
 		\State $mian\_\precision \gets $ sumy wartości dla każdej kolumny macierzy $\mConfusionMatrix$
 		\For{$i = 1$ to $\nKlaster$}
 		\State $diag \gets diag + \mConfusionMatrix[i, i]$
@@ -1792,6 +1791,7 @@ Jeżeli dane zawierają szum, może on być interpretowany na dwa sposoby w kont
 	\item Szum uznawany jest za błędną klasyfikację. Aby skorygować wartość metryki o szum, należy pomnożyć ją przez odsetek punktów niebędących szumem w stosunku do całości danych. Na przykład, jeżeli początkowa wartość metryki wynosi $80\%$, a $40\%$ danych stanowi szum, to ostateczna wartość tej metryki będzie równa $80\% * (100\% - 40\%) = 48\%$.
 \end{enumerate}
 
+\ksremark{dotąd}
 \section{Wyniki}
 
 \subsection{Czas grupowania}
