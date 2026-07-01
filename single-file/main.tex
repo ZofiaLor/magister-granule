@@ -1791,7 +1791,7 @@ Jeżeli dane zawierają szum, może on być interpretowany na dwa sposoby w kont
 	\item Szum uznawany jest za błędną klasyfikację. Aby skorygować wartość metryki o szum, należy pomnożyć ją przez odsetek punktów niebędących szumem w stosunku do całości danych. Na przykład, jeżeli początkowa wartość metryki wynosi $80\%$, a $40\%$ danych stanowi szum, to ostateczna wartość tej metryki będzie równa $80\% * (100\% - 40\%) = 48\%$.
 \end{enumerate}
 
-\ksremark{dotąd}
+ 
 \section{Wyniki}
 
 \subsection{Czas grupowania}
@@ -1808,19 +1808,20 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 \ksremark{Rys. \ref{fig:circles-times}: Opis wykresów musi być po polsku.}
 
 
-Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba jest stała.
-Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(n)$, więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych.
+Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$ \ksremark{$O(\nX^{3})$}, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba \ksremark{$\nGranula$} jest stała 
+\ksremark{i zdecydowanie mniejsza od liczby danych $\nGranula \ll \nX$. }.
+Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(n)$ \ksremark{$O(\nX)$}, więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych.
 
 \subsection{Jakość grupowania}
 \label{sec:wyniki-jakosc}
 
 Na wykresach wyników grupowania hierarchicznego metodą rozmytą punkty szare odpowiadają współrzędnym oryginalnych danych. Wyjątkiem są wykresy danych \spheres, gdzie oryginalne punkty pominięto, aby zachować czytelność wykresu. Punkty kolorowe odpowiadają środkom granul, gdzie środki o tym samym kolorze należą do tego samego klastra. 
-Elipsy (elipsoidy dla \spheres) w kolorze magenta wizualizują rozmycie granul, gdzie długość każdej półosi jest równa dwukrotności rozmycia w danym wymiarze. Mnożnik ten został wybrany ze względu na dobrą czytelność wynikowych wykresów.
+Elipsy (elipsoidy dla \spheres) w kolorze magenta \ksremark{fioletowym} wizualizują rozmycie granul, gdzie długość każdej półosi jest równa dwukrotności rozmycia w danym wymiarze. Mnożnik ten został wybrany ze względu na dobrą czytelność wynikowych wykresów.
 
 \subsubsection{Dane generowane}
 \label{sec:wyniki-jakosc-generowane}
 
-Oprócz niezależnych procentowych średnich wartości metryk dokładności, trafności i precyzji istotne jest, jakie są wyniki działania \MojAlg{} w porównaniu z algorytmem ostrym. W tym celu wykorzystano algorytm \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} aby zgrupować dane oryginalne, a także środki klastrów (w liczebnościach 50, 100, 200) wyznaczonych przez algorytm rozmytych $c$-średnich, bez uwzględnienia rozmycia, czyli macierzy $\mClusterMembership$.
+Oprócz niezależnych procentowych średnich wartości metryk dokładności, trafności i precyzji istotne jest, jakie są wyniki działania \MojAlg{} w porównaniu z algorytmem ostrym. W tym celu wykorzystano algorytm \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} aby zgrupować dane oryginalne \ksremark{Metodykę badań opiszemy wcześniej. Tu omawiamy wyniki.}, a także środki klastrów (w liczebnościach 50, 100, 200) wyznaczonych przez algorytm rozmytych $c$-średnich, bez uwzględnienia rozmycia, czyli macierzy $\mClusterMembership$.
 
 Do wyznaczenia metryk jakości dla tych badań, również wykorzystano algorytmy \ref{alg:calc_l_matrix}, \ref{alg:perm_l_matrix} oraz \ref{alg:calc_quality}. W przypadku oryginalnych danych, wejściem algorytmu \ref{alg:calc_l_matrix} były etykiety wyznaczone przez algorytm \texttt{AgglomerativeClustering}. Dla środków klastrów algorytmu rozmytych $c$-średnich, najpierw wyznaczono przynależności punktów do tych klastrów na podstawie macierzy $\mClusterMembership$ (tak samo jak dla \MojAlg{}).
 
@@ -1954,7 +1955,7 @@ W przypadku \SingleLinkage{}, najlepszą średnią dokładność, trafność i p
 
 Co istotne, dla większości plików wejściowych, za wyjątkiem niektórych danych \blobs{} i \laguna{}, maksymalne wartości wszystkich metryk jakości wynosi 100\%. Oznacza to, że istnieje przynajmniej jedna taka kombinacja parametrów (typu relacji, liczby granul, parametru $\xi$), dla których grupowanie przebiega w pełni zgodnie z oczekiwaniami.
 
-Wyniki przeanalizowano również na podstawie wykresów.
+%Wyniki przeanalizowano również na podstawie wykresów.
 
 
 \begin{table}
@@ -2018,7 +2019,7 @@ Wyniki przeanalizowano również na podstawie wykresów.
 \end{table}  
 
 Wykresy wyników grupowania danych \blobs\  (rys. \ref{fig:blobs1000e}) pokazują, że wysoka dokładność uzyskana dla nich z macierzy pomyłek nie przekłada się na zgodność wyników z oczekiwaniami.
-Ze względu na dużą dysproporcję danych pomiędzy trzema klastrami (48:1:1), algorytm rozmytych $c$-średnich często traktuje dwa mniejsze z nich jako szum i nie tworzy dla nich granul. Zawierają one jednak jedynie 4\% danych, dlatego dokładność grupowania pozostaje wysoka. 
+Ze względu na dużą dysproporcję danych pomiędzy trzema klastrami ($48:1:1$), algorytm rozmytych $c$-średnich często traktuje dwa mniejsze z nich jako szum i nie tworzy dla nich granul. Zawierają one jednak jedynie 4\% danych, dlatego dokładność grupowania pozostaje wysoka. 
 Trafność i precyzja lepiej odzwierciedlają zgodność z oczekiwaniami -- są znacznie niższe od dokładności. Mniejsze klastry mają tę samą wagę, co większy klaster, dlatego niepoprawne grupowania wyraźnie wpływają na wartość metryki.
 Jako że błędy wynikają z klasteryzacji FCM, wyniki uzyskane dla grupowania samych środków granul są bardzo zbliżone do uzyskanych przy pomocy \MojAlg{}.
 
@@ -2046,7 +2047,7 @@ Jak pokazuje tabela \ref{id:tab:blobs-max-quality}, dla niektórych liczebności
 \end{tabular}
 \end{table}  
 
-Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($0.9, 0.95$). W znacznej większości przypadków, dokładność grupowania wynosi 100\%, tak jak dla grupowania ostrego. Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs\, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
+Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($0.9, 0.95$) \ksremark{$\xi \in \{0.9, 0.95\}$}. W znacznej większości przypadków, dokładność grupowania wynosi 100\%, tak jak dla grupowania ostrego. Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs\, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
 
 Klastry dla danych \corners\  mają nierównomierną gęstość, przez co algorytm rozmytych $c$-średnich tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000g}).
 Odległości między granulami położonymi na ,,ramionach'' i w ,,środkach'' klastrów są na tyle duże, że rozmyte odległości ,,środków'' różnych klastrów mogą być od nich mniejsze. Algorytm \MojAlg{} osiąga więc średnio gorsze wyniki niż algorytm ostry, choć wiele kombinacji parametrów pozwala na uzyskanie 100-procentowej dokładności.
@@ -2058,7 +2059,7 @@ Dla danych \laguna\, błędy mogą pojawić się, gdy pojedyncze granule utworzo
 
 Powyżej liczebności 20000 punktów włącznie, dokładność nigdy nie osiąga 100\% (tab. \ref{id:tab:laguna-max-quality}), jednak najczęściej wynosi powyżej 99.9\%. Jak zaznaczono w sekcji dotyczącej etykietowania danych (sekcja \ref{sec:wyniki-etykietowania}), środkowe klastry są na tyle zbliżone do siebie, że na podstawie wykresu nie można definitywnie określić, które punkty pomiędzy nimi należą do którego z nich. Pojedyncze punkty mogą więc być klasyfikowane niepoprawnie z punktu widzenia przypisanych do nich etykiet. 
 
-Ilustrują to wykresy \ref{fig:laguna1000-blue} oraz \ref{fig:laguna40000-blue}. Wykresy tworzone są na podstawie sumarycznej przynależności punktów do granul z danego klastra. Dla każdego wykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} * \{ \Granula \in \Klaster \}$. Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie. \zlremark{Czy to dobre miejsce na wyjaśnienie, jak tworzymy te wykresy?}
+Ilustrują to wykresy \ref{fig:laguna1000-blue} oraz \ref{fig:laguna40000-blue}. Wykresy tworzone są na podstawie sumarycznej przynależności punktów do granul z danego klastra. Dla każdego wykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} * \{ \Granula \in \Klaster \}$ \ksremark{Nie rozumiem tego zapisu.}. Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie. \zlremark{Czy to dobre miejsce na wyjaśnienie, jak tworzymy te wykresy?}
 
 Na rys. \ref{fig:laguna1000-blue} punktów jest jedynie 1000 i wszystkie klastry są wyraźnie oddzielone od siebie. Każdy punkt wyraźnie należy do granul jednego klastra. Na rys. \ref{fig:laguna40000-blue} punktów jest 40000. Klastry środkowe (o numerach 1 i 2) pokrywają się w pobliżu współrzędnych (0, 0). Punkty w bliskim otoczeniu tych współrzędnych przynależą więc w podobnym stopniu do klastra 1 i klastra 2. Ponadto, punkty położone na zewnątrz klastrów 1 i 2 są położone blisko otaczającego je okręgu, oznaczonego jako klaster 0. Można zauważyć ich wysoki stopień przynależności do tego klastra.
 
@@ -2676,6 +2677,9 @@ Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna
 	\label{fig:gowalla-strict-fuzzy}
 \end{figure}
 
+
+\ksremark{Trochę mnie niepokoi ten rozdział. Jest dużo tekstu, ale trochę mi brakuje takiego syntetycznego podejścia. }
+
 %
 % 
 %
@@ -2790,6 +2794,8 @@ Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna
 % \item możliwość rozwoju, kontynuacji prac, potencjalne nowe kierunki
 % \item Czy cel pracy zrealizowany? 
 % \end{itemize}
+
+\ksremark{Hmmm, napisałem uwagi do podsumowania, ale ich teraz nie ma …}
 
 W pracy wykorzystano obliczenia granularne do przyspieszenia działania aglomeracyjnego algorytmu hierarchicznego.
 
