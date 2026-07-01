@@ -1817,7 +1817,7 @@ Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(n)$ \ksremark{
 Na wykresach wyników grupowania hierarchicznego metodą rozmytą punkty szare odpowiadają współrzędnym oryginalnych danych. Wyjątkiem są wykresy danych \spheres, gdzie oryginalne punkty pominięto, aby zachować czytelność wykresu. Punkty kolorowe odpowiadają środkom granul, gdzie środki o tym samym kolorze należą do tego samego klastra. 
 Elipsy (elipsoidy dla \spheres) w kolorze magenta \ksremark{fioletowym} wizualizują rozmycie granul, gdzie długość każdej półosi jest równa dwukrotności rozmycia w danym wymiarze. Mnożnik ten został wybrany ze względu na dobrą czytelność wynikowych wykresów.
 
-\subsubsection{Dane generowane}
+\subsubsection{Dane syntetyczne}
 \label{sec:wyniki-jakosc-generowane}
 
 Oprócz niezależnych procentowych średnich wartości metryk dokładności, trafności i precyzji istotne jest, jakie są wyniki działania \MojAlg{} w porównaniu z algorytmem ostrym. W tym celu wykorzystano algorytm \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} aby zgrupować dane oryginalne \ksremark{Metodykę badań opiszemy wcześniej. Tu omawiamy wyniki.}, a także środki klastrów (w liczebnościach 50, 100, 200) wyznaczonych przez algorytm rozmytych $c$-średnich, bez uwzględnienia rozmycia, czyli macierzy $\mClusterMembership$.
@@ -1947,7 +1947,7 @@ Wyniki dokładności, trafności i precyzji przedstawiają odpowienio tabele \re
 \end{tabular}
 \end{table}  
 
-\paragraph{Zależność od kształtu danych}
+\paragraph{Kształt danych}
 
 Średnią dokładność grupowania danych w zależności od ich kształtu dla łączności \SingleLinkage{} i \CompleteLinkage{} przedstawiono w tabeli \ref{id:tab:acc-ksztalt}, trafność -- w tabeli \ref{id:tab:rec-ksztalt}, a precyzję -- w tabeli \ref{id:tab:prec-ksztalt}.
 
@@ -2267,8 +2267,10 @@ Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone
 \end{tabular}
 \end{table}
 
+\subparagraph{Podsumowanie}
+\ksremark{todo}
 
-\paragraph{Zależność od liczby granul}
+\paragraph{Liczba ziaren}
 
 Średnią dokładność, trafność i precyzję grupowania danych w zależności od liczby granul przedstawiono odpowiednio w tabelach \ref{id:tab:acc-gn}, \ref{id:tab:rec-gn} i \ref{id:tab:prec-gn}. W przypadku łączności \SingleLinkage{} najlepsze wyniki osiągane są dla 100 granul, a dla \CompleteLinkage{} -- dla 50.
 
@@ -2334,7 +2336,9 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 \end{tabular}
 \end{table} 
 
-\paragraph{Zależność od typu relacji}
+\subparagraph{Podsumowanie}
+\ksremark{todo}
+\paragraph{Typu liczb rozmytych}
 
 Średnią dokładność grupowania danych w zależności od typu relacji między granulami dla różnych łączności przedstawiono w tabeli \ref{id:tab:acc-rt}, trafność -- w tabeli \ref{id:tab:rec-rt}, a precyzję -- w tabeli \ref{id:tab:prec-rt}.
 Wyniki w zależności od typu relacji są zbliżone, jednak najlepszą dokładność, trafność i precyzję odnotowano dla relacji trójkątnej i łączności \SingleLinkage{}. Wiąże się to ze skończonym nośnikiem liczb rozmytych.
@@ -2453,7 +2457,9 @@ W przypadku relacji trójkątnej, szum stanowi przeciętnie około 47\% danych -
 \end{tabular}
 \end{table} 
 
-\paragraph{Zależność od parametru $\xi$}
+\subparagraph{Podsumowanie}
+\ksremark{todo}
+\paragraph{Parametr $\xi$}
 
 Średnią dokładność, trafność i precyzję grupowania danych w zależności od parametru $\xi$ przedstawiono na rys. \ref{fig:xi-acc}.
 
@@ -2493,13 +2499,15 @@ Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyni
 	\label{fig:xi-acc}
 \end{figure}
 
-\paragraph{Zależność od kombinacji parametrów}
+\subparagraph{Podsumowanie}
+\ksremark{todo}
+\paragraph{Kombinacja parametrów}
 
 Wyniki pomiarów przeanalizowano też biorąc pod uwagę złożenie wpływu różnych parametrów -- kształtu, liczby granul, typu relacji, parametru $\xi$ -- przy ich uśrednieniu dla wszystkich liczebności danych oryginalnych.
 
 W tej sekcji zamieszczono wykresy złożonych zależności dla miary dokładności. W większości przypadków, trafność i precyzja posiadają na tyle podobne zależności, że nie jest konieczne dodatkowe opisywanie ich -- wnioski byłyby identyczne. Wszystkie wykresy zamieszczono w katalogu \todo{ścieżka do folderu, opis co oznaczają nazwy}.
 
-\paragraph{\blobs{}}
+\subparagraph{\blobs{}}
 
 Jak pokazuje rys. \ref{fig:blobs-complex}, dla dokładności grupowania danych \blobs{} zdecydowanie największe znaczenie ma liczba granul. Najlepsze wyniki -- około 100\% niezależnie od innych parametrów -- uzyskiwane są dla 50 granul. Dla takiej liczebności algorytm rozmytych $c$-średnich zazwyczaj tworzył granule we wszystkich trzech oczekiwanych klastrach.
 
@@ -2523,7 +2531,7 @@ Jeżeli granule znalezione przez algorytm rozmytych $c$-średnich znajdą się w
 	\label{fig:blobs-complex}
 \end{figure}
 
-\paragraph{\circles{}}
+\subparagraph{\circles{}}
 
 Wykresy dla danych \circles{} (rys. \ref{fig:circles-complex}) uwydatniają wpływ łączności na jakość grupowania.
 
@@ -2547,7 +2555,7 @@ Algorytm dla łączności \CompleteLinkage{} nie odnajduje poprawnie klastrów, 
 	\label{fig:circles-complex}
 \end{figure}
 
-\paragraph{\corners{}}
+\subparagraph{\corners{}}
 
 Podobnie jak w przypadku \circles{}, grupowanie danych \corners{} przy łączności \CompleteLinkage{} nie zwraca poprawnych wyników. Rys. \ref{fig:corners-complex} pokazuje, że przez to pozostałe parametry nie mają zauważalnego wpływu na jakość grupowania.
 
@@ -2569,7 +2577,7 @@ Dla łączności \SingleLinkage{} największe znaczenie ma parametr $\xi$. Dokł
 	\label{fig:corners-complex}
 \end{figure}
 
-\paragraph{\crescents{}}
+\subparagraph{\crescents{}}
 
 Wnioski dla danych \crescents{} są bardzo podobne do wniosków dla danych \circles{}. Jak pokazuje rys. \ref{fig:crescents-complex}, dla łączności \SingleLinkage{} średnia dokładność spada poniżej 100\% dopiero dla wysokich ($\ge 0.9$) wartości $\xi$, najbardziej dla relacji wykładniczej. W przypadku \CompleteLinkage{}, również można zauważyć spadek dokładności dla tej relacji i wysokiego $\xi$, jednak nie ma jasnego wpływu badanych parametrów na jakość grupowania.
 
@@ -2589,7 +2597,7 @@ Wnioski dla danych \crescents{} są bardzo podobne do wniosków dla danych \circ
 	\label{fig:crescents-complex}
 \end{figure}
 
-\paragraph{\laguna{}}
+\subparagraph{\laguna{}}
 
 Przy łączności \SingleLinkage{} dokładność spada wraz ze wzrostem wartości $\xi$ -- rys. \ref{fig:laguna-complex}. Najszybciej jakość zmniejsza się dla dużej liczebności granul -- 200. Ma to związek z nieprawidłową przynależnością punktów do granul na zewnątrz dwóch wewnętrznych klastrów, jak widać na rys. \ref{fig:laguna40000-blue}. Tak jak w przypadku innych kształtów danych, najniższe wyniki są uzyskiwane dla relacji wykładniczej.
 
@@ -2611,7 +2619,7 @@ Obliczanie przynależności może też wpływać na wyniki dla \CompleteLinkage{
 	\label{fig:laguna-complex}
 \end{figure}
 
-\paragraph{\spheres{}}
+\subparagraph{\spheres{}}
 
 Wyniki dla danych \spheres{} (rys. \ref{fig:spheres-complex}) przedstawiają inne zależności od wcześniej opisanych danych. 
 
@@ -2635,7 +2643,9 @@ Dla \CompleteLinkage{} można zauważyć wzrost średniej dokładności grupowan
 	\label{fig:spheres-complex}
 \end{figure}
 
-\subsubsection{Dane Brightkite i Gowalla}
+\subparagraph{Podsumowanie}
+\ksremark{todo}
+\subsubsection{Dane \brightkite{} i \gowalla}
 
 Ze względu na brak etykiet danych \brightkite{} i \gowalla{} \todo{czy na pewno nie da się ich oetykietować}, jakość grupowania można ocenić wizualnie, na podstawie wykresów -- odpowiednio rys. \ref{fig:brightkite-strict-fuzzy} i \ref{fig:gowalla-strict-fuzzy}.
 
