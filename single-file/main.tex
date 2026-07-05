@@ -1451,30 +1451,6 @@ Pozostałymi wykorzystanymi w projekcie bibliotekami są: \texttt{matplotlib} (w
 \chapter{Badania}
 \label{sec:badania}
 
-%Co już przeanalizowano
-%\begin{itemize}
-%\item Porównanie czasu wykonania grupowania oryginalnych danych oraz danych zgranulowanych (tylko dane o rozmiarze 1000, 2000 i 5000). Wynik: znaczne przyspieszenie grupowania przy zastosowaniu granulacji (złożoność grupowania hierarchicznego to $O(n^3)$, złożoność algorytmu fuzzy C-means to $O(n)$).
-%\item Wyznaczenie dokładności (accuracy) grupowania danych rozmytych poprzez utworzenie macierzy pomyłek. Wynik: dokładność jest gorsza, niż w przypadku danych oryginalnych. Zależność dokładności od:
-%	\begin{itemize}
-%	\item Kształtu zbioru danych (blobs, corners itd.): Algorytm (nasz) działa najlepiej, gdy docelowe klastry mają zbliżoną liczebność i równomierną gęstość. 
-%	Klastry w danych blobs1000 posiadają liczebność 960, 20, 20 (większe zbiory danych blobs zachowują tę proporcję). Algorytm fuzzy C-means często nie znajduje ani jednej granuli w mniejszych klastrach. Dokładność grupowania mimo to wynosi powyżej 96\% dzięki dysproporcji danych.
-%	Dane corners mają większą gęstość w rogach klastrów. W związku z tym, w rogach znajduje się więcej granul o małym rozmyciu, a na poza nimi - mniej, o większym rozmyciu. Duże rozmycie wiąże się z błędnym grupowaniem hierarchicznym.
-%	\item Liczby danych w zbiorze (1000, 2000, 5000, 10000, 20000, 30000, 40000, 50000): Im większa liczba danych, tym wyższa dokładność.
-%	\item Liczby granul (50, 100, 200): Im większa liczba granul, tym wyższa dokładność.
-%	\item Typu relacji (t, e, g): Wynik niekonkluzywny, ale w wielu przypadkach relacja trójkątna skutkuje wyższą dokładnością. \ksremark{Czy to jest spowodowane tym, że T ma skończony nośnik?}
-%	\item Parametru ksi (0.05, 0.1, ... , 0.9, 0.95): Wynik niekonkluzywny, lepsze wyniki zazwyczaj uzyskiwane są dla niższych \ksremark{bardziej rozmyte czy bardziej ostre?} wartości parametru, ale dokładność znacznie fluktuuje.
-%	\end{itemize}
-%\item Wyznaczenie dendrogramu dla grupowania hierarchicznego. Wynik: zweryfikowanie poprawności działania algorytmu hierarchicznego?
-%\end{itemize}
-%
-%Co jeszcze można zrobić
-%\begin{itemize}
-%\item Porównanie czasu wykonania grupowania dla danych o mniejszych różnicach (np. co 500: 500, 1000, 1500, ... 5000). \ksremark{TAK}
-%\item Różne liczby iteracji algorytmu fuzzy C-means (teraz wyniki są tylko dla 80 iteracji). \ksremark{FCM jest dość stabilny. Klastry na większej liczby iteracji będą podobne.} \ksremark{Blobsy?}
-%\item Dokładniejsze porównanie wpływu typu relacji na dokładność grupowania. 
-%\item Duże zbiory danych, np. gowalla i brightkite. \ksremark{TAK}
-%\end{itemize}
-
 \ksremark{zagajenie}
 
 Działanie algorytmu musi zostać zbadane pod kątem czasu wykonania oraz jakości grupowania.
@@ -1535,12 +1511,14 @@ Algorytm \MojAlg{} (\ref{sec:wlasne-rozwiazanie}) zbadano pod kątem szybkości 
 Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od liczby danych, przygotowano dane o rozmiarach 500-10000 z krokiem 500.
 W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 10000. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
 
-Przyjęto też stałą maksymalną liczbę 80 iteracji algorytmu rozmytych $c$-średnich. Sekcja \ref{sec:wyniki-jakosc} pokazuje, że jest to wystarczająca wartość. Złożoność algorytmu jest liniowa w zależności od liczby iteracji \cite{bib:fcm-kmeans-comparison}.
+Przyjęto też stałą maksymalną liczbę 80 iteracji algorytmu rozmytych $c$-średnich. Sekcja \ref{sec:wyniki-jakosc} pokazuje, że jest to wystarczająca wartość. Złożoność algorytmu jest liniowa w zależności od liczby iteracji \cite{bib:fcm-kmeans-comparison}. Algorytm wykonano też dla różnych liczności granul: 50, 100 oraz 200.
 
 Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej \ksremark{Tutaj trzeba jeszcze krótko napisać, dlaczego jest własna implementacja.}. Pozwoliło to na lepszy pogląd na wpływ granulacji na szybkość, jako że sama logika grupowania pozostała ta sama, co w algorytmie rozmytym. 
 W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu rozmytych $c$-średnich, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
 
 Poszczególne pomiary czasu działania algorytmu dla dokładnie takich samych rozmiarów danych mogą różnić się o kilka milisekund. Wynika to między innymi z działania w tle innych procesów komputera, na którym przeprowadzane są badania. Typowym rozwiązaniem tego problemu jest kilkukrotne powtórzenie pomiarów dla tych samych danych i obliczenie średniej arytmetycznej wyników. Podczas badań pomiary powtórzono czterokrotnie, co wystarczyło do wyeliminowania odstających wyników.\ksremark{Trzeba uzasadnić, dlaczego tyle.}
+
+Wykonano również pomiary czasu wykonania algorytmu \MojAlg{} dla dużych liczebności danych: 50000, 100000, 500000, 1000000, 2000000, 3000000, 4000000 i 5000000, dla liczebności granul 50, 100 i 200. Jako że dla tak dużych rozmiarów danych czas ten jest rzędu minut, nie mają znaczenia milisekundowe przekłamania wyników. Z tego powodu wystarczyło wykonać jeden pomiar dla każdego rozmiaru danych.
 
 \subsection{Jakość grupowania}
 
@@ -1829,6 +1807,7 @@ Do wyznaczenia metryk jakości dla tych badań, również wykorzystano algorytmy
 \section{Wyniki}
 
 \subsection{Czas grupowania}
+\label{sec:wyniki-czas}
 
 Algorytm \MojAlg{}, który wykorzystuje wstępną granulację FCM, ma znacząco mniejszy czas wykonania w stosunku do algorytmu ostrego.
 Charakterystykę czasu wykonania algorytmów w zależności od liczby danych przedstawiono na rys. \ref{fig:circles-times}.
@@ -1844,6 +1823,15 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 
 Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$ \ksremark{$O(\nX^{3})$} \zlremark{Czy na pewno? Dla algorytmu ostrego to będzie $O(\nX^{3})$, dla rozmytego $O(\nGranula^{3})$, użycie $n$ jest tu uogólnieniem}, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba ($\nGranula$) jest stała i zdecydowanie mniejsza od liczby danych ($\nGranula \ll \nX$).
 Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(\nX)$ , więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych.
+
+Czasy wykonania algorytmu rozmytego \MojAlg{} na dużych danych przedstawia rys. \ref{fig:gowalla-times}. W przypadku 200 granul zauważyć można zaburzenie liniowości wyników. Spowodowane jest zbyt dużym wykorzystaniem pamięci: sama macierz $\mClusterMembership$ ma wymiary $\nX \times \nGranula$, czyli dla 4 milionów danych wejściowych zawiera ona 800 milionów liczb zmiennoprzecinkowych. Z tego samego powodu możliwe było wykonanie algorytmu na 6 milionach danych tylko dla 50 granul -- dla większej liczby nie wystarczyło pamięci.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/gowalla_times.pdf}
+\caption{Charakterystyka czasu wykonania algorytmu rozmytego dla różnej liczby granul od liczby danych wejściowych dla dużych danych.}
+\label{fig:gowalla-times}
+\end{figure}
 
 \subsection{Jakość grupowania}
 \label{sec:wyniki-jakosc}
@@ -2306,7 +2294,8 @@ Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone
 \end{table}
 
 \subparagraph{Podsumowanie}
-\ksremark{todo}
+
+Podobnie jak w przypadku algorytmu ostrego, \MojAlg{} osiąga znacznie lepsze wyniki jakości grupowania wykorzystując łączność \SingleLinkage{} niż \CompleteLinkage{}. W większości przypadków, algorytm rozmyty jest w stanie osiągnąć te same, a nawet lepsze wyniki niż algorytm ostry. Wyniki poprawiają się szczególnie w przypadku zilustrowanym przez dane \laguna{}, gdy klastry zaczynają się pokrywać. Jak pokazano na rys. \ref{fig:single-linkage-close-clusters-example}, algorytm \SingleLinkage{} łączy takie klastry ze sobą. Algorytm rozmytych $c$-średnich wyznacza granule bliżej środków takich klastrów, dzięki czemu grupowanie hierarchiczne przebiega potem poprawnie. Z drugiej strony, algorytm FCM może wprowadzić błędy, jak pokazał przypadek danych \blobs{}. Algorytm może błędnie wyznaczyć granule, gdy dane są bardzo niezrównoważone pod względem liczebności klastrów.
 
 \paragraph{Liczba ziaren}
 
@@ -2375,7 +2364,9 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 \end{table} 
 
 \subparagraph{Podsumowanie}
-\ksremark{todo}
+
+Choć wydawać by się mogło, że zwiększenie liczby granul, a tym samym liczby grupowanych danych, powinno poprawić jakość grupowania, wyniki klasteryzacji algorytmem rozmytych $c$-średnich są lepsze, gdy liczba granul jest mniejsza -- 50 lub 100. Gdy klastry mają kulisty kształt (\blobs{}, \laguna{}), granule wyznaczane są w ich środku, a im jest ich więcej, tym bardziej zagęszczone są w środku klastrów, co może powodować błędy obliczania przynależności danych bardziej oddalonych od tego centrum. Dodatkowo, w przypadku badanych danych, dla większej liczby granul bardziej prawdopodobne było błędne wyznaczenie granul przez algorytm FCM.
+
 \paragraph{Typu liczb rozmytych}
 
 Średnią dokładność grupowania danych w zależności od typu relacji między granulami dla różnych łączności przedstawiono w tabeli \ref{id:tab:acc-rt}, trafność -- w tabeli \ref{id:tab:rec-rt}, a precyzję -- w tabeli \ref{id:tab:prec-rt}.
@@ -2496,7 +2487,9 @@ W przypadku relacji trójkątnej, szum stanowi przeciętnie około 47\% danych -
 \end{table} 
 
 \subparagraph{Podsumowanie}
-\ksremark{todo}
+
+Najlepszym typem relacji przy grupowaniu algorytmem \SingleLinkage{} jest relacja trójkątna, choć relacja wykładnicza i gaussowska również ma wysokie wyniki. Wybór typu relacji ma za to duże znaczenie, gdy na jej podstawie określa się przynależność punktów do granul -- relacja trójkątna powoduje wtedy, że około połowa danych zostaje uznanych za szum. W ogólnym przypadku należy wtedy unikać korzystania z tej relacji. Jeżeli jednak nie byłoby konieczne grupowanie wszystkich danych, to grupowanie punktów niebędących szumem ma wyższe wyniki, niż dla pozostałych relacji, gdzie zawsze zgrupowane zostaną wszystkie punkty.
+
 \paragraph{Parametr $\xi$}
 
 Średnią dokładność, trafność i precyzję grupowania danych w zależności od parametru $\xi$ przedstawiono na rys. \ref{fig:xi-acc}.
@@ -2538,7 +2531,9 @@ Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyni
 \end{figure}
 
 \subparagraph{Podsumowanie}
-\ksremark{todo}
+
+Dla łączności \SingleLinkage{} najlepiej używać małych wartości parametru $\xi$ (około $0,1$), a dla \CompleteLinkage{} -- dużych ($0,9$).
+
 \paragraph{Kombinacja parametrów}
 
 Wyniki pomiarów przeanalizowano też biorąc pod uwagę złożenie wpływu różnych parametrów -- kształtu, liczby granul, typu relacji, parametru $\xi$ -- przy ich uśrednieniu dla wszystkich liczebności danych oryginalnych.
@@ -2682,7 +2677,12 @@ Dla \CompleteLinkage{} można zauważyć wzrost średniej dokładności grupowan
 \end{figure}
 
 \subparagraph{Podsumowanie}
-\ksremark{todo}
+Łączność \SingleLinkage{} jest znacznie lepszym wyborem podczas grupowania badanych danych niż \CompleteLinkage{}. Dla tej łączności, niezależnie od kształtu danych, najlepsze wyniki uzyskuje się dla niskich wartości parametru progowego $\xi$. Najlepiej wykorzystywać też relację trójkątną -- z nielicznymi wyjątkami przy danych \blobs{}, wyniki są najwyższe dla tego kształtu granul, przy zwiększaniu parametru $\xi$ jakość najpóźniej spada dla tej relacji.
+
+Wnioski dotyczące optymalnej liczby granul zależą od kształtu danych. Gdy klastry danych układają się w kształt kulisty -- \blobs{}, \laguna{} -- lepsze są małe liczby granul ($\nGranula = 50$), co poprawia jakość klasteryzacji algorytmem rozmytych $c$-średnich. Dla pozostałych badanych kształtów lepiej wybierać większe liczby, dzięki czemu granule rozkładają się bardziej równomiernie.
+
+Przy grupowaniu danych algorytmem o łączności \CompleteLinkage{}, w większości przypadków nie widać jasnego wpływu parametrów na wyniki, za wyjątkiem grupowania danych \blobs{}. Dla tych danych najlepsze wyniki uzyskiwane są dla małej liczby granul ($\nGranula = 50$), wysokiej wartości $\xi$ oraz relacji wykładniczej.
+
 \subsubsection{Dane \brightkite{} i \gowalla}
 
 Ze względu na brak etykiet danych \brightkite{} i \gowalla{} \todo{czy na pewno nie da się ich oetykietować}, jakość grupowania można ocenić wizualnie, na podstawie wykresów -- odpowiednio rys. \ref{fig:brightkite-strict-fuzzy} i \ref{fig:gowalla-strict-fuzzy}.
