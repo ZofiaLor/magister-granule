@@ -1102,7 +1102,15 @@ gdzie $cl(\nPodobienstwo_{\X} \cup \nPodobienstwo_{\Y})$ jest domknięciem relac
 	cl(\nPodobienstwo(p_{\X}) \cup \nPodobienstwo(p_{\Y})) = \max\{p_{\X}, p_{\Y}\}.
 \end{align}
 
-Przykładowo, odległość euklidesową między dwoma punktami, będącymi dwuwymiarowymi trójkątnymi liczbami rozmytymi, zapisać można jako: \todo{wzór ogólny na odległość}
+Wzór na odległość euklidesową \eqref{eq:odleglosc:euklidesowa} można rozszerzyć, aby wykorzystywał rozszerzalne liczby rozmyte, w następujący sposób: \zlremark{Nie wiem, czy to poprawny zapis}
+
+\begin{align}
+	\Odleglosc_{fe} \left(\wGranula_{i}, \wGranula_{j}\right) = \left(\sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\Granula_{i\Atrybut} - \Granula_{j\Atrybut })^{2}}\right)_{\nPodobienstwo(\max(\Granula_{i0}, \Granula_{i1}, \dots, \Granula_{i\nAtrybut}, \Granula_{j0}, \Granula_{j1}, \dots, \Granula_{j\nAtrybut}))},
+	\label{eq:rozmyta:odleglosc:euklidesowa}
+\end{align}
+
+Przykładowo, odległość euklidesową między dwoma punktami, będącymi dwuwymiarowymi trójkątnymi liczbami rozmytymi, zapisać można jako:
+
 \begin{multline}
 	\Odleglosc ((5_{\nPodobienstwo_{t}(2,5)}, -2_{\nPodobienstwo_{t}(0,5)}), (8_{\nPodobienstwo_{t}(1,25)}, 2_{\nPodobienstwo_{t}(4)})) = \\
 	= \sqrt{(5_{\nPodobienstwo_{t}(2,5)} - 8_{\nPodobienstwo_{t}(1,25)})^{2} + (-2_{\nPodobienstwo_{t}(0,5)} - 2_{\nPodobienstwo_{t}(4)})^{2}} = 5_{\nPodobienstwo_{t}(4)}.
@@ -1317,12 +1325,14 @@ Wartościom rozmycia nie odpowiada bezpośrednio żadna ze struktur zwracanych p
 
 Wyjściem tego kroku jest zbiór granul $\zGranula$ -- obiektów posiadających listę $\Atrybut$-elementową liczb rozmytych, które z kolei zawierają informacje o wartościach $x$ i $p$. Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytych, które składają się na ich wymiary. Kształt jest więc parametrem dla operacji logicznych na nich wykonywanych.
 
+Liczby rozmyte stanowią rozszerzenie liczb ostrych, więc każda arytmetyczne i logiczna operacja rozmyta zwraca poprawny wynik również wtedy, gdy ich parametrami są liczby, dla których $p=0$. Implementacja operacji $=_\nPodobienstwo$ w przypadku, gdy obydwie liczby są ostre, wykonuje zwykłą, ostrą operację logiczną $=$, w przeciwnym razie wystąpiłoby dzielenie przez 0. Operacja zwraca 1, jeżeli liczby są równe, 0, jeżeli nie są zamiast wartości logicznych odpowiednio prawda lub fałsz.
+
 \section{Rozmyte grupowanie hierarchiczne}
 \label{sec:rozmyte-grupowanie-hierarchiczne}
 
 Zbiór granul $\zGranula$ oraz ich kształt są parametrami wejściowymi algorytmu rozmytego aglomeracyjnego grupowania hierarchicznego \MojHierAlg.
 %
-Na początku wyznaczane są rozmyte odległości euklidesowe (wzór \eqref{eq:odleglosc:euklidesowa})między każdą parą granul, przy pomocy operacji arytmetycznych określonych w sekcji \ref{sec:rozszerzalne-liczby-rozmyte}. Wynikiem obliczeń jest symetryczna macierz odległości $\mDistance$ o wymiarach $\nX \times \nX$, gdzie $\Distance_{ij} = \Distance_{ji} = \Distance(\wX_{i}, \wX_{j})$. Odległość danego elementu od samego siebie ($\Distance_{ii}$) nie jest wykorzystywana w algorytmie, jej wartość nie jest więc istotna.
+Na początku wyznaczane są rozmyte odległości euklidesowe (wzór \eqref{eq:rozmyta:odleglosc:euklidesowa})między każdą parą granul, przy pomocy operacji arytmetycznych określonych w sekcji \ref{sec:rozszerzalne-liczby-rozmyte}. Wynikiem obliczeń jest symetryczna macierz odległości $\mDistance$ o wymiarach $\nX \times \nX$, gdzie $\Distance_{ij} = \Distance_{ji} = \Distance(\wX_{i}, \wX_{j})$. Odległość danego elementu od samego siebie ($\Distance_{ii}$) nie jest wykorzystywana w algorytmie, jej wartość nie jest więc istotna.
 
 Grupowanie hierarchiczne \MojHierAlg{} ma postać zmodyfikowanego algorytmu naiwnego \PrimitiveClustering{}, o złożoności czasowej $O(\nGranula^{3})$. Zmieniony musi zostać sposób wyznaczania kolejnych minimalnych odległości w macierzy $\mDistance$ oraz, zależne od łączności, aktualizacje odległości do nowo scalonego klastra. 
 
@@ -1620,8 +1630,6 @@ Drugie podejście
 przedstawia pseudokod \ref{alg:similarity_membership}.
 Dla każdego punktu $i$, przynależność do granuli $j$ obliczana na podstawie wartości operacji $=_\nPodobienstwo$ (wzór \ref{eq:fuzzy-equality}) dla każdego wymiaru punktu i granuli. Operacja ta jest zależna od kształtu granul, dla liczb trójkątnych, wykładniczych i gaussowskich należy wykorzystać odpowiednio wzory \ref{eq:similarity_t}, \ref{eq:similarity_e} lub \ref{eq:similarity_g} uwzględniając, że dla liczby ostrej (współrzędnej oryginalnego punktu) $p = 0$. 
 
-Implementacja operacji $=_\nPodobienstwo$ w przypadku, gdy obydwie liczby są ostre, wykonuje zwykłą, ostrą operację logiczną $=$, w przeciwnym razie wystąpiłoby dzielenie przez 0. Operacja zwraca 1, jeżeli liczby są równe, 0, jeżeli nie są \zlremark{to raczej do przeniesienia do r3}.
-
 Wyniki dla każdej współrzędnej łączone są t-normą algebraiczną (wzór \ref{eq:algebraic-norms}). Wreszcie określa się, że punkt należy do tej granuli, dla której wynik tego złączenia jest maksymalny.
 
 Należy uwzględnić, że rozszerzalne liczby rozmyte trójkątne mają skończony nośnik. Oznacza to, że punkt może nie należeć do żadnej granuli -- dla każdej z nich przynależność będzie zerowa. Punkt taki uznawany jest za szum i nie bierze udziału w wyznaczaniu wartości dokładności, trafności i precyzji, jednak odsetek punktów stanowiących szum jest w tym przypadku dodatkową miarą jakości.
@@ -1810,15 +1818,14 @@ Do wyznaczenia metryk jakości dla tych badań, również wykorzystano algorytmy
 \label{sec:wyniki-czas}
 
 Algorytm \MojAlg{}, który wykorzystuje wstępną granulację FCM, ma znacząco mniejszy czas wykonania w stosunku do algorytmu ostrego.
-Charakterystykę czasu wykonania algorytmów w zależności od liczby danych przedstawiono na rys. \ref{fig:circles-times}.
+Charakterystykę czasu wykonania algorytmów w zależności od liczby danych przedstawiono na rys. \ref{fig:comparing-times}.
 
 \begin{figure}
 \centering
-\includegraphics{./img/circles_times.pdf}
-\caption{Charakterystyka czasu wykonania algorytmów ostrego i rozmytego dla różnej liczby granul od liczby danych wejściowych (circles).}
-\label{fig:circles-times}
+\includegraphics{./img/comparing_times.pdf}
+\caption{Charakterystyka czasu wykonania algorytmów ostrego i rozmytego dla różnej liczby granul od liczby danych wejściowych.}
+\label{fig:comparing-times}
 \end{figure}
-\ksremark{Rys. \ref{fig:circles-times}: Opis wykresów musi być po polsku.}
 
 
 Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$ \ksremark{$O(\nX^{3})$} \zlremark{Czy na pewno? Dla algorytmu ostrego to będzie $O(\nX^{3})$, dla rozmytego $O(\nGranula^{3})$, użycie $n$ jest tu uogólnieniem}, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba ($\nGranula$) jest stała i zdecydowanie mniejsza od liczby danych ($\nGranula \ll \nX$).
@@ -2634,7 +2641,7 @@ Wnioski dla danych \crescents{} są bardzo podobne do wniosków dla danych \circ
 
 Przy łączności \SingleLinkage{} dokładność spada wraz ze wzrostem wartości $\xi$ -- rys. \ref{fig:laguna-complex}. Najszybciej jakość zmniejsza się dla dużej liczebności granul -- 200. Ma to związek z nieprawidłową przynależnością punktów do granul na zewnątrz dwóch wewnętrznych klastrów, jak widać na rys. \ref{fig:laguna40000-blue}. Tak jak w przypadku innych kształtów danych, najniższe wyniki są uzyskiwane dla relacji wykładniczej.
 
-Obliczanie przynależności może też wpływać na wyniki dla \CompleteLinkage{}. Dla tej łączności znowu nie można jasno określić wpływu parametrów na dokładność grupowania, natomiast zauważyć można, że dla większych liczebności granul wyniki są bardziej zróżnicowane, natomiast dla 50 granul są one bliższe średniej. \todo{znowu do weryfikacji}
+Obliczanie przynależności może też wpływać na wyniki dla \CompleteLinkage{}. Dla tej łączności znowu nie można jasno określić wpływu parametrów na dokładność grupowania, natomiast zauważyć można, że dla większych liczebności granul wyniki są bardziej zróżnicowane, natomiast dla 50 granul są one bliższe średniej.
 
 \begin{figure}
 	\centering
@@ -2685,7 +2692,7 @@ Przy grupowaniu danych algorytmem o łączności \CompleteLinkage{}, w większo�
 
 \subsubsection{Dane \brightkite{} i \gowalla}
 
-Ze względu na brak etykiet danych \brightkite{} i \gowalla{} \todo{czy na pewno nie da się ich oetykietować}, jakość grupowania można ocenić wizualnie, na podstawie wykresów -- odpowiednio rys. \ref{fig:brightkite-strict-fuzzy} i \ref{fig:gowalla-strict-fuzzy}.
+Ze względu na brak etykiet danych \brightkite{} i \gowalla{}, jakość grupowania można ocenić wizualnie, na podstawie wykresów -- odpowiednio rys. \ref{fig:brightkite-strict-fuzzy} i \ref{fig:gowalla-strict-fuzzy}.
 
 Podczas grupowania ostrego algorytmem \texttt{AgglomerativeClustering} wykorzystano losową próbkę 500000 współrzędnych, jako że algorytm ten nie nadaje się do grupowania bardzo dużych ilości danych. Jako parametry grupowania \MojAlg{} wybrano, w oparciu o wyniki otrzymane w sekcji \ref{sec:wyniki-jakosc-generowane}, relację trójkątną, 100 granul i $\xi=0,1$. W obydwu przypadkach jako docelową liczbę klastrów wybrano 6 -- jeden klaster to jeden kontynent.
 
