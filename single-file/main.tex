@@ -1523,7 +1523,7 @@ W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 1000
 
 Przyjęto też stałą maksymalną liczbę 80 iteracji algorytmu rozmytych $c$-średnich. Sekcja \ref{sec:wyniki-jakosc} pokazuje, że jest to wystarczająca wartość. Złożoność algorytmu jest liniowa w zależności od liczby iteracji \cite{bib:fcm-kmeans-comparison}. Algorytm wykonano też dla różnych liczności granul: 50, 100 oraz 200.
 
-Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystana została własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej \ksremark{Tutaj trzeba jeszcze krótko napisać, dlaczego jest własna implementacja.}. Pozwoliło to na lepszy pogląd na wpływ granulacji na szybkość, jako że sama logika grupowania pozostała ta sama, co w algorytmie rozmytym. 
+Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystany został algorytm \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} (łączność \SingleLinkage{}) oraz własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej \ksremark{Tutaj trzeba jeszcze krótko napisać, dlaczego jest własna implementacja.}. Pozwoliło to na lepszy pogląd na wpływ granulacji na szybkość, jako że sama logika grupowania we własnej implementacji pozostała ta sama, co w algorytmie rozmytym. Algorytm biblioteczny ma z kolei najniższą złożoność czasową dla łączności \SingleLinkage{} (wykorzystuje algorytm minimalnego drzewa rozpinającego), można więc porównać czas wykonania \MojAlg{} z najlepszym możliwym czasem grupowania tych samych danych algorytmem ostrym. Do tego porównania wykorzystano oryginalne dane wejściowe, we wszystkich rozmiarach (1000-50000).
 W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu rozmytych $c$-średnich, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
 
 Poszczególne pomiary czasu działania algorytmu dla dokładnie takich samych rozmiarów danych mogą różnić się o kilka milisekund. Wynika to między innymi z działania w tle innych procesów komputera, na którym przeprowadzane są badania. Typowym rozwiązaniem tego problemu jest kilkukrotne powtórzenie pomiarów dla tych samych danych i obliczenie średniej arytmetycznej wyników. Podczas badań pomiary powtórzono czterokrotnie, co wystarczyło do wyeliminowania odstających wyników.\ksremark{Trzeba uzasadnić, dlaczego tyle.}
@@ -1817,19 +1817,30 @@ Do wyznaczenia metryk jakości dla tych badań, również wykorzystano algorytmy
 \subsection{Czas grupowania}
 \label{sec:wyniki-czas}
 
-Algorytm \MojAlg{}, który wykorzystuje wstępną granulację FCM, ma znacząco mniejszy czas wykonania w stosunku do algorytmu ostrego.
+Algorytm \MojAlg{}, który wykorzystuje wstępną granulację FCM, ma znacząco mniejszy czas wykonania w stosunku do własnej implementacji algorytmu ostrego.
 Charakterystykę czasu wykonania algorytmów w zależności od liczby danych przedstawiono na rys. \ref{fig:comparing-times}.
 
 \begin{figure}
 \centering
 \includegraphics{./img/comparing_times.pdf}
-\caption{Charakterystyka czasu wykonania algorytmów ostrego i rozmytego dla różnej liczby granul od liczby danych wejściowych.}
+\caption{Charakterystyka czasu wykonania własnych implementacji algorytmów ostrego i rozmytego dla różnej liczby granul od liczby danych wejściowych.}
 \label{fig:comparing-times}
 \end{figure}
 
 
 Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$ \ksremark{$O(\nX^{3})$} \zlremark{Czy na pewno? Dla algorytmu ostrego to będzie $O(\nX^{3})$, dla rozmytego $O(\nGranula^{3})$, użycie $n$ jest tu uogólnieniem}, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba ($\nGranula$) jest stała i zdecydowanie mniejsza od liczby danych ($\nGranula \ll \nX$).
 Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(\nX)$ , więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych.
+
+Porównano również czas wykonania algorytmu \MojAlg{} z algorytmem \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn}, dla złożoności \SingleLinkage{}. Wyniki przedstawiono na rys. \ref{fig:comparing-times-sklearn}.
+
+\begin{figure}
+\centering
+\includegraphics{./img/comparing_times_sklearn.pdf}
+\caption{Charakterystyka czasu wykonania algorytmu ostrego \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} i własnej implementacji algorytmu rozmytego dla różnej liczby granul od liczby danych wejściowych.}
+\label{fig:comparing-times-sklearn}
+\end{figure}
+
+Wykres pokazuje, że dla małych danych (do 10000 punktów), najkrócej wykonuje się algorytm biblioteczny -- klasteryzacja algorytmem rozmytych $c$-średnich trwa stosunkowo długo, mimo złożoności liniowej. Powyżej 10000 danych, algorytm \MojAlg{} dla 50 granul wykonywany jest szybciej, niż algorytm ostry. Od 40000 danych, jest on szybszy dla wszystkich badanych liczebności granul. Oznacza to, że mimo gorszej złożoności samego algorytmu hierarchicznego \MojHierAlg{}, całość algorytmu rozmytego jest lepsza pod względem czasu wykonania od algorytmu \texttt{AgglomerativeClustering}, powyżej pewnej liczności danych.
 
 Czasy wykonania algorytmu rozmytego \MojAlg{} na dużych danych przedstawia rys. \ref{fig:gowalla-times}. W przypadku 200 granul zauważyć można zaburzenie liniowości wyników. Spowodowane jest zbyt dużym wykorzystaniem pamięci: sama macierz $\mClusterMembership$ ma wymiary $\nX \times \nGranula$, czyli dla 4 milionów danych wejściowych zawiera ona 800 milionów liczb zmiennoprzecinkowych. Z tego samego powodu możliwe było wykonanie algorytmu na 6 milionach danych tylko dla 50 granul -- dla większej liczby nie wystarczyło pamięci.
 
@@ -2873,7 +2884,7 @@ Dane wejściowe, które mają być zgrupowane, zazwyczaj mają postać ostrych w
 
 W pracy przebadano własności zaproponowanego algorytmu -- jego złożoność czasową oraz jakość grupowania.
 
-Porównano czas wykonania algorytmu \MojAlg{} z czasem wykonania ostrego algorytmu hierarchicznego o analogicznej implementacji do \MojHierAlg{} dla różnych liczebności danych. Odnotowano znaczne zmniejszenie czasu wykonania -- przykładowo, dla liczebności 5000, w zależności od liczby granul algorytm \MojAlg{} wykonywał się 1-4 sekundy, a algorytm ostry -- około 100 sekund. Możliwe było też wykonanie algorytmu na bardzo dużych danych -- kilku milionach punktów -- w czasie rzędu kilkudziesięciu minut. Udało się więc osiągnąć główny cel pracy -- znacznie zmniejszono czas wykonywania algorytmu hierarchicznego dla dużych liczebności danych.
+Porównano czas wykonania algorytmu \MojAlg{} z czasem wykonania ostrego algorytmu hierarchicznego o analogicznej implementacji do \MojHierAlg{} dla różnych liczebności danych. Odnotowano znaczne zmniejszenie czasu wykonania -- przykładowo, dla liczebności 5000, w zależności od liczby granul algorytm \MojAlg{} wykonywał się 1-4 sekundy, a algorytm ostry -- około 100 sekund. Możliwe było też wykonanie algorytmu na bardzo dużych danych -- kilku milionach punktów -- w czasie rzędu kilkudziesięciu minut. Ponadto, algorytm jest też szybszy od optymalnego algorytmu bibliotecznego powyżej pewnej liczby danych. Udało się więc osiągnąć główny cel pracy -- znacznie zmniejszono czas wykonywania algorytmu hierarchicznego dla dużych liczebności danych.
 
 W zamian za przyspieszenie algorytmu dopuszczono pogorszenie jakości grupowania. Pomiary dokładności, trafności i precyzji algorytmu \MojAlg{} pokazały jednak, że w większości przypadków jego wyniki nie odbiegają od wyników algorytmu ostrego, a nawet mogą być lepsze.
 
