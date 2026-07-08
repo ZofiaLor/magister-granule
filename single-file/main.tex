@@ -595,11 +595,9 @@ W rozdziale \ref{sec:analiza-tematu} przedstawiono teoretyczną analizę zagadni
 
 
 % TODO
-\chapter{Granularne algorytmy grupowania hierarchicznego}  % Analiza tematu
+\chapter{Grupowanie danych}  % Analiza tematu
 \label{sec:analiza-tematu}
 % 
-\zlremark{To chyba nie jest dobra nazwa dla tego rozdziału}
- 
 
 Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danych. Umożliwiają znalezienie podobieństw między rozpatrywanymi obiektami i sklasyfikowanie ich. Połączenie tych dwóch podejść może wydobyć zalety każdego z nich. 
 
@@ -644,8 +642,8 @@ Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danyc
 %Przykładem generalizacji jest para: zwierzę i pies. Pies jest zwierzęciem. Pies jest uszczegółowieniem pojęcia zwierzę. Zwierzę jest uogólnieniem pojęcia pies.
 %\end{Example}
 
-\section{Grupowanie danych}
-\label{sec:grupowanie}
+%\section{Grupowanie danych}
+%\label{sec:grupowanie}
  
 
 Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne
@@ -662,7 +660,7 @@ Do głównych rodzin algorytmów grupowania zaliczane są \cite{bib:clustering-a
 	\item Inne algorytmy(na przykład: DBCLASD \cite{bib:dbclasd-algorithm}, CLIQUE \cite{bib:clique-algorithm}).
 \end{itemize}
 
-\section{Algorytmy grupowania hierarchicznego}
+\subsection{Algorytmy grupowania hierarchicznego}
 
 %Ogólna idea działania algorytmu.
 %Typy algorytmu (single linkage, complete linkage...)
@@ -765,7 +763,7 @@ Pseudokod działania algorytmu przedstawia alg. \ref{alg:primitive_clustering}.
 
 Algorytm ogólny \texttt{GENERAL\_LINKAGE()} zawiera dodatkową optymalizację w stosunku do algorytmu naiwnego: wykorzystywana jest kolejka priorytetowa zawierająca kandydatów na najbliższych sąsiadów klastrów, co pozwala ograniczyć czas poszukiwania minimum macierzy w kroku 1. Optymistyczna złożoność czasowa tego algorytmu wynosi $\Omega(n^{2})$, pesymistyczna -- nadal $O(n^{3})$.
 
-\subsection{Single Linkage}
+\subsubsection{Single Linkage}
 
 Na czym polega
 Wizualizacja, dendrogram
@@ -826,7 +824,7 @@ Dla \SingleLinkage{} wykorzystać można szybsze, dedykowane algorytmy, na przyk
 
 \ksremark{Więcej, trzeba napisać więcej!}
 
-\subsection{Complete Linkage}
+\subsubsection{Complete Linkage}
 \label{sec:complete-linkage}
 
 Algorytm \CompleteLinkage{} jest odwrotnością \SingleLinkage{}: odległość między klastrami jest równa maksymalnej odległości między dwoma punktami należącymi do tych klastrów. W momencie złączenia dwóch klastrów w jeden, jego odległość od pozostałych klastrów określa się więc jako:
@@ -867,7 +865,7 @@ W porównaniu z \SingleLinkage{}, algorytm \CompleteLinkage{} zwraca jednak gors
 
 \ksremark{Trzeba napisać jeszcze, jaka jest różnica w wynikach \SingleLinkage\ i complete.}
 
-\section{Algorytm rozmytych $c$ średnich}
+\subsection{Algorytm rozmytych $c$ średnich}
 \label{sec:fcm}
 
 Algorytm rozmytych $c$ średnich (ang. \english{fuzzy $c$-means}, FCM) należy do rodziny algorytmów opartych o minimalizację funkcji kryterialnej. Algorytm wyznacza klastry, dla których przynależność każdego punktu danych jest liczbą z przedziału $\left[ 0,1 \right]$. Wynikiem klasteryzacji FCM jest macierz środków klastrów $\mCentre$ oraz macierz przynależności $\mClusterMembership$. Złożoność czasowa ze względu na liczbę danych tego algorytmu wynosi $O(n)$ \cite{bib:fcm-kmeans-comparison}.
@@ -933,7 +931,7 @@ gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warun
 	\end{algorithmic}
 \end{algorithm}
 
-\section{Obliczenia ziarniste}
+\chapter{Obliczenia ziarniste}
 
 \ksremark{zagajenie}
 
@@ -941,7 +939,7 @@ Obliczenia ziarniste (granularne) pozwalają na analizę danych w bardziej zbli�
 
 Przykładem ilustrującym ideę obliczeń granularnych w jednym wymiarze może być subiektywna ocena temperatur jako ,,zimne'' lub ,,ciepłe''. Temperaturę \SI{10}{\celsius} trudno jednoznacznie zaklasyfikować do jednej z tych dwóch kategorii, dla niektórych osób będzie ona ,,zimna'', dla niektórych ,,ciepła''. Temperatura \SI{20}{\celsius} dużo bardziej pasuje do kategorii ,,ciepła'' niż ,,zimna'', jednak w mniejszym stopniu, niż \SI{25}{\celsius}. Choć w uzyskaniu bardziej szczegółowych informacji może pomóc dodanie większej liczby kategorii, na przykład ,,umiarkowana'' i ,,gorąca'', to nie odzwierciedli ono subiektywnej oceny poszczególnych wartości.
 
-\subsection{Ziarna informacyjne}
+\section{Ziarna informacyjne}
 \ksremark{Co to jest?}
 \ksremark{Jak są reprezentowane?}
 \ksremark{Jak się tworzy ziarna obliczeniowe?}
@@ -954,7 +952,7 @@ W zależności od znaczenia i zastosowania ziaren, mogą one być reprezentowane
 Ziarna informacyjne utworzyć można poprzez grupowanie danych. W przypadku ziaren reprezentowanych przez zbiory rozmyte, typowym algorytmem grupowania jest algorytm rozmytych $c$-średnich \ref{sec:fcm}.
 % TODO link do rozdziału o FCM
 
-\subsection{Zbiory rozmyte}
+\section{Zbiory rozmyte}
 
 Zbiory klasyczne są pojęciem pierwotnym: obiekt $\X$ (liczba, punkt, dana itp.) należy do zbioru $\zA$ ($\X \in \zA$) lub do niego nie należy ($\X \notin \zA$). 
 
@@ -979,7 +977,7 @@ Graficzną interpretację tych charakterystyk przedstawiono na rys. \ref{fig:cor
 \label{fig:core-support-example}
 \end{figure}
 
-\subsubsection{Operacje na zbiorach rozmytych}
+\subsection{Operacje na zbiorach rozmytych}
 
 Podstawowymi operacjami na zbiorach klasycznych są iloczyn i suma. Ich odpowiednikami dla zbiorów rozmytych są odpowiednio t-norma ($\tnorm$) i s-norma ($\snorm$), które spełniają warunki określone w tabeli \ref{id:tab:tnorm-snorm}.
 
@@ -1023,7 +1021,7 @@ Inną typową operacją na zbiorach rozmytych jest negacja. Musi ona spełniać 
 
 Jest to negacja silna, czyli spełnia ona również warunek $\bar{\bar{x}} = x$.
 
-\subsection{Rozszerzalne liczby rozmyte}
+\section{Rozszerzalne liczby rozmyte}
 \label{sec:rozszerzalne-liczby-rozmyte}
 \ksremark{Liczby rozmyte}
 \ksremark{Kształty (trójkątne, wykładnicze, gaussowskie)}
@@ -1046,12 +1044,12 @@ Rozszerzalne liczby rozmyte to liczby ostre rozszerzone o relację $\ast$-podobi
 	\X_{\nPodobienstwo}(\Y) = \nPodobienstwo(\X, \Y)
 \end{align}
 
-\subsubsection{Kształty liczb rozmytych}
+\subsection{Kształty liczb rozmytych}
 \label{sec:ksztalty-liczb-rozmytych}
 
 Kształt rozszerzalnej liczby rozmytej określony jest przez relację $\ast$-podobieństwa. Może on być dowolny, o ile spełnia warunki określone w definicji \ref{def:fuzzy-similarity}. W pracy wykorzystywane są trzy kształty, opisane w \cite{bib:fuzzy-numbers-revisited-logic-operations}:
 
-\paragraph{Liczby trójkątne}
+\subsubsection{Liczby trójkątne}
 
 Dla liczb trójkątnych relacja $\ast$-podobieństwa $\nPodobienstwo_{t}$ definiowana jest jako:
 \begin{align}
@@ -1060,7 +1058,7 @@ Dla liczb trójkątnych relacja $\ast$-podobieństwa $\nPodobienstwo_{t}$ defini
 \end{align}
 gdzie $p > 0$, a $\ast$ to t-norma Łukasiewicza.
 
-\paragraph{Liczby wykładnicze}
+\subsubsection{Liczby wykładnicze}
 
 Dla liczb wykładniczych relacja $\ast$-podobieństwa $\nPodobienstwo_{e}$ definiowana jest jako:
 \begin{align}
@@ -1069,7 +1067,7 @@ Dla liczb wykładniczych relacja $\ast$-podobieństwa $\nPodobienstwo_{e}$ defin
 \end{align}
 gdzie $p > 1$, a $\ast$ to t-norma iloczynowa.
 
-\paragraph{Liczby gaussowskie}
+\subsubsection{Liczby gaussowskie}
 
 Dla liczb gaussowskich relacja $\ast$-podobieństwa $\nPodobienstwo_{g}$ definiowana jest jako:
 \begin{align}
@@ -1078,7 +1076,7 @@ Dla liczb gaussowskich relacja $\ast$-podobieństwa $\nPodobienstwo_{g}$ definio
 \end{align}
 gdzie $p > 0$, a $\ast$ to t-norma iloczynowa.
 
-\subsubsection{Operacje arytmetyczne}
+\subsection{Operacje arytmetyczne}
 
 Operacje arytmetyczne na rozszerzalnych liczbach rozmytych są proste obliczeniowo i nie zwiększają rozmycia. Wynikiem operacji arytmetycznej na rozszerzalnej liczbie lub liczbach rozmytych jest rozszerzalna liczba rozmyta.
 
@@ -1102,8 +1100,8 @@ gdzie $cl(\nPodobienstwo_{\X} \cup \nPodobienstwo_{\Y})$ jest domknięciem relac
 	cl(\nPodobienstwo(p_{\X}) \cup \nPodobienstwo(p_{\Y})) = \max\{p_{\X}, p_{\Y}\}.
 \end{align}
 
-Wzór na odległość euklidesową \eqref{eq:odleglosc:euklidesowa} można rozszerzyć, aby wykorzystywał rozszerzalne liczby rozmyte, w następujący sposób: \zlremark{Nie wiem, czy to poprawny zapis}
-
+Wzór na odległość euklidesową \eqref{eq:odleglosc:euklidesowa} można rozszerzyć, aby wykorzystywał rozszerzalne liczby rozmyte, w następujący sposób:  
+%
 \begin{align}
 	\Odleglosc_{fe} \left(\wGranula_{i}, \wGranula_{j}\right) = \left(\sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\Granula_{i\Atrybut} - \Granula_{j\Atrybut })^{2}}\right)_{\nPodobienstwo(\max(\Granula_{i0}, \Granula_{i1}, \dots, \Granula_{i\nAtrybut}, \Granula_{j0}, \Granula_{j1}, \dots, \Granula_{j\nAtrybut}))},
 	\label{eq:rozmyta:odleglosc:euklidesowa}
@@ -1116,7 +1114,7 @@ Przykładowo, odległość euklidesową między dwoma punktami, będącymi dwuwy
 	= \sqrt{(5_{\nPodobienstwo_{t}(2,5)} - 8_{\nPodobienstwo_{t}(1,25)})^{2} + (-2_{\nPodobienstwo_{t}(0,5)} - 2_{\nPodobienstwo_{t}(4)})^{2}} = 5_{\nPodobienstwo_{t}(4)}.
 \end{multline}
 
-\subsubsection{Operacje logiczne}
+\subsection{Operacje logiczne}
 Operacje porównania na rozszerzalnych liczbach rozmytych oparte są o operator równości rozmytej \cite{bib:fuzzy-numbers-revisited-logic-operations}:
 \begin{Definition}
 	Operator równości rozmytej $=_{\nPodobienstwo}: \zRozszerzalna \times \zRozszerzalna \to [0,1]$ zdefiniowany jest przy pomocy rozmytej relacji $\ast$-podobieństwa $\nPodobienstwo$:
@@ -1168,9 +1166,9 @@ Operatory nierówności wyznaczane są w następujący sposób:
 
 % tekst
 
-% \section{[Tytuł podrozdziału]}
+% \chapter{[Tytuł podrozdziału]}
 
-% \section{[Tytuł podrozdziału]}
+% \chapter{[Tytuł podrozdziału]}
 
 % W całym dokumencie powinny znajdować się odniesienia do zawartych w nim ilustracji (rys. \ref{fig:2}).
 
@@ -1339,6 +1337,7 @@ Grupowanie hierarchiczne \MojHierAlg{} ma postać zmodyfikowanego algorytmu naiw
 Minimum i maksimum wyznacza się przy pomocy operacji porównania. W przypadku rozszerzalnych liczb rozmytych, wynikami takich operacji są liczby z przedziału $[0, 1]$. W celu określenia, która z liczb rozmytych jest większa lub mniejsza, wprowadzony zostaje parametr progowy $\xi$, będący parametrem badawczym. Algorytmy rozmytego minimum i maksimum przedstawiają odpowiednio pseudokody \ref{alg:fuzzy-min} i \ref{alg:fuzzy-max}. Na podstawie alg. \ref{alg:fuzzy-min} można też utworzyć rozmytą funkcję $\arg\min$ (alg. \ref{alg:fuzzy-argmin}).
 
 Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną pseudokodem \ref{alg:fuzzy_single_linkage}. \zlremark{Dla complete linkage wystarczy podmienić jedną linię -- jak najlepiej to opisać?}
+\ksremark{\ref{alg:lacznosc} fuzzy maximum}
 
 \begin{algorithm}[t]
 	\caption{Minimum rozmyte}
@@ -1438,7 +1437,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 		\State $w, k \gets $ \Call{FuzzyArgMin}{$\mDistance, \wPunkt, r, \xi$} \Comment{znalezienie indeksów dwóch najbliższych klastrów}
 		\State $\wPunkt \gets \wPunkt \setminus {k}$ \Comment{nieużywane w dalszych iteracjach}
 		\For{$\Punkt \in \wPunkt$}
-		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności}
+		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności}\label{alg:lacznosc}
 		\EndFor
 		\State $\wEtykieta \gets$ \Call{scal}{$\wEtykieta, w, k$} \Comment{zamiana wszystkich etykiet o wartości $k$ na wartość $w$.}
 		\EndFor
@@ -1828,7 +1827,7 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 \end{figure}
 
 
-Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego wynosi $O(n^{3})$ \ksremark{$O(\nX^{3})$} \zlremark{Czy na pewno? Dla algorytmu ostrego to będzie $O(\nX^{3})$, dla rozmytego $O(\nGranula^{3})$, użycie $n$ jest tu uogólnieniem}, jednak w przypadku algorytmu rozmytego dotyczy ona tylko granul, których liczba ($\nGranula$) jest stała i zdecydowanie mniejsza od liczby danych ($\nGranula \ll \nX$).
+Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego jest sześcienna i wynosi dla algorytmy ostrego $O(\nX^{3})$, dla rozmytego $O(\nGranula^{3})$, gdzie liczba ziaren $\nGranula$ jest stała i zdecydowanie mniejsza od liczby danych ($\nGranula \ll \nX$).
 Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(\nX)$ , więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych.
 
 Porównano również czas wykonania algorytmu \MojAlg{} z algorytmem \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn}, dla złożoności \SingleLinkage{}. Wyniki przedstawiono na rys. \ref{fig:comparing-times-sklearn}.
@@ -1857,7 +1856,7 @@ Czasy wykonania algorytmu rozmytego \MojAlg{} na dużych danych przedstawia rys.
 Na wykresach wyników grupowania hierarchicznego metodą rozmytą punkty szare odpowiadają współrzędnym oryginalnych danych. Wyjątkiem są wykresy danych \spheres, gdzie oryginalne punkty pominięto, aby zachować czytelność wykresu. Punkty kolorowe odpowiadają środkom granul, gdzie środki o tym samym kolorze należą do tego samego klastra. 
 Elipsy (elipsoidy dla \spheres) w kolorze magenta \ksremark{fioletowym} wizualizują rozmycie granul, gdzie długość każdej półosi jest równa dwukrotności rozmycia w danym wymiarze. Mnożnik ten został wybrany ze względu na dobrą czytelność wynikowych wykresów.
 
-Dla niektórych wyników utworzono również wykresy na podstawie sumarycznej przynależności punktów do granul z danego klastra. Mają postać kilku podwykresów, gdzie punktami w kolorze niebieskim oznaczono dane oryginalne. Dla każdego podwykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} * \{ \Granula \in \Klaster \}$ \ksremark{Nie rozumiem tego zapisu.} \zlremark{$\{ \Granula \in \Klaster \}$ ma być warunkiem, czyli do sumy wlicza się dana wartość $\ClusterMembership_{\X\Granula}$ tylko wtedy, gdy ten warunek jest dla niej spełniony. Nie wiem, jak to zapisać we wzorze -- chyba, że zamiast wzoru dać pseudokod.}. Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie.
+Dla niektórych wyników utworzono również wykresy na podstawie sumarycznej przynależności punktów do granul z danego klastra. Mają postać kilku podwykresów, gdzie punktami w kolorze niebieskim oznaczono dane oryginalne. Dla każdego podwykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} \cdot [ \Granula \in \Klaster ]$ \ksremark{Nie rozumiem tego zapisu.} \zlremark{$\{ \Granula \in \Klaster \}$ ma być warunkiem, czyli do sumy wlicza się dana wartość $\ClusterMembership_{\X\Granula}$ tylko wtedy, gdy ten warunek jest dla niej spełniony. Nie wiem, jak to zapisać we wzorze -- chyba, że zamiast wzoru dać pseudokod.}. Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie.
 
 \subsubsection{Dane syntetyczne}
 \label{sec:wyniki-jakosc-generowane}
@@ -2313,7 +2312,11 @@ Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone
 
 \subparagraph{Podsumowanie}
 
-Podobnie jak w przypadku algorytmu ostrego, \MojAlg{} osiąga znacznie lepsze wyniki jakości grupowania wykorzystując łączność \SingleLinkage{} niż \CompleteLinkage{}. W większości przypadków, algorytm rozmyty jest w stanie osiągnąć te same, a nawet lepsze wyniki niż algorytm ostry. Wyniki poprawiają się szczególnie w przypadku zilustrowanym przez dane \laguna{}, gdy klastry zaczynają się pokrywać. Jak pokazano na rys. \ref{fig:single-linkage-close-clusters-example}, algorytm \SingleLinkage{} łączy takie klastry ze sobą. Algorytm rozmytych $c$-średnich wyznacza granule bliżej środków takich klastrów, dzięki czemu grupowanie hierarchiczne przebiega potem poprawnie. Z drugiej strony, algorytm FCM może wprowadzić błędy, jak pokazał przypadek danych \blobs{}. Algorytm może błędnie wyznaczyć granule, gdy dane są bardzo niezrównoważone pod względem liczebności klastrów.
+Podobnie jak w przypadku algorytmu ostrego, \MojAlg{} osiąga znacznie lepsze wyniki jakości grupowania wykorzystując łączność \SingleLinkage{} niż \CompleteLinkage{}. W większości przypadków, algorytm rozmyty jest w stanie osiągnąć te same, a nawet lepsze wyniki niż algorytm ostry. 
+\ksremark{Może coś takiego? „Dzieje się to w sytuacji, gdy klastry zaczynają się pokrywać i istnieją obiekty bliskie różnym grupom. Wtedy dla algorytmu ostrego taki obiekt może być swego rodzaju mostem łączącym różne grupy.
+W przypadku algorytmu ziarnistego granule są pewnym uogólnieniem grupy danych i nie występują wtedy takie pojedyncze obiekty łączące różne grupy. 
+Przez co algorytm ziarnisty nie połączy tych grup w jedną.”}
+Wyniki poprawiają się szczególnie w przypadku zilustrowanym przez dane \laguna{}, gdy klastry zaczynają się pokrywać. Jak pokazano na rys. \ref{fig:single-linkage-close-clusters-example}, algorytm \SingleLinkage{} łączy takie klastry ze sobą. Algorytm rozmytych $c$-średnich wyznacza granule bliżej środków takich klastrów, dzięki czemu grupowanie hierarchiczne przebiega potem poprawnie. Z drugiej strony, algorytm FCM może wprowadzić błędy, jak pokazał przypadek danych \blobs{}. Algorytm może błędnie wyznaczyć granule, gdy dane są bardzo niezrównoważone pod względem liczebności klastrów.
 
 \paragraph{Liczba ziaren}
 
@@ -2383,7 +2386,10 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 
 \subparagraph{Podsumowanie}
 
-Choć wydawać by się mogło, że zwiększenie liczby granul, a tym samym liczby grupowanych danych, powinno poprawić jakość grupowania, wyniki klasteryzacji algorytmem rozmytych $c$-średnich są lepsze, gdy liczba granul jest mniejsza -- 50 lub 100. Gdy klastry mają kulisty kształt (\blobs{}, \laguna{}), granule wyznaczane są w ich środku, a im jest ich więcej, tym bardziej zagęszczone są w środku klastrów, co może powodować błędy obliczania przynależności danych bardziej oddalonych od tego centrum. Dodatkowo, w przypadku badanych danych, dla większej liczby granul bardziej prawdopodobne było błędne wyznaczenie granul przez algorytm FCM.
+Choć wydawać by się mogło, że zwiększenie liczby granul, a tym samym liczby grupowanych danych, powinno poprawić jakość grupowania, wyniki klasteryzacji algorytmem 
+\MojAlg\
+%rozmytych $c$-średnich 
+są lepsze, gdy liczba granul jest mniejsza -- 50 lub 100. Gdy klastry mają kulisty kształt (\blobs{}, \laguna{}), granule wyznaczane są w ich środku, a im jest ich więcej, tym bardziej zagęszczone są w środku klastrów, co może powodować błędy obliczania przynależności danych bardziej oddalonych od tego centrum. Dodatkowo, w przypadku badanych danych, dla większej liczby granul bardziej prawdopodobne było błędne wyznaczenie granul przez algorytm FCM.
 
 \paragraph{Typu liczb rozmytych}
 
@@ -2506,7 +2512,12 @@ W przypadku relacji trójkątnej, szum stanowi przeciętnie około 47\% danych -
 
 \subparagraph{Podsumowanie}
 
-Najlepszym typem relacji przy grupowaniu algorytmem \SingleLinkage{} jest relacja trójkątna, choć relacja wykładnicza i gaussowska również ma wysokie wyniki. Wybór typu relacji ma za to duże znaczenie, gdy na jej podstawie określa się przynależność punktów do granul -- relacja trójkątna powoduje wtedy, że około połowa danych zostaje uznanych za szum. W ogólnym przypadku należy wtedy unikać korzystania z tej relacji. Jeżeli jednak nie byłoby konieczne grupowanie wszystkich danych, to grupowanie punktów niebędących szumem ma wyższe wyniki, niż dla pozostałych relacji, gdzie zawsze zgrupowane zostaną wszystkie punkty.
+Najwyższe wartość metryk jakości przy grupowaniu algorytmem \SingleLinkage{} uzyskuje się dla relacji trójkątnej, choć relacja wykładnicza i gaussowska również ma wysokie wyniki. Wybór typu relacji ma za to duże znaczenie, gdy na jej podstawie określa się przynależność punktów do granul -- relacja trójkątna powoduje wtedy, że
+istotna część danych oryginalnych może nie zostać w ogóle przypisana do żadnej grupy.
+% około połowa danych zostaje uznanych za szum \ksremark{dlaczego?}. 
+%W ogólnym przypadku należy wtedy unikać korzystania z tej relacji. 
+%Jeżeli jednak nie byłoby konieczne grupowanie wszystkich danych, to grupowanie punktów niebędących szumem ma wyższe wyniki, niż dla pozostałych relacji, gdzie zawsze zgrupowane zostaną wszystkie punkty.
+
 
 \paragraph{Parametr $\xi$}
 
@@ -2549,8 +2560,7 @@ Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyni
 \end{figure}
 
 \subparagraph{Podsumowanie}
-
-Dla łączności \SingleLinkage{} najlepiej używać małych wartości parametru $\xi$ (około $0,1$), a dla \CompleteLinkage{} -- dużych ($0,9$).
+Eksperymenty sugerują, że dla  łączności \SingleLinkage{} najlepiej używać małych wartości parametru $\xi \approx 0{,}1$, a dla \CompleteLinkage{} -- dużych $\xi \approx 0{,}9$.
 
 \paragraph{Kombinacja parametrów}
 
@@ -2864,15 +2874,17 @@ Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna
 \ksremark{Co to jest grupowanie? Po co? Jakie są podejścia?}
 
 
-Do analizy danych powszechnie wykorzystuje się algorytmy grupowania. Polegają one na wyznaczeniu takich klas danych, aby wszystkie dane przypisane do tej samej klasy były do siebie jak najbardziej podobne pod względem wybranej metryki, a dane przypisane do różnych klas -- jak najbardziej niepodobne.
+Do analizy danych powszechnie wykorzystuje się algorytmy grupowania. Polegają one na wyznaczeniu takich grup danych, aby wszystkie dane przypisane do tej samej grupy były do siebie jak najbardziej podobne pod względem wybranej metryki, a dane przypisane do różnych grup -- jak najbardziej niepodobne.
 
-Algorytmy takie mogą być na przykład oparte o minimalizację pewnej funkcji kryterialnej bądź wykorzystywać zagęszczenie danych w pewnym obszarze do wyznaczenia klastrów. W pracy skupiono się na aglomeracyjnym algorytmie hierarchicznym, który polega na tworzeniu sekwencji zagnieżdżonych podziałów danych, poprzez łączenie mniejszych klastrów w większe.
+Algorytmy takie mogą być na przykład oparte o \ksremark{na} minimalizację pewnej funkcji kryterialnej bądź wykorzystywać zagęszczenie danych w pewnym obszarze do wyznaczenia klastrów. W pracy skupiono się na aglomeracyjnym algorytmie hierarchicznym, który polega na tworzeniu sekwencji zagnieżdżonych podziałów danych, poprzez łączenie mniejszych klastrów w większe.
 
+\ksremark{złożoność sześcienna}
 W pracy do przyspieszenia działania aglomeracyjnego algorytmu hierarchicznego wykorzystano obliczenia granularne.
 \ksremark{O co chodzi w obliczeniach ziarnistych?}
 
 Jest to dziedzina, która również stosowana jest do analizy danych. Polega na analizowaniu ich na sposób podobny do ludzkiego postrzegania rzeczywistości. W pracy realizowane są one przy pomocy liczb rozmytych, czyli takich liczb, które modelują pewne ostre wartości liczbowe w jakimś przybliżeniu.
 
+\ksremark{W pracy zaproponowany został autorski algorytm …}
 Wykorzystany algorytm hierarchiczny, nazwany \MojHierAlg{}, wykorzystuje ogólną implementację o złożoności $O(n^3)$, dostosowaną do operowania na granulach informacyjnych, reprezentowanych przez wektory liczb rozmytych zamiast na oryginalnych punktach danych. Każda granula ma swój środek oraz rozmycie w każdym wymiarze. Modyfikacje algorytmu w stosunku do standardowej, ostrej wersji, dotyczą operacji arytmetycznych i logicznych. Odległości euklidesowe między granulami również mają postać liczb rozmytych, które są następnie porównywane. Jako że wynikiem porównań liczb rozmytych jest wartość z przedziału $[0, 1]$, wprowadzony został dodatkowy parametr progowy $\xi$, określający, dla jakiej wartości operacja logiczna będzie ewaluowana jako prawda. W \MojHierAlg{} zaimplementowano dwie łączności grupowania hierarchicznego: \SingleLinkage{} oraz \CompleteLinkage{}.
 
 Dane wejściowe, które mają być zgrupowane, zazwyczaj mają postać ostrych współrzędnych punktów. Przed wykonaniem algorytmu \MojHierAlg{} wyznacza się więc na ich podstawie granule informacyjne. Wykorzystano do tego algorytm rozmytych $c$-średnich, który ma mniejszą -- liniową -- złożoność czasową, niż algorytm hierarchiczny. Algorytm ten grupuje dane w klastry rozmyte, czyli takie, do których każdy punkt należy w pewnym stopniu, określonym jako liczba z przedziału $[0, 1]$. Następnie klastry te przekształcane są w granule. Wykorzystano trzy kształty granul: trójkątne, wykładnicze i gaussowskie. Całość algorytmu, wraz z przygotowaniem danych, nazwano \MojAlg{}.
