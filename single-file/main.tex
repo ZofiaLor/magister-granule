@@ -1290,7 +1290,7 @@ Operatory nierówności wyznaczane są w następujący sposób:
 
 %\section{Plan rozwiązania}
 
-Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasowa -- w przypadku algorytmu ogólnego aż do $O(n^{3})$. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(n)$).
+Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasowa -- w przypadku algorytmu ogólnego aż do $O(\nX^{3})$, gdzie $\nX =$ liczba danych. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(\nX)$).
 
 Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego \MojAlg\ składa się z trzech głównych kroków:
 
@@ -1300,7 +1300,7 @@ Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego \MojAlg\ składa si�
 	\item aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia: \MojHierAlg\ (roz. \ref{sec:rozmyte-grupowanie-hierarchiczne}).
 \end{enumerate}
 
-Złożoność czasowa tego algorytmu może zostać określona jako $O(n + \nGranula^3)$, przy czym $\nGranula \ll n$ odpowiada liczbie granul. \zlremark{Taką złożoność mamy z kroków 1+3, a co z krokiem 2?}
+Złożoność czasowa tego algorytmu może zostać określona jako $O(\nX + \nX\nGranula \nGranula^3)$, przy czym $\nGranula \ll \nX$ odpowiada liczbie granul.
 
 \section{Granulacja danych oryginalnych}
 \label{sec:granulacja-danych-oryginalnych}
@@ -1316,12 +1316,12 @@ Granule wykorzystywane do grupowania hierarchicznego mają postać wielowymiarow
 
 Wartości ostre są tożsame ze środkami klastrów będących wynikiem algorytmu rozmytych $c$-średnich, czyli z wektorem $\wCentre$ (wzór \ref{eq:center_update}).
 
-Wartościom rozmycia nie odpowiada bezpośrednio żadna ze struktur zwracanych przez FCM. Dla każdego klastra $\Klaster$ i wymiaru (atrybutu) $\Atrybut$, rozmycie oblicza się jako następującą wariancję \zlremark{czy to nie jest odchylenie standardowe?}:
+Wartościom rozmycia nie odpowiada bezpośrednio żadna ze struktur zwracanych przez FCM. Dla każdego klastra $\Klaster$ i wymiaru (atrybutu) $\Atrybut$, rozmycie oblicza się jako następujące odchylenie standardowe:
 \begin{align}
 	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m} (\X_{\Iteracja\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m}}}.
 \end{align}
 
-Wyjściem tego kroku jest zbiór granul $\zGranula$ -- obiektów posiadających listę $\Atrybut$-elementową liczb rozmytych, które z kolei zawierają informacje o wartościach $x$ i $p$. Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytych, które składają się na ich wymiary. Kształt jest więc parametrem dla operacji logicznych na nich wykonywanych.
+Wyjściem tego kroku jest zbiór granul $\zGranula$ -- obiektów posiadających listę $\Atrybut$-elementową liczb rozmytych, które z kolei zawierają informacje o wartościach $x$ i $p$. Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytych, które składają się na ich wymiary. Kształt jest więc parametrem dla operacji logicznych na nich wykonywanych. Złożoność czasowa tego kroku wynosi $O(\nX\nGranula)$
 
 Liczby rozmyte stanowią rozszerzenie liczb ostrych, więc każda arytmetyczne i logiczna operacja rozmyta zwraca poprawny wynik również wtedy, gdy ich parametrami są liczby, dla których $p=0$. Implementacja operacji $=_\nPodobienstwo$ w przypadku, gdy obydwie liczby są ostre, wykonuje zwykłą, ostrą operację logiczną $=$, w przeciwnym razie wystąpiłoby dzielenie przez 0. Operacja zwraca 1, jeżeli liczby są równe, 0, jeżeli nie są zamiast wartości logicznych odpowiednio prawda lub fałsz.
 
@@ -1336,8 +1336,7 @@ Grupowanie hierarchiczne \MojHierAlg{} ma postać zmodyfikowanego algorytmu naiw
 
 Minimum i maksimum wyznacza się przy pomocy operacji porównania. W przypadku rozszerzalnych liczb rozmytych, wynikami takich operacji są liczby z przedziału $[0, 1]$. W celu określenia, która z liczb rozmytych jest większa lub mniejsza, wprowadzony zostaje parametr progowy $\xi$, będący parametrem badawczym. Algorytmy rozmytego minimum i maksimum przedstawiają odpowiednio pseudokody \ref{alg:fuzzy-min} i \ref{alg:fuzzy-max}. Na podstawie alg. \ref{alg:fuzzy-min} można też utworzyć rozmytą funkcję $\arg\min$ (alg. \ref{alg:fuzzy-argmin}).
 
-Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną pseudokodem \ref{alg:fuzzy_single_linkage}. \zlremark{Dla complete linkage wystarczy podmienić jedną linię -- jak najlepiej to opisać?}
-\ksremark{\ref{alg:lacznosc} fuzzy maximum}
+Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną pseudokodem \ref{alg:fuzzy_single_linkage}. Ten sam algorytm dla łączności \CompleteLinkage{} jest niemal identyczny: należy jedynie podmienić wywołanie algorytmu rozmytego minimum (alg. \ref{alg:fuzzy-min}) w linii \ref{alg:lacznosc} na algorytm rozmytego maksimum (alg. \ref{alg:fuzzy-max}).
 
 \begin{algorithm}[t]
 	\caption{Minimum rozmyte}
@@ -1856,7 +1855,7 @@ Czasy wykonania algorytmu rozmytego \MojAlg{} na dużych danych przedstawia rys.
 Na wykresach wyników grupowania hierarchicznego metodą rozmytą punkty szare odpowiadają współrzędnym oryginalnych danych. Wyjątkiem są wykresy danych \spheres, gdzie oryginalne punkty pominięto, aby zachować czytelność wykresu. Punkty kolorowe odpowiadają środkom granul, gdzie środki o tym samym kolorze należą do tego samego klastra. 
 Elipsy (elipsoidy dla \spheres) w kolorze magenta \ksremark{fioletowym} wizualizują rozmycie granul, gdzie długość każdej półosi jest równa dwukrotności rozmycia w danym wymiarze. Mnożnik ten został wybrany ze względu na dobrą czytelność wynikowych wykresów.
 
-Dla niektórych wyników utworzono również wykresy na podstawie sumarycznej przynależności punktów do granul z danego klastra. Mają postać kilku podwykresów, gdzie punktami w kolorze niebieskim oznaczono dane oryginalne. Dla każdego podwykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} \cdot [ \Granula \in \Klaster ]$ \ksremark{Nie rozumiem tego zapisu.} \zlremark{$\{ \Granula \in \Klaster \}$ ma być warunkiem, czyli do sumy wlicza się dana wartość $\ClusterMembership_{\X\Granula}$ tylko wtedy, gdy ten warunek jest dla niej spełniony. Nie wiem, jak to zapisać we wzorze -- chyba, że zamiast wzoru dać pseudokod.}. Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie.
+Dla niektórych wyników utworzono również wykresy na podstawie sumarycznej przynależności punktów do granul z danego klastra. Mają postać kilku podwykresów, gdzie punktami w kolorze niebieskim oznaczono dane oryginalne. Dla każdego podwykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} \cdot [ \Granula \in \Klaster ]$, gdzie zapis $[P]$ wartościowany jest do 1, gdy warunek $P$ jest spełniony, w przeciwnym razie do 0 (wartość $\ClusterMembership_{\X\Granula}$ jest wliczana do sumy, gdy granula $\Granula$ należy do klastra $\Klaster$). Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie.
 
 \subsubsection{Dane syntetyczne}
 \label{sec:wyniki-jakosc-generowane}
