@@ -10,7 +10,6 @@ import pandas
 seed = 42
 n_granules = 50
 n_iterations = 80
-repeats = 1
 folderPath = "img/iter80/"
 
 
@@ -54,17 +53,20 @@ class DataEntry(object):
         self.strict_number_times = []
         self.fuzzy_number_times = dict()
 
-    def measure_strict_number_times(self):
+    def measure_strict_number_times(self, repeats, use_sklearn_lib):
         self.strict_number_times = []
         print("strict")
         for i in range(repeats):
-            hc = HierarchicalClustering(self.clusters_number)
+            if use_sklearn_lib:
+                hc = sklearn.cluster.AgglomerativeClustering(self.clusters_number)
+            else:
+                hc = HierarchicalClustering(self.clusters_number)
             start = time.time()
             hc.fit(self.data)
             end = time.time()
             self.strict_number_times.append((end - start) * 1000)
 
-    def measure_fuzzy_number_times(self):
+    def measure_fuzzy_number_times(self, repeats):
         self.fuzzy_number_times = dict()
         for n in self.granules_number:
             print(n)
@@ -83,9 +85,9 @@ class DataEntry(object):
                 self.fuzzy_number_times[n] = (end - start) * 1000
                 print((end - start) * 1000)
 
-    def measure_times(self):
-        self.measure_strict_number_times()
-        self.measure_fuzzy_number_times()
+    def measure_times(self, repeats, use_sklearn_lib):
+        self.measure_strict_number_times(repeats, use_sklearn_lib)
+        self.measure_fuzzy_number_times(repeats)
         print(np.mean(self.strict_number_times))
         for n in self.granules_number:
             print(np.mean(self.fuzzy_number_times[n]))
@@ -224,7 +226,7 @@ class DataEntry(object):
                     for clust in range(self.granules_number[i]):
                         ax[i, j].plot(centers[i][clust, 0] + 2 * fuzz[i][clust][0] * np.cos(t),
                                       centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(t),
-                                      color='magenta', alpha=0.5)
+                                      color='deeppink', alpha=0.5)
             if save_to_file:
                 plt.savefig(folderPath + self.name + relation_type + "_" + linkage[0] + ".pdf")
                 plt.close()
@@ -246,7 +248,7 @@ class DataEntry(object):
                         ax.plot_surface(centers[i][clust, 0] + 2 * fuzz[i][clust][0] * np.sin(p) * np.cos(t),
                                         centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(p) * np.sin(t),
                                         centers[i][clust, 2] + 2 * fuzz[i][clust][2] * np.cos(p),
-                                        color='magenta', alpha=0.5)
+                                        color='deeppink', alpha=0.5)
             if save_to_file:
                 plt.savefig(folderPath + self.name + relation_type + "_" + linkage[0] + ".pdf")
                 plt.close()
