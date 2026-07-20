@@ -103,7 +103,53 @@ class HierarchicalClustering:
         #         print(repr(self.distances[i, j]), end="\t")
         #     print()
 
-    def fuzzy_fit(self, granules, ksi, relation_type='t', linkage='single', generateLinkageMatrix=False):
+    def fuzzy_dendrogram(self, granules, ksi, relation_type='t', linkage='single'):
+        self.fuzzy_distance(granules)
+        n_samples = np.size(granules, 0)
+        formula = None
+        valid_indices = list(range(n_samples))
+        if linkage == 'single':
+            formula = _single_linkage
+        elif linkage == 'complete':
+            formula = _complete_linkage
+        else:
+            print("Invalid linkage")
+            return
+
+        self.linkage_matrix = []  #
+        self.linkage_clusters = [[x, 1] for x in range(n_samples)]  #
+        new_cluster_label = n_samples  #
+
+        for it in range(n_samples - 1):
+            min_num = FuzzyNumber(np.inf, 0)
+            row = 0
+            col = 0
+            for i in range(len(valid_indices) - 1):
+                for j in range(i + 1, len(valid_indices)):
+                    r, c = valid_indices[i], valid_indices[j]
+                    if self.distances[r, c].less(min_num, relation_type) > ksi:
+                        min_num = self.distances[r, c]
+                        row = r
+                        col = c
+            new_size = self.linkage_clusters[row][1] + self.linkage_clusters[col][1]  #
+            self.linkage_matrix.append(
+                [self.linkage_clusters[row][0], self.linkage_clusters[col][0], min_num.x, new_size])  #
+            self.linkage_clusters[row] = [new_cluster_label, new_size]  #
+            new_cluster_label += 1  #
+
+            # Iterate over one axis, change the row values to the minimum
+            valid_indices.remove(col)
+            for i in valid_indices:
+                if i != row:
+                    min_distance = formula(self.distances[row, i], self.distances[i, col], ksi, relation_type)
+                    self.distances[i, row] = min_distance
+                    self.distances[row, i] = min_distance
+                # self.distances[i, col] = FuzzyNumber(np.inf, 0)
+                # self.distances[col, i] = FuzzyNumber(np.inf, 0)
+
+        self.linkage_matrix = np.array(self.linkage_matrix)  #
+
+    def fuzzy_fit(self, granules, ksi, relation_type='t', linkage='single'):
         self.fuzzy_distance(granules)
         n_samples = np.size(granules, 0)
         self.labels = np.arange(0, n_samples, step=1)
@@ -117,12 +163,6 @@ class HierarchicalClustering:
             print("Invalid linkage")
             return
 
-        if generateLinkageMatrix:
-            self.n_clusters = 1  # scipy dendrogram requires a single result cluster
-            self.linkage_matrix = []  #
-            self.linkage_clusters = [[x, 1] for x in range(n_samples)]  #
-            new_cluster_label = n_samples  #
-
         for it in range(n_samples - self.n_clusters):
             min_num = FuzzyNumber(np.inf, 0)
             row = 0
@@ -134,12 +174,6 @@ class HierarchicalClustering:
                         min_num = self.distances[r, c]
                         row = r
                         col = c
-            if generateLinkageMatrix:
-                new_size = self.linkage_clusters[row][1] + self.linkage_clusters[col][1]  #
-                self.linkage_matrix.append(
-                    [self.linkage_clusters[row][0], self.linkage_clusters[col][0], min_num.x, new_size])  #
-                self.linkage_clusters[row] = [new_cluster_label, new_size]  #
-                new_cluster_label += 1  #
 
             # Iterate over one axis, change the row values to the minimum
             valid_indices.remove(col)
@@ -156,9 +190,6 @@ class HierarchicalClustering:
                 if self.labels[i] == max(row, col):
                     self.labels[i] = min(row, col)
 
-        if generateLinkageMatrix:
-            self.linkage_matrix = np.array(self.linkage_matrix)  #
-
         to_map = np.unique(self.labels)
         for i in range(self.labels.size):
             self.labels[i] = np.where(to_map == self.labels[i])[0][0]
@@ -169,16 +200,46 @@ class HierarchicalClustering:
         np.fill_diagonal(self.distances, np.inf)
         return self.distances
 
-    # Algorithm based on https://github.com/hhundiwala/hierarchical-clustering/tree/master
-    def fit(self, X, generateLinkageMatrix=False):
+    def strict_dendrogram(self, X):
         self.euclidean_distance(X)
         n_samples = np.size(X, 0)
         self.labels = np.arange(0, n_samples, step=1)
-        if generateLinkageMatrix:
-            self.n_clusters = 1  # scipy dendrogram requires a single result cluster
-            self.linkage_matrix = []  #
-            self.linkage_clusters = [[x, 1] for x in range(n_samples)]  #
-            new_cluster_label = n_samples  #
+
+        self.n_clusters = 1  # scipy dendrogram requires a single result cluster
+        self.linkage_matrix = []  #
+        self.linkage_clusters = [[x, 1] for x in range(n_samples)]  #
+        new_cluster_label = n_samples  #
+
+        for it in range(n_samples - 1):
+            min_distance = np.min(self.distances)  #
+            min_unraveled_index = np.argmin(self.distances)
+            # The matrix is symmetric so the row/col distinction is not important
+            # However, for the later part of the algorithm to work, row < col
+            row, col = np.unravel_index(min_unraveled_index, (n_samples, n_samples))
+            if row > col:
+                row, col = col, row
+            new_size = self.linkage_clusters[row][1] + self.linkage_clusters[col][1]  #
+            self.linkage_matrix.append(
+                [self.linkage_clusters[row][0], self.linkage_clusters[col][0], min_distance, new_size])  #
+            self.linkage_clusters[row] = [new_cluster_label, new_size]  #
+            new_cluster_label += 1  #
+
+            # Iterate over one axis, change the row values to the minimum
+            for i in range(n_samples):
+                if i != row:
+                    min_distance = min(self.distances[row, i], self.distances[i, col])
+                    self.distances[i, row] = min_distance
+                    self.distances[row, i] = min_distance
+                self.distances[i, col] = np.inf
+                self.distances[col, i] = np.inf
+
+        self.linkage_matrix = np.array(self.linkage_matrix)  #
+
+    # Algorithm based on https://github.com/hhundiwala/hierarchical-clustering/tree/master
+    def fit(self, X):
+        self.euclidean_distance(X)
+        n_samples = np.size(X, 0)
+        self.labels = np.arange(0, n_samples, step=1)
 
         for it in range(n_samples - self.n_clusters):
             min_distance = np.min(self.distances)  #
@@ -188,12 +249,6 @@ class HierarchicalClustering:
             row, col = np.unravel_index(min_unraveled_index, (n_samples, n_samples))
             if row > col:
                 row, col = col, row
-            if generateLinkageMatrix:
-                new_size = self.linkage_clusters[row][1] + self.linkage_clusters[col][1]  #
-                self.linkage_matrix.append(
-                    [self.linkage_clusters[row][0], self.linkage_clusters[col][0], min_distance, new_size])  #
-                self.linkage_clusters[row] = [new_cluster_label, new_size]  #
-                new_cluster_label += 1  #
 
             # Iterate over one axis, change the row values to the minimum
             for i in range(n_samples):
@@ -209,8 +264,6 @@ class HierarchicalClustering:
                 if self.labels[i] == max(row, col):
                     self.labels[i] = min(row, col)
 
-        if generateLinkageMatrix:
-            self.linkage_matrix = np.array(self.linkage_matrix)  #
         to_map = np.unique(self.labels)
         for i in range(self.labels.size):
             self.labels[i] = np.where(to_map == self.labels[i])[0][0]
