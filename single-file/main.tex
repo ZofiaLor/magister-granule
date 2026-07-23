@@ -339,6 +339,7 @@
 \input{oznaczenia.tex}
 
 \usepackage{siunitx}
+\sisetup{output-decimal-marker={,}}
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % listingi i fragmentu kodu źródłowego 
@@ -1844,59 +1845,59 @@ Wyniki dokładności, trafności i precyzji otrzymane na podstawie ostrego algor
 \centering
 \caption{Dokładność grupowania hierarchicznego danych algorytmem ostrym o łączności \SingleLinkage{}}
 \label{id:tab:acc-sl-strict}
-\begin{tabular}{lcccc}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{dokładność}\\
             \cmidrule{2-5}
-	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
 \midrule
-	    \blobs\ & 98,9896\% & 99,9939\% & 99,3894\% & 96,9635\% \\
-		\circles\ & 100\% & 100\% & 100\% & 100\% \\
-		\corners\ & 100\% & 100\% & 100\% & 100\% \\
-		\crescents\ & 100\% & 100\% & 100\% & 100\% \\
-		\laguna\ & 91,2538\% & 99,9697\% & 99,9842\% & 99,9907\% \\
-		\spheres\ & 100\% & 100\% & 100\% & 100\% \\
+	    \blobs\ & 0.9899 & 0.9999 & 0.9939 & 0.9696 \\
+		\circles\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\corners\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\crescents\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\laguna\ & 0.9125 & 0.9997 & 0.9998 & 0.9999 \\
+		\spheres\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \bottomrule
 \end{tabular}
-\end{table}  
-\ksremark{W tab. \ref{id:tab:acc-sl-strict} (i kolejnych) trzeba wyrównać liczby do separatora dziesiętnego. Ograniczyłbym też dokładność do maks. 2 miejsc po przecinku. Można też zamiast procentów podać wartość dziesiętne. To może ułatwić wyrównanie liczb.}
+\end{table}
 
 \begin{table}
 \centering
 \caption{Trafność grupowania hierarchicznego danych algorytmem ostrym o łączności \SingleLinkage{}}
 \label{id:tab:rec-sl-strict}
-\begin{tabular}{lcccc}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{trafność}\\
             \cmidrule{2-5}
-	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
 \midrule
-	    \blobs\ & 83,3297\% & 99,9979\% & 95,7081\% & 74,8745\% \\
-		\circles\ & 100\% & 100\% & 100\% & 100\% \\
-		\corners\ & 100\% & 100\% & 100\% & 100\% \\
-		\crescents\ & 100\% & 100\% & 100\% & 100\% \\
-		\laguna\ & 70,8419\% & 99,8990\% & 99,9474\% & 99,9691\% \\
-		\spheres\ & 100\% & 100\% & 100\% & 100\% \\
+	    \blobs\ & 0.8333 & 1.0000 & 0.9571 & 0.7487 \\
+		\circles\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\corners\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\crescents\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\laguna\ & 0.7084 & 0.9990 & 0.9995 & 0.9997 \\
+		\spheres\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \bottomrule
 \end{tabular}
 \end{table}  
+%\blobs\ & 83,3297\% & 99,9979\% & 95,7081\% & 74,8745\% \\
 
 \begin{table}
 \centering
 \caption{Precyzja grupowania hierarchicznego danych algorytmem ostrym o łączności \SingleLinkage{}}
 \label{id:tab:prec-sl-strict}
-\begin{tabular}{lcccc}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{precyzja}\\
             \cmidrule{2-5}
-	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
 \midrule
-	    \blobs\ & 82,9519\% & 99,8996\% & 93,9172\% & 72,8243\% \\
-		\circles\ & 100\% & 100\% & 100\% & 100\% \\
-		\corners\ & 100\% & 100\% & 100\% & 100\% \\
-		\crescents\ & 100\% & 100\% & 100\% & 100\% \\
-		\laguna\ & 83,7537\% & 99,9626\% & 99,9819\% & 99,9774\% \\
-		\spheres\ & 100\% & 100\% & 100\% & 100\% \\
+	    \blobs\ & 0.8295 & 0.9990 & 0.9392 & 0.7282 \\
+		\circles\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\corners\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\crescents\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\laguna\ & 0.8375 & 0.9996 & 0.9998 & 0.9998 \\
+		\spheres\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -1905,18 +1906,18 @@ Wyniki dokładności, trafności i precyzji otrzymane na podstawie ostrego algor
 \centering
 \caption{Dokładność grupowania hierarchicznego danych algorytmem ostrym o łączności \CompleteLinkage{}}
 \label{id:tab:acc-cl-strict}
-\begin{tabular}{lcccc}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{dokładność}\\
             \cmidrule{2-5}
-	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
 \midrule
-	    \blobs\ & 72,6066\% & 99,9939\% & 89,5644\% & 72,3716\% \\
-		\circles\ & 56,2017\% & 55,3280\% & 53,2986\% & 56,2662\% \\
-		\corners\ & 52,6533\% & 48,1830\% & 50,5334\% & 51,3014\% \\
-		\crescents\ & 79,8567\% & 80,1224\% & 80,3264\% & 78,2213\% \\
-		\laguna\ & 45,0770\% & 48,7489\% & 46,5281\% & 46,6356\% \\
-		\spheres\ & 58,5200\% & 57,1152\% & 56,4977\% & 66,1486\% \\
+	    \blobs\ & 0.7261 & 0.9999 & 0.8956 & 0.7237 \\
+		\circles\ & 0.5620 & 0.5533 & 0.5330 & 0.5627 \\
+		\corners\ & 0.5265 & 0.4818 & 0.5053 & 0.5130 \\
+		\crescents\ & 0.7986 & 0.8012 & 0.8032 & 0.7822 \\
+		\laguna\ & 0.4508 & 0.4875 & 0.4653 & 0.4664 \\
+		\spheres\ & 0.5852 & 0.5712 & 0.5650 & 0.6615 \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -1925,38 +1926,39 @@ Wyniki dokładności, trafności i precyzji otrzymane na podstawie ostrego algor
 \centering
 \caption{Trafność grupowania hierarchicznego danych algorytmem ostrym o łączności \CompleteLinkage{}}
 \label{id:tab:rec-cl-strict}
-\begin{tabular}{lcccc}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{trafność}\\
             \cmidrule{2-5}
-	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
 \midrule
-	    \blobs\ & 78,2487\% & 99,9979\% & 88,2168\% & 90,4066\% \\
-		\circles\ & 49,0029\% & 49,3986\% & 48,7550\% & 50,7111\% \\
-		\corners\ & 52,6533\% & 48,1830\% & 50,5334\% & 51,3014\% \\
-		\crescents\ & 79,8567\% & 80,1224\% & 80,3264\% & 78,2213\% \\
-		\laguna\ & 54,4682\% & 60,2569\% & 48,5567\% & 50,7216\% \\
-		\spheres\ & 54,7333\% & 37,2862\% & 48,0543\% & 58,9714\% \\
+	    \blobs\ & 0.7825 & 1.0000 & 0.8822 & 0.9041 \\
+		\circles\ & 0.4900 & 0.4940 & 0.4876 & 0.5071 \\
+		\corners\ & 0.5265 & 0.4818 & 0.5053 & 0.5130 \\
+		\crescents\ & 0.7986 & 0.8012 & 0.8033 & 0.7822 \\
+		\laguna\ & 0.5447 & 0.6026 & 0.4856 & 0.5072 \\
+		\spheres\ & 0.5473 & 0.3729 & 0.4805 & 0.5897 \\
 \bottomrule
 \end{tabular}
 \end{table}  
+% \blobs\ & 78,2487\% & 99,9979\% & 88,2168\% & 90,4066\% \\
 
 \begin{table}
 \centering
 \caption{Precyzja grupowania hierarchicznego danych algorytmem ostrym o łączności \CompleteLinkage{}}
 \label{id:tab:prec-cl-strict}
-\begin{tabular}{lcccc}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{precyzja}\\
             \cmidrule{2-5}
-	kształt & dane oryginalne &  50 granul & 100 granul & 200 granul \\
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
 \midrule
-	    \blobs\ & 60,5350\% & 99,8996\% & 87,5319\% & 65,9098\% \\
-		\circles\ & 48,8136\% & 49,4785\% & 48,8043\% & 50,5186\% \\
-		\corners\ & 49,5570\% & 47,7896\% & 46,3080\% & 48,2794\% \\
-		\crescents\ & 83,7208\% & 80,7172\% & 82,8527\% & 80,9327\% \\
-		\laguna\ & 39,8365\% & 43,0156\% & 35,6135\% & 38,0403\% \\
-		\spheres\ & 51,4251\% & 44,8004\% & 48,9059\% & 53,2369\% \\
+	    \blobs\ & 0.6054 & 0.9990 & 0.8753 & 0.6591 \\
+		\circles\ & 0.4881 & 0.4948 & 0.4880 & 0.5052 \\
+		\corners\ & 0.4956 & 0.4779 & 0.4631 & 0.4828 \\
+		\crescents\ & 0.8372 & 0.8072 & 0.8285 & 0.8093 \\
+		\laguna\ & 0.3984 & 0.4302 & 0.3561 & 0.3804 \\
+		\spheres\ & 0.5143 & 0.4480 & 0.4891 & 0.5324 \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -1976,18 +1978,18 @@ Co istotne, dla większości plików wejściowych, za wyjątkiem niektórych dan
 \centering
 \caption{Dokładność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności}
 \label{id:tab:acc-ksztalt}
-\begin{tabular}{lcc}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{2}{c}{dokładność}\\
             \cmidrule{2-3}
-	kształt & \SingleLinkage{} &  \CompleteLinkage{} \\
+	kształt &  \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	    \blobs\  & 98,7404\% & 87,5816\% \\
-		\circles\ & 99,8159\% & 57,3777\% \\
-		\corners\  & 94,8454\% & 51,6697\% \\
-		\crescents\  & 99,4291\% & 79,7707\% \\
-		\laguna\  & 98,7580\% & 46,8501\% \\
-		\spheres\  & 98,7557\% & 70,5616\% \\
+	    \blobs\  & 0.9874 & 0.8758 \\
+		\circles\ & 0.9982 & 0.5738 \\
+		\corners\  & 0.9485 & 0.5167 \\
+		\crescents\  & 0.9943 & 0.7977 \\
+		\laguna\  & 0.9876 & 0.4685 \\
+		\spheres\  & 0.9876 & 0.7056 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1996,18 +1998,18 @@ Co istotne, dla większości plików wejściowych, za wyjątkiem niektórych dan
 \centering
 \caption{Trafność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności}
 \label{id:tab:rec-ksztalt}
-\begin{tabular}{lrr}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{2}{c}{trafność}\\
             \cmidrule{2-3}
-	kształt & \SingleLinkage{} &  \CompleteLinkage{} \\
+	kształt & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	    \blobs\  & 88,4588\% & 89,6780\% \\
-		\circles\ & 99,7088\% & 49,6957\% \\
-		\corners\  & 94,8454\% & 51,6697\% \\
-		\crescents\  & 99,4291\% & 79,7707\% \\
-		\laguna\  & 96,2464\% & 55,7066\% \\
-		\spheres\  & 95,1177\% & 40,8578\% \\
+	    \blobs\  & 0.8846 & 0.8968 \\
+		\circles\ & 0.9971 & 0.4970 \\
+		\corners\  & 0.9485 & 0.5167 \\
+		\crescents\  & 0.9943 & 0.7977 \\
+		\laguna\  & 0.9625 & 0.5571 \\
+		\spheres\  & 0.9512 & 0.4086 \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -2016,18 +2018,18 @@ Co istotne, dla większości plików wejściowych, za wyjątkiem niektórych dan
 \centering
 \caption{Precyzja grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności}
 \label{id:tab:prec-ksztalt}
-\begin{tabular}{lrr}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{2}{c}{precyzja}\\
             \cmidrule{2-3}
-	kształt & \SingleLinkage{} &  \CompleteLinkage{} \\
+	kształt & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	    \blobs\  & 87,2735\% & 83,2466\% \\
-		\circles\ & 99,8379\% & 49,4699\% \\
-		\corners\  & 95,2282\% & 48,3977\% \\
-		\crescents\  & 99,6430\% & 82,0669\% \\
-		\laguna\  & 98,1172\% & 40,0251\% \\
-		\spheres\  & 94,7975\% & 44,4152\% \\
+	    \blobs\  & 0.8727 & 0.8325 \\
+		\circles\ & 0.9984 & 0.4947 \\
+		\corners\  & 0.9523 & 0.4840 \\
+		\crescents\  & 0.9964 & 0.8207 \\
+		\laguna\  & 0.9812 & 0.4003 \\
+		\spheres\  & 0.9480 & 0.4442 \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -2044,23 +2046,25 @@ Jak pokazuje tabela \ref{id:tab:blobs-max-quality}, dla niektórych liczebności
 \centering
 \caption{Maksymalne wartości metryk jakości dla danych \blobs{} przy łączności \SingleLinkage{}.}
 \label{id:tab:blobs-max-quality}
-\begin{tabular}{rccc}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{3}{c}{jakość}\\
             \cmidrule{2-4}
-	rozmiar danych & dokładność &  trafność & precyzja \\
+	rozmiar danych & \multicolumn{1}{c}{dokładność} &  \multicolumn{1}{c}{trafność} & \multicolumn{1}{c}{precyzja} \\
 \midrule
-	    1000  & 100\% & 100\% & 100\% \\
-		2000 & 100\% & 100\% & 100\% \\
-		5000  & 99,98\% & 99,9931\% & 99,67\% \\
-		10000  & 100\% & 100\% & 100\% \\
-		20000  & 100\% & 100\% & 100\% \\
-		30000  & 99,9933\% & 99,9977\% & 99,8893\% \\
-		40000  & 100\% & 100\% & 100\% \\
-		50000  & 99,98\% & 99,9993\% & 99,9667\% \\
+	    1000  & 1.0000 & 1.0000 & 1.0000 \\
+		2000 & 1.0000 & 1.0000 & 1.0000 \\
+		5000  & 0.9998 & 0.9999 & 0.9967 \\
+		10000  & 1.0000 & 1.0000 & 1.0000 \\
+		20000  & 1.0000 & 1.0000 & 1.0000 \\
+		30000  & 0.9999 & 1.0000 & 0.9989 \\
+		40000  & 1.0000 & 1.0000 & 1.0000 \\
+		50000  & 0.9998 & 1.0000 & 0.9997 \\
 \bottomrule
 \end{tabular}
 \end{table}  
+% 30000  & 99,9933\% & 99,9977\% & 99,8893\% \\
+% 50000  & 99,98\% & 99,9993\% & 99,9667\% \\
 
 \subparagraph{\circles{}}
 Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($\xi \in \{0.9, 0.95\}$). W znacznej większości przypadków, dokładność grupowania wynosi 100\%, tak jak dla grupowania ostrego. Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs\, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
@@ -2088,20 +2092,20 @@ Proporcja danych wynosi 8:1:1 (otaczający okrąg ma większą liczebność), je
 \centering
 \caption{Maksymalne wartości metryk jakości dla danych \laguna{} przy łączności \SingleLinkage{}.}
 \label{id:tab:laguna-max-quality}
-\begin{tabular}{rccc}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{3}{c}{jakość}\\
             \cmidrule{2-4}
-	rozmiar danych & dokładność &  trafność & precyzja \\
+	rozmiar danych & \multicolumn{1}{c}{dokładność} &  \multicolumn{1}{c}{trafność} & \multicolumn{1}{c}{precyzja} \\
 \midrule
-	    1000  & 100\% & 100\% & 100\% \\
-		2000 & 100\% & 100\% & 100\% \\
-		5000  & 100\% & 100\% & 100\% \\
-		10000  & 100\% & 100\% & 100\% \\
-		20000  & 99,99\% & 99,9667\% & 99,9813\% \\
-		30000  & 99,9933\% & 99,9778\% & 99,9903\% \\
-		40000  & 99,9925\% & 99,975\% & 99,9823\% \\
-		50000  & 99,97\% & 99,9002\% & 99,9675\% \\
+	    1000  & 1.0000 & 1.0000 & 1.0000 \\
+		2000 & 1.0000 & 1.0000 & 1.0000 \\
+		5000  & 1.0000 & 1.0000 & 1.0000 \\
+		10000  & 1.0000 & 1.0000 & 1.0000 \\
+		20000  & 0.9999 & 0.9997 & 0.9998 \\
+		30000  & 0.9999 & 0.9998 & 0.9999 \\
+		40000  & 0.9999 & 0.9998 & 0.9998 \\
+		50000  & 0.9997 & 0.9990 & 0.9997 \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -2225,20 +2229,20 @@ Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone
 \centering
 \caption{Dokładność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
 \label{id:tab:acc-ksztalt-shape-dep}
-\begin{tabular}{lcccc}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{dokładność}\\
             \cmidrule{2-5}
 			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
             \cmidrule{2-5}
-	kształt & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+	kształt & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	    \blobs\  & 99,0033\% & 87,5504\% & 86,3917\% & 76,0942\% \\
-		\circles\ & 99,8159\% & 55,9642\% & 81,3611\% & 46,2302\% \\
-		\corners\  & 94,8798\% & 52,4794\% & 76,9991\% & 42,8511\% \\
-		\crescents\  & 99,4289\% & 78,6924\% & 81,8781\% & 65,2166\% \\
-		\laguna\  & 98,7033\% & 47,4800\% & 79,9512\% & 38,2663\% \\
-		\spheres\  & 98,7115\% & 66,6523\% & 78,0562\% & 54,8465\% \\
+	    \blobs\  & 0.9900 & 0.8755 & 0.8639 & 0.7609 \\
+		\circles\ & 0.9982 & 0.5596 & 0.8136 & 0.4623 \\
+		\corners\  & 0.9488 & 0.5248 & 0.7700 & 0.4285 \\
+		\crescents\  & 0.9943 & 0.7869 & 0.8188 & 0.6522 \\
+		\laguna\  & 0.9870 & 0.4748 & 0.7995 & 0.3827 \\
+		\spheres\  & 0.9871 & 0.6665 & 0.7806 & 0.5485 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2247,20 +2251,20 @@ Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone
 \centering
 \caption{Trafność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
 \label{id:tab:rec-ksztalt-shape-dep}
-\begin{tabular}{lcccc}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{trafność}\\
             \cmidrule{2-5}
 			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
             \cmidrule{2-5}
-	kształt & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+	kształt & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	    \blobs\  & 85,8545\% & 85,0807\% & 74,7377\% & 74,3498\% \\
-		\circles\ & 99,7088\% & 49,7552\% & 81,2541\% & 40,5606\% \\
-		\corners\  & 94,8544\% & 52,2929\% & 76,9871\% & 42,7678\% \\
-		\crescents\  & 99,4289\% & 78,6814\% & 81,8781\% & 65,2116\% \\
-		\laguna\  & 96,2867\% & 55,6583\% & 77,6934\% & 45,1308\% \\
-		\spheres\  & 95,1200\% & 40,8295\% & 74,5046\% & 32,5115\% \\
+	    \blobs\  & 0.8585 & 0.8508 & 0.7474 & 0.7435 \\
+		\circles\ & 0.9971 & 0.4976 & 0.8125 & 0.4056 \\
+		\corners\  & 0.9485 & 0.5229 & 0.7699 & 0.4277 \\
+		\crescents\  & 0.9943 & 0.7868 & 0.8188 & 0.6521 \\
+		\laguna\  & 0.9629 & 0.5566 & 0.7769 & 0.4513 \\
+		\spheres\  & 0.9512 & 0.4083 & 0.7450 & 0.3251 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2269,20 +2273,20 @@ Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone
 \centering
 \caption{Precyzja grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
 \label{id:tab:prec-ksztalt-shape-dep}
-\begin{tabular}{lcccc}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{precyzja}\\
             \cmidrule{2-5}
 			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
             \cmidrule{2-5}
-	kształt & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+	kształt & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	    \blobs\  & 85,2487\% & 82,7817\% & 74,1242\% & 71,7945\% \\
-		\circles\ & 99,8379\% & 49,4878\% & 81,3831\% & 40,3351\% \\
-		\corners\  & 95,2396\% & 48,9359\% & 77,3953\% & 40,0577\% \\
-		\crescents\  & 99,6244\% & 81,0472\% & 82,0736\% & 67,1825\% \\
-		\laguna\  & 97,6834\% & 40,7718\% & 79,2011\% & 32,7719\% \\
-		\spheres\  & 94,7714\% & 41,5135\% & 74,1778\% & 34,1132\% \\
+	    \blobs\  & 0.8525 & 0.8278 & 0.7412 & 0.7179 \\
+		\circles\ & 0.9984 & 0.4949 & 0.8138 & 0.4034 \\
+		\corners\  & 0.9524 & 0.4894 & 0.7740 & 0.4006 \\
+		\crescents\  & 0.9962 & 0.8105 & 0.8207 & 0.6718 \\
+		\laguna\  & 0.9768 & 0.4077 & 0.7920 & 0.3277 \\
+		\spheres\  & 0.9477 & 0.4151 & 0.7418 & 0.3411 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2314,15 +2318,15 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 \centering
 \caption{Dokładność grupowania hierarchicznego danych w zależności od liczby granul i~łączności}
 \label{id:tab:acc-gn}
-\begin{tabular}{rrr}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{2}{c}{dokładność}\\
             \cmidrule{2-3}
-	liczba granul & \SingleLinkage{} &  \CompleteLinkage{} \\
+	liczba granul & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	50 & 97,9193\% & 67,6764\% \\
-	100 & 98,7219\% & 66,0573\% \\
-	200 & 98,5311\% & 63,1719\% \\
+	50 & 0.9792 & 0.6768 \\
+	100 & 0.9872 & 0.6606 \\
+	200 & 0.9853 & 0.6317 \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -2331,15 +2335,15 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 \centering
 \caption{Trafność grupowania hierarchicznego danych w zależności od liczby granul i~łączności}
 \label{id:tab:rec-gn}
-\begin{tabular}{rrr}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{2}{c}{trafność}\\
             \cmidrule{2-3}
-	liczba granul & \SingleLinkage{} &  \CompleteLinkage{} \\
+	liczba granul & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	50 & 96,3905\% & 62,7023\% \\
-	100 & 96,9951\% & 61,6141\% \\
-	200 & 93,5175\% & 59,3729\% \\
+	50 & 0.9639 & 0.6270 \\
+	100 & 0.9700 & 0.6161 \\
+	200 & 0.9352 & 0.5937 \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -2348,15 +2352,15 @@ Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla więks
 \centering
 \caption{Precyzja grupowania hierarchicznego danych w zależności od liczby granul i~łączności}
 \label{id:tab:prec-gn}
-\begin{tabular}{rrr}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{2}{c}{precyzja}\\
             \cmidrule{2-3}
-	liczba granul & \SingleLinkage{} &  \CompleteLinkage{} \\
+	liczba granul & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	50 & 96,5762\% & 60,6208\% \\
-	100 & 96,9830\% & 58,5948\% \\
-	200 & 93,8895\% & 54,5952\% \\
+	50 & 0.9658 & 0.6062 \\
+	100 & 0.9698 & 0.5859 \\
+	200 & 0.9389 & 0.5460 \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -2378,15 +2382,15 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 \centering
 \caption{Dokładność grupowania hierarchicznego danych w zależności od typu relacji i łączności}
 \label{id:tab:acc-rt}
-\begin{tabular}{rrr}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{2}{c}{dokładność}\\
             \cmidrule{2-3}
-	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} \\
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	trójkątna & 99,5228\% & 65,1280\% \\
-	wykładnicza & 97,8022\% & 65,7017\% \\
-	gaussowska & 97,8473\% & 66,0760\% \\
+	trójkątna & 0.9952 & 0.6513 \\
+	wykładnicza & 0.9780 & 0.6570 \\
+	gaussowska & 0.9785 & 0.6608 \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -2396,15 +2400,15 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 \centering
 \caption{Trafność grupowania hierarchicznego danych w zależności od typu relacji i~łączności}
 \label{id:tab:rec-rt}
-\begin{tabular}{rrr}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{2}{c}{trafność}\\
             \cmidrule{2-3}
-	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} \\
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	trójkątna & 97,7600\% & 61,2267\% \\
-	wykładnicza & 94,7597\% & 61,1654\% \\
-	gaussowska & 94,3834\% & 61,2972\% \\
+	trójkątna & 0.9776 & 0.6123 \\
+	wykładnicza & 0.9476 & 0.6117 \\
+	gaussowska & 0.9438 & 0.6130 \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -2413,15 +2417,15 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 \centering
 \caption{Precyzja grupowania hierarchicznego danych w zależności od typu relacji i~łączności}
 \label{id:tab:prec-rt}
-\begin{tabular}{rrr}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{2}{c}{precyzja}\\
             \cmidrule{2-3}
-	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} \\
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	trójkątna & 97,6227\% & 57,8388\% \\
-	wykładnicza & 95,1663\% & 57,9002\% \\
-	gaussowska & 94,6597\% & 58,0717\% \\
+	trójkątna & 0.9762 & 0.5784 \\
+	wykładnicza & 0.9517 & 0.5790 \\
+	gaussowska & 0.9466 & 0.5807 \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -2434,17 +2438,17 @@ W przypadku relacji trójkątnej, szum stanowi przeciętnie około 47\% danych -
 \centering
 \caption{Dokładność grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
 \label{id:tab:acc-rt-shape-dep}
-\begin{tabular}{rrrrr}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{dokładność}\\
             \cmidrule{2-5}
 			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
             \cmidrule{2-5}
-	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	trójkątna & 99,6472\% & 62,6451\% & 46,6946\% & 29,9881\% \\
-	wykładnicza & 97,7899\% & 65,6977\% & 97,7899\% & 65,6977\% \\
-	gaussowska & 97,8342\% & 66,0665\% & 97,8342\% & 66,0665\% \\
+	trójkątna & 0.9965 & 0.6265 & 0.4669 & 0.2999 \\
+	wykładnicza & 0.9779 & 0.6570 & 0.9779 & 0.6570 \\
+	gaussowska & 0.9783 & 0.6607 & 0.9783 & 0.6607 \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -2453,17 +2457,17 @@ W przypadku relacji trójkątnej, szum stanowi przeciętnie około 47\% danych -
 \centering
 \caption{Trafność grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
 \label{id:tab:rec-rt-shape-dep}
-\begin{tabular}{rrrrr}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{trafność}\\
             \cmidrule{2-5}
 			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
             \cmidrule{2-5}
-	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	trójkątna & 96,7141\% & 59,0667\% & 44,6149\% & 28,1838\% \\
-	wykładnicza & 94,6528\% & 60,9238\% & 94,6528\% & 60,9238\% \\
-	gaussowska & 94,2597\% & 61,1585\% & 94,2597\% & 61,1585\% \\
+	trójkątna & 0.9671 & 0.5907 & 0.4461 & 0.2818 \\
+	wykładnicza & 0.9465 & 0.6092 & 0.9465 & 0.6092 \\
+	gaussowska & 0.9426 & 0.6116 & 0.9426 & 0.6116 \\
 \bottomrule
 \end{tabular}
 \end{table} 
@@ -2472,17 +2476,17 @@ W przypadku relacji trójkątnej, szum stanowi przeciętnie około 47\% danych -
 \centering
 \caption{Precyzja grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
 \label{id:tab:prec-rt-shape-dep}
-\begin{tabular}{rrrrr}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
             & \multicolumn{4}{c}{precyzja}\\
             \cmidrule{2-5}
 			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
             \cmidrule{2-5}
-	typ relacji & \SingleLinkage{} &  \CompleteLinkage{} & \SingleLinkage{} &  \CompleteLinkage{} \\
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
 \midrule
-	trójkątna & 96,5923\% & 56,3474\% & 44,5672\% & 27,2059\% \\
-	wykładnicza & 95,0716\% & 57,8856\% & 95,0716\% & 57,8856\% \\
-	gaussowska & 94,5388\% & 58,0360\% & 94,5388\% & 58,0360\% \\
+	trójkątna & 0.9659 & 0.5635 & 0.4457 & 0.2721 \\
+	wykładnicza & 0.9507 & 0.5789 & 0.9507 & 0.5789 \\
+	gaussowska & 0.9454 & 0.5804 & 0.9454 & 0.5804 \\
 \bottomrule
 \end{tabular}
 \end{table} 
