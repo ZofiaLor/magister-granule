@@ -44,6 +44,7 @@ def main():
                     fullData[file.name[:-5]] = DataEntry(f.read(), file.name[:-5])
                 for key, value in num_of_clusters.items():
                     if key in file.name:
+                        fullData[file.name[:-5]].name_root = key
                         fullData[file.name[:-5]].clusters_number = value
                         break
     plot_results(args.filename, args.save_plot, args.linkage)

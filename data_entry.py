@@ -5,12 +5,13 @@ from hierarchy import HierarchicalClustering, Granule, calculate_fcm_variance, F
 from fuzzy_cmeans import FuzzyCMeans
 import time
 import pandas
+import os
 
 # Constants
 seed = 42
 n_granules = 50
 n_iterations = 80
-folderPath = "img/iter80/"
+folderPath = "img/granule_visualization/"
 
 
 class DataEntry(object):
@@ -38,6 +39,7 @@ class DataEntry(object):
                 self.data = np.array(list(zip(x, y)))
         self.dim = dim
         self.name = name
+        self.name_root = name
         self.length = self.data.shape[0]
         rng = np.random.default_rng(seed)
         p = rng.permutation(self.length)
@@ -227,11 +229,6 @@ class DataEntry(object):
                         ax[i, j].plot(centers[i][clust, 0] + 2 * fuzz[i][clust][0] * np.cos(t),
                                       centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(t),
                                       color='deeppink', alpha=0.5)
-            if save_to_file:
-                plt.savefig(folderPath + self.name + relation_type + "_" + linkage[0] + ".pdf")
-                plt.close()
-            else:
-                plt.show()
         else:
             fig = plt.figure(figsize=(12, 10))
             for i in range(len(self.granules_number)):
@@ -249,8 +246,11 @@ class DataEntry(object):
                                         centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(p) * np.sin(t),
                                         centers[i][clust, 2] + 2 * fuzz[i][clust][2] * np.cos(p),
                                         color='deeppink', alpha=0.5)
-            if save_to_file:
-                plt.savefig(folderPath + self.name + relation_type + "_" + linkage[0] + ".pdf")
-                plt.close()
-            else:
-                plt.show()
+        if save_to_file:
+            path = folderPath + self.name_root
+            if not os.path.exists(path):
+                os.makedirs(path)
+            plt.savefig(path + "/" + self.name + relation_type + "_" + linkage[0] + ".pdf")
+            plt.close()
+        else:
+            plt.show()

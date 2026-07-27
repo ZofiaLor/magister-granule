@@ -70,4 +70,4 @@ for folder in os.scandir("dane_labelled"):
                     fullData[file.name[:-5]].clusters_number = value
                     break
 
-plot_membership(fullData["laguna40000"], 50)
+plot_membership(fullData["laguna40000"], 200)

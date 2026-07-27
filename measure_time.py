@@ -95,6 +95,7 @@ def main():
                     fullData[file.name[:-5]] = DataEntry(f.read(), file.name[:-5])
                 for key, value in num_of_clusters.items():
                     if key in file.name:
+                        fullData[file.name[:-5]].name_root = key
                         fullData[file.name[:-5]].clusters_number = value
                         break
     compare_time_complexity(args.repeats, args.save_times, args.save_plot, args.library_function, args.filename)
