@@ -53,6 +53,8 @@ def compare_time_complexity(repeats, save_results, save_plot, use_sklearn_lib, n
     results = [list(i) for i in zip(*results)]
     results = pandas.DataFrame(results, columns=["strict", "50 granules", "100 granules", "200 granules"])
     if save_results:
+        if not os.path.exists(resultsFolderPath):
+            os.makedirs(resultsFolderPath)
         results.to_csv(resultsFolderPath + "_times.csv")
     else:
         print(results.to_string())
@@ -69,6 +71,8 @@ def compare_time_complexity(repeats, save_results, save_plot, use_sklearn_lib, n
                          "Grupowanie hierarchiczne 100 granul", "Grupowanie hierarchiczne 200 granul"],
                         bbox_to_anchor=(0.5, -0.38), loc='lower center')
     if save_plot:
+        if not os.path.exists(imageFolderPath):
+            os.makedirs(imageFolderPath)
         plt.savefig(imageFolderPath + "comparing_times_sklearn.pdf", bbox_extra_artists=[legend], bbox_inches='tight')
     else:
         plt.tight_layout()

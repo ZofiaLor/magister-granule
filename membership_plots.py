@@ -1,4 +1,5 @@
 import os
+import argparse
 import matplotlib.pyplot as plt
 from data_entry import DataEntry
 from hierarchy import HierarchicalClustering, Granule, calculate_fcm_variance, FuzzyNumber
@@ -56,18 +57,28 @@ def plot_membership(data: DataEntry, n_granules):
         plt.show()
 
 
-for folder in os.scandir("dane_labelled"):
-    for file in os.scandir(folder.path):
-        with open(file.path) as f:
-            # Assumption: all folders contain only files with .data extension
-            names.append(file.name[:-5])
-            if "spheres" in file.name:
-                fullData[file.name[:-5]] = DataEntry(f.read(), file.name[:-5], 3)
-            else:
-                fullData[file.name[:-5]] = DataEntry(f.read(), file.name[:-5])
-            for key, value in num_of_clusters.items():
-                if key in file.name:
-                    fullData[file.name[:-5]].clusters_number = value
-                    break
+def main():
+    parser = argparse.ArgumentParser(prog="Plot Memberships",
+                                     description="Plot memberships of points to each hierarchical clustering cluster")
+    parser.add_argument("filename", help="name of the data file (e.g. blobs1000)")
+    parser.add_argument("-n", "--num_granules", type=int, default=100, help="number of granules, 100 by default")
+    args = parser.parse_args()
+    for folder in os.scandir("dane_labelled"):
+        for file in os.scandir(folder.path):
+            with open(file.path) as f:
+                # Assumption: all folders contain only files with .data extension
+                names.append(file.name[:-5])
+                if "spheres" in file.name:
+                    fullData[file.name[:-5]] = DataEntry(f.read(), file.name[:-5], 3)
+                else:
+                    fullData[file.name[:-5]] = DataEntry(f.read(), file.name[:-5])
+                for key, value in num_of_clusters.items():
+                    if key in file.name:
+                        fullData[file.name[:-5]].clusters_number = value
+                        break
 
-plot_membership(fullData["laguna40000"], 200)
+    plot_membership(fullData[args.filename], args.num_granules)
+
+
+if __name__ == "__main__":
+    main()

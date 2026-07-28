@@ -32,6 +32,8 @@ def measure_accuracy_recall_precision(linkage, specific_file=None, shape_depende
                 result = fullData[root + str(data_size)].measure_accuracy(shape_dependent_membership=shape_dependent,
                                                                           linkage=linkage)
                 accuracy_results = pandas.concat([accuracy_results, result], ignore_index=True)
+            if not os.path.exists(folderPath):
+                os.makedirs(folderPath)
             if shape_dependent:
                 accuracy_results.to_csv(folderPath + root + "_" + linkages[linkage] + "_shape_dep_accuracy.csv")
             else:
@@ -53,6 +55,8 @@ def measure_strict_accuracy_recall_precision(linkage, specific_file=None):
                 print(root + str(data_size))
                 result = fullData[root + str(data_size)].measure_strict_accuracy(linkage=linkage)
                 accuracy_results = pandas.concat([accuracy_results, result], ignore_index=True)
+            if not os.path.exists(folderPath):
+                os.makedirs(folderPath)
             accuracy_results.to_csv(folderPath + root + "_" + linkages[linkage] + "_strict_accuracy.csv")
 
 
