@@ -1475,7 +1475,7 @@ gdzie:
 	\item \texttt{-h} (alternatywnie: \texttt{--help}) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
 	\item \texttt{-f FILENAME} (alternatywnie: \texttt{--filename FILENAME}) -- wybór konkretnego pliku z danymi do pomiaru (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykonywane są pomiary na wszystkich plikach,
 	\item \texttt{-l \{sl,single,cl,complete\}} (alternatywnie: \texttt{-linkage \{sl,single,cl,complete\}}) -- łączność grupowania hierarchicznego, gdzie ,,sl'' i ,,single'' to łączność \SingleLinkage{}, a ,,cl'' i ,,complete'' -- \CompleteLinkage{},
-	\item \texttt{-r} (alternatywnie: \texttt{--relation\_dependent}) -- obliczanie przynależności punktów do granul na podstawie relacji $\tnorm$-podobieństwa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$,
+	\item \texttt{-r} (alternatywnie: \texttt{--relation\_dependent}) -- obliczanie przynależności punktów do granul na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$,
 	\item \texttt{--strict} -- dodatkowe pomiary metryk jakości dla grupowania ostrego algorytmem \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn}.
 \end{itemize}
 
@@ -1655,7 +1655,7 @@ Trafność i precyzję można rozszerzyć na wiele klas na różne sposoby. W ba
 
 Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Na potrzeby porównania konieczne jest określenie, do której granuli należy każdy punkt. Przynależność tą wyznaczano na dwa sposoby na podstawie
 (1)  macierzy przynależności do klastra wyznaczonego przez algorytm rozmytych $c$-średnich $\mClusterMembership$ i 
-(2)  wartości relacji $\tnorm$-podobieństwa $\nPodobienstwo$.
+(2)  wartości relacji $\ast$-podobieństwa $\nPodobienstwo$.
 
 Pierwsze podejście 
 %\paragraph{Na podstawie macierzy $\mClusterMembership$}
@@ -1893,6 +1893,8 @@ Czasy wykonania algorytmu rozmytego \MojAlg{} na dużych danych przedstawia rys.
 
 Na wykresach wyników grupowania hierarchicznego metodą rozmytą punkty szare odpowiadają współrzędnym oryginalnych danych. Wyjątkiem są wykresy danych \spheres, gdzie oryginalne punkty pominięto, aby zachować czytelność wykresu. Punkty kolorowe odpowiadają środkom granul, gdzie środki o tym samym kolorze należą do tego samego klastra. 
 Elipsy (elipsoidy dla \spheres) w kolorze różowym wizualizują rozmycie granul, gdzie długość każdej półosi jest równa dwukrotności rozmycia w danym wymiarze. Mnożnik ten został wybrany ze względu na dobrą czytelność wynikowych wykresów.
+
+Wszystkie wykresy zamieszczono w katalogu \texttt{img/granule\_visualization}, pogrupowane w podkatalogach według kształtu danych (\blobs{}, \circles{}, \corners{}, \crescents{}, \laguna{} i \spheres{}). Nazwa każdego pliku ma format \texttt{[kształt][liczba\_danych][relacja]\_[łączność].pdf}, gdzie ,,relacja'': \texttt{t} (trójkątna), \texttt{e} (wykładnicza) lub \texttt{g} (gaussowska), a ,,łączność'': \texttt{s} (\SingleLinkage{}) lub \texttt{c} (\CompleteLinkage{}).
 
 Dla niektórych wyników utworzono również wykresy na podstawie sumarycznej przynależności punktów do granul z danego klastra. Mają postać kilku podwykresów, gdzie punktami w kolorze niebieskim oznaczono dane oryginalne. Dla każdego podwykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} \cdot [ \Granula \in \Klaster ]$, gdzie zapis $[P]$ wartościowany jest do 1, gdy warunek $P$ jest spełniony, w przeciwnym razie do 0 (wartość $\ClusterMembership_{\X\Granula}$ jest wliczana do sumy, gdy granula $\Granula$ należy do klastra $\Klaster$). Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie.
 
@@ -2280,14 +2282,14 @@ Wyniki te należy też analizować w porównaniu z wynikami algorytmu ostrego (t
 \label{fig:spheres1000ec}
 \end{figure}
 
-\subparagraph{Przynależność określona na podstawie relacji $\star$-podobieństwa}
-Wyniki dla pomiarów, gdzie przynależność punktów do granul określono na podstawie relacji $\star$-podobieństwa przedstawiono w tabelach \ref{id:tab:acc-ksztalt-shape-dep}, \ref{id:tab:rec-ksztalt-shape-dep} i \ref{id:tab:prec-ksztalt-shape-dep}. Dodatkowo, gdy szum nie jest uwzględniany, dla każdego pliku wejściowego istnieje taka kombinacja parametrów, dla której wartości metryk wynoszą 100\%. Dla relacji trójkątnej, tylko pewien podzbiór punktów najbliżej środków granul będzie uwzględniony, jest więc mniejsza szansa na niezgodne z oczekiwaniami przypisanie do granuli. Jak pokazuje rys. \ref{fig:shape-dep}, wiąże się to jednak z utratą dużego odsetka informacji.
+\subparagraph{Przynależność określona na podstawie relacji $\ast$-podobieństwa}
+Wyniki dla pomiarów, gdzie przynależność punktów do granul określono na podstawie relacji $\ast$-podobieństwa przedstawiono w tabelach \ref{id:tab:acc-ksztalt-shape-dep}, \ref{id:tab:rec-ksztalt-shape-dep} i \ref{id:tab:prec-ksztalt-shape-dep}. Dodatkowo, gdy szum nie jest uwzględniany, dla każdego pliku wejściowego istnieje taka kombinacja parametrów, dla której wartości metryk wynoszą 100\%. Dla relacji trójkątnej, tylko pewien podzbiór punktów najbliżej środków granul będzie uwzględniony, jest więc mniejsza szansa na niezgodne z oczekiwaniami przypisanie do granuli. Jak pokazuje rys. \ref{fig:shape-dep}, wiąże się to jednak z utratą dużego odsetka informacji.
 
 Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone do metryk dla przynależności określonej na podstawie macierzy $\mClusterMembership$ (tabele \ref{id:tab:acc-ksztalt}, \ref{id:tab:rec-ksztalt} i \ref{id:tab:prec-ksztalt}), natomiast gdy jest on uwzględniony, wyniki są niższe o nawet kilkanaście punktów procentowych.
 
 \begin{table}
 \centering
-\caption{Dokładność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\caption{Dokładność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
 \label{id:tab:acc-ksztalt-shape-dep}
 \begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
@@ -2309,7 +2311,7 @@ Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone
 
 \begin{table}
 \centering
-\caption{Trafność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\caption{Trafność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
 \label{id:tab:rec-ksztalt-shape-dep}
 \begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
@@ -2331,7 +2333,7 @@ Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone
 
 \begin{table}
 \centering
-\caption{Precyzja grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\caption{Precyzja grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
 \label{id:tab:prec-ksztalt-shape-dep}
 \begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
@@ -2490,13 +2492,13 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 \end{tabular}
 \end{table} 
 
-Wyniki dla pomiarów, gdzie przynależność punktów do granul określono na podstawie relacji $\star$-podobieństwa przedstawiono w tabelach \ref{id:tab:acc-rt-shape-dep}, \ref{id:tab:rec-rt-shape-dep} i \ref{id:tab:prec-rt-shape-dep}. Dla relacji wykładniczej i gaussowskiej nie występuje szum, dlatego wyniki nie różnią się, gdy zostanie uwzględniony. Gdy szumu nie ma, lub nie jest uwzględniony, wartości metryk są bardzo zbliżone do metryk dla przynależności określonej na podstawie macierzy $\mClusterMembership$. 
+Wyniki dla pomiarów, gdzie przynależność punktów do granul określono na podstawie relacji $\ast$-podobieństwa przedstawiono w tabelach \ref{id:tab:acc-rt-shape-dep}, \ref{id:tab:rec-rt-shape-dep} i \ref{id:tab:prec-rt-shape-dep}. Dla relacji wykładniczej i gaussowskiej nie występuje szum, dlatego wyniki nie różnią się, gdy zostanie uwzględniony. Gdy szumu nie ma, lub nie jest uwzględniony, wartości metryk są bardzo zbliżone do metryk dla przynależności określonej na podstawie macierzy $\mClusterMembership$. 
 
 W przypadku relacji trójkątnej, szum stanowi przeciętnie około 47\% danych -- wyniki, gdy zostaje on uwzględniony, są niemal o połowę niższe. 
 
 \begin{table}
 \centering
-\caption{Dokładność grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\caption{Dokładność grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
 \label{id:tab:acc-rt-shape-dep}
 \begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
@@ -2515,7 +2517,7 @@ W przypadku relacji trójkątnej, szum stanowi przeciętnie około 47\% danych -
 
 \begin{table}
 \centering
-\caption{Trafność grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\caption{Trafność grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
 \label{id:tab:rec-rt-shape-dep}
 \begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
@@ -2534,7 +2536,7 @@ W przypadku relacji trójkątnej, szum stanowi przeciętnie około 47\% danych -
 
 \begin{table}
 \centering
-\caption{Precyzja grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\star$-podobieństwa}
+\caption{Precyzja grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
 \label{id:tab:prec-rt-shape-dep}
 \begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 \toprule
@@ -2603,7 +2605,13 @@ Eksperymenty sugerują, że dla  łączności \SingleLinkage{} najlepiej używa�
 
 Wyniki pomiarów przeanalizowano też biorąc pod uwagę złożenie wpływu różnych parametrów -- kształtu, liczby granul, typu relacji, parametru $\xi$ -- przy ich uśrednieniu dla wszystkich liczebności danych oryginalnych.
 
-W tej sekcji zamieszczono wykresy złożonych zależności dla miary dokładności. W większości przypadków, trafność i precyzja posiadają na tyle podobne zależności, że nie jest konieczne dodatkowe opisywanie ich -- wnioski byłyby identyczne. Wszystkie wykresy zamieszczono w katalogu \todo{ścieżka do folderu, opis co oznaczają nazwy}.
+W tej sekcji zamieszczono wykresy złożonych zależności dla miary dokładności. W większości przypadków, trafność i precyzja posiadają na tyle podobne zależności, że nie jest konieczne dodatkowe opisywanie ich -- wnioski byłyby identyczne. Wszystkie wykresy zamieszczono w katalogu \texttt{img/complex}, pogrupowane w podkatalogach według kształtu danych (\blobs{}, \circles{}, \corners{}, \crescents{}, \laguna{} i \spheres{}). Nazwa każdego pliku wskazuje na metrykę, łączność i sposób określenia przynależności danych do granul:
+
+\begin{enumerate}
+	\item metryka: dokładność (\texttt{acc}), trafność (\texttt{rec}), precyzja (\texttt{prec}),
+	\item łączność: \SingleLinkage{} (\texttt{sl}), \CompleteLinkage{} (\texttt{cl}),
+	\item przynależność danych do granul: na podstawie macierzy przynależności $\mClusterMembership$ (brak oznaczenia), na podstawie relacji $\ast$-podobieństwa (\texttt{shape\_dep}).
+\end{enumerate}
 
 \subparagraph{\blobs{}}
 
