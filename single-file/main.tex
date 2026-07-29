@@ -352,7 +352,7 @@
 morekeywords={string,exception,std,vector},% słowa kluczowe rozpoznawane przez pakiet listings
 language=C++,% C, Matlab, Python, SQL, TeX, XML, bash, ... – vide https://www.ctan.org/pkg/listings
 commentstyle=\textit,%
-identifierstyle=\textsf,%
+identifierstyle=\texttt,%
 keywordstyle=\sffamily\bfseries, %\texttt, %
 %captionpos=b,%
 tabsize=3,%
@@ -1271,7 +1271,7 @@ Operatory nierówności wyznaczane są w następujący sposób:
 
 %\section{Plan rozwiązania}
 
-Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasowa -- w przypadku algorytmu ogólnego aż do $O(\nX^{3})$, gdzie $\nX =$ liczba danych. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(\nX)$).
+Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasowa -- w przypadku algorytmu ogólnego aż do $O(\nX^{3})$, gdzie $\nX$ to liczba danych. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(\nX)$).
 
 Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego \MojAlg\ składa się z trzech głównych kroków:
 
@@ -1427,76 +1427,6 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
 	\end{algorithmic}
 \end{algorithm}
 
-\section{Narzędzia programistyczne}
-
-Całość projektu zaimplementowano w języku Python\footnote{\url{https://www.python.org/}, dostęp 26.04.2026}. Jest to jeden z najczęściej wykorzystywanych języków programowania, szczególnie w projektach związanych z analizą danych. Język posiada wiele bibliotek, które implementują większość potrzebnych funkcjonalności.
-
-Biblioteka \texttt{scikit-fuzzy-c-means} dostarcza implementację algorytmu rozmytych $c$-średnich. Środki klastrów inicjalizowane są metodą \texttt{K-Means++}.
-Inną biblioteką, która również dostarcza tej implementacji, jest \texttt{scikit-fuzzy}. Oprócz tego, posiada ona bardziej rozwinięte API, umożliwiające wykonywanie różnych operacji na zbiorach rozmytych. Działanie algorytmu rozmytych $c$-średnich jest identyczne dla obydwu bibliotek, ostatecznie wybrano prostszą bibliotekę \texttt{scikit-fuzzy-c-means}.
-
-Pozostałymi wykorzystanymi w projekcie bibliotekami są: \texttt{matplotlib} (wykresy danych), \texttt{scikit-learn} (aglomeracyjny algorytm hierarchiczny), \texttt{scipy} (dendrogram), \texttt{numpy} (obliczenia macierzowe, wykorzystywana też przez \texttt{scikit-learn} i \texttt{scipy}) i \texttt{pandas} (ramki danych).
-
-\section{Uruchamianie}
-
-Do badań przedstawionych w rozdziale \ref{sec:badania} wykorzystano skrypty pomocnicze. 
-
-\subsection{Pomiar czasu}
-
-Pomiaru czasu można dokonać przy pomocy skryptu \texttt{measure\_time.py}. Dla każdej liczebności danych wykonywana jest określona parametrem liczba pomiarów czasu wykonania algorytmu \MojAlg{} oraz algorytmu ostrego, po czym obliczana jest ich średnia arytmetyczna. Wyniki mają postać ramki danych zawierającej pomiary w milisekundach oraz wykresu ilustrującego zależność czasu wykonania algorytmów od liczby danych.
-
-Wywołanie skryptu z linii poleceń ma następującą składnię:
-
-\texttt{python3 measure\_time.py [-h] [-r REPEATS] [-l] [-t] [-p]}
-
-\texttt{[-f \{blobs,circles,corners,crescents,laguna,spheres\}]},
-
-gdzie:
-
-\begin{itemize}
-	\item \texttt{-h} (alternatywnie: \texttt{--help}) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
-	\item \texttt{-r REPEATS} (alternatywnie: \texttt{--repeats REPEATS}) -- parametr (liczba całkowita) odpowiadający liczbie powtórzeń każdego z pomiarów czasu. Domyślnie wartość 4,
-	\item \texttt{-l} (alternatywnie: \texttt{--library\_function}) -- użycie funkcji \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} zamiast własnej implementacji ostrego algorytmu hierarchicznego, porównywanego z algorytmem \MojAlg{}. Pomiary zostaną wtedy wykonane na większych liczebnościach danych,
-	\item \texttt{-t} (alternatywnie: \texttt{--save\_times}) -- zapisanie wyników do pliku .csv, wywołanie bez przełącznika powoduje wypisanie pomiarów do konsoli,
-	\item \texttt{-p} (alternatywnie: \texttt{--save\_plot}) -- zapisanie wykresu do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresu na ekranie,
-	\item \texttt{-f \{blobs,circles,corners,crescents,laguna,spheres\}} (alternatywnie: \texttt{--filename \{blobs,circles,corners,crescents,laguna,spheres\}}) -- wybór danych do pomiaru. Domyślnie wartość 'corners'.
-\end{itemize}
-
-\subsection{Pomiar jakości}
-
-Pomiaru jakości grupowania można dokonać przy pomocy skryptu \texttt{measure\_quality.py}. Dla wybranych lub wszystkich danych mierzona jest dokładność, trafność i precyzja grupowania. Pomiary wykonywane są dla różnych liczebności granul, typów relacji i wartości parametru $\xi$. Gdy mierzone są wszystkie dane, wyniki zapisywane są w pliku .csv, w przeciwnym razie wypisywane są w konsoli.
-
-Wywołanie skryptu z linii poleceń ma następującą składnię:
-
-\texttt{python3 measure\_quality.py [-h] [-f FILENAME] [-l \{sl,single,cl,complete\}] [-r] [--strict]},
-
-gdzie:
-
-\begin{itemize}
-	\item \texttt{-h} (alternatywnie: \texttt{--help}) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
-	\item \texttt{-f FILENAME} (alternatywnie: \texttt{--filename FILENAME}) -- wybór konkretnego pliku z danymi do pomiaru (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykonywane są pomiary na wszystkich plikach,
-	\item \texttt{-l \{sl,single,cl,complete\}} (alternatywnie: \texttt{-linkage \{sl,single,cl,complete\}}) -- łączność grupowania hierarchicznego, gdzie ,,sl'' i ,,single'' to łączność \SingleLinkage{}, a ,,cl'' i ,,complete'' -- \CompleteLinkage{},
-	\item \texttt{-r} (alternatywnie: \texttt{--relation\_dependent}) -- obliczanie przynależności punktów do granul na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$,
-	\item \texttt{--strict} -- dodatkowe pomiary metryk jakości dla grupowania ostrego algorytmem \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn}.
-\end{itemize}
-
-\subsection{Wykresy grupowania granul}
-
-Wykresy wyników grupowania \MojAlg{} można uzyskać przy pomocy skryptu \texttt{plot\_granules.py}. Każdy wykres składa się z 9 podwykresów, zawierających wyniki dla różnych liczebności granul i wartości parametru $\xi$. Dla każdego pliku tworzone są 3 takie wykresy, dla każdego typu relacji.
-
-Wywołanie skryptu z linii poleceń ma następującą składnię:
-
-\texttt{python3 plot\_granules.py [-h] [-f FILENAME] [-l {single,complete}] [-p]},
-
-gdzie:
-
-\begin{itemize}
-	\item \texttt{-h} (alternatywnie: \texttt{--help}) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
-	\item \texttt{-f FILENAME} (alternatywnie: \texttt{--filename FILENAME}) -- wybór konkretnego pliku z danymi do zgrupowania i przedstawienia na wykresie (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykresy tworzone są dla wszystkich plików,
-	\item \texttt{-l \{sl,single,cl,complete\}} (alternatywnie: \texttt{-linkage \{single,complete\}}) -- łączność grupowania hierarchicznego, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{},
-	\item \texttt{-p} (alternatywnie: \texttt{--save\_plot}) -- zapisanie wykresów do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresów na ekranie, jeżeli są one tworzone tylko dla jednego pliku. Gdy wykresy generowane są dla wszystkich plików, są one zapisywane do .pdf niezależnie od obecności przełącznika.
-\end{itemize}
-
-% TODO
 \chapter{Badania}
 \label{sec:badania}
 
@@ -1586,9 +1516,9 @@ W celu przypisania etykiet do danych z folderu \texttt{dane}, przygotowano pomoc
 
 Oznaczanie etykiet dla danych dwuwymiarowych wykorzystuje widżet \texttt{LassoSelector} biblioteki \texttt{matplotlib}. Dla każdego pliku z danymi dwuwymiarowymi, wyświetlono wykres połączony z obiektem klasy \texttt{SelectFromCollection} z przykładu \cite{bib:mplt-lasso}. Klasa ta między innymi umożliwia wyznaczenie indeksów i współrzędnych punktów zaznaczonych myszą na wykresie. 
 
-Każdemu punktowi domyślnie przypisano etykietę 0. Po zaznaczeniu zbioru punktów na wykresie, naciśnięcie klawisza cyfry na klawiaturze powoduje przypisanie tym punktom etykiety o danym numerze i wyświetlenie w konsoli informacji, ilu punktom ją przypisano. Proces można powtarzać dowolną ilość razy, można go zakończyć poprzez naciśnięcie klawisza ENTER i zamknięcie wykresu.
+Każdemu punktowi domyślnie przypisano etykietę 0. Po zaznaczeniu zbioru punktów na wykresie naciśnięcie klawisza cyfry na klawiaturze powoduje przypisanie tym punktom etykiety o danym numerze i wyświetlenie w konsoli informacji, ilu punktom ją przypisano. Proces można powtarzać dowolną liczbę razy, można go zakończyć poprzez naciśnięcie klawisza ENTER i zamknięcie wykresu.
 
-W celu ostatecznej weryfikacji pojawia się drugi wykres, na którym każdej etykiecie odpowiada inny kolor. Po zamknięciu tego wykresu, plik z etykietami jest zapisywany w folderze \texttt{dane\_labelled}. Plik ma format zgodny z oryginalnym plikiem z danymi (każdy wiersz to oddzielone znakami tabulacji współrzędne jednego punktu), z dodaną dodatkową kolumną z etykietami punktów. \ksremark{To się nie dzieje automatycznie?}
+W celu ostatecznej weryfikacji pojawia się drugi wykres, na którym każdej etykiecie odpowiada inny kolor. Po zamknięciu tego wykresu, plik z etykietami jest zapisywany w folderze \texttt{dane\_labelled}. Plik ma format zgodny z oryginalnym plikiem z danymi (każdy wiersz to oddzielone znakami tabulacji współrzędne jednego punktu), z dodaną dodatkową kolumną z etykietami punktów. 
 
 \paragraph{Dane trójwymiarowe}
 
@@ -1617,9 +1547,9 @@ W przypadku danych \laguna{} o liczebności 20000 i większej, dwa środkowe kla
 
 \subsubsection{Miara jakości}
 
-Wybranymi miarami jakości grupowania są dokładność, trafność i precyzja.\ksremark{Tu podamy wzory.}
+Wybranymi miarami jakości grupowania są dokładność $\accuracy$, trafność $\recall$ i precyzja $\precision$. 
 
-W przypadku dwuklasowym (klast \english{positive} i \english{negative}), dokładność jest definiowana jako:
+W przypadku dwuklasowym (klasy \english{positive} i \english{negative}), dokładność (ang. \english{accuracy}) jest definiowana jako:
 
 \begin{align}
 	\accuracy = \frac{TP + TN}{TP + FP + TN + FN},
@@ -1635,20 +1565,20 @@ gdzie:
 
 Dokładność jest łatwo rozszerzalna na więcej klas: sumę liczb danych poprawnie zaklasyfikowanych do każdej klasy należy podzielić przez liczbę wszystkich danych.
 
-Trafność definiowana jest jako:
+Trafność (czułość, ang. \english{recall}) definiowana jest jako:
 
 \begin{align}
 	\recall = \frac{TP}{TP + FN},
 \end{align}
-
+%
 czyli stosunek liczby danych poprawnie zaklasyfikowanych do klasy \english{positive} do wszystkich danych do niej należących.
 
-Precyzję definiuje się jako:
+Precyzję (ang. \english{precision}) definiuje się jako:
 
 \begin{align}
 	\precision = \frac{TP}{TP + FP},
 \end{align}
-
+%
 czyli stosunek liczby danych poprawnie zaklasyfikowanych do klasy \english{positive} do wszystkich danych które zostały do niej zaklasyfikowane.
 
 Trafność i precyzję można rozszerzyć na wiele klas na różne sposoby. W badaniach wybrano metodę, w której najpierw obliczana jest wartość metryk cząstkowych dla każdej klasy z osobna (jedna klasa odpowiada klasie \english{positive}, wszystkie pozostałe -- \english{negative}), a następnie obliczana jest z nich średnia arytmetyczna. Oznacza to, że każda klasa ma jednakową wagę dla ostatecznego wyniku -- jeżeli będą miały różne liczności, to klasy zawierające małą liczbę danych będą mieć proporcjonalnie większy wpływ na wyniki trafności i precyzji, niż dokładności.
@@ -2565,7 +2495,7 @@ Najwyższe wartość metryk jakości przy grupowaniu algorytmem \SingleLinkage{}
 Dla \SingleLinkage{}, najwyższą dokładność i precyzję -- odpowiednio 99,7745\% i 98,1348\% -- osiągnięto dla $\xi=0,05$, najwyższą trafność -- 98,3582\% -- dla $\xi=0,1$. Wartości metryk spadają wraz ze wzrostem wartości parametru. Powyżej $\xi=0,8$ następuje gwałtowne załamanie na wykresie wyników.
 
 Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyniki -- 67,1215\% -- osiągnięto dla $\xi=0,9$. Trafność i precyzja nie wpisują się w tą zależność -- ich wartości wahają się odpowiednio około 60-61\% i 58\%. Najwyższa wartość trafności wynosi 61,7007\% dla $\xi=0,65$, a precyzji -- 58,4605\% dla $\xi=0,7$.
-\ksremark{Trzeba skomentować te wyniki.}
+% 
 \begin{figure}
 	\centering
 	\begin{subfigure}{0.48\textwidth}
@@ -2951,7 +2881,80 @@ Algorytm \MojAlg{} może w prosty sposób zostać rozszerzony o inne metryki odl
 \begin{appendices}
 
 %% TODO
-%\chapter{Dokumentacja techniczna}
+\chapter{Dokumentacja techniczna}
+
+\section*{Implementacja}
+
+Całość projektu zaimplementowano w języku Python\footnote{\url{https://www.python.org/}, dostęp 26.04.2026}. Jest to jeden z najczęściej wykorzystywanych języków programowania, szczególnie w projektach związanych z analizą danych. Język posiada wiele bibliotek, które implementują większość potrzebnych funkcjonalności.
+
+Biblioteka \texttt{scikit-fuzzy-c-means} dostarcza implementację algorytmu rozmytych $c$-średnich. Środki klastrów inicjalizowane są metodą \texttt{K-Means++}.
+Inną biblioteką, która również dostarcza tej implementacji, jest \texttt{scikit-fuzzy}. Oprócz tego, posiada ona bardziej rozwinięte API, umożliwiające wykonywanie różnych operacji na zbiorach rozmytych. Działanie algorytmu rozmytych $c$-średnich jest identyczne dla obydwu bibliotek, ostatecznie wybrano prostszą bibliotekę \texttt{scikit-fuzzy-c-means}.
+
+Pozostałymi wykorzystanymi w projekcie bibliotekami są: \texttt{matplotlib} (wykresy danych), \texttt{scikit-learn} (aglomeracyjny algorytm hierarchiczny), \texttt{scipy} (dendrogram), \texttt{numpy} (obliczenia macierzowe, wykorzystywana też przez \texttt{scikit-learn} i \texttt{scipy}) i \texttt{pandas} (ramki danych).
+
+\subsection*{Uruchamianie}
+
+Do badań przedstawionych w rozdziale \ref{sec:badania} wykorzystano skrypty pomocnicze. 
+
+\subsubsection*{Pomiar czasu}
+
+Pomiaru czasu można dokonać przy pomocy skryptu \texttt{measure\_time.py}. Dla każdej liczebności danych wykonywana jest określona parametrem liczba pomiarów czasu wykonania algorytmu \MojAlg{} oraz algorytmu ostrego, po czym obliczana jest ich średnia arytmetyczna. Wyniki mają postać ramki danych zawierającej pomiary w milisekundach oraz wykresu ilustrującego zależność czasu wykonania algorytmów od liczby danych.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\texttt{python3 measure\_time.py [-h] [-r REPEATS] [-l] [-t] [-p]}
+
+\texttt{[-f \{blobs,circles,corners,crescents,laguna,spheres\}]},
+
+gdzie:
+
+\ksremark{lstinline}
+\begin{itemize}
+	\item \lstinline!-h! (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \texttt{-r REPEATS} (alternatywnie: \texttt{--repeats REPEATS}) -- parametr (liczba całkowita) odpowiadający liczbie powtórzeń każdego z pomiarów czasu. Domyślnie wartość 4,
+	\item \texttt{-l} (alternatywnie: \texttt{--library\_function}) -- użycie funkcji \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} zamiast własnej implementacji ostrego algorytmu hierarchicznego, porównywanego z algorytmem \MojAlg{}. Pomiary zostaną wtedy wykonane na większych liczebnościach danych,
+	\item \texttt{-t} (alternatywnie: \texttt{--save\_times}) -- zapisanie wyników do pliku .csv, wywołanie bez przełącznika powoduje wypisanie pomiarów do konsoli,
+	\item \texttt{-p} (alternatywnie: \texttt{--save\_plot}) -- zapisanie wykresu do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresu na ekranie,
+	\item \texttt{-f \{blobs,circles,corners,crescents,laguna,spheres\}} (alternatywnie: \texttt{--filename \{blobs,circles,corners,crescents,laguna,spheres\}}) -- wybór danych do pomiaru. Domyślnie wartość 'corners'.
+\end{itemize}
+
+\subsubsection*{Pomiar jakości}
+
+Pomiaru jakości grupowania można dokonać przy pomocy skryptu \texttt{measure\_quality.py}. Dla wybranych lub wszystkich danych mierzona jest dokładność, trafność i precyzja grupowania. Pomiary wykonywane są dla różnych liczebności granul, typów relacji i wartości parametru $\xi$. Gdy mierzone są wszystkie dane, wyniki zapisywane są w pliku .csv, w przeciwnym razie wypisywane są w konsoli.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\texttt{python3 measure\_quality.py [-h] [-f FILENAME] [-l \{sl,single,cl,complete\}] [-r] [--strict]},
+
+gdzie:
+
+\begin{itemize}
+	\item \texttt{-h} (alternatywnie: \texttt{--help}) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \texttt{-f FILENAME} (alternatywnie: \texttt{--filename FILENAME}) -- wybór konkretnego pliku z danymi do pomiaru (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykonywane są pomiary na wszystkich plikach,
+	\item \texttt{-l \{sl,single,cl,complete\}} (alternatywnie: \texttt{-linkage \{sl,single,cl,complete\}}) -- łączność grupowania hierarchicznego, gdzie ,,sl'' i ,,single'' to łączność \SingleLinkage{}, a ,,cl'' i ,,complete'' -- \CompleteLinkage{},
+	\item \texttt{-r} (alternatywnie: \texttt{--relation\_dependent}) -- obliczanie przynależności punktów do granul na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$,
+	\item \texttt{--strict} -- dodatkowe pomiary metryk jakości dla grupowania ostrego algorytmem \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn}.
+\end{itemize}
+
+\subsubsection*{Wykresy grupowania granul}
+
+Wykresy wyników grupowania \MojAlg{} można uzyskać przy pomocy skryptu \texttt{plot\_granules.py}. Każdy wykres składa się z 9 podwykresów, zawierających wyniki dla różnych liczebności granul i wartości parametru $\xi$. Dla każdego pliku tworzone są 3 takie wykresy, dla każdego typu relacji.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\texttt{python3 plot\_granules.py [-h] [-f FILENAME] [-l {single,complete}] [-p]},
+
+gdzie:
+
+\begin{itemize}
+	\item \texttt{-h} (alternatywnie: \texttt{--help}) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \texttt{-f FILENAME} (alternatywnie: \texttt{--filename FILENAME}) -- wybór konkretnego pliku z danymi do zgrupowania i przedstawienia na wykresie (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykresy tworzone są dla wszystkich plików,
+	\item \texttt{-l \{sl,single,cl,complete\}} (alternatywnie: \texttt{-linkage \{single,complete\}}) -- łączność grupowania hierarchicznego, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{},
+	\item \texttt{-p} (alternatywnie: \texttt{--save\_plot}) -- zapisanie wykresów do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresów na ekranie, jeżeli są one tworzone tylko dla jednego pliku. Gdy wykresy generowane są dla wszystkich plików, są one zapisywane do .pdf niezależnie od obecności przełącznika.
+\end{itemize}
+
+% TODO
+
 
 
 % TODO
