@@ -402,9 +402,9 @@ escapeinside={@*}{*@},%
 \newcommand{\brightkite}{\dataset{brightkite}}
 
 \newcommand{\procedura}[1]{\textsc{#1}}
-\newcommand{\PrimitiveClustering}{\procedura{PrimitiveClustering}}
-\newcommand{\SingleLinkage}{\procedura{SingleLinkage}}
-\newcommand{\CompleteLinkage}{\procedura{CompleteLinkage}}
+\newcommand{\PrimitiveClustering}{\procedura{Pri\-mi\-ti\-ve\-Clu\-s\-te\-r\-ing}}
+\newcommand{\SingleLinkage}{\procedura{Si\-ng\-le\-Lin\-ka\-ge}}
+\newcommand{\CompleteLinkage}{\procedura{Com\-ple\-te\-Lin\-ka\-ge}}
 \newcommand{\MojAlg}{\procedura{GrAgglo}}
 \newcommand{\MojHierAlg}{\procedura{FuzzyAgglo}}
 
@@ -1868,7 +1868,7 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego jest sześcienna i wynosi dla algorytmy ostrego $O(\nX^{3})$, dla rozmytego $O(\nGranula^{3})$, gdzie liczba ziaren $\nGranula$ jest stała i zdecydowanie mniejsza od liczby danych ($\nGranula \ll \nX$).
 Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(\nX)$ , więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych.
 
-Porównano również czas wykonania algorytmu \MojAlg{} z algorytmem \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn}, dla złożoności \SingleLinkage{}. Wyniki przedstawiono na rys. \ref{fig:comparing-times-sklearn}.
+Porównano również czas wykonania algorytmu \MojAlg{} z algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}, dla złożoności \SingleLinkage{}. Wyniki przedstawiono na rys. \ref{fig:comparing-times-sklearn}.
 
 \begin{figure}
 \centering
@@ -1877,7 +1877,7 @@ Porównano również czas wykonania algorytmu \MojAlg{} z algorytmem \texttt{Agg
 \label{fig:comparing-times-sklearn}
 \end{figure}
 
-Wykres pokazuje, że dla małych danych (do 10000 punktów), najkrócej wykonuje się algorytm biblioteczny -- klasteryzacja algorytmem rozmytych $c$-średnich trwa stosunkowo długo, mimo złożoności liniowej. Powyżej 10000 danych, algorytm \MojAlg{} dla 50 granul wykonywany jest szybciej, niż algorytm ostry. Od 40000 danych, jest on szybszy dla wszystkich badanych liczebności granul. Oznacza to, że mimo gorszej złożoności samego algorytmu hierarchicznego \MojHierAlg{}, całość algorytmu rozmytego jest lepsza pod względem czasu wykonania od algorytmu \texttt{AgglomerativeClustering}, powyżej pewnej liczności danych.
+Wykres pokazuje, że dla małych danych (do 10000 punktów), najkrócej wykonuje się algorytm biblioteczny -- klasteryzacja algorytmem rozmytych $c$-średnich trwa stosunkowo długo, mimo złożoności liniowej. Powyżej 10000 danych, \nocomma\ algorytm \MojAlg{} dla 50 granul wykonywany jest szybciej, \nocomma\ niż algorytm ostry. Od 40000 danych, jest on szybszy dla wszystkich badanych liczebności granul. Oznacza to, że mimo gorszej złożoności samego algorytmu hierarchicznego \MojHierAlg{}, całość algorytmu rozmytego jest lepsza pod względem czasu wykonania od algorytmu \texttt{AgglomerativeClustering}, powyżej pewnej liczności danych.
 
 Czasy wykonania algorytmu rozmytego \MojAlg{} na dużych danych przedstawia rys. \ref{fig:gowalla-times}. W przypadku 200 granul zauważyć można zaburzenie liniowości wyników. Spowodowane jest zbyt dużym wykorzystaniem pamięci: sama macierz $\mClusterMembership$ ma wymiary $\nX \times \nGranula$, czyli dla 4 milionów danych wejściowych zawiera ona 800 milionów liczb zmiennoprzecinkowych. Z tego samego powodu możliwe było wykonanie algorytmu na 6 milionach danych tylko dla 50 granul -- dla większej liczby nie wystarczyło pamięci.
 
@@ -2914,30 +2914,28 @@ Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna
 % \end{itemize}
 
 Do analizy danych powszechnie wykorzystuje się algorytmy grupowania. Polegają one na wyznaczeniu takich grup danych, aby wszystkie dane przypisane do tej samej grupy były do siebie jak najbardziej podobne pod względem wybranej metryki, a dane przypisane do różnych grup -- jak najbardziej niepodobne.
-
-Algorytmy takie mogą być na przykład oparte na minimalizacji pewnej funkcji kryterialnej bądź wykorzystywać zagęszczenie danych w pewnym obszarze do wyznaczenia klastrów. W pracy skupiono się na aglomeracyjnym algorytmie hierarchicznym, który polega na tworzeniu sekwencji zagnieżdżonych podziałów danych, poprzez łączenie mniejszych klastrów w większe. Wadą tego algorytmu jest jego duża złożoność czasowa: sześcienna dla implementacji ogólnej. Choć istnieją specjalizowane implementacje o niższych złożonościach (kwadratowych), to pozostają one na tyle wysokie, że algorytm jest problematyczny do wykorzystania dla dużych liczebności danych.
+%
+Algorytmy takie mogą być na przykład oparte na minimalizacji pewnej funkcji kryterialnej bądź wykorzystywać zagęszczenie danych w pewnym obszarze do wyznaczenia klastrów. W pracy skupiono się na aglomeracyjnym algorytmie hierarchicznym, który polega na tworzeniu sekwencji zagnieżdżonych podziałów danych poprzez łączenie mniejszych klastrów w większe. Wadą tego algorytmu jest jego duża złożoność czasowa: sześcienna dla implementacji ogólnej. Choć istnieją specjalizowane implementacje o niższych złożonościach (kwadratowych), to pozostają one na tyle wysokie, że algorytm jest problematyczny do wykorzystania dla dużych liczebności danych.
 
 W pracy do przyspieszenia działania aglomeracyjnego algorytmu hierarchicznego wykorzystano obliczenia granularne.
-
 Jest to dziedzina, która również stosowana jest do analizy danych. Polega na analizowaniu ich na sposób podobny do ludzkiego postrzegania rzeczywistości. Związanym z nią pojęciem jest granula informacyjna, będące encją o pewnej semantyce. W pracy granule realizowane są przy pomocy liczb rozmytych, czyli takich liczb, które modelują pewne ostre wartości liczbowe w jakimś przybliżeniu.
-
+%
 W pracy zaproponowany został autorski algorytm \MojAlg{}, który wykonuje grupowanie hierarchiczne na granulach informacyjnych, zamiast na oryginalnych liczbach ostrych. 
-
-Krokiem przygotowawczym algorytmu jest zgrupowanie danych wejściowych (współrzędnych punktów) w granule. Wykorzystano do tego algorytm rozmytych $c$-średnich, który ma mniejszą -- liniową -- złożoność czasową, niż algorytm hierarchiczny. Algorytm ten grupuje dane w klastry rozmyte, czyli takie, do których każdy punkt należy w pewnym stopniu, określonym jako liczba z przedziału $[0, 1]$. Następnie klastry te przekształcane są w granule: wielowymiarowe liczby rozmyte, gdzie dla każdego wymiaru wyróżnić można środek i rozmycie granuli. Wykorzystano trzy kształty granul: trójkątne, wykładnicze i gaussowskie.
-
-Właściwe aglomeracyjne grupowanie hierarchiczne algorytmu \MojAlg{} wykorzystuje ogólną implementację o złożoności $O(n^3)$, dostosowaną do operowania na granulach. Modyfikacje algorytmu w stosunku do standardowej, ostrej wersji, dotyczą operacji arytmetycznych i logicznych. Odległości euklidesowe między granulami również mają postać liczb rozmytych, które są następnie porównywane. Jako że wynikiem porównań liczb rozmytych jest wartość z przedziału $[0, 1]$, wprowadzony został dodatkowy parametr progowy $\xi$, określający, dla jakiej wartości operacja logiczna będzie ewaluowana jako prawda. Zaimplementowano dwie łączności grupowania hierarchicznego: \SingleLinkage{} oraz \CompleteLinkage{}.
+Krokiem przygotowawczym algorytmu jest zgrupowanie danych wejściowych (współrzędnych punktów) w granule. Wykorzystano do tego algorytm rozmytych $c$-średnich FCM, który ma mniejszą -- liniową -- złożoność czasową niż algorytm hierarchiczny. Algorytm ten grupuje dane w klastry rozmyte, czyli takie, do których każdy punkt należy w pewnym stopniu, określonym jako liczba z przedziału $[0, 1]$. Następnie klastry te przekształcane są w granule: wielowymiarowe liczby rozmyte, gdzie dla każdego wymiaru wyróżnić można środek i rozmycie granuli. Wykorzystano trzy kształty granul: trójkątne, wykładnicze i gaussowskie.
+Właściwe aglomeracyjne grupowanie hierarchiczne algorytmu \MojAlg{} wykorzystuje ogólną implementację o złożoności sześciennej dostosowaną do operowania na granulach.  Modyfikacje algorytmu w stosunku do standardowej, ostrej wersji, dotyczą operacji arytmetycznych i logicznych. Odległości euklidesowe między granulami również mają postać liczb rozmytych, które są następnie porównywane. Jako że wynikiem porównań liczb rozmytych jest wartość z przedziału $[0, 1]$, wprowadzony został dodatkowy parametr progowy $\xi$, określający, dla jakiej wartości operacja logiczna będzie ewaluowana jako prawda. Zaimplementowano dwie łączności grupowania hierarchicznego: \SingleLinkage{} oraz \CompleteLinkage{}.
 
 W pracy przebadano własności zaproponowanego algorytmu -- jego złożoność czasową oraz jakość grupowania.
-
-Porównano czas wykonania algorytmu \MojAlg{} z czasem wykonania ostrego algorytmu hierarchicznego o analogicznej implementacji do \MojHierAlg{} dla różnych liczebności danych. Odnotowano znaczne zmniejszenie czasu wykonania -- przykładowo, dla liczebności 5000, w zależności od liczby granul algorytm \MojAlg{} wykonywał się 1-4 sekundy, a algorytm ostry -- około 100 sekund. Możliwe było też wykonanie algorytmu na bardzo dużych danych -- kilku milionach punktów -- w czasie rzędu kilkudziesięciu minut. Ponadto, algorytm jest też szybszy od optymalnego algorytmu bibliotecznego powyżej pewnej liczby danych. Jego złożoność czasowa jest liniowa w zależności od liczby danych wejściowych -- choć właściwe grupowanie hierarchiczne nadal ma złożoność sześcienną, to wykorzystuje ono granule informacyjne, których jest znacznie mniej, niż danych wejściowych. Udało się więc osiągnąć główny cel pracy -- znacznie zmniejszono czas wykonywania algorytmu hierarchicznego dla dużych liczebności danych.
-
+%
+Porównano czas wykonania algorytmu \MojAlg{} z czasem wykonania ostrego algorytmu hierarchicznego o analogicznej implementacji %do \MojHierAlg{} 
+dla różnych liczebności danych. Odnotowano znaczne zmniejszenie czasu wykonania -- przykładowo, dla liczebności 5000, w zależności od liczby granul, algorytm \MojAlg{} wykonywał się 1-4 sekundy, a algorytm ostry -- około 100 sekund. Możliwe było też wykonanie algorytmu na bardzo dużych danych -- kilku milionach punktów -- w czasie rzędu kilkudziesięciu minut. Ponadto, algorytm jest też szybszy od optymalnego algorytmu bibliotecznego powyżej pewnej liczby danych. Jego złożoność czasowa jest liniowa w zależności od liczby danych wejściowych -- choć właściwe grupowanie hierarchiczne nadal ma złożoność sześcienną, to wykorzystuje ono granule informacyjne, których jest znacznie mniej, niż danych wejściowych. Udało się więc osiągnąć główny cel pracy -- znacznie zmniejszono czas wykonywania algorytmu hierarchicznego dla dużych liczebności danych.
 W zamian za przyspieszenie algorytmu dopuszczono pogorszenie jakości grupowania. Pomiary dokładności, trafności i precyzji algorytmu \MojAlg{} pokazały jednak, że w większości przypadków jego wyniki nie odbiegają od wyników algorytmu ostrego, a nawet mogą być lepsze.
+%
+Algorytm badano dla różnych kombinacji parametrów: liczby granul, kształtu granul i parametru progowego $\xi$, dla obydwu zaimplementowanych łączności. Dla wszystkich parametrów, średnie wartości metryk jakości są zbliżone do wyników tych samych metryk dla algorytmu ostrego. Ponadto w większości przypadków można znaleźć taką kombinację tych parametrów, dla których wyniki są lepsze niż dla algorytmu ostrego.
+%
+Analiza grupowania \MojAlg{} %dla danych \brightkite{} i \gowalla{} 
+pokazuje również, że granulacja danych wejściowych algorytmem rozmytych $c$-średnich pozwala na wyeliminowanie z danych elementów odstających, na które bardzo wrażliwy jest algorytm hierarchiczny. 
 
-Algorytm badano dla różnych kombinacji parametrów: liczby granul, kształtu granul i parametru progowego $\xi$, dla obydwu zaimplementowanych łączności. Dla wszystkich parametrów, średnie wartości metryk jakości są zbliżone do wyników tych samych metryk dla algorytmu ostrego. Ponadto w większości przypadków można znaleźć taką kombinację tych parametrów, dla których wyniki są lepsze, niż dla algorytmu ostrego.
-
-Analiza grupowania \MojAlg{} dla danych \brightkite{} i \gowalla{} pokazuje również, że wstępne grupowanie algorytmem rozmytych $c$-średnich pozwala na wyeliminowanie z danych elementów odstających, na które bardzo wrażliwy jest algorytm hierarchiczny. 
-
-Algorytm \MojHierAlg{} może w prosty sposób zostać rozszerzony o inne metryki odległości. Dzięki zastosowaniu ogólnej implementacji, łatwo można też dodać inne opcje łączności, takie jak łączność średnia lub Warda. Ponadto, implementację granul rozszerzyć można o inne kształty.
+Algorytm \MojAlg{} może w prosty sposób zostać rozszerzony o inne metryki odległości. Dzięki zastosowaniu ogólnej implementacji, łatwo można też dodać inne opcje łączności, takie jak łączność średnia lub Warda. Ponadto, implementację granul rozszerzyć można o inne kształty.
 
 
 
@@ -2952,8 +2950,8 @@ Algorytm \MojHierAlg{} może w prosty sposób zostać rozszerzony o inne metryki
 
 \begin{appendices}
 
-% TODO
-\chapter{Dokumentacja techniczna}
+%% TODO
+%\chapter{Dokumentacja techniczna}
 
 
 % TODO
@@ -2965,16 +2963,16 @@ Algorytm \MojHierAlg{} może w prosty sposób zostać rozszerzony o inne metryki
 \item[FCM] algorytm fuzzy-c means 
 \end{itemize}
 
-% TODO
-\chapter{Lista dodatkowych plików, uzupełniających tekst pracy (jeżeli dotyczy)} 
-
-W systemie do pracy dołączono dodatkowe pliki zawierające:
-\begin{itemize}
-\item źródła programu,
-\item zbiory danych użyte w~eksperymentach,
-\item film pokazujący działanie opracowanego oprogramowania lub zaprojektowanego i wykonanego urządzenia,
-\item itp.
-\end{itemize}
+%% TODO
+%\chapter{Lista dodatkowych plików, uzupełniających tekst pracy (jeżeli dotyczy)} 
+%
+%W systemie do pracy dołączono dodatkowe pliki zawierające:
+%\begin{itemize}
+%\item źródła programu,
+%\item zbiory danych użyte w~eksperymentach,
+%\item film pokazujący działanie opracowanego oprogramowania lub zaprojektowanego i wykonanego urządzenia,
+%\item itp.
+%\end{itemize}
 
 
 \listoffigures
