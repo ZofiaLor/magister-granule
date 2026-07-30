@@ -1490,7 +1490,7 @@ W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 1000
 
 Przyjęto też stałą maksymalną liczbę 80 iteracji algorytmu rozmytych $c$-średnich. Sekcja \ref{sec:wyniki-jakosc} pokazuje, że jest to wystarczająca wartość. Złożoność algorytmu jest liniowa w zależności od liczby iteracji \cite{bib:fcm-kmeans-comparison}. Algorytm wykonano też dla różnych liczności granul: 50, 100 oraz 200.
 
-Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystany został algorytm \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} (łączność \SingleLinkage{}) oraz własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej. Pozwoliło to na lepszy pogląd na wpływ granulacji na szybkość, jako że sama logika grupowania we własnej implementacji pozostała ta sama, co w algorytmie rozmytym. Algorytm biblioteczny ma z kolei najniższą złożoność czasową dla łączności \SingleLinkage{} (wykorzystuje algorytm minimalnego drzewa rozpinającego), można więc porównać czas wykonania \MojAlg{} z najlepszym możliwym czasem grupowania tych samych danych algorytmem ostrym. Do tego porównania wykorzystano oryginalne dane wejściowe, we wszystkich rozmiarach (1000-50000).
+Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystany został algorytm \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} (łączność \SingleLinkage{}) oraz własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej. Pozwoliło to na lepszy pogląd na wpływ granulacji na szybkość, jako że sama logika grupowania we własnej implementacji pozostała ta sama, co w algorytmie rozmytym. Algorytm biblioteczny ma z kolei najniższą złożoność czasową dla łączności \SingleLinkage{} (wykorzystuje algorytm minimalnego drzewa rozpinającego), można więc porównać czas wykonania \MojAlg{} z najlepszym możliwym czasem grupowania tych samych danych algorytmem ostrym. Do tego porównania wykorzystano oryginalne dane wejściowe, we wszystkich rozmiarach (1000-50000).
 W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu rozmytych $c$-średnich, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
 
 Poszczególne pomiary czasu działania algorytmu dla dokładnie takich samych rozmiarów danych mogą różnić się o kilka milisekund. Wynika to między innymi z działania w tle innych procesów komputera, na którym przeprowadzane są badania. Typowym rozwiązaniem tego problemu jest kilkukrotne powtórzenie pomiarów dla tych samych danych i obliczenie średniej arytmetycznej wyników. Podczas badań pomiary powtórzono czterokrotnie, co wystarczyło do wyeliminowania odstających wyników.
@@ -1554,7 +1554,6 @@ W przypadku dwuklasowym (klasy \english{positive} i \english{negative}), dokład
 \begin{align}
 	\accuracy = \frac{TP + TN}{TP + FP + TN + FN},
 \end{align}
-
 gdzie:
 \begin{itemize}
 	\item TP -- liczba danych poprawnie zaklasyfikowanych do klasy \english{positive}
@@ -1775,9 +1774,9 @@ Jeżeli dane zawierają szum, może on być interpretowany na dwa sposoby w kont
 	\item Szum uznawany jest za błędną klasyfikację. Aby skorygować wartość metryki o szum, należy pomnożyć ją przez odsetek punktów niebędących szumem w stosunku do całości danych. Na przykład, jeżeli początkowa wartość metryki wynosi $80\%$, a $40\%$ danych stanowi szum, to ostateczna wartość tej metryki będzie równa $80\% * (100\% - 40\%) = 48\%$.
 \end{enumerate}
 
-Oprócz niezależnych procentowych średnich wartości metryk dokładności, trafności i precyzji istotne jest, jakie są wyniki działania \MojAlg{} w porównaniu z algorytmem ostrym. W tym celu wykorzystano algorytm \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} aby zgrupować dane oryginalne, a także środki klastrów (w liczebnościach 50, 100, 200) wyznaczonych przez algorytm rozmytych $c$-średnich, bez uwzględnienia rozmycia, czyli macierzy $\mClusterMembership$.
+Oprócz niezależnych procentowych średnich wartości metryk dokładności, trafności i precyzji istotne jest, jakie są wyniki działania \MojAlg{} w porównaniu z algorytmem ostrym. W tym celu wykorzystano algorytm \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} aby zgrupować dane oryginalne, a także środki klastrów (w liczebnościach 50, 100, 200) wyznaczonych przez algorytm rozmytych $c$-średnich, bez uwzględnienia rozmycia, czyli macierzy $\mClusterMembership$.
 
-Do wyznaczenia metryk jakości dla tych badań, również wykorzystano algorytmy \ref{alg:calc_l_matrix}, \ref{alg:perm_l_matrix} oraz \ref{alg:calc_quality}. W przypadku oryginalnych danych, wejściem algorytmu \ref{alg:calc_l_matrix} były etykiety wyznaczone przez algorytm \texttt{AgglomerativeClustering}. Dla środków klastrów algorytmu rozmytych $c$-średnich, najpierw wyznaczono przynależności punktów do tych klastrów na podstawie macierzy $\mClusterMembership$ (tak samo jak dla \MojAlg{}).
+Do wyznaczenia metryk jakości dla tych badań, również wykorzystano algorytmy \ref{alg:calc_l_matrix}, \ref{alg:perm_l_matrix} oraz \ref{alg:calc_quality}. W przypadku oryginalnych danych, wejściem algorytmu \ref{alg:calc_l_matrix} były etykiety wyznaczone przez algorytm \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring}. Dla środków klastrów algorytmu rozmytych $c$-średnich, najpierw wyznaczono przynależności punktów do tych klastrów na podstawie macierzy $\mClusterMembership$ (tak samo jak dla \MojAlg{}).
  
 \section{Wyniki}
 
@@ -1803,11 +1802,11 @@ Porównano również czas wykonania algorytmu \MojAlg{} z algorytmem \texttt{Ag\
 \begin{figure}
 \centering
 \includegraphics{./img/comparing_times_sklearn.pdf}
-\caption{Charakterystyka czasu wykonania algorytmu ostrego \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} i własnej implementacji algorytmu rozmytego dla różnej liczby granul od liczby danych wejściowych.}
+\caption{Charakterystyka czasu wykonania algorytmu ostrego \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} i własnej implementacji algorytmu rozmytego dla różnej liczby granul od liczby danych wejściowych.}
 \label{fig:comparing-times-sklearn}
 \end{figure}
 
-Wykres pokazuje, że dla małych danych (do 10000 punktów), najkrócej wykonuje się algorytm biblioteczny -- klasteryzacja algorytmem rozmytych $c$-średnich trwa stosunkowo długo, mimo złożoności liniowej. Powyżej 10000 danych, \nocomma\ algorytm \MojAlg{} dla 50 granul wykonywany jest szybciej, \nocomma\ niż algorytm ostry. Od 40000 danych, jest on szybszy dla wszystkich badanych liczebności granul. Oznacza to, że mimo gorszej złożoności samego algorytmu hierarchicznego \MojHierAlg{}, całość algorytmu rozmytego jest lepsza pod względem czasu wykonania od algorytmu \texttt{AgglomerativeClustering}, powyżej pewnej liczności danych.
+Wykres pokazuje, że dla małych danych (do 10000 punktów), najkrócej wykonuje się algorytm biblioteczny -- klasteryzacja algorytmem rozmytych $c$-średnich trwa stosunkowo długo, mimo złożoności liniowej. Powyżej 10000 danych algorytm \MojAlg{} dla 50 granul wykonywany jest szybciej niż algorytm ostry. Od 40000 danych, jest on szybszy dla wszystkich badanych liczebności granul. Oznacza to, że mimo gorszej złożoności samego algorytmu hierarchicznego \MojHierAlg{}, całość algorytmu rozmytego jest lepsza pod względem czasu wykonania od algorytmu \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring}, powyżej pewnej liczności danych.
 
 Czasy wykonania algorytmu rozmytego \MojAlg{} na dużych danych przedstawia rys. \ref{fig:gowalla-times}. W przypadku 200 granul zauważyć można zaburzenie liniowości wyników. Spowodowane jest zbyt dużym wykorzystaniem pamięci: sama macierz $\mClusterMembership$ ma wymiary $\nX \times \nGranula$, czyli dla 4 milionów danych wejściowych zawiera ona 800 milionów liczb zmiennoprzecinkowych. Z tego samego powodu możliwe było wykonanie algorytmu na 6 milionach danych tylko dla 50 granul -- dla większej liczby nie wystarczyło pamięci.
 
@@ -1831,7 +1830,7 @@ Dla niektórych wyników utworzono również wykresy na podstawie sumarycznej pr
 \subsubsection{Dane syntetyczne}
 \label{sec:wyniki-jakosc-generowane}
 
-Wyniki dokładności, trafności i precyzji otrzymane na podstawie ostrego algorytmu hierarchicznego \texttt{AgglomerativeClustering} grupującego dane oryginalne i środki klastrów wyznaczonych przez algorytm rozmytych $c$-średnich przedstawiają odpowienio tabele \ref{id:tab:acc-sl-strict}, \ref{id:tab:rec-sl-strict} i \ref{id:tab:prec-sl-strict} dla łączności \SingleLinkage{} oraz \ref{id:tab:acc-cl-strict}, \ref{id:tab:rec-cl-strict} i \ref{id:tab:prec-cl-strict} dla łączności \CompleteLinkage{}.
+Wyniki dokładności, trafności i precyzji otrzymane na podstawie ostrego algorytmu hierarchicznego \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} grupującego dane oryginalne i środki klastrów wyznaczonych przez algorytm rozmytych $c$-średnich przedstawiają odpowienio tabele \ref{id:tab:acc-sl-strict}, \ref{id:tab:rec-sl-strict} i \ref{id:tab:prec-sl-strict} dla łączności \SingleLinkage{} oraz \ref{id:tab:acc-cl-strict}, \ref{id:tab:rec-cl-strict} i \ref{id:tab:prec-cl-strict} dla łączności \CompleteLinkage{}.
 
 \begin{table}
 \centering
@@ -2385,8 +2384,7 @@ Jako że większość kształtów danych zawiera dysproporcje w liczebności, ś
 	gaussowska & 0.9785 & 0.6608 \\
 \bottomrule
 \end{tabular}
-\end{table} 
-\ksremark{Dokładność w tab. \ref{id:tab:acc-rt} jest układa się dokładnie odwrotnie dla \SingleLinkage\ i dla \CompleteLinkage. Tzn. tam gdzie \SingleLinkage\ jest najlepszy, tam \CompleteLinkage\ jest najgorszy i odwrotnie. Dlaczego tak się dzieje?}
+\end{table}
 
 \begin{table}
 \centering
@@ -2690,9 +2688,9 @@ Przy grupowaniu danych algorytmem o łączności \CompleteLinkage{}, w większo�
 
 Ze względu na brak etykiet danych \brightkite{} i \gowalla{}, jakość grupowania można ocenić wizualnie, na podstawie wykresów -- odpowiednio rys. \ref{fig:brightkite-strict-fuzzy} i \ref{fig:gowalla-strict-fuzzy}.
 
-Podczas grupowania ostrego algorytmem \texttt{AgglomerativeClustering} wykorzystano losową próbkę 500000 współrzędnych, jako że algorytm ten nie nadaje się do grupowania bardzo dużych ilości danych. Jako parametry grupowania \MojAlg{} wybrano, w oparciu o wyniki otrzymane w sekcji \ref{sec:wyniki-jakosc-generowane}, relację trójkątną, 100 granul i $\xi=0,1$. W obydwu przypadkach jako docelową liczbę klastrów wybrano 6 -- jeden klaster to jeden kontynent.
+Podczas grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} wykorzystano losową próbkę 500000 współrzędnych, jako że algorytm ten nie nadaje się do grupowania bardzo dużych ilości danych. Jako parametry grupowania \MojAlg{} wybrano, w oparciu o wyniki otrzymane w sekcji \ref{sec:wyniki-jakosc-generowane}, relację trójkątną, 100 granul i $\xi=0,1$. W obydwu przypadkach jako docelową liczbę klastrów wybrano 6 -- jeden klaster to jeden kontynent.
 
-Grupowanie ostre algorytmem \texttt{AgglomerativeClustering} nie odnajduje oczekiwanych klastrów. W przypadku danych \brightkite{}, wszystkie kontynenty zostały połączone w jeden klaster, zaś elementy odstające -- wyspy, ocean, błędne współrzędne -- to pozostałe 5 klastrów. W przypadku danych \gowalla{} grupowanie jest lepsze -- Ameryki stanowią osobny klaster niż reszta kontynentów -- jednak wciąż 4 klastry odpowiadają wyłącznie danym odstającym.
+Grupowanie ostre algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} nie odnajduje oczekiwanych klastrów. W przypadku danych \brightkite{}, wszystkie kontynenty zostały połączone w jeden klaster, zaś elementy odstające -- wyspy, ocean, błędne współrzędne -- to pozostałe 5 klastrów. W przypadku danych \gowalla{} grupowanie jest lepsze -- Ameryki stanowią osobny klaster niż reszta kontynentów -- jednak wciąż 4 klastry odpowiadają wyłącznie danym odstającym.
 
 Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna granulacja FCM pozwoliła na eliminację szumów (w tym błędnych współrzędnych), na które wrażliwy jest algorytm grupowania hierarchicznego. Zauważyć można, że duży wpływ na rozmieszczenie granul ma zagęszczenie danych -- najwięcej granul powstało we współrzędnych odpowiadająch Europie i Ameryce Północnej. Zarówno w przypadku danych \brightkite{}, jak i \gowalla{}, Europa i Azja zostały uznane za jeden klaster. 
 
@@ -2708,7 +2706,7 @@ Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna
 		\caption{Grupowanie algorytmem \MojAlg{} całości danych}
 	\end{subfigure}
 	
-	\caption{Wyniki grupowania hierarchicznego algorytmem ostrym \texttt{AgglomerativeClustering} i algorytmem \MojAlg{} danych \brightkite{}}
+	\caption{Wyniki grupowania hierarchicznego algorytmem ostrym \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} i algorytmem \MojAlg{} danych \brightkite{}}
 	\label{fig:brightkite-strict-fuzzy}
 \end{figure}
 
@@ -2724,7 +2722,7 @@ Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna
 		\caption{Grupowanie algorytmem \MojAlg{} całości danych}
 	\end{subfigure}
 	
-	\caption{Wyniki grupowania hierarchicznego algorytmem ostrym \texttt{AgglomerativeClustering} i algorytmem \MojAlg{} danych \gowalla{}}
+	\caption{Wyniki grupowania hierarchicznego algorytmem ostrym \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} i algorytmem \MojAlg{} danych \gowalla{}}
 	\label{fig:gowalla-strict-fuzzy}
 \end{figure}
 
@@ -2902,20 +2900,17 @@ Pomiaru czasu można dokonać przy pomocy skryptu \texttt{measure\_time.py}. Dla
 
 Wywołanie skryptu z linii poleceń ma następującą składnię:
 
-\texttt{python3 measure\_time.py [-h] [-r REPEATS] [-l] [-t] [-p]}
+\lstinline|python measure_time.py [-h] [-r REPEATS] [-l] [-t] [-p] [-f {blobs,circles,corners,crescents,laguna,spheres}]|,
 
-\texttt{[-f \{blobs,circles,corners,crescents,laguna,spheres\}]},
+\noindent gdzie:
 
-gdzie:
-
-\ksremark{lstinline}
 \begin{itemize}
-	\item \lstinline!-h! (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
-	\item \texttt{-r REPEATS} (alternatywnie: \texttt{--repeats REPEATS}) -- parametr (liczba całkowita) odpowiadający liczbie powtórzeń każdego z pomiarów czasu. Domyślnie wartość 4,
-	\item \texttt{-l} (alternatywnie: \texttt{--library\_function}) -- użycie funkcji \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn} zamiast własnej implementacji ostrego algorytmu hierarchicznego, porównywanego z algorytmem \MojAlg{}. Pomiary zostaną wtedy wykonane na większych liczebnościach danych,
-	\item \texttt{-t} (alternatywnie: \texttt{--save\_times}) -- zapisanie wyników do pliku .csv, wywołanie bez przełącznika powoduje wypisanie pomiarów do konsoli,
-	\item \texttt{-p} (alternatywnie: \texttt{--save\_plot}) -- zapisanie wykresu do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresu na ekranie,
-	\item \texttt{-f \{blobs,circles,corners,crescents,laguna,spheres\}} (alternatywnie: \texttt{--filename \{blobs,circles,corners,crescents,laguna,spheres\}}) -- wybór danych do pomiaru. Domyślnie wartość 'corners'.
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-r REPEATS| (alternatywnie: \lstinline|--repeats REPEATS|) -- parametr (liczba całkowita) odpowiadający liczbie powtórzeń każdego z pomiarów czasu. Domyślnie wartość 4,
+	\item \lstinline|-l| (alternatywnie: \lstinline|--library_function|) -- użycie funkcji \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} zamiast własnej implementacji ostrego algorytmu hierarchicznego, porównywanego z algorytmem \MojAlg{}. Pomiary zostaną wtedy wykonane na większych liczebnościach danych,
+	\item \lstinline|-t| (alternatywnie: \lstinline|--save_times|) -- zapisanie wyników do pliku .csv, wywołanie bez przełącznika powoduje wypisanie pomiarów do konsoli,
+	\item \lstinline|-p| (alternatywnie: \lstinline|--save_plot|) -- zapisanie wykresu do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresu na ekranie,
+	\item \lstinline|-f {blobs,circles,corners,crescents,laguna,spheres}| (alternatywnie: \lstinline|--filename {blobs,circles,corners,crescents,laguna,spheres}|) -- wybór danych do pomiaru. Domyślnie wartość 'corners'.
 \end{itemize}
 
 \subsubsection*{Pomiar jakości}
@@ -2924,16 +2919,16 @@ Pomiaru jakości grupowania można dokonać przy pomocy skryptu \texttt{measure\
 
 Wywołanie skryptu z linii poleceń ma następującą składnię:
 
-\texttt{python3 measure\_quality.py [-h] [-f FILENAME] [-l \{sl,single,cl,complete\}] [-r] [--strict]},
+\lstinline|python measure_quality.py [-h] [-f FILENAME] [-l {sl,single,cl,complete}] [-r] [--strict]|,
 
-gdzie:
+\noindent gdzie:
 
 \begin{itemize}
-	\item \texttt{-h} (alternatywnie: \texttt{--help}) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
-	\item \texttt{-f FILENAME} (alternatywnie: \texttt{--filename FILENAME}) -- wybór konkretnego pliku z danymi do pomiaru (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykonywane są pomiary na wszystkich plikach,
-	\item \texttt{-l \{sl,single,cl,complete\}} (alternatywnie: \texttt{-linkage \{sl,single,cl,complete\}}) -- łączność grupowania hierarchicznego, gdzie ,,sl'' i ,,single'' to łączność \SingleLinkage{}, a ,,cl'' i ,,complete'' -- \CompleteLinkage{},
-	\item \texttt{-r} (alternatywnie: \texttt{--relation\_dependent}) -- obliczanie przynależności punktów do granul na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$,
-	\item \texttt{--strict} -- dodatkowe pomiary metryk jakości dla grupowania ostrego algorytmem \texttt{AgglomerativeClustering} biblioteki \texttt{scikit-learn}.
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-f FILENAME| (alternatywnie: \lstinline|--filename FILENAME|) -- wybór konkretnego pliku z danymi do pomiaru (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykonywane są pomiary na wszystkich plikach,
+	\item \lstinline|-l {sl,single,cl,complete}| (alternatywnie: \lstinline|-linkage {sl,single,cl,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,sl'' i ,,single'' to łączność \SingleLinkage{}, a ,,cl'' i ,,complete'' -- \CompleteLinkage{},
+	\item \lstinline|-r| (alternatywnie: \lstinline|--relation_dependent|) -- obliczanie przynależności punktów do granul na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$,
+	\item \lstinline|--strict| -- dodatkowe pomiary metryk jakości dla grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
 \end{itemize}
 
 \subsubsection*{Wykresy grupowania granul}
@@ -2942,15 +2937,15 @@ Wykresy wyników grupowania \MojAlg{} można uzyskać przy pomocy skryptu \textt
 
 Wywołanie skryptu z linii poleceń ma następującą składnię:
 
-\texttt{python3 plot\_granules.py [-h] [-f FILENAME] [-l {single,complete}] [-p]},
+\lstinline|python plot_granules.py [-h] [-f FILENAME] [-l {single,complete}] [-p]|,
 
-gdzie:
+\noindent gdzie:
 
 \begin{itemize}
-	\item \texttt{-h} (alternatywnie: \texttt{--help}) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
-	\item \texttt{-f FILENAME} (alternatywnie: \texttt{--filename FILENAME}) -- wybór konkretnego pliku z danymi do zgrupowania i przedstawienia na wykresie (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykresy tworzone są dla wszystkich plików,
-	\item \texttt{-l \{sl,single,cl,complete\}} (alternatywnie: \texttt{-linkage \{single,complete\}}) -- łączność grupowania hierarchicznego, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{},
-	\item \texttt{-p} (alternatywnie: \texttt{--save\_plot}) -- zapisanie wykresów do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresów na ekranie, jeżeli są one tworzone tylko dla jednego pliku. Gdy wykresy generowane są dla wszystkich plików, są one zapisywane do .pdf niezależnie od obecności przełącznika.
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-f FILENAME| (alternatywnie: \lstinline|--filename FILENAME|) -- wybór konkretnego pliku z danymi do zgrupowania i przedstawienia na wykresie (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykresy tworzone są dla wszystkich plików,
+	\item \lstinline|-l \{sl,single,cl,complete\}| (alternatywnie: \lstinline|-linkage {single,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{},
+	\item \lstinline|-p| (alternatywnie: \lstinline|--save_plot|) -- zapisanie wykresów do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresów na ekranie, jeżeli są one tworzone tylko dla jednego pliku. Gdy wykresy generowane są dla wszystkich plików, są one zapisywane do .pdf niezależnie od obecności przełącznika.
 \end{itemize}
 
 % TODO
