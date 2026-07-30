@@ -2,159 +2,174 @@ import pandas
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
+import argparse
+import os
 
-# names_roots = ["blobs", "circles", "corners", "crescents", "laguna", "spheres"]
-# d = {}
-# for name in names_roots:
-#     with open("./dane_labelled/" + name + "/" + name + "1000.data", 'r') as f:
-#         lines = f.read().splitlines()
-#         data = []
-#         for line in lines:
-#             l = line.split()
-#             if len(l) > 3:
-#                 data.append([float(l[0]), float(l[1]), float(l[2]), float(l[3])])
-#             else:
-#                 data.append([float(l[0]), float(l[1]), float(l[2])])
-#         d[name] = np.array(data)
-#
-# fig = plt.figure()
-# ax = fig.add_subplot(2, 3, 1)
-# ax.scatter(d["blobs"][:, 0], d["blobs"][:, 1], c=d["blobs"][:, 2])
-# ax.set_title("Blobs")
-# ax = fig.add_subplot(2, 3, 2)
-# ax.scatter(d["circles"][:, 0], d["circles"][:, 1], c=d["circles"][:, 2])
-# ax.set_title("Circles")
-# ax = fig.add_subplot(2, 3, 3)
-# ax.scatter(d["corners"][:, 0], d["corners"][:, 1], c=d["corners"][:, 2])
-# ax.set_title("Corners")
-# ax = fig.add_subplot(2, 3, 4)
-# ax.scatter(d["crescents"][:, 0], d["crescents"][:, 1], c=d["crescents"][:, 2])
-# ax.set_title("Crescents")
-# ax = fig.add_subplot(2, 3, 5)
-# ax.scatter(d["laguna"][:, 0], d["laguna"][:, 1], c=d["laguna"][:, 2])
-# ax.set_title("Laguna")
-# ax = fig.add_subplot(2, 3, 6, projection='3d')
-# ax.scatter3D(d["spheres"][:, 0], d["spheres"][:, 1], d["spheres"][:, 2], c=d["spheres"][:, 3], alpha=0.5)
-# ax.set_title("Spheres")
-#
-# plt.show()
-#
-# with open("./dane_labelled/laguna/laguna20000.data", 'r') as f:
-#     lines = f.read().splitlines()
-#     data = []
-#     for line in lines:
-#         l = line.split()
-#         data.append([float(l[0]), float(l[1]), float(l[2])])
-#     data = np.array(data)
-#     plt.figure()
-#     plt.scatter(data[:, 0], data[:, 1], c=data[:, 2])
-#     plt.show()
-
+names_roots = ["blobs", "circles", "corners", "crescents", "laguna", "spheres"]
+linkages = {"single": "sl", "complete": "cl"}
 granules_numbers = [50, 100, 200]
 relation_types = ['t', 'e', 'g']
 line_type = [':', '-', '--']
 cmap = mpl.colormaps['tab10']
 colors = cmap(np.linspace(0, 1, 9))
 legend_labels = []
+data_shapes = dict()
+data_shapes_noise = dict()
 
-data_blobs = pandas.read_csv("wyniki/blobs_sl_accuracy.csv")
-data_circles = pandas.read_csv("wyniki/circles_sl_accuracy.csv")
-data_corners = pandas.read_csv("wyniki/corners_sl_accuracy.csv")
-data_crescents = pandas.read_csv("wyniki/crescents_sl_accuracy.csv")
-data_laguna = pandas.read_csv("wyniki/laguna_sl_accuracy.csv")
-data_spheres = pandas.read_csv("wyniki/spheres_sl_accuracy.csv")
 
-print("blobs\n", data_blobs[["accuracy", "recall", "precision"]].mean())
-print("circles\n", data_circles[["accuracy", "recall", "precision"]].mean())
-print("corners\n", data_corners[["accuracy", "recall", "precision"]].mean())
-print("crescents\n", data_crescents[["accuracy", "recall", "precision"]].mean())
-print("laguna\n", data_laguna[["accuracy", "recall", "precision"]].mean())
-print("spheres\n", data_spheres[["accuracy", "recall", "precision"]].mean())
+def read_data(shape_dep, linkage, strict):
+    if shape_dep:
+        suffix = "_" + linkages[linkage] + "_" + "shape_dep_accuracy.csv"
+    else:
+        suffix = "_" + linkages[linkage] + "_" + "accuracy.csv"
+    for name in names_roots:
+        filename = "wyniki/" + name + suffix
+        if not os.path.exists(filename):
+            print(filename + " not found")
+            return None, None
+        data_shapes[name] = pandas.read_csv(filename)
+        if shape_dep:
+            df = data_shapes[name].copy()
+            for index, row in df.iterrows():
+                df.at[index, 'accuracy'] = row['accuracy'] * (1 - row['noise percentage'])
+                df.at[index, 'recall'] = row['recall'] * (1 - row['noise percentage'])
+                df.at[index, 'precision'] = row['precision'] * (1 - row['noise percentage'])
+            data_shapes_noise[name] = df
+        if strict:
+            data_strict = pandas.read_csv("wyniki/" + name + "_sl_strict_accuracy.csv")[
+                ["granules", "accuracy", "recall", "precision"]].groupby(by=["granules"]).mean()
+            print(name, "\n", data_strict)
 
-data = pandas.concat([data_blobs, data_circles, data_corners, data_crescents, data_laguna, data_spheres])
+    if shape_dep:
+        return pandas.concat(data_shapes.values()), pandas.concat(data_shapes_noise.values())
+    return pandas.concat(data_shapes.values()), None
 
-for name, shape in {"blobs": data_blobs, "circles": data_circles, "corners": data_corners, "crescents": data_crescents, "laguna": data_laguna, "spheres": data_spheres}.items():
-    filtered_size = shape[["granules number", "relation type", "ksi", "accuracy", "recall", "precision"]].groupby(by=["granules number", "relation type", "ksi"]).mean().reset_index()
 
-    plt.figure(figsize=(12, 10))
-    for i in range(3):
-        for j in range(3):
-            d = filtered_size[(filtered_size['granules number'] == granules_numbers[i]) & (filtered_size['relation type'] == relation_types[j])]
-            plt.plot(d['ksi'], d['accuracy'], linestyle=line_type[i])
-            plt.title("Zależność dokładności grupowania danych " + name + r" od liczby granul, typu relacji i wartości $ \xi $ przy łączności single linkage")
-            plt.xlabel(r"$ \xi $")
-            plt.ylabel("dokładność")
-            legend_labels.append(str(granules_numbers[i]) + " granul, typ relacji: " + relation_types[j])
-    plt.legend(legend_labels)
-    # plt.show()
-    plt.savefig("img/iter80/" + name + "/" + name + "_complex_acc_sl.pdf")
-    plt.close()
+def analyze_data_shape(shape_dep):
+    print("Data shape impact analysis")
+    for name in names_roots:
+        print("\n" + name)
+        print("mean")
+        print(data_shapes[name][["accuracy", "recall", "precision"]].mean())
+        print("\nmax")
+        print(data_shapes[name][["data size", "accuracy", "recall", "precision"]].groupby(by=["data size"]).max())
 
-    plt.figure(figsize=(12, 10))
-    for i in range(3):
-        for j in range(3):
-            d = filtered_size[(filtered_size['granules number'] == granules_numbers[i]) & (
-                        filtered_size['relation type'] == relation_types[j])]
-            plt.plot(d['ksi'], d['recall'], linestyle=line_type[i])
-            plt.title(
-                "Zależność trafności grupowania danych " + name + r" od liczby granul, typu relacji i wartości $ \xi $ przy łączności single linkage")
-            plt.xlabel(r"$ \xi $")
-            plt.ylabel("trafność")
-            legend_labels.append(str(granules_numbers[i]) + " granul, typ relacji: " + relation_types[j])
-    plt.legend(legend_labels)
-    # plt.show()
-    plt.savefig("img/iter80/" + name + "/" + name + "_complex_rec_sl.pdf")
-    plt.close()
+        if shape_dep:
+            print("\nWith noise")
+            print("mean")
+            print(data_shapes_noise[name][["accuracy", "recall", "precision"]].mean())
+            print("\nmax")
+            print(data_shapes_noise[name][["data size", "accuracy", "recall", "precision"]].groupby(by=["data size"]).max())
 
-    plt.figure(figsize=(12, 10))
-    for i in range(3):
-        for j in range(3):
-            d = filtered_size[(filtered_size['granules number'] == granules_numbers[i]) & (
-                    filtered_size['relation type'] == relation_types[j])]
-            plt.plot(d['ksi'], d['precision'], linestyle=line_type[i])
-            plt.title(
-                "Zależność precyzji grupowania danych " + name + r" od liczby granul, typu relacji i wartości $ \xi $ przy łączności single linkage")
-            plt.xlabel(r"$ \xi $")
-            plt.ylabel("precyzja")
-            legend_labels.append(str(granules_numbers[i]) + " granul, typ relacji: " + relation_types[j])
-    plt.legend(legend_labels)
-    # plt.show()
-    plt.savefig("img/iter80/" + name + "/" + name + "_complex_prec_sl.pdf")
-    plt.close()
 
-to_group = data[["relation type", "accuracy", "recall", "precision"]]
-grouped = to_group.groupby(by=["relation type"], as_index=False).mean()
-print(to_group.groupby(by=["relation type"]).mean().to_string())
-plt.figure()
-plt.bar(grouped["relation type"], grouped["accuracy"], color=cmap(np.linspace(0, 1, 3)))
-plt.title('Accuracy by relation type')
-plt.xlabel('relation type')
-plt.ylabel('accuracy')
-plt.show()
+def analyze_relation_type(data, data_noise, shape_dep):
+    print("Relation type impact analysis")
+    print("mean")
+    print(data[["relation type", "accuracy", "recall", "precision"]].groupby(by=["relation type"]).mean().to_string())
+    if shape_dep:
+        print("\nWith noise")
+        print("mean")
+        print(data_noise[["relation type", "accuracy", "recall", "precision"]].groupby(
+            by=["relation type"]).mean().to_string())
 
-to_group = data[["granules number", "accuracy", "recall", "precision"]]
-grouped = to_group.groupby(by=["granules number"]).mean()
-print(grouped.to_string())
 
-to_group = data[["ksi", "accuracy", "recall", "precision"]]
-grouped = to_group.groupby(by=["ksi"], as_index=False).mean()
-print(grouped.to_string())
-plt.figure(figsize=(9,9))
-plt.plot(grouped["ksi"], grouped["accuracy"], marker='o')
-plt.plot(grouped["ksi"], grouped["recall"], marker='o')
-plt.plot(grouped["ksi"], grouped["precision"], marker='o')
-# plt.bar(grouped["ksi"], grouped["accuracy"], color=cmap(np.linspace(0, 1, 19)), width=0.02)
-plt.legend(["dokładność", "trafność", "precyzja"])
-plt.title(r'Średnia dokładność, trafność i precyzja w zależności od parametru $ \xi $')
-plt.xlabel(r'$ \xi $')
-plt.ylabel('wynik')
-plt.show()
+def analyze_granule_number(data, data_noise, shape_dep):
+    print("Granule number impact analysis")
+    print("mean")
+    print(data[["granules number", "accuracy", "recall", "precision"]].groupby(by=["granules number"]).mean().to_string())
+    print("noise")
+    if shape_dep:
+        print("\nWith noise")
+        print("mean")
+        print(data_noise[["granules number", "accuracy", "recall", "precision"]].groupby(by=["granules number"]).mean().to_string())
 
-# grouped = to_group.groupby(by=["ksi"], as_index=False).std()
-# print(grouped.to_string())
-# plt.figure()
-# plt.bar(grouped["ksi"], grouped["accuracy"], color=cmap(np.linspace(0, 1, 19)), width=0.02)
-# plt.title('Std of accuracy by ksi parameter')
-# plt.xlabel('ksi')
-# plt.ylabel('std of accuracy')
-# plt.show()
+
+def analyze_xi(data, data_noise, shape_dep):
+    print("Granule number impact analysis")
+    print("mean")
+    to_group = data[["ksi", "accuracy", "recall", "precision"]]
+    grouped = to_group.groupby(by=["ksi"], as_index=False).mean()
+    print(grouped.to_string())
+    plt.figure(figsize=(9,9))
+    plt.plot(grouped["ksi"], grouped["accuracy"], marker='o')
+    plt.plot(grouped["ksi"], grouped["recall"], marker='o')
+    plt.plot(grouped["ksi"], grouped["precision"], marker='o')
+    plt.legend(["dokładność", "trafność", "precyzja"])
+    plt.title(r'Średnia dokładność, trafność i precyzja w zależności od parametru $ \xi $')
+    plt.xlabel(r'$ \xi $')
+    plt.ylabel('wynik')
+    plt.show()
+
+    if shape_dep:
+        print("\nWith noise")
+        print("mean")
+        to_group = data_noise[["ksi", "accuracy", "recall", "precision"]]
+        grouped = to_group.groupby(by=["ksi"], as_index=False).mean()
+        print(grouped.to_string())
+        plt.figure(figsize=(9, 9))
+        plt.plot(grouped["ksi"], grouped["accuracy"], marker='o')
+        plt.plot(grouped["ksi"], grouped["recall"], marker='o')
+        plt.plot(grouped["ksi"], grouped["precision"], marker='o')
+        plt.legend(["dokładność", "trafność", "precyzja"])
+        plt.title(r'Średnia dokładność, trafność i precyzja w zależności od parametru $ \xi $, przy uwzględnieniu szumu')
+        plt.xlabel(r'$ \xi $')
+        plt.ylabel('wynik')
+        plt.show()
+
+
+def analyze_combination(linkage):
+    metric_names = [["accuracy", "acc", "dokładności", "dokładność"], ["recall", "rec", "trafności", "trafność"], ["precision", "prec", "precyzji", "precyzja"]]
+    for name, shape in data_shapes.items():
+        folderPath = "img/complex/" + name + "/"
+        if not os.path.exists(folderPath):
+            os.makedirs(folderPath)
+        filtered_size = shape[["granules number", "relation type", "ksi", "accuracy", "recall", "precision"]].groupby(by=["granules number", "relation type", "ksi"]).mean().reset_index()
+
+        for metric in metric_names:
+            plt.figure(figsize=(12, 10))
+            for i in range(3):
+                for j in range(3):
+                    d = filtered_size[(filtered_size['granules number'] == granules_numbers[i]) & (filtered_size['relation type'] == relation_types[j])]
+                    plt.plot(d['ksi'], d[metric[0]], linestyle=line_type[i])
+                    plt.title("Zależność " + metric[2] + " grupowania danych " + name + r" od liczby granul, typu relacji i wartości $ \xi $ przy łączności " + linkage + " linkage")
+                    plt.xlabel(r"$ \xi $")
+                    plt.ylabel(metric[3])
+                    legend_labels.append(str(granules_numbers[i]) + " granul, typ relacji: " + relation_types[j])
+            plt.legend(legend_labels)
+            # plt.show()
+            plt.savefig(folderPath + name + "_complex_ " + metric[1] + "_" + linkages[linkage] + ".pdf")
+            plt.close()
+
+
+def main():
+    parser = argparse.ArgumentParser(prog="Clustering Quality Analysis",
+                                     description="Analyze quality results based on different parameters")
+    parser.add_argument("-l", "--linkage", choices=["single", "complete"], default="single",
+                        help="linkage of the hierachical clustering: single or complete, single by default")
+    parser.add_argument("-s", "--shape_dependent", action="store_true", help="analyze results of when granule memberships are based on granule shape/relation type")
+    parser.add_argument("-d", "--data_shape", action="store_true", help="analyze quality based on data shape")
+    parser.add_argument("-r", "--relation_type", action="store_true", help="analyze quality based on relation type")
+    parser.add_argument("-g", "--granule_number", action="store_true", help="analyze quality based on granule number")
+    parser.add_argument("-x", "--xi", action="store_true", help="analyze quality based on xi (threshold) parameter")
+    parser.add_argument("-c", "--complex", action="store_true", help="analyze quality based on the combination of relation type, granule number and xi parameter")
+    parser.add_argument("--strict", action="store_true",
+                        help="analyze strict (non-fuzzy) clustering results in addition to fuzzy ones")
+    args = parser.parse_args()
+
+    data, data_noise = read_data(args.shape_dependent, args.linkage, args.strict)
+    if data is None:
+        return
+    if args.data_shape:
+        analyze_data_shape(args.shape_dependent)
+    if args.relation_type:
+        analyze_relation_type(data, data_noise, args.shape_dependent)
+    if args.granule_number:
+        analyze_granule_number(data, data_noise, args.shape_dependent)
+    if args.xi:
+        analyze_xi(data, data_noise, args.shape_dependent)
+    if args.complex:
+        analyze_combination(args.linkage)
+
+
+if __name__ == "__main__":
+    main()
