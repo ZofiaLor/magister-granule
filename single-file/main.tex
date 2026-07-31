@@ -904,22 +904,22 @@ gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warun
 		\State $\nX \gets $ liczba próbek
 		\State $\nAtrybut \gets $ liczba atrybutów \Comment{$\nX$ i $\nAtrybut$: wymiary $\zX$} 
 		\State $\wCentre \gets $ losowe wartości początkowe środków klastrów
-		\State $\mMembership \gets $ losowe wartości początkowe przynależności punktów do klastrów, spełniające warunek ze wzoru \ref{eq:cluster_mem_condition}
+		\State $\mClusterMembership \gets $ losowe wartości początkowe przynależności punktów do klastrów, spełniające warunek ze wzoru \ref{eq:cluster_mem_condition}
 		\State $i\gets 1$
 		\State koniec $\gets$ false
 		\While{$i < \nIteracja$ $\land$ $\lnot$ koniec} 
 		\State aktualizacja wartości $\wCentre$ na podstawie wzoru \eqref{eq:center_update}
-		\State aktualizacja wartości $\mMembership$ na podstawie wzoru \eqref{eq:membership_update}
+		\State aktualizacja wartości $\mClusterMembership$ na podstawie wzoru \eqref{eq:membership_update}
 		\If{spełniony warunek \ref{eq:fcm_stop_contidion}}
 		\State  koniec $\gets$ true
 		\EndIf
 		\EndWhile
-		\State \Return $v, U$
+		\State \Return $\wCentre, \mClusterMembership$
 		\EndProcedure
 	\end{algorithmic}
 \end{algorithm}
 
-\todo{inne algorytmy? FCOM, PCM?}
+Algorytm rozmytych $c$-średnich stanowi podstawę dla wielu innych algorytmów. Należą do nich między innymi algorytm \english{possibilistic $c$-means} (PCM) \cite{bib:pcm-algorithm}, w którym warunek \eqref{eq:cluster_mem_condition} nie musi być spełniony, oraz \english{fuzzy $c$-ordered-means} (FCOM) \cite{bib:fcom-algorithm}, gdzie dane sortowane są według odległości od środków klastrów.
 
 \chapter{Obliczenia ziarniste}
 
@@ -2926,7 +2926,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 \begin{itemize}
 	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
 	\item \lstinline|-f FILENAME| (alternatywnie: \lstinline|--filename FILENAME|) -- wybór konkretnego pliku z danymi do pomiaru (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykonywane są pomiary na wszystkich plikach,
-	\item \lstinline|-l {sl,single,cl,complete}| (alternatywnie: \lstinline|-linkage {sl,single,cl,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,sl'' i ,,single'' to łączność \SingleLinkage{}, a ,,cl'' i ,,complete'' -- \CompleteLinkage{},
+	\item \lstinline|-l {sl,single,cl,complete}| (alternatywnie: \lstinline|-linkage {sl,single,cl,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,sl'' i ,,single'' to łączność \SingleLinkage{}, a ,,cl'' i ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
 	\item \lstinline|-r| (alternatywnie: \lstinline|--relation_dependent|) -- obliczanie przynależności punktów do granul na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$,
 	\item \lstinline|--strict| -- dodatkowe pomiary metryk jakości dla grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
 \end{itemize}
@@ -2944,8 +2944,30 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 \begin{itemize}
 	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
 	\item \lstinline|-f FILENAME| (alternatywnie: \lstinline|--filename FILENAME|) -- wybór konkretnego pliku z danymi do zgrupowania i przedstawienia na wykresie (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykresy tworzone są dla wszystkich plików,
-	\item \lstinline|-l \{sl,single,cl,complete\}| (alternatywnie: \lstinline|-linkage {single,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{},
+	\item \lstinline|-l \{single,complete\}| (alternatywnie: \lstinline|-linkage {single,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
 	\item \lstinline|-p| (alternatywnie: \lstinline|--save_plot|) -- zapisanie wykresów do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresów na ekranie, jeżeli są one tworzone tylko dla jednego pliku. Gdy wykresy generowane są dla wszystkich plików, są one zapisywane do .pdf niezależnie od obecności przełącznika.
+\end{itemize}
+
+\subsubsection*{Analiza wyników}
+
+Skrypt \texttt{accuracy\_analysis.py} służy do analizy wyników pomiarów wykonanych przy pomocy skryptu \texttt{measure\_quality.py}. Do jego działania wymagane jest więc uprzednie wykonanie pomiarów dla wszystkich plików, przy wybranej konfiguracji łączności i obliczania przynależności punktów do granul. Możliwa jest analiza wpływu poszczególnych parametrów grupowania na wyniki.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\lstinline|python accuracy_analysis.py [-h] [-l {single,complete}] [-s] [-d] [-r] [-g] [-x] [-c] [--strict]|,
+
+\noindent gdzie:
+
+\begin{itemize}
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-l \{single,complete\}| (alternatywnie: \lstinline|-linkage {single,complete}|) -- analiza wyników grupowania przy danej łączności, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
+	\item \lstinline|-s| (alternatywnie: \lstinline|--shape_dependent|) -- analiza wyników grupowania, dla których przynależność punktów do granul obliczona była na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$ (w wynikach występować może szum),
+	\item \lstinline|-d| (alternatywnie: \lstinline|--data_shape|) -- analiza wpływu kształtu danych (na przykład \blobs{}, \circles{}) na jakość grupowania,
+	\item \lstinline|-r| (alternatywnie: \lstinline|--relation_type|) -- analiza wpływu typu relacji (trójkątna, wykładnicza, gaussowska) na jakość grupowania,
+	\item \lstinline|-g| (alternatywnie: \lstinline|--granule_number|) -- analiza wpływu liczby granul generowanych przez algorytm FCM na jakość grupowania,
+	\item \lstinline|-x| (alternatywnie: \lstinline|--xi|) -- analiza wpływu parametru progowego $\xi$ na jakość grupowania,
+	\item \lstinline|-c| (alternatywnie: \lstinline|--complex|) -- analiza wpływu kombinacji parametrów (kształtu danych, typu relacji, liczby granul oraz parametru $\xi$) na jakość grupowania,
+	\item \lstinline|--strict| -- dodatkowa analiza wyników jakości dla grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
 \end{itemize}
 
 % TODO
@@ -2956,9 +2978,19 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 \chapter{Spis skrótów i symboli}
 
 \begin{itemize}
-\item[$N$] liczebność zbioru danych
-\item[$\mu$] stopnień przyleżności do zbioru
-\item[FCM] algorytm fuzzy-c means 
+	\item[$\Atrybut$] atrybut (wymiar) danych
+	\item[$\accuracy$] dokładność 
+	\item[$\klaster$] klaster 
+	\item[$\Odleglosc$] odległość między danymi 
+	\item[FCM] algorytm rozmytych $c$-średnich (\english{fuzzy $c$-means})
+	\item[$\Granula$] granula
+	\item[$\mConfusionMatrix$] macierz pomyłek
+	\item[$\precision$] precyzja
+	\item[$\recall$] trafność 
+	\item[$\nPodobienstwo$] rozmyta relacja $\ast$-podobieństwa 
+	\item[$\mCentre$] macierz środków klastrów FCM
+	\item[$\mClusterMembership$] stopnień przyleżności do zbioru
+	\item[$\xi$] parametr progowy rozmytego grupowania hierarchicznego
 \end{itemize}
 
 %% TODO
