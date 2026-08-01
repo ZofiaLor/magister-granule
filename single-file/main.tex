@@ -2926,7 +2926,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 \begin{itemize}
 	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
 	\item \lstinline|-f FILENAME| (alternatywnie: \lstinline|--filename FILENAME|) -- wybór konkretnego pliku z danymi do pomiaru (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykonywane są pomiary na wszystkich plikach,
-	\item \lstinline|-l {sl,single,cl,complete}| (alternatywnie: \lstinline|-linkage {sl,single,cl,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,sl'' i ,,single'' to łączność \SingleLinkage{}, a ,,cl'' i ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
+	\item \lstinline|-l {sl,single,cl,complete}| (alternatywnie: \lstinline|--linkage {sl,single,cl,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,sl'' i ,,single'' to łączność \SingleLinkage{}, a ,,cl'' i ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
 	\item \lstinline|-r| (alternatywnie: \lstinline|--relation_dependent|) -- obliczanie przynależności punktów do granul na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$,
 	\item \lstinline|--strict| -- dodatkowe pomiary metryk jakości dla grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
 \end{itemize}
@@ -2944,7 +2944,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 \begin{itemize}
 	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
 	\item \lstinline|-f FILENAME| (alternatywnie: \lstinline|--filename FILENAME|) -- wybór konkretnego pliku z danymi do zgrupowania i przedstawienia na wykresie (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykresy tworzone są dla wszystkich plików,
-	\item \lstinline|-l \{single,complete\}| (alternatywnie: \lstinline|-linkage {single,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
+	\item \lstinline|-l \{single,complete\}| (alternatywnie: \lstinline|--linkage {single,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
 	\item \lstinline|-p| (alternatywnie: \lstinline|--save_plot|) -- zapisanie wykresów do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresów na ekranie, jeżeli są one tworzone tylko dla jednego pliku. Gdy wykresy generowane są dla wszystkich plików, są one zapisywane do .pdf niezależnie od obecności przełącznika.
 \end{itemize}
 
@@ -2960,7 +2960,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 
 \begin{itemize}
 	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
-	\item \lstinline|-l \{single,complete\}| (alternatywnie: \lstinline|-linkage {single,complete}|) -- analiza wyników grupowania przy danej łączności, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
+	\item \lstinline|-l \{single,complete\}| (alternatywnie: \lstinline|--linkage {single,complete}|) -- analiza wyników grupowania przy danej łączności, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
 	\item \lstinline|-s| (alternatywnie: \lstinline|--shape_dependent|) -- analiza wyników grupowania, dla których przynależność punktów do granul obliczona była na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$ (w wynikach występować może szum),
 	\item \lstinline|-d| (alternatywnie: \lstinline|--data_shape|) -- analiza wpływu kształtu danych (na przykład \blobs{}, \circles{}) na jakość grupowania,
 	\item \lstinline|-r| (alternatywnie: \lstinline|--relation_type|) -- analiza wpływu typu relacji (trójkątna, wykładnicza, gaussowska) na jakość grupowania,
@@ -2968,6 +2968,22 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 	\item \lstinline|-x| (alternatywnie: \lstinline|--xi|) -- analiza wpływu parametru progowego $\xi$ na jakość grupowania,
 	\item \lstinline|-c| (alternatywnie: \lstinline|--complex|) -- analiza wpływu kombinacji parametrów (kształtu danych, typu relacji, liczby granul oraz parametru $\xi$) na jakość grupowania,
 	\item \lstinline|--strict| -- dodatkowa analiza wyników jakości dla grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
+\end{itemize}
+
+\subsubsection*{Wykresy przynależności}
+
+Skrypt \texttt{membership\_plots.py} pozwala na utworzenie wykresów przynależnosci punktów do granul, na przykład \ref{fig:blobs1000-blue}.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\lstinline|python membership_plots.py [-h] [-n NUM_GRANULES] filename|,
+
+\noindent gdzie:
+
+\begin{itemize}
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-n NUM_GRANULES| (alternatywnie: \lstinline|--num_granules NUM_GRANULES|) -- liczba granul generowanych przez algorytm FCM, domyślnie 100,
+	\item \lstinline|filename|  -- nazwa pliku z danymi do zgrupowania i przedstawienia na wykresie (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000).
 \end{itemize}
 
 % TODO
