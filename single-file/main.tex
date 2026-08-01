@@ -584,15 +584,15 @@ Celem niniejszej pracy będzie opracowanie i przebadanie własności granularneg
 
 Algorytm ten ma niższą złożoność czasową -- liniową w zależności od liczby danych -- powinien więc przyspieszyć proces grupowania. Jako że wprowadzone zostanie rozmycie danych, dopuszczalne jest obniżenie jakości grupowania.
 
-W rozdziale \ref{sec:analiza-tematu} przedstawiono teoretyczną analizę zagadnień związanych z tematem. Omówione są algorytmy grupowania danych, w szczególności algorytm hierarchiczny oraz algorytm rozmytych $c$-średnich. Opisano istotne dla rozwiązania elementy logiki rozmytej, w tym rozszerzalne liczby rozmyte. Rozdział \ref{sec:wlasne-rozwiazanie} zawiera omówienie własnej implementacji rozmytego algorytmu aglomeracyjnego grupowania hierarchicznego i konieczne kroki przygotowujące dane. W rozdziale \ref{sec:badania} analizowane jest działanie tego algorytmu. Przedstawione są wykorzystane dane oraz metodyki badania czasu i jakości grupowania, a następnie w oparciu o nie omawiane są wyniki grupowania.
+W rozdziałach \ref{sec:analiza-tematu-grupowanie} i \ref{sec:analiza-tematu-ziarna} przedstawiono teoretyczną analizę zagadnień związanych z tematem. Rozdział \ref{sec:analiza-tematu-grupowanie} przedstawia algorytmy grupowania danych, w szczególności algorytm hierarchiczny oraz algorytm rozmytych $c$-średnich. W rozdziale \ref{sec:analiza-tematu-ziarna} opisano istotne dla rozwiązania elementy logiki rozmytej, w tym rozszerzalne liczby rozmyte. Rozdział \ref{sec:wlasne-rozwiazanie} zawiera omówienie własnej implementacji rozmytego algorytmu aglomeracyjnego grupowania hierarchicznego i konieczne kroki przygotowujące dane. W rozdziale \ref{sec:badania} analizowane jest działanie tego algorytmu. Przedstawione są wykorzystane dane oraz metodyki badania czasu i jakości grupowania, a następnie w oparciu o nie omawiane są wyniki grupowania.
 
 
 % TODO
 \chapter{Grupowanie danych}  % Analiza tematu
-\label{sec:analiza-tematu}
+\label{sec:analiza-tematu-grupowanie}
 % 
 
-Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danych. Umożliwiają znalezienie podobieństw między rozpatrywanymi obiektami i sklasyfikowanie ich. Połączenie tych dwóch podejść może wydobyć zalety każdego z nich. 
+Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danych. Umożliwiają znalezienie podobieństw między rozpatrywanymi obiektami i sklasyfikowanie ich. Połączenie tych dwóch podejść może wydobyć zalety każdego z nich. \zlremark{To było zagajenie, kiedy w jednym rozdziale było opisane grupowanie i obliczenia ziarniste. Czy dalej powinno tak wyglądać?}
 
 %\begin{itemize}
 %\item Jaki problem chcę (muszę :-) rozwiązać?
@@ -639,7 +639,7 @@ Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danyc
 %\label{sec:grupowanie}
  
 
-Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne
+Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne do siebie nawzajem
 \cite{bib:fcm-for-optimizing,bib:clustering-alg-survey}, a równocześnie niepodobne do obiektów z innych grup. Algorytmy grupowania są algorytmami nienadzorowanymi -- mają jedynie informacje o podobieństwie między poszczególnymi elementami.
 
  
@@ -758,10 +758,6 @@ Algorytm ogólny \texttt{GENERAL\_LINKAGE()} zawiera dodatkową optymalizację w
 
 \subsection{Single Linkage}
 
-Na czym polega
-Wizualizacja, dendrogram
-Typy implementacji (naiwna, SLINK...)
-
 W algorytmie \SingleLinkage{} \cite{bib:hierarchical-clustering} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
 Oznacza to, że w momencie złączenia klastrów $A_{1}$ i $A_{2}$ w jeden klaster $A$, odległość tego klastra do innego klastra $B$ zdefiniowana jest jako:
 \begin{align}
@@ -873,6 +869,8 @@ Dla każdego punktu, suma jego wartości przynależności do wszystkich klastró
 	\forall \Iteracja \in [1, N] \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster} = 1
 \end{align}
 
+Pseudokod algorytmu rozmytych $c$-średnich przedstawia alg. \ref{alg:fcm}.
+
 W każdej iteracji algorytmu obliczane są najpierw nowe współrzędne środków klastrów:
 \begin{align}
 	\label{eq:center_update}
@@ -922,6 +920,7 @@ gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warun
 Algorytm rozmytych $c$-średnich stanowi podstawę dla wielu innych algorytmów. Należą do nich między innymi algorytm \english{possibilistic $c$-means} (PCM) \cite{bib:pcm-algorithm}, w którym warunek \eqref{eq:cluster_mem_condition} nie musi być spełniony, oraz \english{fuzzy $c$-ordered-means} (FCOM) \cite{bib:fcom-algorithm}, gdzie dane sortowane są według odległości od środków klastrów.
 
 \chapter{Obliczenia ziarniste}
+\label{sec:analiza-tematu-ziarna}
 
 Obliczenia ziarniste (granularne) pozwalają na analizę danych w bardziej zbliżony do ludzkiego sposób zrozumienia. 
 
@@ -934,7 +933,7 @@ Są one encjami o pewnej semantyce, kolekcjami obiektów o określonym w~pewien 
 %
 W zależności od znaczenia i zastosowania ziaren, mogą one być reprezentowane na różne sposoby: jako zbiory klasyczne, przedziały liczb, zbiory rozmyte, zbiory cieniowane, zbiory przybliżone, czy funkcje prawdopodobieństwa \cite{bib:general-framework-information-granules}.
 %
-Ziarna informacyjne utworzyć można poprzez grupowanie danych. W przypadku ziaren reprezentowanych przez zbiory rozmyte, typowym algorytmem grupowania jest algorytm rozmytych $c$-średnich \ref{sec:fcm}.
+Ziarna informacyjne utworzyć można poprzez grupowanie danych. W przypadku ziaren reprezentowanych przez zbiory rozmyte, typowym algorytmem grupowania jest algorytm rozmytych $c$-średnich, opisanym w sekcji \ref{sec:fcm}.
 
 \section{Zbiory rozmyte}
 
@@ -1281,7 +1280,7 @@ Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego \MojAlg\ składa si�
 	\item aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia: \MojHierAlg\ (roz. \ref{sec:rozmyte-grupowanie-hierarchiczne}).
 \end{enumerate}
 
-Złożoność czasowa tego algorytmu może zostać określona jako $O(\nX + \nX\nGranula \nGranula^3)$, przy czym $\nGranula \ll \nX$ odpowiada liczbie granul.
+Złożoność czasowa tego algorytmu może zostać określona jako $O(\nX + \nX\nGranula + \nGranula^3)$, przy czym $\nGranula \ll \nX$ odpowiada liczbie granul.
 
 \section{Granulacja danych oryginalnych}
 \label{sec:granulacja-danych-oryginalnych}
@@ -1311,7 +1310,7 @@ Liczby rozmyte stanowią rozszerzenie liczb ostrych, więc każda arytmetyczne i
 
 Zbiór granul $\zGranula$ oraz ich kształt są parametrami wejściowymi algorytmu rozmytego aglomeracyjnego grupowania hierarchicznego \MojHierAlg.
 %
-Na początku wyznaczane są rozmyte odległości euklidesowe (wzór \eqref{eq:rozmyta:odleglosc:euklidesowa})między każdą parą granul, przy pomocy operacji arytmetycznych określonych w sekcji \ref{sec:rozszerzalne-liczby-rozmyte}. Wynikiem obliczeń jest symetryczna macierz odległości $\mDistance$ o wymiarach $\nX \times \nX$, gdzie $\Distance_{ij} = \Distance_{ji} = \Distance(\wX_{i}, \wX_{j})$. Odległość danego elementu od samego siebie ($\Distance_{ii}$) nie jest wykorzystywana w algorytmie, jej wartość nie jest więc istotna.
+Na początku wyznaczane są rozmyte odległości euklidesowe (wzór \eqref{eq:rozmyta:odleglosc:euklidesowa})między każdą parą granul, przy pomocy operacji arytmetycznych określonych w sekcji \ref{sec:rozszerzalne-liczby-rozmyte} (alg. \ref{alg:fuzzy-distance}). Wynikiem obliczeń jest symetryczna macierz odległości $\mDistance$ o wymiarach $\nX \times \nX$, gdzie $\Distance_{ij} = \Distance_{ji} = \Distance(\wX_{i}, \wX_{j})$. Odległość danego elementu od samego siebie ($\Distance_{ii}$) nie jest wykorzystywana w algorytmie, jej wartość nie jest więc istotna.
 
 Grupowanie hierarchiczne \MojHierAlg{} ma postać zmodyfikowanego algorytmu naiwnego \PrimitiveClustering{}, o złożoności czasowej $O(\nGranula^{3})$. Zmieniony musi zostać sposób wyznaczania kolejnych minimalnych odległości w macierzy $\mDistance$ oraz, zależne od łączności, aktualizacje odległości do nowo scalonego klastra. 
 
@@ -1495,7 +1494,7 @@ W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algor
 
 Poszczególne pomiary czasu działania algorytmu dla dokładnie takich samych rozmiarów danych mogą różnić się o kilka milisekund. Wynika to między innymi z działania w tle innych procesów komputera, na którym przeprowadzane są badania. Typowym rozwiązaniem tego problemu jest kilkukrotne powtórzenie pomiarów dla tych samych danych i obliczenie średniej arytmetycznej wyników. Podczas badań pomiary powtórzono czterokrotnie, co wystarczyło do wyeliminowania odstających wyników.
 
-Wykonano również pomiary czasu wykonania algorytmu \MojAlg{} dla dużych liczebności danych: 50000, 100000, 500000, 1000000, 2000000, 3000000, 4000000 i 5000000, dla liczebności granul 50, 100 i 200. Jako że dla tak dużych rozmiarów danych czas ten jest rzędu minut, nie mają znaczenia milisekundowe przekłamania wyników. Z tego powodu wystarczyło wykonać jeden pomiar dla każdego rozmiaru danych.
+Wykonano również pomiary czasu wykonania algorytmu \MojAlg{} dla dużych liczebności danych: 50000, 100000, 500000, 1000000, 2000000, 3000000, 4000000, 5000000 i 6000000, dla liczebności granul 50, 100 i 200. Jako że dla tak dużych rozmiarów danych czas ten jest rzędu minut, nie mają znaczenia milisekundowe przekłamania wyników. Z tego powodu wystarczyło wykonać jeden pomiar dla każdego rozmiaru danych.
 
 \subsection{Jakość grupowania}
 
@@ -1696,6 +1695,7 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 	\end{algorithmic}
 \end{algorithm}
 
+\zlremark{czy taka duża przerwa między akapitami (pusty paragraph) jest w porządku?}
 Wyznaczono macierz $\mConfusionMatrix$, w której wartość elementu $\ConfusionMatrix_{ij}$ jest równa liczbie punktów, dla których oczekiwana etykieta ma wartość $i$ i przynależących do klastra $j$ wyznaczonego przez algorytm \MojAlg{}:
 \begin{align}
 \ConfusionMatrix_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j].
@@ -1748,15 +1748,15 @@ Sposób obliczenia metryk jakości przedstawia również pseudokod \ref{alg:calc
 		\State $diag \gets 0$ \Comment{Suma wartości na przekątnej macierzy $\mConfusionMatrix$}
 		\State $\recall \gets 0$
 		\State $\precision \gets 0$
-		\State $mian\_\recall \gets $ sumy wartości dla każdego wiersza macierzy $\mConfusionMatrix$ \Comment{Skoro to sumy, to może zmienna mogłaby się nazywać coś w stylu suma itd?}
-		\State $mian\_\precision \gets $ sumy wartości dla każdej kolumny macierzy $\mConfusionMatrix$
+		\State $suma\_\recall \gets $ sumy wartości dla każdego wiersza macierzy $\mConfusionMatrix$
+		\State $suma\_\precision \gets $ sumy wartości dla każdej kolumny macierzy $\mConfusionMatrix$
 		\For{$i = 1$ to $\nKlaster$}
 		\State $diag \gets diag + \mConfusionMatrix[i, i]$
-		\If {$mian\_\recall[i] > 0 $}
-			\State $\recall \gets \recall + \mConfusionMatrix[i, i] / mian\_\recall[i]$
+		\If {$suma\_\recall[i] > 0 $}
+			\State $\recall \gets \recall + \mConfusionMatrix[i, i] / suma\_\recall[i]$
 		\EndIf
-		\If {$mian\_\precision[i] > 0 $}
-			\State $\precision \gets \precision + \mConfusionMatrix[i, i] / mian\_\precision[i]$
+		\If {$suma\_\precision[i] > 0 $}
+			\State $\precision \gets \precision + \mConfusionMatrix[i, i] / suma\_\precision[i]$
 		\EndIf
 		\EndFor
 		\State $\accuracy \gets diag / \nX$
@@ -1794,7 +1794,7 @@ Charakterystykę czasu wykonania algorytmów w zależności od liczby danych prz
 \end{figure}
 
 
-Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego jest sześcienna i wynosi dla algorytmy ostrego $O(\nX^{3})$, dla rozmytego $O(\nGranula^{3})$, gdzie liczba ziaren $\nGranula$ jest stała i zdecydowanie mniejsza od liczby danych ($\nGranula \ll \nX$).
+Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego jest sześcienna i wynosi dla algorytmu ostrego $O(\nX^{3})$, dla rozmytego $O(\nGranula^{3})$, gdzie liczba ziaren $\nGranula$ jest stała i zdecydowanie mniejsza od liczby danych ($\nGranula \ll \nX$).
 Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(\nX)$ , więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych.
 
 Porównano również czas wykonania algorytmu \MojAlg{} z algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}, dla złożoności \SingleLinkage{}. Wyniki przedstawiono na rys. \ref{fig:comparing-times-sklearn}.
@@ -1823,7 +1823,7 @@ Czasy wykonania algorytmu rozmytego \MojAlg{} na dużych danych przedstawia rys.
 Na wykresach wyników grupowania hierarchicznego metodą rozmytą punkty szare odpowiadają współrzędnym oryginalnych danych. Wyjątkiem są wykresy danych \spheres, gdzie oryginalne punkty pominięto, aby zachować czytelność wykresu. Punkty kolorowe odpowiadają środkom granul, gdzie środki o tym samym kolorze należą do tego samego klastra. 
 Elipsy (elipsoidy dla \spheres) w kolorze różowym wizualizują rozmycie granul, gdzie długość każdej półosi jest równa dwukrotności rozmycia w danym wymiarze. Mnożnik ten został wybrany ze względu na dobrą czytelność wynikowych wykresów.
 
-Wszystkie wykresy zamieszczono w katalogu \texttt{img/granule\_visualization}, pogrupowane w podkatalogach według kształtu danych (\blobs{}, \circles{}, \corners{}, \crescents{}, \laguna{} i \spheres{}). Nazwa każdego pliku ma format \texttt{[kształt][liczba\_danych][relacja]\_[łączność].pdf}, gdzie ,,relacja'': \texttt{t} (trójkątna), \texttt{e} (wykładnicza) lub \texttt{g} (gaussowska), a ,,łączność'': \texttt{s} (\SingleLinkage{}) lub \texttt{c} (\CompleteLinkage{}).
+Wszystkie wykresy zamieszczono w katalogu \texttt{img/granule\_visualization}, pogrupowane w podkatalogach według kształtu danych (\blobs{}, \circles{}, \corners{}, \crescents{}, \laguna{} i \spheres{}). Nazwa każdego pliku ma format \texttt{[kształt]\-[licz\-ba\_da\-nych]\-[re\-lac\-ja]\_[łącz\-ność].pdf}, gdzie ,,relacja'': \texttt{t} (trójkątna), \texttt{e} (wykładnicza) lub \texttt{g} (gaussowska), a ,,łączność'': \texttt{s} (\SingleLinkage{}) lub \texttt{c} (\CompleteLinkage{}).
 
 Dla niektórych wyników utworzono również wykresy na podstawie sumarycznej przynależności punktów do granul z danego klastra. Mają postać kilku podwykresów, gdzie punktami w kolorze niebieskim oznaczono dane oryginalne. Dla każdego podwykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} \cdot [ \Granula \in \Klaster ]$, gdzie zapis $[P]$ wartościowany jest do 1, gdy warunek $P$ jest spełniony, w przeciwnym razie do 0 (wartość $\ClusterMembership_{\X\Granula}$ jest wliczana do sumy, gdy granula $\Granula$ należy do klastra $\Klaster$). Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie.
 
@@ -2058,7 +2058,7 @@ Jak pokazuje tabela \ref{id:tab:blobs-max-quality}, dla niektórych liczebności
 % 50000  & 99,98\% & 99,9993\% & 99,9667\% \\
 
 \subparagraph{\circles{}}
-Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby (50) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($\xi \in \{0.9, 0.95\}$). W znacznej większości przypadków, dokładność grupowania wynosi 100\%, tak jak dla grupowania ostrego. Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs\, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
+Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby ($\nGranula = 50$) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($\xi \in \{0.9, 0.95\}$). W znacznej większości przypadków, dokładność grupowania wynosi 100\%, tak jak dla grupowania ostrego. Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs{}, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
 
 \subparagraph{\corners{}}
 Klastry dla danych \corners\  mają nierównomierną gęstość, przez co algorytm rozmytych $c$-średnich tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000g}).
@@ -2288,7 +2288,7 @@ Podobnie jak w przypadku algorytmu ostrego, \MojAlg{} osiąga znacznie lepsze wy
 
 Poprawa w szczególności zachodzi w sytuacji, gdy oczekiwane klastry zaczynają się pokrywać i istnieją punkty bliskie różnym grupom, na przykład dla danych \laguna{} o dużych liczebnościach. Dla algorytmu ostrego, punkt taki może spowodować złączenie różnych klastrów, co pokazano na rys. \ref{fig:single-linkage-close-clusters-example}. W przypadku algorytmu rozmytego granule są uogólnieniem grupy danych, co eliminuje takie pojedyncze punkty. Ponadto, algorytm rozmytych $c$-średnich wyznacza granule bliżej środków klastrów, co dodatkowo pomaga w poprawnym grupowaniu.
 
-Z drugiej strony, algorytm FCM może wprowadzić błędy, jak pokazał przypadek danych \blobs{}. Algorytm może błędnie wyznaczyć granule, gdy dane są bardzo niezrównoważone pod względem liczebności klastrów.
+Z drugiej strony, algorytm FCM może wprowadzić błędy w fazie przygotowania danych, jak pokazał przypadek danych \blobs{}. Algorytm może błędnie wyznaczyć granule, gdy dane są bardzo niezrównoważone pod względem liczebności klastrów.
 
 \paragraph{Liczba ziaren}
 
@@ -2296,7 +2296,7 @@ Z drugiej strony, algorytm FCM może wprowadzić błędy, jak pokazał przypadek
 
 Dla danych takich, jak \circles{} (rys. \ref{fig:circles50000e}) czy \crescents{} (rys. \ref{fig:crescents5000e}), gdzie klastry mają podobną liczebność i gęstość, zwiększenie liczby granul powoduje ich zagęszczenie, przy równomiernym rozłożeniu.
 
-Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla większych liczebności granul, możliwe jest, że algorytm rozmytych $c$-średnich nie wyznacza ani jednego środka granuli w dwóch mniejszych klastrach, przez co niemożliwe jest poprawne grupowanie. Tak samo dzieje się, gdy pogrupowane zostaną same środki granul, bez uwzględnienia rozmycia. Jak można odczytać z rys. \ref{fig:blobs1000-blue}, w takim przypadku większość punktów zostanie zaklasyfikowane do tego samego klastra. 
+Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla większych liczebności granul, możliwe jest, że algorytm rozmytych $c$-średnich nie wyznaczy ani jednego środka granuli w dwóch mniejszych klastrach, przez co niemożliwe jest poprawne grupowanie. Tak samo dzieje się, gdy pogrupowane zostaną same środki granul, bez uwzględnienia rozmycia. Jak można odczytać z rys. \ref{fig:blobs1000-blue}, w takim przypadku większość punktów zostanie zaklasyfikowane do tego samego klastra. 
 
 \begin{figure}
 \centering
