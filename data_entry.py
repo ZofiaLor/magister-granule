@@ -55,6 +55,17 @@ class DataEntry(object):
         self.strict_number_times = []
         self.fuzzy_number_times = dict()
 
+    def fuzzy_prepare_fit(self, fcm_clusters, linkage="single", relation_type="t", ksi=0.5):
+        fcm = FuzzyCMeans(n_clusters=fcm_clusters, random_state=seed, max_iter=n_iterations)
+        hc = HierarchicalClustering(n_clusters=self.clusters_number)
+        granules = []
+        fcm.fit(self.data)
+        fuzziness = calculate_fcm_variance(fcm)
+        for i in range(n_granules):
+            granules.append(Granule(fcm.cluster_centers_[i], fuzziness[i]))
+        hc.fuzzy_fit(granules, ksi, relation_type, linkage)
+        return hc, fcm, granules
+
     def measure_strict_number_times(self, repeats, use_sklearn_lib):
         self.strict_number_times = []
         print("strict")
@@ -72,7 +83,7 @@ class DataEntry(object):
         self.fuzzy_number_times = dict()
         for n in self.granules_number:
             print(n)
-            for i in range(repeats):
+            for j in range(repeats):
                 fcm = FuzzyCMeans(n_clusters=n, random_state=seed, max_iter=n_iterations)
                 hc = HierarchicalClustering(n_clusters=self.clusters_number)
                 granules = []
