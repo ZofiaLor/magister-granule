@@ -1024,6 +1024,8 @@ Rozszerzalne liczby rozmyte to liczby ostre rozszerzone o relację $\ast$-podobi
 	\X_{\nPodobienstwo}(\Y) = \nPodobienstwo(\X, \Y)
 \end{align}
 
+Relacja $\nPodobienstwo$ zawiera zazwyczaj parametr $p$, który określa stopień rozmycia liczby. Im większa wartość tego parametru, tym większe rozmycie.
+
 \subsection{Kształty liczb rozmytych}
 \label{sec:ksztalty-liczb-rozmytych}
 
@@ -1045,7 +1047,7 @@ Dla liczb wykładniczych relacja $\ast$-podobieństwa $\nPodobienstwo_{e}$ defin
 	\label{eq:similarity_e}
 	\nPodobienstwo_{e}(\X,\Y) = \exp \left(- \frac{|\X-\Y|}{p} \right),
 \end{align}
-gdzie $p > 1$, a $\ast$ to t-norma iloczynowa.
+gdzie $p > 1$, a $\ast$ to t-norma iloczynowa. \zlremark{\cite{bib:fuzzy-numbers-revisited-logic-operations} ma warunek p > 1, a potem rysunek, na którym p = 1. Czy nie powinno być też p > 0?}
 
 \subsubsection{Liczby gaussowskie}
 
@@ -1272,7 +1274,7 @@ Operatory nierówności wyznaczane są w następujący sposób:
 
 Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasowa -- w przypadku algorytmu ogólnego aż do $O(\nX^{3})$, gdzie $\nX$ to liczba danych. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(\nX)$).
 
-Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego \MojAlg\ składa się z trzech głównych kroków:
+Zaproponowano rozmyty algorytm aglomeracyjnego grupowania hierarchicznego: \MojAlg{}. Składa się on z trzech głównych kroków:
 
 \begin{enumerate}
 	\item granulacja oryginalnych danych przy pomocy algorytmu rozmytych $c$-średnich (roz. \ref{sec:granulacja-danych-oryginalnych}),
@@ -1281,6 +1283,8 @@ Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego \MojAlg\ składa si�
 \end{enumerate}
 
 Złożoność czasowa tego algorytmu może zostać określona jako $O(\nX + \nX\nGranula + \nGranula^3)$, przy czym $\nGranula \ll \nX$ odpowiada liczbie granul.
+
+Implementacja algorytmu, skrypty pomocnicze pozwalające na analizę jego działania, badane dane syntetyczne oraz wyniki uzyskane na ich podstawie zamieszczono w repozytorium pod adresem \url{https://github.com/ZofiaLor/magister-granule}.
 
 \section{Granulacja danych oryginalnych}
 \label{sec:granulacja-danych-oryginalnych}
