@@ -21,9 +21,11 @@ def compare_time_complexity(repeats, save_results, save_plot, use_sklearn_lib, n
     measured_data = {}
     if use_sklearn_lib:
         suffix = "_sklearn"
+        plot_title = "Grupowanie hierarchiczne danych niezgranulowanych algorytmem bibliotecznym"
         data_size_presets_for_time_measurement = [1000, 2000, 5000, 10000, 20000, 30000, 40000, 50000]
     else:
         suffix = ""
+        plot_title = "Grupowanie hierarchiczne danych niezgranulowanych"
         data_size_presets_for_time_measurement = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
     for i in data_size_presets_for_time_measurement:
         if use_sklearn_lib:
@@ -69,7 +71,7 @@ def compare_time_complexity(repeats, save_results, save_plot, use_sklearn_lib, n
     plt.xlabel("Liczba danych")
     plt.ylabel("Czas wykonania [ms]")
     plt.title("Średni czas wykonania algorytmów w zależności od liczby danych")
-    legend = plt.legend(["Grupowanie hierarchiczne danych niezgranulowanych algorytmem bibliotecznym", "Grupowanie hierarchiczne 50 granul",
+    legend = plt.legend([plot_title, "Grupowanie hierarchiczne 50 granul",
                          "Grupowanie hierarchiczne 100 granul", "Grupowanie hierarchiczne 200 granul"],
                         bbox_to_anchor=(0.5, -0.38), loc='lower center')
     if save_plot:
