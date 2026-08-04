@@ -9,7 +9,6 @@ import os
 
 # Constants
 seed = 42
-n_granules = 50
 n_iterations = 80
 folderPath = "img/granule_visualization/"
 
@@ -61,7 +60,7 @@ class DataEntry(object):
         granules = []
         fcm.fit(self.data)
         fuzziness = calculate_fcm_variance(fcm)
-        for i in range(n_granules):
+        for i in range(fcm_clusters):
             granules.append(Granule(fcm.cluster_centers_[i], fuzziness[i]))
         hc.fuzzy_fit(granules, ksi, relation_type, linkage)
         return hc, fcm, granules
@@ -91,7 +90,7 @@ class DataEntry(object):
                 start = time.time()
                 fcm.fit(self.data)
                 fuzziness = calculate_fcm_variance(fcm)
-                for i in range(n_granules):
+                for i in range(n):
                     granules.append(Granule(fcm.cluster_centers_[i], fuzziness[i]))
                 hc.fuzzy_fit(granules, 0.5)
                 end = time.time()

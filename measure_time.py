@@ -20,8 +20,10 @@ names_roots = ["blobs", "circles", "corners", "crescents", "laguna", "spheres"]
 def compare_time_complexity(repeats, save_results, save_plot, use_sklearn_lib, name="corners"):
     measured_data = {}
     if use_sklearn_lib:
+        suffix = "_sklearn"
         data_size_presets_for_time_measurement = [1000, 2000, 5000, 10000, 20000, 30000, 40000, 50000]
     else:
+        suffix = ""
         data_size_presets_for_time_measurement = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
     for i in data_size_presets_for_time_measurement:
         if use_sklearn_lib:
@@ -40,7 +42,7 @@ def compare_time_complexity(repeats, save_results, save_plot, use_sklearn_lib, n
     granule100_avg = np.empty(shape=s)
     granule200_avg = np.empty(shape=s)
 
-    for i in range(len(data_size_presets_for_time_measurement)):
+    for i in range(s):
         regular_avg[i] = np.mean(measured_data[name + str(data_size_presets_for_time_measurement[i])].strict_number_times)
         granule50_avg[i] = np.mean(
             measured_data[name + str(data_size_presets_for_time_measurement[i])].fuzzy_number_times[50])
@@ -55,7 +57,7 @@ def compare_time_complexity(repeats, save_results, save_plot, use_sklearn_lib, n
     if save_results:
         if not os.path.exists(resultsFolderPath):
             os.makedirs(resultsFolderPath)
-        results.to_csv(resultsFolderPath + "_times.csv")
+        results.to_csv(resultsFolderPath + "times" + suffix + ".csv")
     else:
         print(results.to_string())
 
@@ -73,7 +75,7 @@ def compare_time_complexity(repeats, save_results, save_plot, use_sklearn_lib, n
     if save_plot:
         if not os.path.exists(imageFolderPath):
             os.makedirs(imageFolderPath)
-        plt.savefig(imageFolderPath + "comparing_times_sklearn.pdf", bbox_extra_artists=[legend], bbox_inches='tight')
+        plt.savefig(imageFolderPath + "comparing_times" + suffix + ".pdf", bbox_extra_artists=[legend], bbox_inches='tight')
     else:
         plt.tight_layout()
         plt.show()
