@@ -2990,6 +2990,25 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 	\item \lstinline|filename|  -- nazwa pliku z danymi do zgrupowania i przedstawienia na wykresie (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000).
 \end{itemize}
 
+\subsubsection*{Analiza dużych danych}
+
+Skrypt \texttt{large\_data\_analysis.py} przeznaczony jest do analizy dwuwymiarowych danych o dużych rozmiarach (w ramach pracy wykorzystano go dla danych \brightkite{} i \gowalla{}). Pozwala on na pomiar czasu wykonania algorytmu \MojAlg{} przy określonym kroku oraz na przedstawienie na wykresie wyników grupowania danych przez algorytm \MojAlg{} oraz przez algorytm ostry \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\lstinline|python large_data_analysis.py [-h] [-c N_CLUSTERS] [-s SIZE] [-f] {time,plot} filename|,
+
+\noindent gdzie:
+
+\begin{itemize}
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-n NUM_CLUSTERS| (alternatywnie: \lstinline|--num_clusters NUM_CLUSTERS|) -- liczba klastrów do wyznaczenia przez algorytm hierarchiczny, domyślnie 6,
+	\item \lstinline|-s SIZE| (alternatywnie: \lstinline|--size SIZE| lub \lstinline|--step SIZE|) -- w zależności od wyboru trybu rozmiar kroku kolejnych pomiarów czasu lub rozmiar danych do zgrupowania i przedstawienia na wykresie dla algorytmu ostrego,
+	\item \lstinline|-f| (alternatywnie: \lstinline|--flip_coordinates|) -- zamiana kolejnością wymiarów danych na potrzeby przedstawienia ich na wykresie,
+	\item \lstinline|filename|  -- ścieżka do pliku z danymi,
+	\item \lstinline|{time,plot}| -- wybór trybu działania skryptu (,,time'': pomiar czasu, ,,plot'': wykresy wyników grupowania).
+\end{itemize}
+
 % TODO
 
 
