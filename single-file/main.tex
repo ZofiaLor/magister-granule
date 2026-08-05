@@ -584,6 +584,13 @@ Celem niniejszej pracy będzie opracowanie i przebadanie własności granularneg
 
 Algorytm ten ma niższą złożoność czasową -- liniową w zależności od liczby danych -- powinien więc przyspieszyć proces grupowania. Jako że wprowadzone zostanie rozmycie danych, dopuszczalne jest obniżenie jakości grupowania.
 
+In the paper, we use the following notation. 
+The blackboard bold uppercase characters $(\zTest)$ denote sets, 
+upper case italics $(\nTest)$ -- cardinality of sets, 
+lower case bolds   $(\wTest)$ -- vectors, 
+upper case bolds   $(\mTest)$ -- matrices,
+lower case italics $(\Test)$  -- scalars and set elements.
+
 W rozdziałach \ref{sec:analiza-tematu-grupowanie} i \ref{sec:analiza-tematu-ziarna} przedstawiono teoretyczną analizę zagadnień związanych z tematem. Rozdział \ref{sec:analiza-tematu-grupowanie} przedstawia algorytmy grupowania danych, w szczególności algorytm hierarchiczny oraz algorytm rozmytych $c$-średnich. W rozdziale \ref{sec:analiza-tematu-ziarna} opisano istotne dla rozwiązania elementy logiki rozmytej, w tym rozszerzalne liczby rozmyte. Rozdział \ref{sec:wlasne-rozwiazanie} zawiera omówienie własnej implementacji rozmytego algorytmu aglomeracyjnego grupowania hierarchicznego i konieczne kroki przygotowujące dane. W rozdziale \ref{sec:badania} analizowane jest działanie tego algorytmu. Przedstawione są wykorzystane dane oraz metodyki badania czasu i jakości grupowania, a następnie w oparciu o nie omawiane są wyniki grupowania.
 
 
@@ -592,53 +599,7 @@ W rozdziałach \ref{sec:analiza-tematu-grupowanie} i \ref{sec:analiza-tematu-zia
 \label{sec:analiza-tematu-grupowanie}
 % 
 
-Grupowanie danych oraz obliczenia granularne są wykorzystywane do analizy danych. Umożliwiają znalezienie podobieństw między rozpatrywanymi obiektami i sklasyfikowanie ich. Połączenie tych dwóch podejść może wydobyć zalety każdego z nich. \zlremark{To było zagajenie, kiedy w jednym rozdziale było opisane grupowanie i obliczenia ziarniste. Czy dalej powinno tak wyglądać?}
-
-%\begin{itemize}
-%\item Jaki problem chcę (muszę :-) rozwiązać?
-%\item Dlaczego rozwiązanie problemu jest ważne?
-%\item Jak inni rozwiązują ten problem?
-%\item Jakie są zalety i wady tych rozwiązań?
-%\end{itemize}
-%
-%Odwołania do literatury: 
-%książek \cite{bib:ksiazka},
-%artykułów w czasopismach \cite{bib:artykul}, 
-%materiałów konferencyjnych \cite{bib:konferencja}
-%i stron www \cite{bib:internet}.
-
-%Równania powinny być numerowane
-%\begin{align}
-%y = \frac{\partial x}{\partial t}
-%\end{align}
-
-%
-%\begin{itemize}
-%\item analiza tematu
-%\item wprowadzenie do dziedziny (\english{state of the art}) – sformułowanie problemu, 
-%\item poszerzone studia literaturowe, przegląd literatury tematu (należy wskazać źródła wszystkich informacji zawartych w pracy)
-%\item opis znanych rozwiązań, algorytmów, osadzenie pracy w kontekście
-%\item Tytuł rozdziału jest często zbliżony do tematu pracy. 
-%\item Rozdział jest wysycony cytowaniami do literatury \cite{bib:artykul,bib:ksiazka,bib:konferencja}. 
-%Cytowanie książki \cite{bib:ksiazka}, artykułu w czasopiśmie \cite{bib:artykul}, artykułu konferencyjnego \cite{bib:konferencja} lub strony internetowej \cite{bib:internet}.
-%\end{itemize}
-
-%\begin{Definition}\label{def:1}
-%Definicja to zdanie (lub układ zdań) odpowiadające na pytanie o strukturze „co to jest a?”. Definicja normalna jest zdaniem złożonym z 2 członów: definiowanego (łac. definiendum) i definiującego (łac. definiens), połączonych spójnikiem definicyjnym („jest to”, „to tyle, co” itp.). 
-%\end{Definition}
-%
-%\begin{Theorem}[Pitagorasa]\label{t:pitagoras}
-%W dowolnym trójkącie prostokątnym suma kwadratów długości przyprostokątnych jest równa kwadratowi długości przeciwprostokątnej tego trójkąta. 
-%\end{Theorem}
-%
-%\begin{Example}[generalizacja]\label{ex:generalizacja}
-%Przykładem generalizacji jest para: zwierzę i pies. Pies jest zwierzęciem. Pies jest uszczegółowieniem pojęcia zwierzę. Zwierzę jest uogólnieniem pojęcia pies.
-%\end{Example}
-
-%\section{Grupowanie danych}
-%\label{sec:grupowanie}
- 
-
+Grupowanie jest wykorzystywane do analizy danych. Umożliwia znalezienie podobieństw między rozpatrywanymi obiektami i sklasyfikowanie ich. 
 Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne do siebie nawzajem
 \cite{bib:fcm-for-optimizing,bib:clustering-alg-survey}, a równocześnie niepodobne do obiektów z innych grup. Algorytmy grupowania są algorytmami nienadzorowanymi -- mają jedynie informacje o podobieństwie między poszczególnymi elementami.
 
@@ -707,6 +668,7 @@ a $\X_{i\Atrybut}$ oznacza $\Atrybut$-ty atrybut $i$-tego punktu.
 Metryka ta jest uszczegółowieniem metryki Minkowskiego
 \begin{align}
 \Odleglosc_m \left(\wX_{i}, \wX_{j}\right) = \left(\sum_{\Atrybut=0}^{\nAtrybut}|\X_{i\Atrybut} - \X_{j\Atrybut}|^{p}\right)^{1/p},
+\label{eq:odleglosc:minkowskiego}
 \end{align}
 dla $p=2$. Inną popularną metryką jest odległość Manhattan, również należąca do rodziny metryk Minkowskiego, dla $p=1$.
 
@@ -953,9 +915,45 @@ Dla zbioru rozmytego można wyróżnić jego rdzeń oraz nośnik:
 
 Graficzną interpretację tych charakterystyk przedstawiono na rys. \ref{fig:core-support-example}. Zbiór rozmyty może nie posiadać rdzenia ($\forall_{\X \in \zA}\;  \ClusterMembership(\X)_{\zA} < 1$), może mieć nieskończony nośnik ($\forall_{\X \in \zA}\;  \ClusterMembership(\X)_{\zA} > 0$).
 
+
 \begin{figure}
-\centering
-\includegraphics[width=\textwidth]{./img/core_support_example.pdf}
+	\centering
+	\begin{tikzpicture}[scale=1.5, >=stealth]
+		
+		% Osie współrzędnych
+		\draw[->, thick] (-0.2,0) -- (4.5,0) node[right] {};
+		\draw[->, thick] (0,-0.2) -- (0,2.5) node[above] {};
+		
+		% Oznaczenie "1" na osi Y i szara przerywana linia
+		\draw[gray, dashed, thick] (0,2) -- (2.0,2);
+		\node[left] at (0,2) {1};
+		\node[above left] at (0,2.2) {$\Membership$};
+		
+		% Wykres trapezu (funkcja przynależności)
+		\draw[very thick] (1,0) -- (2.0,2) -- (3.5,2) -- (3.9,0);
+		
+		% Pionowe zielone linie pomocnicze dla rdzenia
+		\draw[green, dashed, thick] (2.0,2) -- (2.0,-0.3);
+		\draw[green, dashed, thick] (3.5,2) -- (3.5,-0.3);
+		
+		% Oznaczenie: Rdzeń (zielone)
+		\draw[green, thick, |<->|] (2.0,-0.2) -- (3.5,-0.2);
+		\node[below, green] at (2.75,-0.2) {rdzeń};
+		
+		% Pionowe niebieskie linie pomocnicze dla nośnika
+		\draw[blue, dashed, thick] (1,0) -- (1,-0.8);
+		\draw[blue, dashed, thick] (3.9,0) -- (3.9,-0.8);
+		
+		% Oznaczenie: Nośnik (niebieskie)
+		\draw[blue, thick, |<->|] (1,-0.7) -- (3.9,-0.7);
+		\node[below, blue] at (2.45,-0.7) {nośnik};
+		
+	\end{tikzpicture}
+%\end{figure}
+%
+%\begin{figure}
+%\centering
+%\includegraphics[width=0.6\textwidth]{./img/core_support_example.pdf}
 \caption{Wykres trapezowego zbioru rozmytego, ilustrujący jego rdzeń i nośnik.}
 \label{fig:core-support-example}
 \end{figure}
@@ -1047,7 +1045,7 @@ Dla liczb wykładniczych relacja $\ast$-podobieństwa $\nPodobienstwo_{e}$ defin
 	\label{eq:similarity_e}
 	\nPodobienstwo_{e}(\X,\Y) = \exp \left(- \frac{|\X-\Y|}{p} \right),
 \end{align}
-gdzie $p > 1$, a $\ast$ to t-norma iloczynowa. \zlremark{\cite{bib:fuzzy-numbers-revisited-logic-operations} ma warunek p > 1, a potem rysunek, na którym p = 1. Czy nie powinno być też p > 0?}
+gdzie $p > 0$, a $\ast$ to t-norma iloczynowa. 
 
 \subsubsection{Liczby gaussowskie}
 
@@ -2494,9 +2492,9 @@ Najwyższe wartość metryk jakości przy grupowaniu algorytmem \SingleLinkage{}
 
 Średnią dokładność, trafność i precyzję grupowania danych w zależności od parametru $\xi$ przedstawiono na rys. \ref{fig:xi-acc}.
 
-Dla \SingleLinkage{}, najwyższą dokładność i precyzję -- odpowiednio 99,7745\% i 98,1348\% -- osiągnięto dla $\xi=0,05$, najwyższą trafność -- 98,3582\% -- dla $\xi=0,1$. Wartości metryk spadają wraz ze wzrostem wartości parametru. Powyżej $\xi=0,8$ następuje gwałtowne załamanie na wykresie wyników.
+Dla \SingleLinkage{}, najwyższą dokładność i precyzję -- odpowiednio \num{99,7745}\% i 98,1348\% -- osiągnięto dla $\xi=0,05$, najwyższą trafność -- 98,3582\% -- dla $\xi=0,1$. Wartości metryk spadają wraz ze wzrostem wartości parametru. Powyżej $\xi=0,8$ następuje gwałtowne załamanie na wykresie wyników.
 
-Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyniki -- 67,1215\% -- osiągnięto dla $\xi=0,9$. Trafność i precyzja nie wpisują się w tą zależność -- ich wartości wahają się odpowiednio około 60-61\% i 58\%. Najwyższa wartość trafności wynosi 61,7007\% dla $\xi=0,65$, a precyzji -- 58,4605\% dla $\xi=0,7$.
+Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyniki -- 67,1215\% -- osiągnięto dla $\xi=0,9$. Trafność i precyzja nie wpisują się w tą zależność -- ich wartości wahają się odpowiednio około 60-61\% i 58\%. Najwyższa wartość trafności wynosi 61,7007\% dla $\xi=0,65$, a precyzji -- 58,4605\% dla $\xi=\num{0,7}$.
 % 
 \begin{figure}
 	\centering
@@ -2573,7 +2571,7 @@ Jeżeli granule znalezione przez algorytm rozmytych $c$-średnich znajdą się w
 
 Wykresy dla danych \circles{} (rys. \ref{fig:circles-complex}) uwydatniają wpływ łączności na jakość grupowania.
 
-W przypadku łączności \SingleLinkage{}, dokładność jest niemal zawsze równa 100\%. Spada ona dla wysokich ($\ge0.9$) wartości parametru $\xi$. Najniższe wartości są osiągane dla relacji wykładniczej, wyższe dla gaussowskiej. Dla relacji trójkątnej, wyniki pozostają na poziomie 100\% nawet dla $\xi=0.95$.
+W przypadku łączności \SingleLinkage{}, dokładność jest niemal zawsze równa 100\%. Spada ona dla wysokich ($\ge0.9$) wartości parametru $\xi$. Najniższe wartości są osiągane dla relacji wykładniczej, wyższe dla gaussowskiej. Dla relacji trójkątnej, wyniki pozostają na poziomie 100\% nawet dla $\xi=\num{0.95}$.
 
 Algorytm dla łączności \CompleteLinkage{} nie odnajduje poprawnie klastrów, co widać na rys. \ref{fig:circles1000gc}. Badane parametry nie mają znacznego wpływu na jakość.
 
@@ -2692,7 +2690,7 @@ Przy grupowaniu danych algorytmem o łączności \CompleteLinkage{}, w większo�
 
 Ze względu na brak etykiet danych \brightkite{} i \gowalla{}, jakość grupowania można ocenić wizualnie, na podstawie wykresów -- odpowiednio rys. \ref{fig:brightkite-strict-fuzzy} i \ref{fig:gowalla-strict-fuzzy}.
 
-Podczas grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} wykorzystano losową próbkę 500000 współrzędnych, jako że algorytm ten nie nadaje się do grupowania bardzo dużych ilości danych. Jako parametry grupowania \MojAlg{} wybrano, w oparciu o wyniki otrzymane w sekcji \ref{sec:wyniki-jakosc-generowane}, relację trójkątną, 100 granul i $\xi=0,1$. W obydwu przypadkach jako docelową liczbę klastrów wybrano 6 -- jeden klaster to jeden kontynent.
+Podczas grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} wykorzystano losową próbkę \num{500000} współrzędnych, jako że algorytm ten nie nadaje się do grupowania bardzo dużych ilości danych. Jako parametry grupowania \MojAlg{} wybrano na podstawie wyników przedstawionych na stronie \pageref{sec:wyniki-jakosc-generowane} i dalszych, relację trójkątną, 100 granul i $\xi=\num{0,1}$. W obydwu przypadkach jako docelową liczbę klastrów wybrano 6 -- jeden klaster to jeden kontynent.
 
 Grupowanie ostre algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} nie odnajduje oczekiwanych klastrów. W przypadku danych \brightkite{}, wszystkie kontynenty zostały połączone w jeden klaster, zaś elementy odstające -- wyspy, ocean, błędne współrzędne -- to pozostałe 5 klastrów. W przypadku danych \gowalla{} grupowanie jest lepsze -- Ameryki stanowią osobny klaster niż reszta kontynentów -- jednak wciąż 4 klastry odpowiadają wyłącznie danym odstającym.
 
@@ -3018,17 +3016,19 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 
 \begin{itemize}
 	\item[$\Atrybut$] atrybut (wymiar) danych
-	\item[$\accuracy$] dokładność 
+	\item[$\accuracy$] dokładność (ang. \english{accuracy}) 
 	\item[$\klaster$] klaster 
-	\item[$\Odleglosc$] odległość między danymi 
+	\item[$\Odleglosc$] odległość między danymi (wzory \eqref{eq:odleglosc:euklidesowa}, \eqref{eq:odleglosc:minkowskiego})
 	\item[FCM] algorytm rozmytych $c$-średnich (\english{fuzzy $c$-means})
-	\item[$\Granula$] granula
+	\item[$\Granula$] granula, ziarno informacyjne
+	\item[$\nGranula$] liczba granul
+	\item[$\zGranula$] zbiór granul	
 	\item[$\mConfusionMatrix$] macierz pomyłek
-	\item[$\precision$] precyzja
-	\item[$\recall$] trafność 
+	\item[$\precision$] precyzja (ang. \english{precision})
+	\item[$\recall$] trafność, czułość (ang. \english{recall})
 	\item[$\nPodobienstwo$] rozmyta relacja $\ast$-podobieństwa 
 	\item[$\mCentre$] macierz środków klastrów FCM
-	\item[$\mClusterMembership$] stopnień przyleżności do zbioru
+	\item[$\mClusterMembership$] stopnień przyleżności do zbioru rozmytego
 	\item[$\xi$] parametr progowy rozmytego grupowania hierarchicznego
 \end{itemize}
 
