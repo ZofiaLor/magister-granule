@@ -427,7 +427,7 @@ escapeinside={@*}{*@},%
 
 
 \begin{document}
-\kslistofremarks
+% \kslistofremarks
 
 \frontmatter
 
@@ -1567,18 +1567,15 @@ czyli stosunek liczby danych poprawnie zaklasyfikowanych do klasy \english{posit
 
 Trafność i precyzję można rozszerzyć na wiele klas na różne sposoby. W badaniach wybrano metodę, w której najpierw obliczana jest wartość metryk cząstkowych dla każdej klasy z osobna (jedna klasa odpowiada klasie \english{positive}, wszystkie pozostałe -- \english{negative}), a następnie obliczana jest z nich średnia arytmetyczna. Oznacza to, że każda klasa ma jednakową wagę dla ostatecznego wyniku -- jeżeli będą miały różne liczności, to klasy zawierające małą liczbę danych będą mieć proporcjonalnie większy wpływ na wyniki trafności i precyzji, niż dokładności.
 
+\paragraph{Przynależność punktów do granul}
+
 Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Na potrzeby porównania konieczne jest określenie, do której granuli należy każdy punkt. Przynależność tą wyznaczano na dwa sposoby na podstawie
 (1)  macierzy przynależności do klastra wyznaczonego przez algorytm rozmytych $c$-średnich $\mClusterMembership$ i 
 (2)  wartości relacji $\ast$-podobieństwa $\nPodobienstwo$.
 
-Pierwsze podejście 
-%\paragraph{Na podstawie macierzy $\mClusterMembership$}
-dla każdego punktu $i$, znajduje granulę, dla której wartość odpowiedniego wiersza w macierzy przynależności $\wClusterMembership_i$ jest maksymalna.
+Pierwsze podejście dla każdego punktu $i$, znajduje granulę, dla której wartość odpowiedniego wiersza w macierzy przynależności $\wClusterMembership_i$ jest maksymalna.
 
-Drugie podejście
-%\paragraph{Na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$}
-%Działanie tej metody 
-przedstawia pseudokod \ref{alg:similarity_membership}.
+Drugie podejście przedstawia pseudokod \ref{alg:similarity_membership}.
 Dla każdego punktu $i$, przynależność do granuli $j$ obliczana na podstawie wartości operacji $=_\nPodobienstwo$ (wzór \ref{eq:fuzzy-equality}) dla każdego wymiaru punktu i granuli. Operacja ta jest zależna od kształtu granul, dla liczb trójkątnych, wykładniczych i gaussowskich należy wykorzystać odpowiednio wzory \ref{eq:similarity_t}, \ref{eq:similarity_e} lub \ref{eq:similarity_g} uwzględniając, że dla liczby ostrej (współrzędnej oryginalnego punktu) $p = 0$. 
 
 Wyniki dla każdej współrzędnej łączone są t-normą algebraiczną (wzór \ref{eq:algebraic-norms}). Wreszcie określa się, że punkt należy do tej granuli, dla której wynik tego złączenia jest maksymalny.
@@ -1643,7 +1640,16 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 	\label{fig:shape-dep}
 \end{figure}
 
-\paragraph{}
+\paragraph{Macierz pomyłek i obliczanie miar jakości}
+
+Wyznaczono macierz $\mConfusionMatrix$, w której wartość elementu $\ConfusionMatrix_{ij}$ jest równa liczbie punktów, dla których oczekiwana etykieta ma wartość $i$ i przynależących do klastra $j$ wyznaczonego przez algorytm \MojAlg{}:
+\begin{align}
+\ConfusionMatrix_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j].
+\end{align}
+%
+Sposób wyznaczenia tej macierzy przedstawiono również na pseudokodzie \ref{alg:calc_l_matrix}.
+
+Numeracja klastrów wyznaczonych przez algorytm \MojAlg{} może być inna od oczekiwanych etykiet ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na pseudokodzie \ref{alg:perm_l_matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $\mConfusionMatrix$, która maksymalizuje wartości na przekątnej. 
 
 \begin{algorithm}[t]
 	\caption{Wyznaczenie macierzy $\mConfusionMatrix$}
@@ -1680,16 +1686,6 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 		\EndProcedure
 	\end{algorithmic}
 \end{algorithm}
-
-\zlremark{czy taka duża przerwa między akapitami (pusty paragraph) jest w porządku?}
-Wyznaczono macierz $\mConfusionMatrix$, w której wartość elementu $\ConfusionMatrix_{ij}$ jest równa liczbie punktów, dla których oczekiwana etykieta ma wartość $i$ i przynależących do klastra $j$ wyznaczonego przez algorytm \MojAlg{}:
-\begin{align}
-\ConfusionMatrix_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j].
-\end{align}
-%
-Sposób wyznaczenia tej macierzy przedstawiono również na pseudokodzie \ref{alg:calc_l_matrix}.
-
-Numeracja klastrów wyznaczonych przez algorytm \MojAlg{} może być inna od oczekiwanych etykiet ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na pseudokodzie \ref{alg:perm_l_matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $\mConfusionMatrix$, która maksymalizuje wartości na przekątnej. 
 
 Z uzyskanej w ten sposób macierzy pomyłek, dokładność wyznaczana jest jako suma wartości na przekątnej macierzy podzielona przez całkowitą liczbę danych:
 \begin{align}
@@ -2845,6 +2841,8 @@ Algorytm badano dla różnych kombinacji parametrów: liczby granul, kształtu g
 Analiza grupowania \MojAlg{} %dla danych \brightkite{} i \gowalla{} 
 pokazuje również, że granulacja danych wejściowych algorytmem rozmytych $c$-średnich pozwala na wyeliminowanie z danych elementów odstających, na które bardzo wrażliwy jest algorytm hierarchiczny. 
 
+Implementację algorytmu \MojAlg{} oraz skrypty wykorzystane do badań jego działania zamieszczono w repozytorium pod adresem \url{https://github.com/ZofiaLor/magister-granule}.
+
 Algorytm \MojAlg{} może w prosty sposób zostać rozszerzony o inne metryki odległości. Dzięki zastosowaniu ogólnej implementacji, łatwo można też dodać inne opcje łączności, takie jak łączność średnia lub Warda. Ponadto, implementację granul rozszerzyć można o inne kształty.
 
 
@@ -2897,7 +2895,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 
 \subsubsection*{Pomiar jakości}
 
-Pomiaru jakości grupowania można dokonać przy pomocy skryptu \texttt{measure\_quality.py}. Dla wybranych lub wszystkich danych mierzona jest dokładność, trafność i precyzja grupowania. Pomiary wykonywane są dla różnych liczebności granul, typów relacji i wartości parametru $\xi$. Gdy mierzone są wszystkie dane, wyniki zapisywane są w pliku .csv, w przeciwnym razie wypisywane są w konsoli.
+Pomiaru jakości grupowania można dokonać przy pomocy skryptu \lstinline|measure_quality.py|. Dla wybranych lub wszystkich danych mierzona jest dokładność, trafność i precyzja grupowania. Pomiary wykonywane są dla różnych liczebności granul, typów relacji i wartości parametru $\xi$. Gdy mierzone są wszystkie dane, wyniki zapisywane są w pliku .csv, w przeciwnym razie wypisywane są w konsoli.
 
 Wywołanie skryptu z linii poleceń ma następującą składnię:
 
@@ -2915,7 +2913,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 
 \subsubsection*{Wykresy grupowania granul}
 
-Wykresy wyników grupowania \MojAlg{} można uzyskać przy pomocy skryptu \texttt{plot\_granules.py}. Każdy wykres składa się z 9 podwykresów, zawierających wyniki dla różnych liczebności granul i wartości parametru $\xi$. Dla każdego pliku tworzone są 3 takie wykresy, dla każdego typu relacji.
+Wykresy wyników grupowania \MojAlg{} można uzyskać przy pomocy skryptu \lstinline|plot_granules.py|. Każdy wykres składa się z 9 podwykresów, zawierających wyniki dla różnych liczebności granul i wartości parametru $\xi$. Dla każdego pliku tworzone są 3 takie wykresy, dla każdego typu relacji.
 
 Wywołanie skryptu z linii poleceń ma następującą składnię:
 
@@ -2932,7 +2930,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 
 \subsubsection*{Analiza wyników}
 
-Skrypt \lstinline|accuracy_analysis.py| służy do analizy wyników pomiarów wykonanych przy pomocy skryptu \texttt{measure\_quality.py}. Do jego działania wymagane jest więc uprzednie wykonanie pomiarów dla wszystkich plików, przy wybranej konfiguracji łączności i obliczania przynależności punktów do granul. Możliwa jest analiza wpływu poszczególnych parametrów grupowania na wyniki.
+Skrypt \lstinline|accuracy_analysis.py| służy do analizy wyników pomiarów wykonanych przy pomocy skryptu \lstinline|measure_quality.py|. Do jego działania wymagane jest więc uprzednie wykonanie pomiarów dla wszystkich plików, przy wybranej konfiguracji łączności i obliczania przynależności punktów do granul. Możliwa jest analiza wpływu poszczególnych parametrów grupowania na wyniki.
 
 Wywołanie skryptu z linii poleceń ma następującą składnię:
 
@@ -2970,7 +2968,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 
 \subsubsection*{Analiza dużych danych}
 
-Skrypt \texttt{large\_data\_analysis.py} przeznaczony jest do analizy dwuwymiarowych danych o dużych rozmiarach (w ramach pracy wykorzystano go dla danych \brightkite{} i \gowalla{}). Pozwala on na pomiar czasu wykonania algorytmu \MojAlg{} przy określonym kroku oraz na przedstawienie na wykresie wyników grupowania danych przez algorytm \MojAlg{} oraz przez algorytm ostry \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
+Skrypt \lstinline|large_data_analysis.py| przeznaczony jest do analizy dwuwymiarowych danych o dużych rozmiarach (w ramach pracy wykorzystano go dla danych \brightkite{} i \gowalla{}). Pozwala on na pomiar czasu wykonania algorytmu \MojAlg{} przy określonym kroku oraz na przedstawienie na wykresie wyników grupowania danych przez algorytm \MojAlg{} oraz przez algorytm ostry \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
 
 Wywołanie skryptu z linii poleceń ma następującą składnię:
 
@@ -2998,17 +2996,16 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 	\item[$\Atrybut$] atrybut (wymiar) danych
 	\item[$\accuracy$] dokładność (ang. \english{accuracy}) 
 	\item[$\klaster$] klaster 
-	\item[$\Odleglosc$] odległość między danymi (wzory \eqref{eq:odleglosc:euklidesowa}, \eqref{eq:odleglosc:minkowskiego})
+	\item[$\Odleglosc$] odległość między danymi
 	\item[FCM] algorytm rozmytych $c$-średnich (\english{fuzzy $c$-means})
 	\item[$\Granula$] granula, ziarno informacyjne
-	\item[$\nGranula$] liczba granul
-	\item[$\zGranula$] zbiór granul	
 	\item[$\mConfusionMatrix$] macierz pomyłek
 	\item[$\precision$] precyzja (ang. \english{precision})
+	\item[$p$] rozmycie rozszerzalnej liczby rozmytej
 	\item[$\recall$] trafność, czułość (ang. \english{recall})
 	\item[$\nPodobienstwo$] rozmyta relacja $\ast$-podobieństwa 
 	\item[$\mCentre$] macierz środków klastrów FCM
-	\item[$\mClusterMembership$] stopnień przyleżności do zbioru rozmytego
+	\item[$\mClusterMembership$] macierz stopni przyleżności do zbioru rozmytego
 	\item[$\xi$] parametr progowy rozmytego grupowania hierarchicznego
 \end{itemize}
 
