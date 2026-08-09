@@ -521,8 +521,8 @@ escapeinside={@*}{*@},%
 \subsubsection*{Tytuł pracy} 
 \Title
 
-\subsubsection*{Streszczenie}  
-Aglorytm rozszerza standardowy aglomeracyjny algorytm grupowania hierarchicznego o wykorzystanie ziaren informacyjnych mających postać wielowymiarowych liczb rozmytych. Ziarna te wyznaczane są na podstawie wyników algorytmu rozmytych $c$-średnich. Rozszerzenie algorytmu ma na celu zmniejszenie czasu wykonywania grupowania.
+\subsubsection*{Streszczenie}
+Aglomeracyjne grupowanie hierarchiczne polega na iteracyjnym scalaniu najbliższych sobie grup danych, aż do uzyskania z góry ustalonej ich liczby. Wadą tego algorytmu jest duża złożoność czasowa w zależności od liczby danych wejściowych. W pracy zaproponowany został rozmyty algorytm grupowania hierarchicznego, który algorytm standardowy rozszerza o wykorzystanie ziaren informacyjnych mających postać wielowymiarowych liczb rozmytych. Ziarna te wyznaczane są na podstawie wyników algorytmu rozmytych $c$-średnich o niskiej złożoności czasowej. Modyfikacja algorytmu ma na celu zmniejszenie czasu wykonywania grupowania. W pracy badany jest również wpływ wprowadzenia rozmycia danych na jakość grupowania.
 
 \subsubsection*{Słowa kluczowe} 
 grupowanie hierarchiczne, fuzzy C-means, obliczenia ziarniste, liczby rozmyte, Python
@@ -534,7 +534,7 @@ grupowanie hierarchiczne, fuzzy C-means, obliczenia ziarniste, liczby rozmyte, P
 
 \subsubsection*{Abstract} 
 \begin{otherlanguage}{british}
-The algorithm extends the standard agglomerative hierarchical clustering algorithm with the usage of information granules represented by multidimensional fuzzy numbers. The granules are calculated based on fuzzy $c$-means algorithm's results. The purpose of the algorithm's extension is to decrease clustering execution time.
+In agglomerative hierarchical clustering, groups of data that are the closest to each other are iteratively merged until a predetermined number of clusters is reached. A drawback of this algorithm is its high time complexity based on the amount of input data. This paper proposes a fuzzy hierarchical clustering algorithm that extends the standard algorithm with the usage of information granules, represented by multidimensional fuzzy numbers. These granules are calculated based on fuzzy $c$-means algorithm's results, which has a low time complexity. The modification of the algorithm aims to decrease execution time of the clustering. The paper also examines the impact of introducing data fuzziness on clustering quality.
 \end{otherlanguage}
 \subsubsection*{Key words}  
 \begin{otherlanguage}{british}
@@ -2863,7 +2863,7 @@ Algorytm \MojAlg{} może w prosty sposób zostać rozszerzony o inne metryki odl
 
 \section*{Implementacja}
 
-Całość projektu zaimplementowano w języku Python\footnote{\url{https://www.python.org/}, dostęp 26.04.2026}. Jest to jeden z najczęściej wykorzystywanych języków programowania, szczególnie w projektach związanych z analizą danych. Język posiada wiele bibliotek, które implementują większość potrzebnych funkcjonalności.
+Całość projektu zaimplementowano w języku Python\footnote{\url{https://www.python.org/}, dostęp 26.04.2026} w wersji 3.12. Jest to jeden z najczęściej wykorzystywanych języków programowania, szczególnie w projektach związanych z analizą danych. Język posiada wiele bibliotek, które implementują większość potrzebnych funkcjonalności.
 
 Biblioteka \texttt{scikit-fuzzy-c-means} dostarcza implementację algorytmu rozmytych $c$-średnich. Środki klastrów inicjalizowane są metodą \texttt{K-Means++}.
 Inną biblioteką, która również dostarcza tej implementacji, jest \texttt{scikit-fuzzy}. Oprócz tego, posiada ona bardziej rozwinięte API, umożliwiające wykonywanie różnych operacji na zbiorach rozmytych. Działanie algorytmu rozmytych $c$-średnich jest identyczne dla obydwu bibliotek, ostatecznie wybrano prostszą bibliotekę \texttt{scikit-fuzzy-c-means}.
