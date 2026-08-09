@@ -17,7 +17,6 @@ class DataEntry(object):
     def __init__(self, data, name, dim=2, has_labels=True):
         self.labels = []
         if isinstance(data, np.ndarray):
-            # handle labels
             self.data = data
         else:
             data = data.splitlines()
@@ -248,7 +247,6 @@ class DataEntry(object):
                     t, p = np.meshgrid(t, p)
                     ax = fig.add_subplot(len(self.granules_number), len(self.ksi),
                                          i * len(self.granules_number) + j + 1, projection='3d')
-                    # ax.scatter3D(self.data[:, 0], self.data[:, 1], self.data[:, 2], c='lightgray')
                     ax.scatter3D(centers[i][:, 0], centers[i][:, 1], centers[i][:, 2], c=labels[i][j])
                     ax.set_title(str(self.granules_number[i]) + " granules, ksi = " + str(self.ksi[j]))
                     for clust in range(self.granules_number[i]):
