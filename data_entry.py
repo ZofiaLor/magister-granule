@@ -232,7 +232,7 @@ class DataEntry(object):
                 for j in range(len(self.ksi)):
                     ax[i, j].scatter(self.data[:, 0], self.data[:, 1], c='lightgray')
                     ax[i, j].scatter(centers[i][:, 0], centers[i][:, 1], c=labels[i][j])
-                    ax[i, j].set_title(str(self.granules_number[i]) + " granules, ksi = " + str(self.ksi[j]))
+                    ax[i, j].set_title(str(self.granules_number[i]) + r" granul, $ \xi $ = " + str(self.ksi[j]))
                     t = np.linspace(0, 2 * np.pi)
                     for clust in range(self.granules_number[i]):
                         ax[i, j].plot(centers[i][clust, 0] + 2 * fuzz[i][clust][0] * np.cos(t),
@@ -248,7 +248,7 @@ class DataEntry(object):
                     ax = fig.add_subplot(len(self.granules_number), len(self.ksi),
                                          i * len(self.granules_number) + j + 1, projection='3d')
                     ax.scatter3D(centers[i][:, 0], centers[i][:, 1], centers[i][:, 2], c=labels[i][j])
-                    ax.set_title(str(self.granules_number[i]) + " granules, ksi = " + str(self.ksi[j]))
+                    ax.set_title(str(self.granules_number[i]) + r" granul, $ \xi $ = " + str(self.ksi[j]))
                     for clust in range(self.granules_number[i]):
                         ax.plot_surface(centers[i][clust, 0] + 2 * fuzz[i][clust][0] * np.sin(p) * np.cos(t),
                                         centers[i][clust, 1] + 2 * fuzz[i][clust][1] * np.sin(p) * np.sin(t),
