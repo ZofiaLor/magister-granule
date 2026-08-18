@@ -98,10 +98,6 @@ class HierarchicalClustering:
             for col in range(row + 1, n_samples):
                 self.distances[row, col] = self.distances[col, row] = granules[row].fuzzy_distance(granules[col])
         return self.distances
-        # for i in range(n_samples):
-        #     for j in range(n_samples):
-        #         print(repr(self.distances[i, j]), end="\t")
-        #     print()
 
     def fuzzy_dendrogram(self, granules, ksi, relation_type='t', linkage='single'):
         self.fuzzy_distance(granules)
@@ -144,8 +140,6 @@ class HierarchicalClustering:
                     min_distance = formula(self.distances[row, i], self.distances[i, col], ksi, relation_type)
                     self.distances[i, row] = min_distance
                     self.distances[row, i] = min_distance
-                # self.distances[i, col] = FuzzyNumber(np.inf, 0)
-                # self.distances[col, i] = FuzzyNumber(np.inf, 0)
 
         self.linkage_matrix = np.array(self.linkage_matrix)  #
 
@@ -182,8 +176,6 @@ class HierarchicalClustering:
                     min_distance = formula(self.distances[row, i], self.distances[i, col], ksi, relation_type)
                     self.distances[i, row] = min_distance
                     self.distances[row, i] = min_distance
-                # self.distances[i, col] = FuzzyNumber(np.inf, 0)
-                # self.distances[col, i] = FuzzyNumber(np.inf, 0)
 
             # This does not ensure that the labels are consecutive
             for i in range(n_samples):

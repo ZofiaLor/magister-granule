@@ -182,6 +182,7 @@
 %%%% TODO LIST GENERATOR %%%%%%%%%
 
 \usepackage{color}
+\usepackage[dvipsnames]{xcolor}
 \definecolor{brickred}      {cmyk}{0   , 0.89, 0.94, 0.28}
 
 \makeatletter \newcommand \kslistofremarks{\section*{Uwagi} \@starttoc{rks}}
@@ -426,7 +427,7 @@ escapeinside={@*}{*@},%
 
 
 \begin{document}
-\kslistofremarks
+% \kslistofremarks
 
 \frontmatter
 
@@ -520,8 +521,8 @@ escapeinside={@*}{*@},%
 \subsubsection*{Tytuł pracy} 
 \Title
 
-\subsubsection*{Streszczenie}  
-Aglorytm rozszerza standardowy aglomeracyjny algorytm grupowania hierarchicznego o wykorzystanie ziaren informacyjnych mających postać wielowymiarowych liczb rozmytych. Ziarna te wyznaczane są na podstawie wyników algorytmu rozmytych $c$-średnich. Rozszerzenie algorytmu ma na celu zmniejszenie czasu wykonywania grupowania.
+\subsubsection*{Streszczenie}
+Aglomeracyjne grupowanie hierarchiczne polega na iteracyjnym scalaniu najbliższych sobie grup danych aż do uzyskania z góry ustalonej ich liczby. Wadą tego algorytmu jest duża złożoność czasowa w zależności od liczby danych wejściowych. W pracy zaproponowany został rozmyty algorytm grupowania hierarchicznego, który algorytm standardowy rozszerza o wykorzystanie ziaren informacyjnych mających postać wielowymiarowych liczb rozmytych. Ziarna te wyznaczane są na podstawie wyników algorytmu rozmytych $c$-średnich o niskiej złożoności czasowej. Modyfikacja algorytmu ma na celu zmniejszenie czasu wykonywania grupowania. W pracy badany jest również wpływ wprowadzenia rozmycia danych na jakość grupowania.
 
 \subsubsection*{Słowa kluczowe} 
 grupowanie hierarchiczne, fuzzy C-means, obliczenia ziarniste, liczby rozmyte, Python
@@ -533,7 +534,7 @@ grupowanie hierarchiczne, fuzzy C-means, obliczenia ziarniste, liczby rozmyte, P
 
 \subsubsection*{Abstract} 
 \begin{otherlanguage}{british}
-The algorithm extends the standard agglomerative hierarchical clustering algorithm with the usage of information granules represented by multidimensional fuzzy numbers. The granules are calculated based on fuzzy $c$-means algorithm's results. The purpose of the algorithm's extension is to decrease clustering execution time.
+In agglomerative hierarchical clustering, groups of data that are the closest to each other are iteratively merged until a predetermined number of clusters is reached. A drawback of this algorithm is its high time complexity based on the amount of input data. This paper proposes a fuzzy hierarchical clustering algorithm that extends the standard algorithm with the usage of information granules, represented by multidimensional fuzzy numbers. These granules are calculated based on fuzzy $c$-means algorithm's results, which has a low time complexity. The modification of the algorithm aims to decrease execution time of the clustering. The paper also examines the impact of introducing data fuzziness on clustering quality.
 \end{otherlanguage}
 \subsubsection*{Key words}  
 \begin{otherlanguage}{british}
@@ -584,12 +585,7 @@ Celem niniejszej pracy będzie opracowanie i przebadanie własności granularneg
 
 Algorytm ten ma niższą złożoność czasową -- liniową w zależności od liczby danych -- powinien więc przyspieszyć proces grupowania. Jako że wprowadzone zostanie rozmycie danych, dopuszczalne jest obniżenie jakości grupowania.
 
-In the paper, we use the following notation. 
-The blackboard bold uppercase characters $(\zTest)$ denote sets, 
-upper case italics $(\nTest)$ -- cardinality of sets, 
-lower case bolds   $(\wTest)$ -- vectors, 
-upper case bolds   $(\mTest)$ -- matrices,
-lower case italics $(\Test)$  -- scalars and set elements.
+W pracy wykorzystano następującą notację: kursywą i małą literą oznacza się skalar bądź element zbioru $(\X)$, wielką literą kreśloną -- zbiór, w którym się znajduje $(\zX)$, kursywą i wielką literą -- liczebność zbioru $(\nX)$, pogrubieniem i małą literą -- wektory $(\wX)$, a pogrubieniem i wielką literą -- macierze $(\mX)$.
 
 W rozdziałach \ref{sec:analiza-tematu-grupowanie} i \ref{sec:analiza-tematu-ziarna} przedstawiono teoretyczną analizę zagadnień związanych z tematem. Rozdział \ref{sec:analiza-tematu-grupowanie} przedstawia algorytmy grupowania danych, w szczególności algorytm hierarchiczny oraz algorytm rozmytych $c$-średnich. W rozdziale \ref{sec:analiza-tematu-ziarna} opisano istotne dla rozwiązania elementy logiki rozmytej, w tym rozszerzalne liczby rozmyte. Rozdział \ref{sec:wlasne-rozwiazanie} zawiera omówienie własnej implementacji rozmytego algorytmu aglomeracyjnego grupowania hierarchicznego i konieczne kroki przygotowujące dane. W rozdziale \ref{sec:badania} analizowane jest działanie tego algorytmu. Przedstawione są wykorzystane dane oraz metodyki badania czasu i jakości grupowania, a następnie w oparciu o nie omawiane są wyniki grupowania.
 
@@ -920,40 +916,28 @@ Graficzną interpretację tych charakterystyk przedstawiono na rys. \ref{fig:cor
 	\centering
 	\begin{tikzpicture}[scale=1.5, >=stealth]
 		
-		% Osie współrzędnych
 		\draw[->, thick] (-0.2,0) -- (4.5,0) node[right] {};
 		\draw[->, thick] (0,-0.2) -- (0,2.5) node[above] {};
 		
-		% Oznaczenie "1" na osi Y i szara przerywana linia
 		\draw[gray, dashed, thick] (0,2) -- (2.0,2);
 		\node[left] at (0,2) {1};
-		\node[above left] at (0,2.2) {$\Membership$};
+		\node[above left] at (0,2.2) {$\ClusterMembership$};
 		
-		% Wykres trapezu (funkcja przynależności)
 		\draw[very thick] (1,0) -- (2.0,2) -- (3.5,2) -- (3.9,0);
 		
-		% Pionowe zielone linie pomocnicze dla rdzenia
-		\draw[green, dashed, thick] (2.0,2) -- (2.0,-0.3);
-		\draw[green, dashed, thick] (3.5,2) -- (3.5,-0.3);
+		\draw[Green, dashed, thick] (2.0,2) -- (2.0,-0.3);
+		\draw[Green, dashed, thick] (3.5,2) -- (3.5,-0.3);
 		
-		% Oznaczenie: Rdzeń (zielone)
-		\draw[green, thick, |<->|] (2.0,-0.2) -- (3.5,-0.2);
-		\node[below, green] at (2.75,-0.2) {rdzeń};
+		\draw[Green, thick, |<->|] (2.0,-0.2) -- (3.5,-0.2);
+		\node[below, Green] at (2.75,-0.2) {rdzeń};
 		
-		% Pionowe niebieskie linie pomocnicze dla nośnika
-		\draw[blue, dashed, thick] (1,0) -- (1,-0.8);
-		\draw[blue, dashed, thick] (3.9,0) -- (3.9,-0.8);
+		\draw[RoyalBlue, dashed, thick] (1,0) -- (1,-0.8);
+		\draw[RoyalBlue, dashed, thick] (3.9,0) -- (3.9,-0.8);
 		
-		% Oznaczenie: Nośnik (niebieskie)
-		\draw[blue, thick, |<->|] (1,-0.7) -- (3.9,-0.7);
-		\node[below, blue] at (2.45,-0.7) {nośnik};
+		\draw[RoyalBlue, thick, |<->|] (1,-0.7) -- (3.9,-0.7);
+		\node[below, RoyalBlue] at (2.45,-0.7) {nośnik};
 		
 	\end{tikzpicture}
-%\end{figure}
-%
-%\begin{figure}
-%\centering
-%\includegraphics[width=0.6\textwidth]{./img/core_support_example.pdf}
 \caption{Wykres trapezowego zbioru rozmytego, ilustrujący jego rdzeń i nośnik.}
 \label{fig:core-support-example}
 \end{figure}
@@ -1436,21 +1420,21 @@ Działanie algorytmu \MojAlg{} musi zostać zbadane pod kątem czasu wykonania o
 \section{Zbiory danych}
 
 Pierwszym zbiorem danych są dane syntetyczne, które znajdują się w plikach \url{.data} zlokalizowanych w folderze \url{dane}, pogrupowanych w podfoldery według kształtów. 
-Dla każdego kształtu zbiory mają liczebność 1000, 2000, 5000, 10000, 20000, 30000, 40000 oraz 50000 wierszy.
+Dla każdego kształtu zbiory mają liczebność \num{1000}, \num{2000}, \num{5000}, \num{10000}, \num{20000}, \num{30000}, \num{40000} oraz \num{50000} wierszy.
 
 Dane mają postać współrzędnych punktów w dwóch lub trzech wymiarach -- każdy wiersz w pliku reprezentuje współrzędne jednego punktu, współrzędne oddzielone są znakami tabulacji. Taka liczba wymiarów pozwala na wizualizację całości danych w postaci wykresu. W zależności od kształtu, dla danego zbioru można na podstawie wykresu wyróżnić 2, 3 lub 4 wyraźnie odseparowane klastry.
 Wykresy danych przedstawiono na rys. \ref{fig:data-shapes}, a w tabeli \ref{id:tab:zbiory} -- dodatkowo ich charakterystykę (liczbę wymiarów i klastrów).
 
-Dane te nie posiadają etykiet. W sposób opisany w podsekcji \ref{sec:etykietowanie-danych} każdemu punktowi przypisano etykietę w postaci liczby całkowitej $[0, \nKlaster-1]$ i zapisano w folderze \url{dane_labelled} w analogicznym formacie.
+Dane te nie posiadają etykiet. W sposób opisany w sekcji na stronie \pageref{sec:etykietowanie-danych} każdemu punktowi przypisano etykietę w postaci liczby całkowitej $[0, \nKlaster-1]$ i zapisano w folderze \url{dane_labelled} w analogicznym formacie.
 
 % czy 2011 to dobra data dla tych stron?
-Wykorzystano również zbiory danych \brightkite\ \cite{bib:brightkite} (4491143 wierszy) oraz \gowalla\ \cite{bib:gowalla} (6442890 wierszy).
+Wykorzystano również zbiory danych \brightkite\ \cite{bib:brightkite} (\num{4491143} wierszy) oraz \gowalla\ \cite{bib:gowalla} (\num{6442890} wierszy).
 Dane przedstawiają informacje o logowaniach się użytkowników platform społecznościowych.
 Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' -- dwuwymiarowe współrzędne lokalizacji logowań. Dane nie są etykietowane i nie mają przypisanych klas. 
 %
 Analiza wykresów (rys. \ref{fig:gowalla-brightkite-shapes}) pozwala zauważyć kształty kontynentów -- można uznać je za docelowe klastry. 
 %
-Dane zawierają błędne współrzędne. W danych \brightkite{}, kolumna ,,latitude'' (szerokość geograficzna) zawiera wartości z przedziału $[-163.193333, 151.198]$, podczas gdy dopuszczalnym przedziałem jest $[-90, 90]$. Dla danych \gowalla{} przedział ten wynosi $[-90, 405.658498]$. Błędne współrzędne pozostawiono w zbiorze danych.
+Dane zawierają błędne współrzędne. W danych \brightkite{}, kolumna ,,latitude'' (szerokość geograficzna) zawiera wartości z przedziału $[\num{-163.193333}, \num{151.198}]$, podczas gdy dopuszczalnym przedziałem jest $[-90, 90]$. Dla danych \gowalla{} przedział ten wynosi $[-90, \num{405.658498}]$. Błędne współrzędne pozostawiono w zbiorze danych.
 
 \begin{figure}
 \centering
@@ -1486,23 +1470,23 @@ Algorytm \MojAlg{} (\ref{sec:wlasne-rozwiazanie}) zbadano pod kątem szybkości 
 
 \subsection{Czas grupowania}
 
-Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od liczby danych, przygotowano dane o rozmiarach 500-10000 z krokiem 500.
-W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze 10000. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
+Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od liczby danych, przygotowano dane o rozmiarach 500-\num{10000} z krokiem 500.
+W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze \num{10000}. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
 
 Przyjęto też stałą maksymalną liczbę 80 iteracji algorytmu rozmytych $c$-średnich. Sekcja \ref{sec:wyniki-jakosc} pokazuje, że jest to wystarczająca wartość. Złożoność algorytmu jest liniowa w zależności od liczby iteracji \cite{bib:fcm-kmeans-comparison}. Algorytm wykonano też dla różnych liczności granul: 50, 100 oraz 200.
 
-Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystany został algorytm \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} (łączność \SingleLinkage{}) oraz własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej. Pozwoliło to na lepszy pogląd na wpływ granulacji na szybkość, jako że sama logika grupowania we własnej implementacji pozostała ta sama, co w algorytmie rozmytym. Algorytm biblioteczny ma z kolei najniższą złożoność czasową dla łączności \SingleLinkage{} (wykorzystuje algorytm minimalnego drzewa rozpinającego), można więc porównać czas wykonania \MojAlg{} z najlepszym możliwym czasem grupowania tych samych danych algorytmem ostrym. Do tego porównania wykorzystano oryginalne dane wejściowe, we wszystkich rozmiarach (1000-50000).
+Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystany został algorytm \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} (łączność \SingleLinkage{}) oraz własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej. Pozwoliło to na lepszy pogląd na wpływ granulacji na szybkość, jako że sama logika grupowania we własnej implementacji pozostała ta sama, co w algorytmie rozmytym. Algorytm biblioteczny ma z kolei najniższą złożoność czasową dla łączności \SingleLinkage{} (wykorzystuje algorytm minimalnego drzewa rozpinającego), można więc porównać czas wykonania \MojAlg{} z najlepszym możliwym czasem grupowania tych samych danych algorytmem ostrym. Do tego porównania wykorzystano oryginalne dane wejściowe, we wszystkich rozmiarach (1000-\num{50000}).
 W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu rozmytych $c$-średnich, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
 
 Poszczególne pomiary czasu działania algorytmu dla dokładnie takich samych rozmiarów danych mogą różnić się o kilka milisekund. Wynika to między innymi z działania w tle innych procesów komputera, na którym przeprowadzane są badania. Typowym rozwiązaniem tego problemu jest kilkukrotne powtórzenie pomiarów dla tych samych danych i obliczenie średniej arytmetycznej wyników. Podczas badań pomiary powtórzono czterokrotnie, co wystarczyło do wyeliminowania odstających wyników.
 
-Wykonano również pomiary czasu wykonania algorytmu \MojAlg{} dla dużych liczebności danych: 50000, 100000, 500000, 1000000, 2000000, 3000000, 4000000, 5000000 i 6000000, dla liczebności granul 50, 100 i 200. Jako że dla tak dużych rozmiarów danych czas ten jest rzędu minut, nie mają znaczenia milisekundowe przekłamania wyników. Z tego powodu wystarczyło wykonać jeden pomiar dla każdego rozmiaru danych.
+Wykonano również pomiary czasu wykonania algorytmu \MojAlg{} dla dużych liczebności danych: \num{50000}, \num{100000}, \num{500000}, \num{1000000}, \num{2000000}, \num{3000000}, \num{4000000}, \num{5000000} i \num{6000000}, dla liczebności granul 50, 100 i 200. Jako że dla tak dużych rozmiarów danych czas ten jest rzędu minut, nie mają znaczenia milisekundowe przekłamania wyników. Z tego powodu wystarczyło wykonać jeden pomiar dla każdego rozmiaru danych.
 
 \subsection{Jakość grupowania}
 
 Jakość zmierzono poprzez porówanie wyników algorytmu \MojAlg{} z oczekiwanymi przynależnościami punktów do klastrów, oznaczonymi etykietami. Jako miary jakości wykorzystano dokładność, trafność oraz precyzję.
 
-Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych łączności (\SingleLinkage{}, \CompleteLinkage{}), liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi \in \{ 0.05, 0.10, 0.15, \ldots, 0.95 \}$. 
+Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych łączności (\SingleLinkage{}, \CompleteLinkage{}), liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi \in \{ \num{0.05}, \num{0.10}, \num{0.15}, \ldots, \num{0.95} \}$. 
 
 Podobnie jak w przypadku pomiarów czasu grupowania, przyjęto stałą maksymalną liczbę 80 iteracji. Sparametryzowanie tej wartości oznaczałoby badanie działania bibliotecznej funkcji FCM, zamiast własnego algorytmu.
 
@@ -1530,7 +1514,7 @@ W przypadku danych trójwymiarowych skorzystano z faktu, że jedyne dane wykorzy
 
 Na wykresie \ref{fig:data-shapes-labels} przedstawiono wyniki etykietowania danych. Punkty oznaczone tym samym kolorem mają te same etykiety.
 
-W przypadku danych \laguna{} o liczebności 20000 i większej, dwa środkowe klastry przestają być wyraźnie oddzielone od siebie (rys. \ref{fig:laguna20000-labels}). Liczebności tych klastrów po podziale ich narzędziem \texttt{LassoSelector} nie są równe, jak w przypadku mniejszych zbiorów o tym samym kształcie -- różnice wynoszą nie więcej niż 18 punktów. Przy tak dużych zbiorach danych wpływ pojedynczych punktów jest marginalny, należy jednak uwzględnić tę niepewność w analizie wyników jakości grupowania.
+W przypadku danych \laguna{} o liczebności \num{20000} i większej, dwa środkowe klastry przestają być wyraźnie oddzielone od siebie (rys. \ref{fig:laguna20000-labels}). Liczebności tych klastrów po podziale ich narzędziem \texttt{LassoSelector} nie są równe, jak w przypadku mniejszych zbiorów o tym samym kształcie -- różnice wynoszą nie więcej niż 18 punktów. Przy tak dużych zbiorach danych wpływ pojedynczych punktów jest marginalny, należy jednak uwzględnić tę niepewność w analizie wyników jakości grupowania.
 
 \begin{figure}
 \centering
@@ -1542,7 +1526,7 @@ W przypadku danych \laguna{} o liczebności 20000 i większej, dwa środkowe kla
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./img/laguna20000_labelled.png}
-\caption{Wykres danych \laguna{} z folderu \texttt{dane\_labelled} o rozmiarze 20000 punktów, o etykietach oznaczonych kolorami.}
+\caption{Wykres danych \laguna{} z folderu \texttt{dane\_labelled} o rozmiarze \num{20000} punktów, o etykietach oznaczonych kolorami.}
 \label{fig:laguna20000-labels}
 \end{figure}
 
@@ -1583,18 +1567,15 @@ czyli stosunek liczby danych poprawnie zaklasyfikowanych do klasy \english{posit
 
 Trafność i precyzję można rozszerzyć na wiele klas na różne sposoby. W badaniach wybrano metodę, w której najpierw obliczana jest wartość metryk cząstkowych dla każdej klasy z osobna (jedna klasa odpowiada klasie \english{positive}, wszystkie pozostałe -- \english{negative}), a następnie obliczana jest z nich średnia arytmetyczna. Oznacza to, że każda klasa ma jednakową wagę dla ostatecznego wyniku -- jeżeli będą miały różne liczności, to klasy zawierające małą liczbę danych będą mieć proporcjonalnie większy wpływ na wyniki trafności i precyzji, niż dokładności.
 
+\paragraph{Przynależność punktów do granul}
+
 Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Na potrzeby porównania konieczne jest określenie, do której granuli należy każdy punkt. Przynależność tą wyznaczano na dwa sposoby na podstawie
 (1)  macierzy przynależności do klastra wyznaczonego przez algorytm rozmytych $c$-średnich $\mClusterMembership$ i 
 (2)  wartości relacji $\ast$-podobieństwa $\nPodobienstwo$.
 
-Pierwsze podejście 
-%\paragraph{Na podstawie macierzy $\mClusterMembership$}
-dla każdego punktu $i$, znajduje granulę, dla której wartość odpowiedniego wiersza w macierzy przynależności $\wClusterMembership_i$ jest maksymalna.
+Pierwsze podejście dla każdego punktu $i$, znajduje granulę, dla której wartość odpowiedniego wiersza w macierzy przynależności $\wClusterMembership_i$ jest maksymalna.
 
-Drugie podejście
-%\paragraph{Na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$}
-%Działanie tej metody 
-przedstawia pseudokod \ref{alg:similarity_membership}.
+Drugie podejście przedstawia pseudokod \ref{alg:similarity_membership}.
 Dla każdego punktu $i$, przynależność do granuli $j$ obliczana na podstawie wartości operacji $=_\nPodobienstwo$ (wzór \ref{eq:fuzzy-equality}) dla każdego wymiaru punktu i granuli. Operacja ta jest zależna od kształtu granul, dla liczb trójkątnych, wykładniczych i gaussowskich należy wykorzystać odpowiednio wzory \ref{eq:similarity_t}, \ref{eq:similarity_e} lub \ref{eq:similarity_g} uwzględniając, że dla liczby ostrej (współrzędnej oryginalnego punktu) $p = 0$. 
 
 Wyniki dla każdej współrzędnej łączone są t-normą algebraiczną (wzór \ref{eq:algebraic-norms}). Wreszcie określa się, że punkt należy do tej granuli, dla której wynik tego złączenia jest maksymalny.
@@ -1659,7 +1640,16 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 	\label{fig:shape-dep}
 \end{figure}
 
-\paragraph{}
+\paragraph{Macierz pomyłek i obliczanie miar jakości}
+
+Wyznaczono macierz $\mConfusionMatrix$, w której wartość elementu $\ConfusionMatrix_{ij}$ jest równa liczbie punktów, dla których oczekiwana etykieta ma wartość $i$ i przynależących do klastra $j$ wyznaczonego przez algorytm \MojAlg{}:
+\begin{align}
+\ConfusionMatrix_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j].
+\end{align}
+%
+Sposób wyznaczenia tej macierzy przedstawiono również na pseudokodzie \ref{alg:calc_l_matrix}.
+
+Numeracja klastrów wyznaczonych przez algorytm \MojAlg{} może być inna od oczekiwanych etykiet ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na pseudokodzie \ref{alg:perm_l_matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $\mConfusionMatrix$, która maksymalizuje wartości na przekątnej. 
 
 \begin{algorithm}[t]
 	\caption{Wyznaczenie macierzy $\mConfusionMatrix$}
@@ -1696,16 +1686,6 @@ Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów d
 		\EndProcedure
 	\end{algorithmic}
 \end{algorithm}
-
-\zlremark{czy taka duża przerwa między akapitami (pusty paragraph) jest w porządku?}
-Wyznaczono macierz $\mConfusionMatrix$, w której wartość elementu $\ConfusionMatrix_{ij}$ jest równa liczbie punktów, dla których oczekiwana etykieta ma wartość $i$ i przynależących do klastra $j$ wyznaczonego przez algorytm \MojAlg{}:
-\begin{align}
-\ConfusionMatrix_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j].
-\end{align}
-%
-Sposób wyznaczenia tej macierzy przedstawiono również na pseudokodzie \ref{alg:calc_l_matrix}.
-
-Numeracja klastrów wyznaczonych przez algorytm \MojAlg{} może być inna od oczekiwanych etykiet ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na pseudokodzie \ref{alg:perm_l_matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $\mConfusionMatrix$, która maksymalizuje wartości na przekątnej. 
 
 Z uzyskanej w ten sposób macierzy pomyłek, dokładność wyznaczana jest jako suma wartości na przekątnej macierzy podzielona przez całkowitą liczbę danych:
 \begin{align}
@@ -1808,7 +1788,7 @@ Porównano również czas wykonania algorytmu \MojAlg{} z algorytmem \texttt{Ag\
 \label{fig:comparing-times-sklearn}
 \end{figure}
 
-Wykres pokazuje, że dla małych danych (do 10000 punktów), najkrócej wykonuje się algorytm biblioteczny -- klasteryzacja algorytmem rozmytych $c$-średnich trwa stosunkowo długo, mimo złożoności liniowej. Powyżej 10000 danych algorytm \MojAlg{} dla 50 granul wykonywany jest szybciej niż algorytm ostry. Od 40000 danych, jest on szybszy dla wszystkich badanych liczebności granul. Oznacza to, że mimo gorszej złożoności samego algorytmu hierarchicznego \MojHierAlg{}, całość algorytmu rozmytego jest lepsza pod względem czasu wykonania od algorytmu \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring}, powyżej pewnej liczności danych.
+Wykres pokazuje, że dla małych danych (do \num{10000} punktów), najkrócej wykonuje się algorytm biblioteczny -- klasteryzacja algorytmem rozmytych $c$-średnich trwa stosunkowo długo, mimo złożoności liniowej. Powyżej \num{10000} danych algorytm \MojAlg{} dla 50 granul wykonywany jest szybciej niż algorytm ostry. Od \num{40000} danych, jest on szybszy dla wszystkich badanych liczebności granul. Oznacza to, że mimo gorszej złożoności samego algorytmu hierarchicznego \MojHierAlg{}, całość algorytmu rozmytego jest lepsza pod względem czasu wykonania od algorytmu \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring}, powyżej pewnej liczności danych.
 
 Czasy wykonania algorytmu rozmytego \MojAlg{} na dużych danych przedstawia rys. \ref{fig:gowalla-times}. W przypadku 200 granul zauważyć można zaburzenie liniowości wyników. Spowodowane jest zbyt dużym wykorzystaniem pamięci: sama macierz $\mClusterMembership$ ma wymiary $\nX \times \nGranula$, czyli dla 4 milionów danych wejściowych zawiera ona 800 milionów liczb zmiennoprzecinkowych. Z tego samego powodu możliwe było wykonanie algorytmu na 6 milionach danych tylko dla 50 granul -- dla większej liczby nie wystarczyło pamięci.
 
@@ -1873,7 +1853,6 @@ Wyniki dokładności, trafności i precyzji otrzymane na podstawie ostrego algor
 \bottomrule
 \end{tabular}
 \end{table}  
-%\blobs\ & 83,3297\% & 99,9979\% & 95,7081\% & 74,8745\% \\
 
 \begin{table}
 \centering
@@ -1934,7 +1913,6 @@ Wyniki dokładności, trafności i precyzji otrzymane na podstawie ostrego algor
 \bottomrule
 \end{tabular}
 \end{table}  
-% \blobs\ & 78,2487\% & 99,9979\% & 88,2168\% & 90,4066\% \\
 
 \begin{table}
 \centering
@@ -2048,19 +2026,17 @@ Jak pokazuje tabela \ref{id:tab:blobs-max-quality}, dla niektórych liczebności
 	    1000  & 1.0000 & 1.0000 & 1.0000 \\
 		2000 & 1.0000 & 1.0000 & 1.0000 \\
 		5000  & 0.9998 & 0.9999 & 0.9967 \\
-		10000  & 1.0000 & 1.0000 & 1.0000 \\
-		20000  & 1.0000 & 1.0000 & 1.0000 \\
-		30000  & 0.9999 & 1.0000 & 0.9989 \\
-		40000  & 1.0000 & 1.0000 & 1.0000 \\
-		50000  & 0.9998 & 1.0000 & 0.9997 \\
+		\num{10000}  & 1.0000 & 1.0000 & 1.0000 \\
+		\num{20000}  & 1.0000 & 1.0000 & 1.0000 \\
+		\num{30000}  & 0.9999 & 1.0000 & 0.9989 \\
+		\num{40000}  & 1.0000 & 1.0000 & 1.0000 \\
+		\num{50000}  & 0.9998 & 1.0000 & 0.9997 \\
 \bottomrule
 \end{tabular}
 \end{table}  
-% 30000  & 99,9933\% & 99,9977\% & 99,8893\% \\
-% 50000  & 99,98\% & 99,9993\% & 99,9667\% \\
 
 \subparagraph{\circles{}}
-Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby ($\nGranula = 50$) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($\xi \in \{0.9, 0.95\}$). W znacznej większości przypadków, dokładność grupowania wynosi 100\%, tak jak dla grupowania ostrego. Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs{}, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
+Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby ($\nGranula = 50$) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($\xi \in \{\num{0.9}, \num{0.95}\}$). W znacznej większości przypadków, dokładność grupowania wynosi 100\%, tak jak dla grupowania ostrego. Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs{}, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
 
 \subparagraph{\corners{}}
 Klastry dla danych \corners\  mają nierównomierną gęstość, przez co algorytm rozmytych $c$-średnich tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000g}).
@@ -2068,14 +2044,14 @@ Odległości między granulami położonymi na ,,ramionach'' i w ,,środkach'' k
 Wszystkie klastry mają tę samą liczebność, wartości dokładności, trafności i precyzji są zbliżone do siebie.
 
 \subparagraph{\crescents{}}
-Dane \crescents\  tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność, trafność i precyzja ich grupowania są prawie najlepsze (rys. \ref{fig:crescents5000e}). Ze względu na bliskie położenie końców łuków, błędy wciąż mogą się pojawić -- koniec jednego łuku złączony zostaje z łukiem drugim. Dzieje się tak tylko dla bardzo wysokich wartości parametru $\xi$ -- $0.9$ i $0.95$.
+Dane \crescents\  tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność, trafność i precyzja ich grupowania są prawie najlepsze (rys. \ref{fig:crescents5000e}). Ze względu na bliskie położenie końców łuków, błędy wciąż mogą się pojawić -- koniec jednego łuku złączony zostaje z łukiem drugim. Dzieje się tak tylko dla bardzo wysokich wartości parametru $\xi$ -- $\num{0.9}$ i $\num{0.95}$.
 
 \subparagraph{\laguna{}}
-Dla danych \laguna\, błędy mogą pojawić się, gdy pojedyncze granule utworzone zostają w większej odległości od środkowego klastra, do którego oczekiwane jest, że powinny należeć. Punkt taki może wtedy zostać zakwalifikowany, jako osobny klaster, co na rysunku \ref{fig:laguna1000e} pokazuje przykład dla 50 granul i $\xi=0.9$. Podobny błąd przedstawia wykres dla 200 granul i $\xi=0.9$ -- pewna grupa punktów na otaczającym okręgu jest na tyle oddalona od pozostałych, że zostaje uznana za osobny klaster, jeden ze środkowych klastrów jest łączony z pozostałą częścią okręgu. 
+Dla danych \laguna\, błędy mogą pojawić się, gdy pojedyncze granule utworzone zostają w większej odległości od środkowego klastra, do którego oczekiwane jest, że powinny należeć. Punkt taki może wtedy zostać zakwalifikowany, jako osobny klaster, co na rysunku \ref{fig:laguna1000e} pokazuje przykład dla 50 granul i $\xi=\num{0.9}$. Podobny błąd przedstawia wykres dla 200 granul i $\xi=\num{0.9}$ -- pewna grupa punktów na otaczającym okręgu jest na tyle oddalona od pozostałych, że zostaje uznana za osobny klaster, jeden ze środkowych klastrów jest łączony z pozostałą częścią okręgu. 
 
-Powyżej liczebności 20000 punktów włącznie, dokładność nigdy nie osiąga 100\% (tab. \ref{id:tab:laguna-max-quality}), jednak najczęściej wynosi powyżej 99.9\%. Jak zaznaczono w sekcji dotyczącej etykietowania danych (sekcja \ref{sec:wyniki-etykietowania}), środkowe klastry są na tyle zbliżone do siebie, że na podstawie wykresu nie można definitywnie określić, które punkty pomiędzy nimi należą do którego z nich. Pojedyncze punkty mogą więc być klasyfikowane niepoprawnie z punktu widzenia przypisanych do nich etykiet. 
+Powyżej liczebności \num{20000} punktów włącznie, dokładność nigdy nie osiąga $100\%$ (tab. \ref{id:tab:laguna-max-quality}), jednak najczęściej wynosi powyżej $\num{99.9}\%$. Jak zaznaczono w sekcji dotyczącej etykietowania danych (sekcja na stronie \pageref{sec:wyniki-etykietowania}), środkowe klastry są na tyle zbliżone do siebie, że na podstawie wykresu nie można definitywnie określić, które punkty pomiędzy nimi należą do którego z nich. Pojedyncze punkty mogą więc być klasyfikowane niepoprawnie z punktu widzenia przypisanych do nich etykiet. 
 
-Ilustrują to wykresy \ref{fig:laguna1000-blue} oraz \ref{fig:laguna40000-blue}. Na rys. \ref{fig:laguna1000-blue} punktów jest jedynie 1000 i wszystkie klastry są wyraźnie oddzielone od siebie. Każdy punkt wyraźnie należy do granul jednego klastra. Na rys. \ref{fig:laguna40000-blue} punktów jest 40000. Klastry środkowe (o numerach 1 i 2) pokrywają się w pobliżu współrzędnych (0, 0). Punkty w bliskim otoczeniu tych współrzędnych przynależą więc w podobnym stopniu do klastra 1 i klastra 2. Ponadto, punkty położone na zewnątrz klastrów 1 i 2 są położone blisko otaczającego je okręgu, oznaczonego jako klaster 0. Można zauważyć ich wysoki stopień przynależności do tego klastra.
+Ilustrują to wykresy \ref{fig:laguna1000-blue} oraz \ref{fig:laguna40000-blue}. Na rys. \ref{fig:laguna1000-blue} punktów jest jedynie 1000 i wszystkie klastry są wyraźnie oddzielone od siebie. Każdy punkt wyraźnie należy do granul jednego klastra. Na rys. \ref{fig:laguna40000-blue} punktów jest \num{40000}. Klastry środkowe (o numerach 1 i 2) pokrywają się w pobliżu współrzędnych (0, 0). Punkty w bliskim otoczeniu tych współrzędnych przynależą więc w podobnym stopniu do klastra 1 i klastra 2. Ponadto, punkty położone na zewnątrz klastrów 1 i 2 są położone blisko otaczającego je okręgu, oznaczonego jako klaster 0. Można zauważyć ich wysoki stopień przynależności do tego klastra.
 
 Dzięki temu nałożeniu się klastrów, jakość grupowania tych danych jest lepsza, gdy wykorzystany zostanie algorytm \MojAlg{}, niż gdy zgrupowane zostaną dane oryginalne. Bez wstępnej klasteryzacji algorytmem rozmytych $c$-średnich, środkowe klastry są łączone ze sobą.
 
@@ -2094,11 +2070,11 @@ Proporcja danych wynosi 8:1:1 (otaczający okrąg ma większą liczebność), je
 	    1000  & 1.0000 & 1.0000 & 1.0000 \\
 		2000 & 1.0000 & 1.0000 & 1.0000 \\
 		5000  & 1.0000 & 1.0000 & 1.0000 \\
-		10000  & 1.0000 & 1.0000 & 1.0000 \\
-		20000  & 0.9999 & 0.9997 & 0.9998 \\
-		30000  & 0.9999 & 0.9998 & 0.9999 \\
-		40000  & 0.9999 & 0.9998 & 0.9998 \\
-		50000  & 0.9997 & 0.9990 & 0.9997 \\
+		\num{10000}  & 1.0000 & 1.0000 & 1.0000 \\
+		\num{20000}  & 0.9999 & 0.9997 & 0.9998 \\
+		\num{30000}  & 0.9999 & 0.9998 & 0.9999 \\
+		\num{40000}  & 0.9999 & 0.9998 & 0.9998 \\
+		\num{50000}  & 0.9997 & 0.9990 & 0.9997 \\
 \bottomrule
 \end{tabular}
 \end{table}  
@@ -2116,7 +2092,7 @@ W przypadku danych \spheres\  (rys. \ref{fig:spheres5000g}) można zauważyć, �
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./img/circles50000e_s.png}
-\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze 50000 i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze \num{50000} i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
 \label{fig:circles50000e}
 \end{figure}
 
@@ -2151,7 +2127,7 @@ W przypadku danych \spheres\  (rys. \ref{fig:spheres5000g}) można zauważyć, �
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./img/laguna40000_blue.png}
-\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze 40000.}
+\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze \num{40000}.}
 \label{fig:laguna40000-blue}
 \end{figure}
 
@@ -2492,9 +2468,9 @@ Najwyższe wartość metryk jakości przy grupowaniu algorytmem \SingleLinkage{}
 
 Średnią dokładność, trafność i precyzję grupowania danych w zależności od parametru $\xi$ przedstawiono na rys. \ref{fig:xi-acc}.
 
-Dla \SingleLinkage{}, najwyższą dokładność i precyzję -- odpowiednio \num{99,7745}\% i 98,1348\% -- osiągnięto dla $\xi=0,05$, najwyższą trafność -- 98,3582\% -- dla $\xi=0,1$. Wartości metryk spadają wraz ze wzrostem wartości parametru. Powyżej $\xi=0,8$ następuje gwałtowne załamanie na wykresie wyników.
+Dla \SingleLinkage{}, najwyższą dokładność i precyzję -- odpowiednio \num{99.7745}\% i \num{98.1348}\% -- osiągnięto dla $\xi=\num{0.05}$, najwyższą trafność -- \num{98.3582}\% -- dla $\xi=\num{0.1}$. Wartości metryk spadają wraz ze wzrostem wartości parametru. Powyżej $\xi=\num{0.8}$ następuje gwałtowne załamanie na wykresie wyników.
 
-Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyniki -- 67,1215\% -- osiągnięto dla $\xi=0,9$. Trafność i precyzja nie wpisują się w tą zależność -- ich wartości wahają się odpowiednio około 60-61\% i 58\%. Najwyższa wartość trafności wynosi 61,7007\% dla $\xi=0,65$, a precyzji -- 58,4605\% dla $\xi=\num{0,7}$.
+Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyniki -- \num{67.1215}\% -- osiągnięto dla $\xi=\num{0.9}$. Trafność i precyzja nie wpisują się w tą zależność -- ich wartości wahają się odpowiednio około 60-61\% i 58\%. Najwyższa wartość trafności wynosi \num{61.7007}\% dla $\xi=\num{0.65}$, a precyzji -- \num{58.4605}\% dla $\xi=\num{0.7}$.
 % 
 \begin{figure}
 	\centering
@@ -2529,7 +2505,7 @@ Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyni
 \end{figure}
 
 \subparagraph{Podsumowanie}
-Eksperymenty sugerują, że dla  łączności \SingleLinkage{} najlepiej używać małych wartości parametru $\xi \approx 0{,}1$, a dla \CompleteLinkage{} -- dużych $\xi \approx 0{,}9$.
+Eksperymenty sugerują, że dla  łączności \SingleLinkage{} najlepiej używać małych wartości parametru $\xi \approx \num{0.1}$, a dla \CompleteLinkage{} -- dużych $\xi \approx \num{0.9}$.
 
 \paragraph{Kombinacja parametrów}
 
@@ -2571,7 +2547,7 @@ Jeżeli granule znalezione przez algorytm rozmytych $c$-średnich znajdą się w
 
 Wykresy dla danych \circles{} (rys. \ref{fig:circles-complex}) uwydatniają wpływ łączności na jakość grupowania.
 
-W przypadku łączności \SingleLinkage{}, dokładność jest niemal zawsze równa 100\%. Spada ona dla wysokich ($\ge0.9$) wartości parametru $\xi$. Najniższe wartości są osiągane dla relacji wykładniczej, wyższe dla gaussowskiej. Dla relacji trójkątnej, wyniki pozostają na poziomie 100\% nawet dla $\xi=\num{0.95}$.
+W przypadku łączności \SingleLinkage{}, dokładność jest niemal zawsze równa 100\%. Spada ona dla wysokich ($\ge \num{0.9}$) wartości parametru $\xi$. Najniższe wartości są osiągane dla relacji wykładniczej, wyższe dla gaussowskiej. Dla relacji trójkątnej, wyniki pozostają na poziomie 100\% nawet dla $\xi=\num{0.95}$.
 
 Algorytm dla łączności \CompleteLinkage{} nie odnajduje poprawnie klastrów, co widać na rys. \ref{fig:circles1000gc}. Badane parametry nie mają znacznego wpływu na jakość.
 
@@ -2595,7 +2571,7 @@ Algorytm dla łączności \CompleteLinkage{} nie odnajduje poprawnie klastrów, 
 
 Podobnie jak w przypadku \circles{}, grupowanie danych \corners{} przy łączności \CompleteLinkage{} nie zwraca poprawnych wyników. Rys. \ref{fig:corners-complex} pokazuje, że przez to pozostałe parametry nie mają zauważalnego wpływu na jakość grupowania.
 
-Dla łączności \SingleLinkage{} największe znaczenie ma parametr $\xi$. Dokładność zmniejsza się wraz ze wzrostem wartości tego parametru. Ponadto, znaczenie ma też liczba granul i typ relacji. Dokładność wcześniej zaczyna spadać dla mniejszej liczebności granul, najpierw dla relacji gaussowskiej, potem wykładniczej, na końcu trójkątnej. Dla relacji trójkątnej i większych liczebności granul -- 100 i 200 -- średnia dokładność zostaje na poziomie 100\% nawet dla $\xi=0.95$.
+Dla łączności \SingleLinkage{} największe znaczenie ma parametr $\xi$. Dokładność zmniejsza się wraz ze wzrostem wartości tego parametru. Ponadto, znaczenie ma też liczba granul i typ relacji. Dokładność wcześniej zaczyna spadać dla mniejszej liczebności granul, najpierw dla relacji gaussowskiej, potem wykładniczej, na końcu trójkątnej. Dla relacji trójkątnej i większych liczebności granul -- 100 i 200 -- średnia dokładność zostaje na poziomie 100\% nawet dla $\xi=\num{0.95}$.
 
 \begin{figure}
 	\centering
@@ -2615,7 +2591,7 @@ Dla łączności \SingleLinkage{} największe znaczenie ma parametr $\xi$. Dokł
 
 \subparagraph{\crescents{}}
 
-Wnioski dla danych \crescents{} są bardzo podobne do wniosków dla danych \circles{}. Jak pokazuje rys. \ref{fig:crescents-complex}, dla łączności \SingleLinkage{} średnia dokładność spada poniżej 100\% dopiero dla wysokich ($\ge 0.9$) wartości $\xi$, najbardziej dla relacji wykładniczej. W przypadku \CompleteLinkage{}, również można zauważyć spadek dokładności dla tej relacji i wysokiego $\xi$, jednak nie ma jasnego wpływu badanych parametrów na jakość grupowania.
+Wnioski dla danych \crescents{} są bardzo podobne do wniosków dla danych \circles{}. Jak pokazuje rys. \ref{fig:crescents-complex}, dla łączności \SingleLinkage{} średnia dokładność spada poniżej 100\% dopiero dla wysokich ($\ge \num{0.9}$) wartości $\xi$, najbardziej dla relacji wykładniczej. W przypadku \CompleteLinkage{}, również można zauważyć spadek dokładności dla tej relacji i wysokiego $\xi$, jednak nie ma jasnego wpływu badanych parametrów na jakość grupowania.
 
 \begin{figure}
 	\centering
@@ -2690,7 +2666,7 @@ Przy grupowaniu danych algorytmem o łączności \CompleteLinkage{}, w większo�
 
 Ze względu na brak etykiet danych \brightkite{} i \gowalla{}, jakość grupowania można ocenić wizualnie, na podstawie wykresów -- odpowiednio rys. \ref{fig:brightkite-strict-fuzzy} i \ref{fig:gowalla-strict-fuzzy}.
 
-Podczas grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} wykorzystano losową próbkę \num{500000} współrzędnych, jako że algorytm ten nie nadaje się do grupowania bardzo dużych ilości danych. Jako parametry grupowania \MojAlg{} wybrano na podstawie wyników przedstawionych na stronie \pageref{sec:wyniki-jakosc-generowane} i dalszych, relację trójkątną, 100 granul i $\xi=\num{0,1}$. W obydwu przypadkach jako docelową liczbę klastrów wybrano 6 -- jeden klaster to jeden kontynent.
+Podczas grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} wykorzystano losową próbkę \num{500000} współrzędnych, jako że algorytm ten nie nadaje się do grupowania bardzo dużych ilości danych. Jako parametry grupowania \MojAlg{} wybrano na podstawie wyników przedstawionych na stronie \pageref{sec:wyniki-jakosc-generowane} i dalszych, relację trójkątną, 100 granul i $\xi=\num{0.1}$. W obydwu przypadkach jako docelową liczbę klastrów wybrano 6 -- jeden klaster to jeden kontynent.
 
 Grupowanie ostre algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} nie odnajduje oczekiwanych klastrów. W przypadku danych \brightkite{}, wszystkie kontynenty zostały połączone w jeden klaster, zaś elementy odstające -- wyspy, ocean, błędne współrzędne -- to pozostałe 5 klastrów. W przypadku danych \gowalla{} grupowanie jest lepsze -- Ameryki stanowią osobny klaster niż reszta kontynentów -- jednak wciąż 4 klastry odpowiadają wyłącznie danym odstającym.
 
@@ -2700,7 +2676,7 @@ Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna
 	\centering
 	\begin{subfigure}{0.8\textwidth}
 		\includegraphics[width=\textwidth]{./img/brightkite_500000_strict.png}
-		\caption{Grupowanie ostre próbki losowej 500000 punktów}
+		\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}{0.8\textwidth}
@@ -2716,7 +2692,7 @@ Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna
 	\centering
 	\begin{subfigure}{0.8\textwidth}
 		\includegraphics[width=\textwidth]{./img/gowalla_500000_strict.png}
-		\caption{Grupowanie ostre próbki losowej 500000 punktów}
+		\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}{0.8\textwidth}
@@ -2849,15 +2825,15 @@ Algorytmy takie mogą być na przykład oparte na minimalizacji pewnej funkcji k
 
 W pracy do przyspieszenia działania aglomeracyjnego algorytmu hierarchicznego wykorzystano obliczenia granularne.
 Jest to dziedzina, która również stosowana jest do analizy danych. Polega na analizowaniu ich na sposób podobny do ludzkiego postrzegania rzeczywistości. Związanym z nią pojęciem jest granula informacyjna, będące encją o pewnej semantyce. W pracy granule realizowane są przy pomocy liczb rozmytych, czyli takich liczb, które modelują pewne ostre wartości liczbowe w jakimś przybliżeniu.
-%
+
 W pracy zaproponowany został autorski algorytm \MojAlg{}, który wykonuje grupowanie hierarchiczne na granulach informacyjnych, zamiast na oryginalnych liczbach ostrych. 
-Krokiem przygotowawczym algorytmu jest zgrupowanie danych wejściowych (współrzędnych punktów) w granule. Wykorzystano do tego algorytm rozmytych $c$-średnich FCM, który ma mniejszą -- liniową -- złożoność czasową niż algorytm hierarchiczny. Algorytm ten grupuje dane w klastry rozmyte, czyli takie, do których każdy punkt należy w pewnym stopniu, określonym jako liczba z przedziału $[0, 1]$. Następnie klastry te przekształcane są w granule: wielowymiarowe liczby rozmyte, gdzie dla każdego wymiaru wyróżnić można środek i rozmycie granuli. Wykorzystano trzy kształty granul: trójkątne, wykładnicze i gaussowskie.
+Krokiem przygotowawczym algorytmu jest zgrupowanie danych wejściowych (współrzędnych punktów) w granule. Wykorzystano do tego algorytm rozmytych $c$-średnich FCM, który ma mniejszą -- liniową -- złożoność czasową niż algorytm hierarchiczny. Algorytm ten grupuje dane w klastry rozmyte, czyli takie, do których każdy punkt należy w pewnym stopniu, określonym jako liczba z przedziału $[0, 1]$. Następnie klastry te przekształcane są w granule: wielowymiarowe ekstensjonalne liczby rozmyte, gdzie dla każdego wymiaru wyróżnić można środek i rozmycie granuli (ziaren informacyjnych). Wykorzystano trzy kształty ziaren: trójkątne, wykładnicze i gaussowskie, definiowane przez odpowiednie rozmyte relacje $\ast$-podobieństwa.
 Właściwe aglomeracyjne grupowanie hierarchiczne algorytmu \MojAlg{} wykorzystuje ogólną implementację o złożoności sześciennej dostosowaną do operowania na granulach.  Modyfikacje algorytmu w stosunku do standardowej, ostrej wersji, dotyczą operacji arytmetycznych i logicznych. Odległości euklidesowe między granulami również mają postać liczb rozmytych, które są następnie porównywane. Jako że wynikiem porównań liczb rozmytych jest wartość z przedziału $[0, 1]$, wprowadzony został dodatkowy parametr progowy $\xi$, określający, dla jakiej wartości operacja logiczna będzie ewaluowana jako prawda. Zaimplementowano dwie łączności grupowania hierarchicznego: \SingleLinkage{} oraz \CompleteLinkage{}.
 
 W pracy przebadano własności zaproponowanego algorytmu -- jego złożoność czasową oraz jakość grupowania.
 %
 Porównano czas wykonania algorytmu \MojAlg{} z czasem wykonania ostrego algorytmu hierarchicznego o analogicznej implementacji %do \MojHierAlg{} 
-dla różnych liczebności danych. Odnotowano znaczne zmniejszenie czasu wykonania -- przykładowo, dla liczebności 5000, w zależności od liczby granul, algorytm \MojAlg{} wykonywał się 1-4 sekundy, a algorytm ostry -- około 100 sekund. Możliwe było też wykonanie algorytmu na bardzo dużych danych -- kilku milionach punktów -- w czasie rzędu kilkudziesięciu minut. Ponadto, algorytm jest też szybszy od optymalnego algorytmu bibliotecznego powyżej pewnej liczby danych. Jego złożoność czasowa jest liniowa w zależności od liczby danych wejściowych -- choć właściwe grupowanie hierarchiczne nadal ma złożoność sześcienną, to wykorzystuje ono granule informacyjne, których jest znacznie mniej, niż danych wejściowych. Udało się więc osiągnąć główny cel pracy -- znacznie zmniejszono czas wykonywania algorytmu hierarchicznego dla dużych liczebności danych.
+dla różnych liczebności danych. Odnotowano znaczne zmniejszenie czasu wykonania -- przykładowo, dla 5000 danych algorytm \MojAlg{} wykonywał się 1-4 sekundy (w zależności od liczby granul), a algorytm ostry -- około 100 sekund. Możliwe było też wykonanie algorytmu na bardzo dużych danych -- kilku milionach punktów -- w czasie rzędu kilkudziesięciu minut. Ponadto, algorytm jest też szybszy od optymalnego algorytmu bibliotecznego powyżej pewnej liczby danych. Jego złożoność czasowa jest liniowa w zależności od liczby danych wejściowych -- choć właściwe grupowanie hierarchiczne nadal ma złożoność sześcienną, to wykorzystuje ono granule informacyjne, których jest znacznie mniej niż danych wejściowych. Udało się więc osiągnąć główny cel pracy -- znacznie zmniejszono czas wykonywania algorytmu hierarchicznego dla dużych liczebności danych.
 W zamian za przyspieszenie algorytmu dopuszczono pogorszenie jakości grupowania. Pomiary dokładności, trafności i precyzji algorytmu \MojAlg{} pokazały jednak, że w większości przypadków jego wyniki nie odbiegają od wyników algorytmu ostrego, a nawet mogą być lepsze.
 %
 Algorytm badano dla różnych kombinacji parametrów: liczby granul, kształtu granul i parametru progowego $\xi$, dla obydwu zaimplementowanych łączności. Dla wszystkich parametrów, średnie wartości metryk jakości są zbliżone do wyników tych samych metryk dla algorytmu ostrego. Ponadto w większości przypadków można znaleźć taką kombinację tych parametrów, dla których wyniki są lepsze niż dla algorytmu ostrego.
@@ -2865,7 +2841,9 @@ Algorytm badano dla różnych kombinacji parametrów: liczby granul, kształtu g
 Analiza grupowania \MojAlg{} %dla danych \brightkite{} i \gowalla{} 
 pokazuje również, że granulacja danych wejściowych algorytmem rozmytych $c$-średnich pozwala na wyeliminowanie z danych elementów odstających, na które bardzo wrażliwy jest algorytm hierarchiczny. 
 
-Algorytm \MojAlg{} może w prosty sposób zostać rozszerzony o inne metryki odległości. Dzięki zastosowaniu ogólnej implementacji, łatwo można też dodać inne opcje łączności, takie jak łączność średnia lub Warda. Ponadto, implementację granul rozszerzyć można o inne kształty.
+Implementację algorytmu \MojAlg{} oraz skrypty wykorzystane do badań jego działania zamieszczono w repozytorium pod adresem \url{https://github.com/ZofiaLor/magister-granule}.
+
+Algorytm \MojAlg{} może w prosty sposób zostać rozszerzony o inne metryki odległości. Dzięki zastosowaniu ogólnej implementacji, łatwo można też dodać inne opcje łączności, takie jak łączność średnia lub Warda. Ponadto, implementację granul rozszerzyć można o inne kształty ziaren poprzez zastosowanie innych rozmytych relacji $\ast$-podobieństwa.
 
 
 
@@ -2885,7 +2863,7 @@ Algorytm \MojAlg{} może w prosty sposób zostać rozszerzony o inne metryki odl
 
 \section*{Implementacja}
 
-Całość projektu zaimplementowano w języku Python\footnote{\url{https://www.python.org/}, dostęp 26.04.2026}. Jest to jeden z najczęściej wykorzystywanych języków programowania, szczególnie w projektach związanych z analizą danych. Język posiada wiele bibliotek, które implementują większość potrzebnych funkcjonalności.
+Całość projektu zaimplementowano w języku Python\footnote{\url{https://www.python.org/}, dostęp 26.04.2026} w wersji 3.12. Jest to jeden z najczęściej wykorzystywanych języków programowania, szczególnie w projektach związanych z analizą danych. Język posiada wiele bibliotek, które implementują większość potrzebnych funkcjonalności.
 
 Biblioteka \texttt{scikit-fuzzy-c-means} dostarcza implementację algorytmu rozmytych $c$-średnich. Środki klastrów inicjalizowane są metodą \texttt{K-Means++}.
 Inną biblioteką, która również dostarcza tej implementacji, jest \texttt{scikit-fuzzy}. Oprócz tego, posiada ona bardziej rozwinięte API, umożliwiające wykonywanie różnych operacji na zbiorach rozmytych. Działanie algorytmu rozmytych $c$-średnich jest identyczne dla obydwu bibliotek, ostatecznie wybrano prostszą bibliotekę \texttt{scikit-fuzzy-c-means}.
@@ -2917,7 +2895,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 
 \subsubsection*{Pomiar jakości}
 
-Pomiaru jakości grupowania można dokonać przy pomocy skryptu \texttt{measure\_quality.py}. Dla wybranych lub wszystkich danych mierzona jest dokładność, trafność i precyzja grupowania. Pomiary wykonywane są dla różnych liczebności granul, typów relacji i wartości parametru $\xi$. Gdy mierzone są wszystkie dane, wyniki zapisywane są w pliku .csv, w przeciwnym razie wypisywane są w konsoli.
+Pomiaru jakości grupowania można dokonać przy pomocy skryptu \lstinline|measure_quality.py|. Dla wybranych lub wszystkich danych mierzona jest dokładność, trafność i precyzja grupowania. Pomiary wykonywane są dla różnych liczebności granul, typów relacji i wartości parametru $\xi$. Gdy mierzone są wszystkie dane, wyniki zapisywane są w pliku .csv, w przeciwnym razie wypisywane są w konsoli.
 
 Wywołanie skryptu z linii poleceń ma następującą składnię:
 
@@ -2935,7 +2913,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 
 \subsubsection*{Wykresy grupowania granul}
 
-Wykresy wyników grupowania \MojAlg{} można uzyskać przy pomocy skryptu \texttt{plot\_granules.py}. Każdy wykres składa się z 9 podwykresów, zawierających wyniki dla różnych liczebności granul i wartości parametru $\xi$. Dla każdego pliku tworzone są 3 takie wykresy, dla każdego typu relacji.
+Wykresy wyników grupowania \MojAlg{} można uzyskać przy pomocy skryptu \lstinline|plot_granules.py|. Każdy wykres składa się z 9 podwykresów, zawierających wyniki dla różnych liczebności granul i wartości parametru $\xi$. Dla każdego pliku tworzone są 3 takie wykresy, dla każdego typu relacji.
 
 Wywołanie skryptu z linii poleceń ma następującą składnię:
 
@@ -2952,7 +2930,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 
 \subsubsection*{Analiza wyników}
 
-Skrypt \lstinline|accuracy_analysis.py| służy do analizy wyników pomiarów wykonanych przy pomocy skryptu \texttt{measure\_quality.py}. Do jego działania wymagane jest więc uprzednie wykonanie pomiarów dla wszystkich plików, przy wybranej konfiguracji łączności i obliczania przynależności punktów do granul. Możliwa jest analiza wpływu poszczególnych parametrów grupowania na wyniki.
+Skrypt \lstinline|accuracy_analysis.py| służy do analizy wyników pomiarów wykonanych przy pomocy skryptu \lstinline|measure_quality.py|. Do jego działania wymagane jest więc uprzednie wykonanie pomiarów dla wszystkich plików, przy wybranej konfiguracji łączności i obliczania przynależności punktów do granul. Możliwa jest analiza wpływu poszczególnych parametrów grupowania na wyniki.
 
 Wywołanie skryptu z linii poleceń ma następującą składnię:
 
@@ -2990,7 +2968,7 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 
 \subsubsection*{Analiza dużych danych}
 
-Skrypt \texttt{large\_data\_analysis.py} przeznaczony jest do analizy dwuwymiarowych danych o dużych rozmiarach (w ramach pracy wykorzystano go dla danych \brightkite{} i \gowalla{}). Pozwala on na pomiar czasu wykonania algorytmu \MojAlg{} przy określonym kroku oraz na przedstawienie na wykresie wyników grupowania danych przez algorytm \MojAlg{} oraz przez algorytm ostry \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
+Skrypt \lstinline|large_data_analysis.py| przeznaczony jest do analizy dwuwymiarowych danych o dużych rozmiarach (w ramach pracy wykorzystano go dla danych \brightkite{} i \gowalla{}). Pozwala on na pomiar czasu wykonania algorytmu \MojAlg{} przy określonym kroku oraz na przedstawienie na wykresie wyników grupowania danych przez algorytm \MojAlg{} oraz przez algorytm ostry \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
 
 Wywołanie skryptu z linii poleceń ma następującą składnię:
 
@@ -3018,17 +2996,16 @@ Wywołanie skryptu z linii poleceń ma następującą składnię:
 	\item[$\Atrybut$] atrybut (wymiar) danych
 	\item[$\accuracy$] dokładność (ang. \english{accuracy}) 
 	\item[$\klaster$] klaster 
-	\item[$\Odleglosc$] odległość między danymi (wzory \eqref{eq:odleglosc:euklidesowa}, \eqref{eq:odleglosc:minkowskiego})
+	\item[$\Odleglosc$] odległość między danymi
 	\item[FCM] algorytm rozmytych $c$-średnich (\english{fuzzy $c$-means})
 	\item[$\Granula$] granula, ziarno informacyjne
-	\item[$\nGranula$] liczba granul
-	\item[$\zGranula$] zbiór granul	
 	\item[$\mConfusionMatrix$] macierz pomyłek
 	\item[$\precision$] precyzja (ang. \english{precision})
+	\item[$p$] rozmycie rozszerzalnej liczby rozmytej
 	\item[$\recall$] trafność, czułość (ang. \english{recall})
 	\item[$\nPodobienstwo$] rozmyta relacja $\ast$-podobieństwa 
 	\item[$\mCentre$] macierz środków klastrów FCM
-	\item[$\mClusterMembership$] stopnień przyleżności do zbioru rozmytego
+	\item[$\mClusterMembership$] macierz stopni przyleżności do zbioru rozmytego
 	\item[$\xi$] parametr progowy rozmytego grupowania hierarchicznego
 \end{itemize}
 
