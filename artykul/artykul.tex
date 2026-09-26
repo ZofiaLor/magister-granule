@@ -1,0 +1,221 @@
+% !TeX spellcheck = en_GB
+
+\documentclass[a4paper,12pt]{article}
+%\usepackage[margin=1.5cm]{geometry}
+
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+
+\usepackage[polish,british]{babel}
+
+\usepackage{ifxetex}
+\usepackage{url}
+\usepackage{siunitx}
+\usepackage{natbib}
+
+%\usepackage{fdsymbol}   % circle and square
+
+\ifxetex  % XeLaTeX
+   \usepackage{fontspec}
+   \defaultfontfeatures{Mapping=tex--text}   % to support TeX conventions like dashes etc
+   \usepackage{xltxtra} % extra customisation for XeLaTeX
+
+%    \setmainfont{Ubuntu Condensed}
+%   \setsansfont{Linux Biolinum O}
+%   \setmainfont[Ligatures={Common,TeX}, Numbers={OldStyle}]{Linux Libertine O}
+    \setmainfont{Fira Sans}
+\else  % LaTeX
+   \usepackage[T1]{fontenc}
+   \usepackage[utf8]{inputenc}
+%   \usepackage[tt=false]{libertine}
+	\usepackage{lmodern}
+\fi
+
+%\usepackage{MnSymbol}
+
+%\usepackage[T1]{fontenc}
+%\usepackage[utf8]{inputenc} 
+
+%\selectlanguage{polish}
+\usepackage{indentfirst}
+%\usepackage{pdflscape} % landscape page in pdf
+%\usepackage{lscape}
+%\usepackage{rotating}
+%\usepackage[nomarkers]{endfloat} % rysunki i tabele na koniec  
+\usepackage{graphicx}
+%\usepackage{subfigure}
+%\usepackage[pdftex]{graphicx}
+%\usepackage{epstopdf} % automatic conversion from eps to pdf (mp file has to have first line: prologues := 3; % set up MetaPost for EPS generation)
+%\usepackage{ifpdf}
+%\usepackage{hyperref}
+\usepackage{booktabs}    % smart tables
+%\usepackage{dcolumn}    % decimal point alignment in tables
+%\usepackage[notcite,notref]{showkeys} % show labels
+%\usepackage{datenumber}   % date manipulation
+%\usepackage{import}     % for importing figures
+%\usepackage{ifthen}     % if then else
+%\usepackage{euro}% easy conversion euro <--> other
+%\usepackage{eurosym}    % euro symbol
+%\usepackage{textcomp}    % symbols :-) 
+%\usepackage{enumerate}   % more sophisticated labelling of item in enumerations
+\usepackage{accents}    % mathematical accents
+%\usepackage[footnotesize]{caption}   % manipulation with captions
+%\usepackage{longtable}   % enables footnotes in tables :-)
+\usepackage{url}
+%\usepackage{listings}
+%\usepackage{subfigure}  % subfigures 
+%\usepackage{numprint}  % printing numbers
+%\usepackage[safe]{tipa}   % schwa 
+%\usepackage[tikz]{bclogo}  % nice logos :-)
+%\usepackage[inline, shortlabels]{enumitem}  % inline enumeration
+\usepackage{subcaption}
+
+%\usepackage[twoside]{CoverPage}
+\usepackage{color}
+%\usepackage{mathtext}   % for Polish chars in math mode
+%\usepackage{bibunits}   % multiple bibliographies
+%\usepackage[math]{anttor} % antykwa torunska
+%\usepackage{eulervm}    % pisana matematyka
+%\usepackage{cmbright}   % computer modern bright
+%\usepackage{antpolt}    % antykwa P\'{o}{\l}tawskiego
+%\usepackage[math]{iwona}  % font family: iwona
+%\usepackage[math]{kurier} % font family: kurier
+%\usepackage[math]{anttor} % font family: antykwa toruńska
+%\usepackage{ccfonts}    % font family: concrete \usepackage[T1]{fontenc}
+%\usepackage[tt=false]{libertine}
+%\usepackage{ccfonts,eulervm} % font family: concrete + euler
+%\usepackage{gentium}
+%\usepackage[tt=false]{libertine}
+%\usepackage{ccfonts,eulervm} % font family: concrete + euler
+\usepackage{lmodern}
+%\usepackage{gfsartemisia-euler}
+%\usepackage{fourier}
+%\usepackage{cyklop}
+%\usepackage{epigrafica}
+%\usepackage{CJKutf8}
+%\usepackage{palatino}
+%\usepackage{boisik}\usepackage[OT1]{fontenc}
+%\usepackage[T1]{fontenc}\usepackage[urw-garamond]{mathdesign}\usepackage{garamondx}
+%\usepackage[sc]{mathpazo} % palatino
+%\usepackage{pxfonts}\usepackage[T1]{fontenc}
+
+\usepackage{lineno} % line numbers
+%\usepackage[final]{changes} % changes in text
+%\usepackage{changes} % changes in text
+
+
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{calc,arrows}
+\usepackage{filecontents} 
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+
+
+
+%
+%\newcommand{\AnnRef}{$\largecircle$}
+%\newcommand{\AnnLep}{$\largeblackcircle$}
+%
+%\newcommand{\TskRef}{$\largesquare$}
+%\newcommand{\TskLep}{$\largeblacksquare$}
+
+
+%\setdeletedmarkup{{\color{red}#1}
+
+
+ 
+ 
+\input{./libraries/oznaczenia.tex}
+\input{./libraries/remarks.tex}
+
+
+
+\newcommand{\pd}[1]{{\colorbox{black}{\color{white}\textbf{#1}}}}
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% FOR 	numprint 
+%\nprounddigits{4}  % number of digits after dot in truncated number
+%\npthousandsep{}%
+%\npdecimalsign{.}%
+%\npproductsign{\cdot}%
+%\npunitseparator{\,}%
+%\npdegreeseparator{}%
+%\npcelsiusseparator{\nprt@unitsep}%
+%\nppercentseparator{\nprt@unitsep}%
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+%\newcommand{\HUGE}{\fontsize{35}{30}\selectfont}
+%\newcolumntype{g}{D{.}{.}{7.7}}
+%\newcolumntype{w}{D{.}{.}{1.4}}
+%\newcolumntype{k}{D{.}{.}{2.0}}
+%\newcolumntype{e}{D{.}{.}{1.2}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[normalem]{ulem} % changes
+\newcommand{\added}[1]{{\color{blue}{\bf #1}}}
+%\newcommand{\deleted}[1]{{\color{red}\sout{#1}}}
+\newcommand{\deleted}[1]{{\color{gray}\{{\it #1}\}}}
+\newcommand{\replaced}[2]{\added{#2} \deleted{#1}}
+%\newcommand{\response}{{{\bf Response: }}}
+%\usepackage{color,soul} % highlight
+%\sethlcolor{yellow}
+%\newcommand{\highlight}[1]{#1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% listingi 
+
+\usepackage{listings}
+\lstset{%
+language=Pascal,%
+commentstyle=\textit,%
+identifierstyle=\textsf,%
+keywordstyle=\sffamily\bfseries, %\texttt, %
+%captionpos=b,%
+tabsize=3,%
+frame=lines,%
+numbers=left,%
+numberstyle=\tiny,%
+numbersep=5pt,%
+breaklines=true,% 
+escapeinside={@}{@},%
+%basicstyle=\footnotesize,%
+morekeywords={output,input,return},
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\graphicspath{{./graf/}}
+\newcommand{\graf}{./graf}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\newtheorem{definition}{Definicja}
+
+\title{\sffamily\bfseries \ksremark{tytuł}}
+%\author{Krzysztof Siminski\\Silesian University of Technology, Gliwice, Poland\\\url{krzysztof.siminski@polsl.pl}\\orcid: \orcid}
+
+
+\frenchspacing
+\begin{document}
+\kslistofremarks
+\maketitle
+
+\begin{abstract}
+
+   {\textbf{Keywords:} }
+\end{abstract}
+
+ 
+ 
+
+\bibliographystyle{plain} 
+\bibliography{./bibliografia/bibliografia}
+
+\end{document}
+
+
+
+
+
