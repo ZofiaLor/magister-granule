@@ -232,11 +232,356 @@ morekeywords={output,input,return},
 
 \section{Introduction}
 
+Clustering is a very common technique of the unsupervised data analysis. 
+It has been widely used in many applications.
+Many techniques and algorithms have been proposed, implemented, and used. 
+
+The idea of data clustering is the partition of data into groups.
+Items in the same group are more similar to each other than to those in other groups. 
+The similarity is usually defined by a distance function.
+Commonly the Euclidean distance is used, but other distance functions can be applied as well. 
+
+Multiple clustering techniques have been proposed in the literature.
+One of them is the hierarchical clustering.
+In the ascending hierarchical clustering, each data item is initially assigned to a separate cluster. 
+Then, the closest clusters are merged into one cluster.
+This technique is not complicated, however it has a high time complexity, which is in general $O(n^3)$, where $n$ is the number of data items.
+This may be a bottleneck in enormous data sets. 
+
+This problem can be addressed with granular computing. 
+Granular computing (GrC) is a paradigm of data analysis with informative granules. 
+The data are gathered in granules and the granules are an input of further algorithms. 
+The representation of granules heavily depends on the application. 
+Commonly set, fuzzy sets, rough sets, intervals and many other are used for granules. 
+
+Unfortunately, the mathematical representation of granules is not straightfoward for mathematical operations. 
+Commonly, Zadeh's extension principle is used to elaborate the results. 
+It causes three main problems \cite{id:Siminski2026Arithmetic}:
 \begin{itemize}
-   \item Clustering algorithms
-   \item High time complexity (hierarchical algorithm)
-   \item Article sections
+   \item for some fuzzy sets, interative numerical procedures are needed, the operations cannot be presented with closed-form formulae;
+   \item for some fuzzy sets and operations, the fuzzy set in the result of an operation does not preserve the properties of the operands (the set of fuzzy numbers with operations is not complete);
+   \item multiple arithmetical operations causes spread of fuzziness, the more operations run, the more fuzzy result, even beyond reasonable interpretability.
 \end{itemize}
+
+In this paper, we would like to address these two problems.
+We would like to use granular approach to accelerate hierarchical clustering algorithms with extensional fuzzy numbers.
+
+
+
+\section{Related works}
+
+\subsection{Hierarchical clustering algorithms}
+
+Clustering is a well known technique for unsupervised data analysis.
+It aims at elaboration of a partition of data item in such a way that items in one cluster are more similar to items in the same cluster than to items in other clusters \cite{id:fcm-for-optimizing,id:clustering-alg-survey}.
+
+Multiple paradigms are used for clustering algorithms \cite{id:clustering-alg-survey}, eg.:
+\begin{itemize}
+   \item Hierarchical approach based on either merging small clusters into larger ones (ascending approach) or splitting larger clusters into smaller ones (descending approach) \cite{id:clustering-alg-survey}, eg. single-linkage \cite{id:Florek1951Sur,id:Sneath1957Application}, SLINK \cite{id:Sibson1973SLINK}, complete-linkage \ksremark{cytowanie}, gravitational clustering \ksremark{cytowanie};
+   \item Criterion function approach based on minimalisation of a certain criterion is represented by a huge FCM \cite{id:Bezdek1973clustervaliditywith}, family, eg. 
+      FCOM \cite{id:Leski2016FuzzyC},
+      FuBi \cite{id:Siminski2022FuBiNFS},
+      Rough FCM \cite{id:Siminski2014Rough,id:Siminski2013Clustering},
+      Subspace FCM \cite{id:Siminski2014Neuro} etc.
+   \item Density approach locates clusters in the most dense regions of the input domain, eg. DBSCAN \cite{id:dbscan-algorithm,id:Suchy2023GrDBSCAN}, OPTICS \cite{id:optics-algorithm}.
+   \item Graph approach treats data items as graph vertices and similarities as graph edges \ksremark{cytowania} 
+\end{itemize}
+
+% hierarchical clustering algorithms 
+
+Hierarchical clustering algorithms are based on the idea of merging or splitting clusters in a hierarchical way. 
+The ascending hierarchical clustering algorithm starts with each data item in a separate cluster. 
+Then, the closest clusters are merged into one cluster.
+This process is repeated until all data items are in one cluster. 
+Clustering can be visualized with a dendrogram (Fig. \ref{id:fig:dendrogram}), which is a tree-like diagram that shows the hierarchical relationships between clusters. 
+The height of the branches in the dendrogram represents the distance between clusters. 
+A cut-off line can be drawn to determine the number of clusters.
+% --------------------------------------------------
+\begin{figure}
+   \centering 
+   \includegraphics[width=1.0\textwidth]{\graf/dendrogram.pdf}
+   \caption{Example of a dendrogram for hierarchical clustering of five objects with a cut-off line at distance 50.}
+   \label{id:fig:dendrogram}
+\end{figure}
+% --------------------------------------------------
+The distance between clusters can be defined in different ways, such as single-linkage, complete-linkage, average-linkage, or Ward's method.
+This choice affects the shape and size of the resulting clusters (Fig. \ref{id:fig:linkage}). 
+In the single-linkage approach \cite{id:Florek1951Sur,id:Sneath1957Application}, the distance $\Distance$ between two clusters is defined as the minimum distance between any pair of points in the two clusters $\zA$ and $\zB$:
+\begin{align}
+   \Odleglosc \left(\zA, \zB\right) = \min_{\wA \in \zA, \wB \in \zB}\Odleglosc\left(\wA, \wB\right).
+\end{align}
+For complete-linkage \cite{id:Sorensen1948Method,id:McQuitty1957Elementary,id:Defays1977Efficient}, the distance between two clusters is defined as the maximum distance between any pair of points in the two clusters:
+\begin{align}
+   \Odleglosc \left(\zA, \zB\right) = \max_{\wA \in \zA, \wB \in \zB}\Odleglosc\left(\wA, \wB\right).
+\end{align}
+In the complete-linkage approach when the distance between all data items do not exist, the dendrogram is not connected and has several not connected components.
+
+Some more strategies are also used for defining the distance between clusters, such as WPGMA (Weighted Pair Group Method with Arithmetic Mean) \cite{id:Sokal1958Statistical}, UPGMA (Unweighted Pair Group Method with Arithmetic Mean) \cite{id:Sokal1958Statistical}, or the Ward's method \cite{id:Ward1963Hierarchical}.
+
+\begin{figure}
+   \centering 
+   \includegraphics[width=1.0\textwidth]{\graf/linkage-example.pdf}
+   \caption{Example of single-linkage and complete-linkage methods for two clusters.}
+   \label{id:fig:linkage}
+\end{figure}
+
+This approach has a high time complexity.
+It is necessary to compute the distance between all pairs of clusters in each iteration, which results overall time complexity of $O(n^3)$. 
+There are known implementations of single-linkage SLINK \cite{id:Sibson1973SLINK} and complete-linkage CLINK \cite{id:Defays1977Efficient} algorithms with time complexity of $O(n^2)$.
+However, there are some limitations of these algorithms, eg. SLINK cannot handle a case when more pairs of clusters have the same minimal distance.
+In contrast, the FCM algorithm has a time complexity of $O(n)$, which is significantly lower.
+
+\subsection{Granular computing}
+\ksremark{todo}
+
+\subsubsection{Extensional fuzzy numbers}
+\newcommand{\efn}{extensional fuzzy number}
+\newcommand{\Efn}{Extensional fuzzy number} 
+
+\Efn\ is a number constructed with a extension of crisp numbers with a fuzzy $\tnorm$-similarity
+relation deﬁned for a left continuous t-norm $\tnorm$ \cite{id:Siminski2026Arithmetic}.
+This is an alternative to the Zadeh's extension principle \cite{id:Zadeh1965FuzzySets} way for constructing fuzzy numbers. 
+It has some advantages such as \cite{id:Siminski2026Arithmetic}: 
+\begin{itemize}
+   \item \Efn s are complete with respect to the arithmetic operations: the result of an operation on \efn s is a \efn.
+   \item The infinite support of a fuzzy number is allowed.
+   \item There is no spread of fuzziness: interative operations on \efn s do not increase the vagueness of the result. 
+   \item The computational overload of extensional fuzzy numbers is very low: no discretisation, no integration, no iterations are needed.
+   \item Infinite number of types of \efn s can be easily constructed with various fuzzy $\tnorm$-similarity relations.
+\end{itemize}
+
+\ksremark{Rysunki z przykładami \efn s, ich własnościami, operacjami arytmetycznymi.} 
+\ksremark{Trochę o artymetyce \efn s.}
+
+% --------------------------------------------------
+\clearpage 
+
+
+Często wybierana euklidesowa metryka odległości \cite{id:hierarchical-overview} zdefiniowana jest jako
+\begin{align}
+	\Odleglosc_e \left(\wX_{i}, \wX_{j}\right) = \sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\X_{i\Atrybut} - \X_{j\Atrybut})^{2}},
+	\label{eq:odleglosc:euklidesowa}
+\end{align}
+gdzie $\nAtrybut$ to liczba atrybutów punktu danych $\wX$,
+a $\X_{i\Atrybut}$ oznacza $\Atrybut$-ty atrybut $i$-tego punktu.
+%
+Metryka ta jest uszczegółowieniem metryki Minkowskiego
+\begin{align}
+\Odleglosc_m \left(\wX_{i}, \wX_{j}\right) = \left(\sum_{\Atrybut=0}^{\nAtrybut}|\X_{i\Atrybut} - \X_{j\Atrybut}|^{p}\right)^{1/p},
+\label{eq:odleglosc:minkowskiego}
+\end{align}
+dla $p=2$. Inną popularną metryką jest odległość Manhattan, również należąca do rodziny metryk Minkowskiego, dla $p=1$.
+
+Łączność określa, jak na podstawie odległości pomiędzy poszczególnymi punktami należącymi do klastrów wyznaczyć odległość pomiędzy tymi klastrami.
+%
+Do łączności zaimplementowanych w popularnych bibliotekach należą {single linkage} (najbliższe sąsiedztwo), {complete linkage} (najdalsze sąsiedztwo), {average linkage} (średnie sąsiedztwo) oraz metoda Warda (minimalna wariancja) \cite{id:ward-linkage}.
+%
+Implementacje aglometacyjnego algorytmu hierarchicznego przedstawione są w \cite{id:hierarchical-algorithms} Wykorzystywane one są przez bibliotekę {SciPy} języka Python \cite{id:scipy-linkage}.
+
+%przepisać, przekopiować pseudokody?
+Algorytm naiwny (\PrimitiveClustering{}) może być wykorzystany dla każdej łączności, jednak jego wadą jest złożoność czasowa wynosząca $O(n^{3})$.
+Jego parametrami wejściowymi są lista etykiet danych oraz macierz podobieństwa między danymi. W algorytmie naiwnym, iteracyjnie wykonywane są trzy kroki:
+\begin{enumerate}
+	\item Znalezienie w macierzy podobieństwa minimalnej wartości -- znalezienie najbliższej sobie pary klastrów,
+	\item Scalenie odnalezionych klastrów,
+	\item Aktualizacja wartości podobieństw w macierzy według wybranej łączności.
+\end{enumerate}
+Pseudokod działania algorytmu przedstawia alg. \ref{alg:primitive_clustering}.
+
+\begin{algorithm}[t]
+	\caption{Naiwny algorytm aglomeracyjnego grupowania hierarchicznego \PrimitiveClustering{} \cite{id:hierarchical-algorithms}}
+	\label{alg:primitive_clustering}
+	\begin{algorithmic}[1]
+		\Require $\wEtykieta$: etykiety elementów
+		\Require $\mDistance$: macierz podobieństwa między każdą parą elementów
+		\Procedure{PrimitiveClustering}{$S, \mDistance$}
+		\State $N \gets $ liczba elementów
+		\State $L \gets [] $ \Comment{Lista wynikowa zawierająca trójki: para klastrów łączonych w danej iteracji i odległość między nimi}
+		\State $rozmiar \gets []$ \Comment{rozmiar klastrów o danych indeksach}
+		\For{$x$ in $\wEtykieta$}
+		\State $rozmiar[x] \gets 1$ \Comment{na początku wszystkie klastry są jednoelementowe}
+		\EndFor
+		\For{$i = 0$ to $N-2$}
+		\State $(a,b) \gets \arg\min_{(\wEtykieta \times \wEtykieta) \setminus \Delta}\mDistance$ \Comment{Operacja $\arg\min$ na macierzy $\mDistance$, uwzględniająca elementy ze zbioru $\wEtykieta$ z wyłączeniem przekątnej głównej}
+		\State $\wEtykieta \gets \wEtykieta \setminus \{a, b\}$  \Comment{Klastry $a$ i $b$ usuwane są ze zbioru rozpatrywanych etykiet}
+		\State nowy element $n \notin \wEtykieta$  \Comment{Do zbioru etykiet dodawany jest nowy element, odpowiadający klastrowi powstałemu po złączeniu $a$ i $b$}
+		\For{$x$ in $S$}
+		\State $\mDistance[n, x] \gets \mDistance[x, n] \gets $ \Call{UpdateFormula}{...} \Comment{wzór dla odpowiedniej łączności, np. alg. \ref{alg:single_linkage}, alg. \ref{alg:complete_linkage}}
+		\EndFor
+		\State $rozmiar[n] \gets rozmiar[a] + rozmiar[b]$
+		\State $S \gets S \cup n$
+		\EndFor
+		\State \Return $L$  \Comment{Zwracana lista zawiera zapis kolejnych scalań klastrów. }
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Algorytm ogólny \texttt{GENERAL\_LINKAGE()} zawiera dodatkową optymalizację w stosunku do algorytmu naiwnego: wykorzystywana jest kolejka priorytetowa zawierająca kandydatów na najbliższych sąsiadów klastrów, co pozwala ograniczyć czas poszukiwania minimum macierzy w kroku 1. Optymistyczna złożoność czasowa tego algorytmu wynosi $\Omega(n^{2})$, pesymistyczna -- nadal $O(n^{3})$.
+
+\subsection{Single Linkage}
+
+W algorytmie \SingleLinkage{} \cite{id:hierarchical-clustering} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
+Oznacza to, że w momencie złączenia klastrów $A_{1}$ i $A_{2}$ w jeden klaster $A$, odległość tego klastra do innego klastra $B$ zdefiniowana jest jako:
+\begin{align}
+\Odleglosc \left(A, B\right) = \min(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
+\end{align}
+
+Wzór ten można przedstawić również w postaci pseudokodu \ref{alg:single_linkage}, którym uzupełnić można algorytm \ref{alg:primitive_clustering}.
+
+\begin{algorithm}[t]
+	\caption{Funkcja aktualizacji odległości między klastrami dla łączności \SingleLinkage{}}
+	\label{alg:single_linkage}
+	\begin{algorithmic}[1]
+		\Require $d_{a, x}, d_{b, x}$: wartości odległości między klastrem $x$ a łączonymi w jeden klastrami $a$ i $b$
+		\Procedure{UpdateFormula}{$d_{a, x}, d_{b, x}$}
+		\State \Return $\min(d_{a, x}, d_{b, x})$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+%
+Przykład takiego przypisania ilustruje rys. \ref{fig:single-linkage-example}. Odległość klastra $B$ od klastra $A_{1}$ jest znana i wynosi $\Odleglosc(A_{1}, B)$, czyli jest ona najmniejszą odległością między dowolnymi dwoma elementami klastrów $B$ i $A_{1}$. Odległość klastra $B$ od klastra $A_{2}$ również jest znana i wynosi $\Odleglosc(A_{2}, B)$. Klastry $A_{1}$ i $A_{2}$ scalane są w jeden klaster $A$, należy więc obliczyć odległość nowopowstałego klastra od pozostałych. Zamiast porównywać wszystkie możliwe kombinacje elementów klastrów $A$ i $B$, wystarczy znaleźć minimum z dwóch wartości: $\Odleglosc(A_{1}, B)$ i $\Odleglosc(A_{2}, B)$. W tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$, czyli $\Odleglosc(A, B) = \Odleglosc(A_{2}, B)$
+
+%rysunek?
+\begin{figure}
+\centering
+%\includegraphics[width=\textwidth]{./img/single_linkage_example.pdf}
+\caption{Ilustracja działania algorytmu \SingleLinkage{}. Odległość klastra $B$ od klastrów $A_{1}$ i $A_{2}$ jest znana. Po złączeniu $A_{1}$ i $A_{2}$ w klaster $A$, nowa odległość od klastra $B$ jest równa minimalnej z poprzednich dwóch -- w tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$.}
+\label{fig:single-linkage-example}
+\end{figure}
+
+Algorytm ten jest wrażliwy na dane odstające, szumy. Pojedynczy punkt znajdujący się w dużej odległości od reszty danych zostanie uznany za osobny klaster. Dodatkowym efektem tego błędnego przypisania będzie złączenie dwóch innych klastrów.
+
+Zachowanie to ilustruje rys. \ref{fig:single-linkage-noise-example}. Gdy dane nie zawierają znacznie odstających danych, algorytm wyznacza dwa klastry zgodnie z oczekiwaniami. Po dodaniu do nich pojedynczej danej o współrzędnej (10, 10), czyli w dużej odległości od reszty danych, dana ta klasyfikowana jest jako osobny klaster.
+
+\begin{figure}
+\centering
+%\includegraphics[width=\textwidth]{./img/single_linkage_noise_example.pdf}
+\caption{Ilustracja wpływu danych odstających na działanie algorytmu \SingleLinkage{}.}
+\label{fig:single-linkage-noise-example}
+\end{figure}
+
+Algorytm działa dobrze, gdy klastry są wyraźnie oddzielone od siebie. Jeżeli będą zbyt blisko siebie, możliwe jest, że zostaną połączone, jak pokazuje przykład na rys. \ref{fig:single-linkage-close-clusters-example}.
+
+\begin{figure}
+\centering
+%\includegraphics[width=\textwidth]{./img/single_linkage_close_clusters_example.pdf}
+\caption{Ilustracja działania algorytmu \SingleLinkage{}, gdy klastry są zbyt zbliżone.}
+\label{fig:single-linkage-close-clusters-example}
+\end{figure}
+
+Dla \SingleLinkage{} wykorzystać można szybsze, dedykowane algorytmy, na przykład algorytm minimalnego drzewa rozpinającego (\texttt{MST\_LINKAGE()}) o złożoności $O(n^2)$ \cite{id:hierarchical-algorithms}.
+
+\subsection{Complete Linkage}
+\label{sec:complete-linkage}
+
+Algorytm \CompleteLinkage{} jest odwrotnością \SingleLinkage{}: odległość między klastrami jest równa maksymalnej odległości między dwoma punktami należącymi do tych klastrów. W momencie złączenia dwóch klastrów w jeden, jego odległość od pozostałych klastrów określa się więc jako:
+\begin{align}
+\Odleglosc \left(A, B\right) = \max(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
+\end{align}
+
+Wzór również można przedstawić jako pseudokod \ref{alg:complete_linkage}, uzupełniający algorytm \ref{alg:primitive_clustering}.
+
+\begin{algorithm}[t]
+	\caption{Funkcja aktualizacji odległości między klastrami dla łączności \CompleteLinkage{}}
+	\label{alg:complete_linkage}
+	\begin{algorithmic}[1]
+		\Require $d_{a, x}, d_{b, x}$: wartości odległości między klastrem $x$ a łączonymi w jeden klastrami $a$ i $b$
+		\Procedure{UpdateFormula}{$d_{a, x}, d_{b, x}$}
+		\State \Return $\max(d_{a, x}, d_{b, x})$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+%
+Algorytm dobrze działa dla kulistych, gęstych klastrów. Pokazuje to rys. \ref{fig:complete-linkage-close-clusters-example}, gdzie algorytm \CompleteLinkage{} wywołano dla tych samych danych, co \SingleLinkage{} na rys. \ref{fig:single-linkage-close-clusters-example}. W przeciwieństwie do niego, \CompleteLinkage{} odnajduje oczekiwane klastry niemal idealnie.
+
+\begin{figure}
+\centering
+%\includegraphics[width=\textwidth]{./img/complete_linkage_close_clusters_example.pdf}
+\caption{Ilustracja działania algorytmu \CompleteLinkage{}, dla zbliżonych, gęstych klastrów.}
+\label{fig:complete-linkage-close-clusters-example}
+\end{figure}
+
+W porównaniu z \SingleLinkage{}, algorytm \CompleteLinkage{} zwraca jednak gorsze wyniki dla danych o innych kształtach \cite{id:hierarchical-clustering, id:sklearn-linkage-comparison}. Ilustruje to przykład na rys. \ref{fig:complete-linkage-non-globular-example}. W przykładzie oczekiwane jest, że każdy z dwóch wyraźnie oddzielonych od siebie okręgów zaklasyfikowany zostanie jako osobny klaster. Algorytm \CompleteLinkage{} nie wyznacza tych klastrów -- granica między klastrami wydaje się być wyznaczona bez względu na faktyczny kształt danych.
+
+\begin{figure}
+\centering
+%\includegraphics[width=\textwidth]{./img/complete_linkage_non_globular_example.pdf}
+\caption{Ilustracja działania algorytmu \CompleteLinkage{}, dla klastrów w kształcie dwóch okręgów.}
+\label{fig:complete-linkage-non-globular-example}
+\end{figure}
+
+\section{Algorytm rozmytych $c$ średnich}
+\label{sec:fcm}
+
+Algorytm rozmytych $c$ średnich (ang. {fuzzy $c$-means}, FCM) należy do rodziny algorytmów opartych na minimalizacji funkcji kryterialnej. Algorytm wyznacza klastry, dla których przynależność każdego punktu danych jest liczbą z przedziału $\left[ 0,1 \right]$. Wynikiem klasteryzacji FCM jest macierz środków klastrów $\mCentre$ oraz macierz przynależności $\mClusterMembership$. Złożoność czasowa ze względu na liczbę danych tego algorytmu wynosi $O(n)$ \cite{id:fcm-kmeans-comparison}.
+
+Funkcja kryterialna algorytmu fuzzy c-means ma postać:
+\begin{align}
+	J(\mCentre, \mClusterMembership) = \sum_{\Iteracja=1}^{N} \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster}^{m} ||\wX_{\Iteracja} - \wCentre_{\klaster}||^{m},
+\end{align}
+%\sum_{\size=1}^{\nSize}  \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\size\klaster}^{m}
+%nie działa z \nSize ani \nLen
+gdzie $\wX_{\Iteracja}$ -- współrzędne $\Iteracja$-tego punktu danych, $\wCentre_{\klaster}$ -- współrzędne środka $\klaster$-tego klastra danych, $\ClusterMembership_{\Iteracja\klaster} \in \left[ 0,1 \right]$ -- wartość przynależności $\Iteracja$-tego punktu do $\klaster$-tego klastra. Parametr $m \in \left( 1,+\infty \right]$ jest współczynnikiem rozmycia algorytmu, najczęściej wykorzystuje się wartość 2 \cite{id:implementation-of-fcm-pcm-algs,id:scikit-fuzzy-cmeans-docs-fcm}.
+
+Dla każdego punktu, suma jego wartości przynależności do wszystkich klastrów wynosi 1:
+
+\begin{align}
+	\label{eq:cluster_mem_condition}
+	\forall \Iteracja \in [1, N] \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster} = 1
+\end{align}
+
+Pseudokod algorytmu rozmytych $c$-średnich przedstawia alg. \ref{alg:fcm}.
+
+W każdej iteracji algorytmu obliczane są najpierw nowe współrzędne środków klastrów:
+\begin{align}
+	\label{eq:center_update}
+	\wCentre_{\klaster} = \frac{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m} \wX_{\Iteracja}}{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m}},
+\end{align}
+a następnie wartości elementów macierzy przynależności:
+\begin{align}
+	\label{eq:membership_update}
+	\ClusterMembership_{\Iteracja\klaster} = \frac{1}{\sum_{j=1}^{\nKlaster}\left( \frac{||\wX_{\Iteracja} - \wCentre_{\klaster}||}{||\wX_{\Iteracja} - \wCentre_{j}||} \right)^{\frac{2}{m - 1}}}.
+\end{align}
+Kroki powtarzane są do momentu spełnienia warunku zatrzymania, na przykład:
+\begin{align}
+	\label{eq:fcm_stop_contidion}
+	||\mClusterMembership^{(t)} - \mClusterMembership^{(t-1)}|| < \epsilon,
+\end{align}
+%
+gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warunkiem zatrzymania może też być z góry określona maksymalna liczba iteracji \cite{id:scikit-fuzzy-cmeans-docs-fcm, id:skfuzzy-docs-fcm}.
+
+\begin{algorithm}[t]
+	\caption{Algorytm rozmytych $c$ średnich}
+	\label{alg:fcm}
+	\begin{algorithmic}[1]
+		\Require $\zX$: dane do klasteryzacji
+		\Require $\nKlaster$: liczba klastrów docelowych
+		\Require $m$: współczynnik rozmycia
+		\Require $\nIteracja$: maksymalna liczba iteracji
+		\Require $\varepsilon$: tolerancja
+		\Procedure{FuzzyCMeans}{$\zX, \nKlaster, m, \nIteracja, \varepsilon$}
+		\State $\nX \gets $ liczba próbek
+		\State $\nAtrybut \gets $ liczba atrybutów \Comment{$\nX$ i $\nAtrybut$: wymiary $\zX$}
+		\State $\wCentre \gets $ losowe wartości początkowe środków klastrów
+		\State $\mClusterMembership \gets $ losowe wartości początkowe przynależności punktów do klastrów, spełniające warunek ze wzoru \ref{eq:cluster_mem_condition}
+		\State $i\gets 1$
+		\State koniec $\gets$ false
+		\While{$i < \nIteracja$ $\land$ $\lnot$ koniec}
+		\State aktualizacja wartości $\wCentre$ na podstawie wzoru \eqref{eq:center_update}
+		\State aktualizacja wartości $\mClusterMembership$ na podstawie wzoru \eqref{eq:membership_update}
+		\If{spełniony warunek \ref{eq:fcm_stop_contidion}}
+		\State  koniec $\gets$ true
+		\EndIf
+		\EndWhile
+		\State \Return $\wCentre, \mClusterMembership$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Algorytm rozmytych $c$-średnich stanowi podstawę dla wielu innych algorytmów. Należą do nich między innymi algorytm {possibilistic $c$-means} (PCM) \cite{id:pcm-algorithm}, w którym warunek \eqref{eq:cluster_mem_condition} nie musi być spełniony, oraz {fuzzy $c$-ordered-means} (FCOM) \cite{id:fcom-algorithm}, gdzie dane sortowane są według odległości od środków klastrów.
+\subsection{Granular computing}
+\subsection{Extensional fuzzy numbers}
  
  \section{Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego}
  \label{sec:wlasne-rozwiazanie}
@@ -426,7 +771,7 @@ morekeywords={output,input,return},
  Dane te nie posiadają etykiet. W sposób opisany w sekcji na stronie \pageref{sec:etykietowanie-danych} każdemu punktowi przypisano etykietę w postaci liczby całkowitej $[0, \nKlaster-1]$ i zapisano w folderze \url{dane_labelled} w analogicznym formacie.
  
  % czy 2011 to dobra data dla tych stron?
- Wykorzystano również zbiory danych \brightkite\ \cite{bib:brightkite} (\num{4491143} wierszy) oraz \gowalla\ \cite{bib:gowalla} (\num{6442890} wierszy).
+ Wykorzystano również zbiory danych \brightkite\ \cite{id:brightkite} (\num{4491143} wierszy) oraz \gowalla\ \cite{id:gowalla} (\num{6442890} wierszy).
  Dane przedstawiają informacje o logowaniach się użytkowników platform społecznościowych.
  Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' -- dwuwymiarowe współrzędne lokalizacji logowań. Dane nie są etykietowane i nie mają przypisanych klas. 
  %
@@ -436,7 +781,7 @@ morekeywords={output,input,return},
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/data_shapes.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/data_shapes.pdf}
  	\caption{Wykresy danych o różnych kształtach z folderu \texttt{dane} o rozmiarze 1000 punktów.}
  	\label{fig:data-shapes}
  \end{figure}
@@ -457,7 +802,7 @@ morekeywords={output,input,return},
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/gowalla_brightkite_shapes.png}
+ 	%\includegraphics[width=\textwidth]{\graf/gowalla_brightkite_shapes.png}
  	\caption{Wykresy danych \brightkite i \gowalla.}
  	\label{fig:gowalla-brightkite-shapes}
  \end{figure}
@@ -471,7 +816,7 @@ morekeywords={output,input,return},
  Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od liczby danych, przygotowano dane o rozmiarach 500-\num{10000} z krokiem 500.
  W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze \num{10000}. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
  
- Przyjęto też stałą maksymalną liczbę 80 iteracji algorytmu rozmytych $c$-średnich. Sekcja \ref{sec:wyniki-jakosc} pokazuje, że jest to wystarczająca wartość. Złożoność algorytmu jest liniowa w zależności od liczby iteracji \cite{bib:fcm-kmeans-comparison}. Algorytm wykonano też dla różnych liczności granul: 50, 100 oraz 200.
+ Przyjęto też stałą maksymalną liczbę 80 iteracji algorytmu rozmytych $c$-średnich. Sekcja \ref{sec:wyniki-jakosc} pokazuje, że jest to wystarczająca wartość. Złożoność algorytmu jest liniowa w zależności od liczby iteracji \cite{id:fcm-kmeans-comparison}. Algorytm wykonano też dla różnych liczności granul: 50, 100 oraz 200.
  
  Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystany został algorytm \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} (łączność \SingleLinkage{}) oraz własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej. Pozwoliło to na lepszy pogląd na wpływ granulacji na szybkość, jako że sama logika grupowania we własnej implementacji pozostała ta sama, co w algorytmie rozmytym. Algorytm biblioteczny ma z kolei najniższą złożoność czasową dla łączności \SingleLinkage{} (wykorzystuje algorytm minimalnego drzewa rozpinającego), można więc porównać czas wykonania \MojAlg{} z najlepszym możliwym czasem grupowania tych samych danych algorytmem ostrym. Do tego porównania wykorzystano oryginalne dane wejściowe, we wszystkich rozmiarach (1000-\num{50000}).
  W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu rozmytych $c$-średnich, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
@@ -497,7 +842,7 @@ morekeywords={output,input,return},
  
  \subparagraph{Dane dwuwymiarowe}
  
- Oznaczanie etykiet dla danych dwuwymiarowych wykorzystuje widżet \texttt{LassoSelector} biblioteki \texttt{matplotlib}. Dla każdego pliku z danymi dwuwymiarowymi, wyświetlono wykres połączony z obiektem klasy \texttt{SelectFromCollection} z przykładu \cite{bib:mplt-lasso}. Klasa ta między innymi umożliwia wyznaczenie indeksów i współrzędnych punktów zaznaczonych myszą na wykresie. 
+ Oznaczanie etykiet dla danych dwuwymiarowych wykorzystuje widżet \texttt{LassoSelector} biblioteki \texttt{matplotlib}. Dla każdego pliku z danymi dwuwymiarowymi, wyświetlono wykres połączony z obiektem klasy \texttt{SelectFromCollection} z przykładu \cite{id:mplt-lasso}. Klasa ta między innymi umożliwia wyznaczenie indeksów i współrzędnych punktów zaznaczonych myszą na wykresie. 
  
  Każdemu punktowi domyślnie przypisano etykietę 0. Po zaznaczeniu zbioru punktów na wykresie naciśnięcie klawisza cyfry na klawiaturze powoduje przypisanie tym punktom etykiety o danym numerze i wyświetlenie w konsoli informacji, ilu punktom ją przypisano. Proces można powtarzać dowolną liczbę razy, można go zakończyć poprzez naciśnięcie klawisza ENTER i zamknięcie wykresu.
  
@@ -516,14 +861,14 @@ morekeywords={output,input,return},
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/data_shapes_labels.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/data_shapes_labels.pdf}
  	\caption{Wykresy danych o różnych kształtach z folderu \texttt{dane\_labelled} o rozmiarze 1000 punktów, o etykietach oznaczonych kolorami.}
  	\label{fig:data-shapes-labels}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/laguna20000_labelled.png}
+ 	%\includegraphics[width=\textwidth]{\graf/laguna20000_labelled.png}
  	\caption{Wykres danych \laguna{} z folderu \texttt{dane\_labelled} o rozmiarze \num{20000} punktów, o etykietach oznaczonych kolorami.}
  	\label{fig:laguna20000-labels}
  \end{figure}
@@ -621,17 +966,17 @@ morekeywords={output,input,return},
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.32\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/shape_dep_t.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/shape_dep_t.pdf}
  		\caption{Liczby trójkątne}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.32\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/shape_dep_e.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/shape_dep_e.pdf}
  		\caption{Liczby wykładnicze}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.32\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/shape_dep_g.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/shape_dep_g.pdf}
  		\caption{Liczby gaussowskie}
  	\end{subfigure}
  	\caption{Przynależność punktów do granul w zależności od kształtu liczb rozmytych. 10 środków granul oznaczono kolorem czerwonym, punkty należące do różnych granul oznaczone są różnymi kolorami. Kolorem szarym oznaczono punkty stanowiące szum.}
@@ -768,7 +1113,7 @@ morekeywords={output,input,return},
  
  \begin{figure}
  	\centering
- 	\includegraphics{\graf/comparing_times.pdf}
+ 	%\includegraphics{\graf/comparing_times.pdf}
  	\caption{Charakterystyka czasu wykonania własnych implementacji algorytmów ostrego i rozmytego dla różnej liczby granul od liczby danych wejściowych.}
  	\label{fig:comparing-times}
  \end{figure}
@@ -781,7 +1126,7 @@ morekeywords={output,input,return},
  
  \begin{figure}
  	\centering
- 	\includegraphics{\graf/comparing_times_sklearn.pdf}
+ 	%\includegraphics{\graf/comparing_times_sklearn.pdf}
  	\caption{Charakterystyka czasu wykonania algorytmu ostrego \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} i własnej implementacji algorytmu rozmytego dla różnej liczby granul od liczby danych wejściowych.}
  	\label{fig:comparing-times-sklearn}
  \end{figure}
@@ -792,7 +1137,7 @@ morekeywords={output,input,return},
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/gowalla_times.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/gowalla_times.pdf}
  	\caption{Charakterystyka czasu wykonania algorytmu rozmytego dla różnej liczby granul od liczby danych wejściowych dla dużych danych.}
  	\label{fig:gowalla-times}
  \end{figure}
@@ -1082,56 +1427,56 @@ morekeywords={output,input,return},
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/blobs1000e_s.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/blobs1000e_s.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \blobs\  o~rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:blobs1000e}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/circles50000e_s.png}
+ 	%\includegraphics[width=\textwidth]{\graf/circles50000e_s.png}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze \num{50000} i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:circles50000e}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/corners1000g_s.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/corners1000g_s.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \corners\  o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:corners1000g}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/crescents5000e_s.png}
+ 	%\includegraphics[width=\textwidth]{\graf/crescents5000e_s.png}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 5000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:crescents5000e}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/laguna1000e_s.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/laguna1000e_s.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:laguna1000e}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/laguna1000_blue.png}
+ 	%\includegraphics[width=\textwidth]{\graf/laguna1000_blue.png}
  	\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze 1000.}
  	\label{fig:laguna1000-blue}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/laguna40000_blue.png}
+ 	%\includegraphics[width=\textwidth]{\graf/laguna40000_blue.png}
  	\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze \num{40000}.}
  	\label{fig:laguna40000-blue}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/spheres5000g_s.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/spheres5000g_s.pdf}
  	\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 5000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:spheres5000g}
  \end{figure}
@@ -1147,42 +1492,42 @@ morekeywords={output,input,return},
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/blobs1000t_c.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/blobs1000t_c.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \blobs\  o~rozmiarze 1000 i trójkątnej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:blobs1000tc}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/circles1000g_c.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/circles1000g_c.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:circles1000gc}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/corners1000e_c.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/corners1000e_c.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \corners\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:corners1000ec}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/crescents1000t_c.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/crescents1000t_c.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 1000 i trójkątnej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:crescents1000tc}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/laguna1000g_c.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/laguna1000g_c.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:laguna1000gc}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/spheres1000e_c.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/spheres1000e_c.pdf}
  	\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 5000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:spheres1000ec}
  \end{figure}
@@ -1276,7 +1621,7 @@ morekeywords={output,input,return},
  
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/blobs1000_blue.png}
+ 	%\includegraphics[width=\textwidth]{\graf/blobs1000_blue.png}
  	\caption{Przynależność punktów do klastrów dla danych \blobs{} o rozmiarze 1000.}
  	\label{fig:blobs1000-blue}
  \end{figure}
@@ -1473,13 +1818,13 @@ morekeywords={output,input,return},
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.48\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/xi_acc_sl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/xi_acc_sl.pdf}
  		\caption{\SingleLinkage}
  		\label{fig:xi-acc-sl}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.48\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/xi_acc_cl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/xi_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  		\label{fig:xi-acc-cl}
  	\end{subfigure}
@@ -1528,12 +1873,12 @@ morekeywords={output,input,return},
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/blobs_complex_acc_sl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/blobs_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/blobs_complex_acc_cl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/blobs_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -1552,12 +1897,12 @@ morekeywords={output,input,return},
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/circles_complex_acc_sl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/circles_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/circles_complex_acc_cl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/circles_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -1574,12 +1919,12 @@ morekeywords={output,input,return},
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/corners_complex_acc_sl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/corners_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/corners_complex_acc_cl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/corners_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -1594,12 +1939,12 @@ morekeywords={output,input,return},
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/crescents_complex_acc_sl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/crescents_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/crescents_complex_acc_cl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/crescents_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -1616,12 +1961,12 @@ morekeywords={output,input,return},
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/laguna_complex_acc_sl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/laguna_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/laguna_complex_acc_cl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/laguna_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -1640,12 +1985,12 @@ morekeywords={output,input,return},
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/spheres_complex_acc_sl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/spheres_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/spheres_complex_acc_cl.pdf}
+ 		%\includegraphics[width=\textwidth]{\graf/spheres_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -1673,12 +2018,12 @@ morekeywords={output,input,return},
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/brightkite_500000_strict.png}
+ 		%\includegraphics[width=\textwidth]{\graf/brightkite_500000_strict.png}
  		\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/brightkite_full_100.png}
+ 		%\includegraphics[width=\textwidth]{\graf/brightkite_full_100.png}
  		\caption{Grupowanie algorytmem \MojAlg{} całości danych}
  	\end{subfigure}
  	
@@ -1689,12 +2034,12 @@ morekeywords={output,input,return},
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/gowalla_500000_strict.png}
+ 		%\includegraphics[width=\textwidth]{\graf/gowalla_500000_strict.png}
  		\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		\includegraphics[width=\textwidth]{\graf/gowalla_full_100.png}
+ 		%\includegraphics[width=\textwidth]{\graf/gowalla_full_100.png}
  		\caption{Grupowanie algorytmem \MojAlg{} całości danych}
  	\end{subfigure}
  	
