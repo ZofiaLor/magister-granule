@@ -27,7 +27,8 @@
    \usepackage[T1]{fontenc}
    \usepackage[utf8]{inputenc}
 %   \usepackage[tt=false]{libertine}
-	\usepackage{lmodern}
+	%\usepackage{lmodern}
+	\usepackage{gentium}
 \fi
 
 %\usepackage{MnSymbol}
@@ -86,7 +87,7 @@
 %\usepackage{gentium}
 %\usepackage[tt=false]{libertine}
 %\usepackage{ccfonts,eulervm} % font family: concrete + euler
-\usepackage{lmodern}
+%\usepackage{lmodern}
 %\usepackage{gfsartemisia-euler}
 %\usepackage{fourier}
 %\usepackage{cyklop}
@@ -128,6 +129,18 @@
 \newcommand{\MojAlg}{\procedura{GrAgglo}}
 \newcommand{\MojHierAlg}{\procedura{FuzzyAgglo}}
 
+
+\newcommand{\lS}{<_S}
+\newcommand{\eqS}{=_S}
+\newcommand{\gS}{>_S}
+\newcommand{\leqS}{\leqslant_S} 
+\newcommand{\geqS}{\geqslant_S}
+\newcommand{\relation}[2]{R\left(#1,#2\right)}
+\newcommand{\ksFRel}[1]{\tilde{#1}}
+\newcommand{\FRsymbol}{\tilde{R}}
+\newcommand{\FR}[2]{\FRsymbol\left(#1,#2\right)}
+\newcommand{\ksR}[3]{#1\left(#2,#3\right)}
+
 %
 %\newcommand{\AnnRef}{$\largecircle$}
 %\newcommand{\AnnLep}{$\largeblackcircle$}
@@ -148,7 +161,8 @@
 \input{./libraries/oznaczenia.tex}
 \input{./libraries/remarks.tex}
 
-
+\newcommand{\efn}{extensional fuzzy number}
+\newcommand{\Efn}{Extensional fuzzy number} 
 
 \newcommand{\pd}[1]{{\colorbox{black}{\color{white}\textbf{#1}}}}
 
@@ -213,7 +227,7 @@ morekeywords={output,input,return},
 
 %\newtheorem{definition}{Definicja}
 
-\title{\sffamily\bfseries GrAgglo: A granular agglomerative clustering algorithm \ksremark{tytuł}}
+\title{\Huge\bfseries GrAgglo: A granular agglomerative clustering algorithm \ksremark{tytuł}}
 %\author{Krzysztof Siminski\\Silesian University of Technology, Gliwice, Poland\\\url{krzysztof.siminski@polsl.pl}\\orcid: \orcid}
 
 
@@ -332,14 +346,45 @@ However, there are some limitations of these algorithms, eg. SLINK cannot handle
 In contrast, the FCM algorithm has a time complexity of $O(n)$, which is significantly lower.
 
 \subsection{Granular computing}
-\ksremark{todo}
+Lofti Zadeh introduced a new paradigm of computation based on informative granules \cite{id:Zadeh1979Fuzzy}.
+This is an abstraction that fills the gap between numbers and human concepts. 
+Humans commonly do not operate on numbers in every day life. 
+We simple operate on concepts that can be described with numbers. 
+Zadeh named these concepts informative granules. 
 
-\subsubsection{Extensional fuzzy numbers}
-\newcommand{\efn}{extensional fuzzy number}
-\newcommand{\Efn}{Extensional fuzzy number} 
+The main idea of granular computing (GrC) is to provide ideas, methods, algorithms, and techniques to make computer work in a way that is similar to human cognition \cite{id:Zadeh1997Toward}.
+The next step dreamt by Zadeh were computers calculating with words \cite{id:Zadeh2002Computing,id:Piegat2015Computing}.
+
+Informative granule is a collection of similar items with a clear significance. 
+This definition is very general. 
+It does not define the similarity of the items nor the significance. 
+These notions are specified in an application they are used for. 
+Thus the representation of granules is very diverse \cite{id:Siminski2026Arithmetic}, eg.
+intervals, 
+sets, 
+fuzzy sets, 
+interval type-2 fuzzy sets \cite{id:Pedrycz2012GranularRepresentation}, 
+rough sets \cite{id:Skowron2016Interactive,id:Pieta2021Applications},
+intuitionistic sets, 
+shadowed sets, 
+clusters  \cite{id:Siminski2020GrFCM}, 
+soft sets \cite{id:Xia2022New}, 
+if-then rules \cite{id:Siminski2021GrNFS},
+\efn s \cite{id:Siminski2026Arithmetic}.  
+
+The next level of abstraction over informative granules is the triarchic theory of GrC based on three perspectives mutually intertwined:
+philosophical, methodological, and computational  \cite{id:Yao2016triarchic}.
+This is a base of the three-way decision approach \cite{id:Yao2009Three,id:Yao2011Superiority,id:Siminski20233WDNFS,id:Ptas2026Art,id:Siminski2026Towards}.
+
+One of representations of informative granules are \efn s.
+ 
+
+\subsubsection{\Efn s}
+
 
 \Efn\ is a number constructed with a extension of crisp numbers with a fuzzy $\tnorm$-similarity
-relation deﬁned for a left continuous t-norm $\tnorm$ \cite{id:Siminski2026Arithmetic}.
+relation deﬁned for a left continuous t-norm $\tnorm$
+\cite{id:Holcapek2012Arithmethics-I,id:Holcapek2012Arithmethics-II,id:Holcapek2014MI-Algebras,id:Siminski2026Arithmetic}.
 This is an alternative to the Zadeh's extension principle \cite{id:Zadeh1965FuzzySets} way for constructing fuzzy numbers. 
 It has some advantages such as \cite{id:Siminski2026Arithmetic}: 
 \begin{itemize}
@@ -350,238 +395,278 @@ It has some advantages such as \cite{id:Siminski2026Arithmetic}:
    \item Infinite number of types of \efn s can be easily constructed with various fuzzy $\tnorm$-similarity relations.
 \end{itemize}
 
-\ksremark{Rysunki z przykładami \efn s, ich własnościami, operacjami arytmetycznymi.} 
-\ksremark{Trochę o artymetyce \efn s.}
+\Efn s can be constructed with any fuzzy $\tnorm$-similarity relation that is defined as a left continuous $t$-norm that is reflexive, symmetric and satisfies the triangle property \cite{id:Siminski2026Arithmetic}.
+$\tnorm$-similarity relations that correspond with common fuzzy sets are \cite{id:Siminski2026Arithmetic}:
+\begin{itemize}
+	\item for symmetric triangular fuzzy sets
+	   \begin{align}
+		\ksR{S_t}{x}{y} = \max \left\{ 1 - \frac{|x - y|}{p}, 0 \right\}, \label{eq:S:max}
+	\end{align}
+	where $p > 0$;
+	\item for symmetric trapezoidal fuzzy sets
+	\begin{align}
+		\ksR{S_r}{x}{y} = \min\left\{1, \max \left\{ 1 - \frac{|x - y|}{p}, 0 \right\} \cdot \frac{1}{1 - k}\right\}, \label{eq:S:trapezoidal}
+	\end{align}
+	where $p > 0$ and $0 \leqslant k < 1$;
+	\item for exponential fuzzy sets
+	\begin{align}
+		\ksR{S_e}{x}{y} = \exp \left( -\frac{|x - y|}{p} \right),
+		\label{eq:S2}
+	\end{align}
+	where $p > 0$;
+	\item for  Gaussian fuzzy sets
+	\begin{align}
+		\ksR{S_g}{x}{y} = \exp \left( -\frac{(x - y)^2}{2p^2}\right),
+		\label{eq:S3}
+	\end{align}
+	where $p > 0$.
+\end{itemize}
+
+Having defined the $\tnorm$-similarity relation the \efn\ $x_S$ is defined as 
+\begin{align}
+	\forall_{y\in\zR} \qquad x_S(y) = \ksR{S}{x}{y}.
+\end{align}
+Thus $x$ defines the core of the \efn\ and the parameter $p$ is responsible for its uzziness. So $x_{S(p)}$ fully defines a \efn.
+
+Arithmetical operations on \efn s based on a $\tnorm$-similarity relation $S$ are defined as \cite{id:Siminski2026Arithmetic}:
+\begin{align}
+	x_{S(p_x)} + y_{S(p_y)} & = (x+y)_{S(\max(p_x, p_y))} \\
+	x_{S(p_x)} \cdot y_{S(p_y)} & = (x\cdot y)_{S(\max(p_x, p_y))} \\
+	-\left(x_{S}\right) & = \left(-x\right)_{S} \\
+	\left(x_{S}\right)^{-1} & = \left(1/x\right)_{S}, \qquad \text{for } x_S \neq 0_S
+\end{align}
+The above formulae make the arithmetic with \efn s very efficient computationally.
+
+\ksremark{Ewentualnie dodamy tutaj operator porównania.}
 
 % --------------------------------------------------
 \clearpage 
 
-
-Często wybierana euklidesowa metryka odległości \cite{id:hierarchical-overview} zdefiniowana jest jako
-\begin{align}
-	\Odleglosc_e \left(\wX_{i}, \wX_{j}\right) = \sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\X_{i\Atrybut} - \X_{j\Atrybut})^{2}},
-	\label{eq:odleglosc:euklidesowa}
-\end{align}
-gdzie $\nAtrybut$ to liczba atrybutów punktu danych $\wX$,
-a $\X_{i\Atrybut}$ oznacza $\Atrybut$-ty atrybut $i$-tego punktu.
 %
-Metryka ta jest uszczegółowieniem metryki Minkowskiego
-\begin{align}
-\Odleglosc_m \left(\wX_{i}, \wX_{j}\right) = \left(\sum_{\Atrybut=0}^{\nAtrybut}|\X_{i\Atrybut} - \X_{j\Atrybut}|^{p}\right)^{1/p},
-\label{eq:odleglosc:minkowskiego}
-\end{align}
-dla $p=2$. Inną popularną metryką jest odległość Manhattan, również należąca do rodziny metryk Minkowskiego, dla $p=1$.
-
-Łączność określa, jak na podstawie odległości pomiędzy poszczególnymi punktami należącymi do klastrów wyznaczyć odległość pomiędzy tymi klastrami.
+%Często wybierana euklidesowa metryka odległości \cite{id:hierarchical-overview} zdefiniowana jest jako
+%\begin{align}
+%	\Odleglosc_e \left(\wX_{i}, \wX_{j}\right) = \sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\X_{i\Atrybut} - \X_{j\Atrybut})^{2}},
+%	\label{eq:odleglosc:euklidesowa}
+%\end{align}
+%gdzie $\nAtrybut$ to liczba atrybutów punktu danych $\wX$,
+%a $\X_{i\Atrybut}$ oznacza $\Atrybut$-ty atrybut $i$-tego punktu.
+%%
+%Metryka ta jest uszczegółowieniem metryki Minkowskiego
+%\begin{align}
+%\Odleglosc_m \left(\wX_{i}, \wX_{j}\right) = \left(\sum_{\Atrybut=0}^{\nAtrybut}|\X_{i\Atrybut} - \X_{j\Atrybut}|^{p}\right)^{1/p},
+%\label{eq:odleglosc:minkowskiego}
+%\end{align}
+%dla $p=2$. Inną popularną metryką jest odległość Manhattan, również należąca do rodziny metryk Minkowskiego, dla $p=1$.
 %
-Do łączności zaimplementowanych w popularnych bibliotekach należą {single linkage} (najbliższe sąsiedztwo), {complete linkage} (najdalsze sąsiedztwo), {average linkage} (średnie sąsiedztwo) oraz metoda Warda (minimalna wariancja) \cite{id:ward-linkage}.
+%Łączność określa, jak na podstawie odległości pomiędzy poszczególnymi punktami należącymi do klastrów wyznaczyć odległość pomiędzy tymi klastrami.
+%%
+%Do łączności zaimplementowanych w popularnych bibliotekach należą {single linkage} (najbliższe sąsiedztwo), {complete linkage} (najdalsze sąsiedztwo), {average linkage} (średnie sąsiedztwo) oraz metoda Warda (minimalna wariancja) \cite{id:ward-linkage}.
+%%
+%Implementacje aglometacyjnego algorytmu hierarchicznego przedstawione są w \cite{id:hierarchical-algorithms} Wykorzystywane one są przez bibliotekę {SciPy} języka Python \cite{id:scipy-linkage}.
 %
-Implementacje aglometacyjnego algorytmu hierarchicznego przedstawione są w \cite{id:hierarchical-algorithms} Wykorzystywane one są przez bibliotekę {SciPy} języka Python \cite{id:scipy-linkage}.
-
-%przepisać, przekopiować pseudokody?
-Algorytm naiwny (\PrimitiveClustering{}) może być wykorzystany dla każdej łączności, jednak jego wadą jest złożoność czasowa wynosząca $O(n^{3})$.
-Jego parametrami wejściowymi są lista etykiet danych oraz macierz podobieństwa między danymi. W algorytmie naiwnym, iteracyjnie wykonywane są trzy kroki:
-\begin{enumerate}
-	\item Znalezienie w macierzy podobieństwa minimalnej wartości -- znalezienie najbliższej sobie pary klastrów,
-	\item Scalenie odnalezionych klastrów,
-	\item Aktualizacja wartości podobieństw w macierzy według wybranej łączności.
-\end{enumerate}
-Pseudokod działania algorytmu przedstawia alg. \ref{alg:primitive_clustering}.
-
-\begin{algorithm}[t]
-	\caption{Naiwny algorytm aglomeracyjnego grupowania hierarchicznego \PrimitiveClustering{} \cite{id:hierarchical-algorithms}}
-	\label{alg:primitive_clustering}
-	\begin{algorithmic}[1]
-		\Require $\wEtykieta$: etykiety elementów
-		\Require $\mDistance$: macierz podobieństwa między każdą parą elementów
-		\Procedure{PrimitiveClustering}{$S, \mDistance$}
-		\State $N \gets $ liczba elementów
-		\State $L \gets [] $ \Comment{Lista wynikowa zawierająca trójki: para klastrów łączonych w danej iteracji i odległość między nimi}
-		\State $rozmiar \gets []$ \Comment{rozmiar klastrów o danych indeksach}
-		\For{$x$ in $\wEtykieta$}
-		\State $rozmiar[x] \gets 1$ \Comment{na początku wszystkie klastry są jednoelementowe}
-		\EndFor
-		\For{$i = 0$ to $N-2$}
-		\State $(a,b) \gets \arg\min_{(\wEtykieta \times \wEtykieta) \setminus \Delta}\mDistance$ \Comment{Operacja $\arg\min$ na macierzy $\mDistance$, uwzględniająca elementy ze zbioru $\wEtykieta$ z wyłączeniem przekątnej głównej}
-		\State $\wEtykieta \gets \wEtykieta \setminus \{a, b\}$  \Comment{Klastry $a$ i $b$ usuwane są ze zbioru rozpatrywanych etykiet}
-		\State nowy element $n \notin \wEtykieta$  \Comment{Do zbioru etykiet dodawany jest nowy element, odpowiadający klastrowi powstałemu po złączeniu $a$ i $b$}
-		\For{$x$ in $S$}
-		\State $\mDistance[n, x] \gets \mDistance[x, n] \gets $ \Call{UpdateFormula}{...} \Comment{wzór dla odpowiedniej łączności, np. alg. \ref{alg:single_linkage}, alg. \ref{alg:complete_linkage}}
-		\EndFor
-		\State $rozmiar[n] \gets rozmiar[a] + rozmiar[b]$
-		\State $S \gets S \cup n$
-		\EndFor
-		\State \Return $L$  \Comment{Zwracana lista zawiera zapis kolejnych scalań klastrów. }
-		\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
-
-Algorytm ogólny \texttt{GENERAL\_LINKAGE()} zawiera dodatkową optymalizację w stosunku do algorytmu naiwnego: wykorzystywana jest kolejka priorytetowa zawierająca kandydatów na najbliższych sąsiadów klastrów, co pozwala ograniczyć czas poszukiwania minimum macierzy w kroku 1. Optymistyczna złożoność czasowa tego algorytmu wynosi $\Omega(n^{2})$, pesymistyczna -- nadal $O(n^{3})$.
-
-\subsection{Single Linkage}
-
-W algorytmie \SingleLinkage{} \cite{id:hierarchical-clustering} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
-Oznacza to, że w momencie złączenia klastrów $A_{1}$ i $A_{2}$ w jeden klaster $A$, odległość tego klastra do innego klastra $B$ zdefiniowana jest jako:
-\begin{align}
-\Odleglosc \left(A, B\right) = \min(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
-\end{align}
-
-Wzór ten można przedstawić również w postaci pseudokodu \ref{alg:single_linkage}, którym uzupełnić można algorytm \ref{alg:primitive_clustering}.
-
-\begin{algorithm}[t]
-	\caption{Funkcja aktualizacji odległości między klastrami dla łączności \SingleLinkage{}}
-	\label{alg:single_linkage}
-	\begin{algorithmic}[1]
-		\Require $d_{a, x}, d_{b, x}$: wartości odległości między klastrem $x$ a łączonymi w jeden klastrami $a$ i $b$
-		\Procedure{UpdateFormula}{$d_{a, x}, d_{b, x}$}
-		\State \Return $\min(d_{a, x}, d_{b, x})$
-		\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
-
+%%przepisać, przekopiować pseudokody?
+%Algorytm naiwny (\PrimitiveClustering{}) może być wykorzystany dla każdej łączności, jednak jego wadą jest złożoność czasowa wynosząca $O(n^{3})$.
+%Jego parametrami wejściowymi są lista etykiet danych oraz macierz podobieństwa między danymi. W algorytmie naiwnym, iteracyjnie wykonywane są trzy kroki:
+%\begin{enumerate}
+%	\item Znalezienie w macierzy podobieństwa minimalnej wartości -- znalezienie najbliższej sobie pary klastrów,
+%	\item Scalenie odnalezionych klastrów,
+%	\item Aktualizacja wartości podobieństw w macierzy według wybranej łączności.
+%\end{enumerate}
+%Pseudokod działania algorytmu przedstawia alg. \ref{alg:primitive_clustering}.
 %
-Przykład takiego przypisania ilustruje rys. \ref{fig:single-linkage-example}. Odległość klastra $B$ od klastra $A_{1}$ jest znana i wynosi $\Odleglosc(A_{1}, B)$, czyli jest ona najmniejszą odległością między dowolnymi dwoma elementami klastrów $B$ i $A_{1}$. Odległość klastra $B$ od klastra $A_{2}$ również jest znana i wynosi $\Odleglosc(A_{2}, B)$. Klastry $A_{1}$ i $A_{2}$ scalane są w jeden klaster $A$, należy więc obliczyć odległość nowopowstałego klastra od pozostałych. Zamiast porównywać wszystkie możliwe kombinacje elementów klastrów $A$ i $B$, wystarczy znaleźć minimum z dwóch wartości: $\Odleglosc(A_{1}, B)$ i $\Odleglosc(A_{2}, B)$. W tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$, czyli $\Odleglosc(A, B) = \Odleglosc(A_{2}, B)$
-
-%rysunek?
-\begin{figure}
-\centering
-%\includegraphics[width=\textwidth]{./img/single_linkage_example.pdf}
-\caption{Ilustracja działania algorytmu \SingleLinkage{}. Odległość klastra $B$ od klastrów $A_{1}$ i $A_{2}$ jest znana. Po złączeniu $A_{1}$ i $A_{2}$ w klaster $A$, nowa odległość od klastra $B$ jest równa minimalnej z poprzednich dwóch -- w tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$.}
-\label{fig:single-linkage-example}
-\end{figure}
-
-Algorytm ten jest wrażliwy na dane odstające, szumy. Pojedynczy punkt znajdujący się w dużej odległości od reszty danych zostanie uznany za osobny klaster. Dodatkowym efektem tego błędnego przypisania będzie złączenie dwóch innych klastrów.
-
-Zachowanie to ilustruje rys. \ref{fig:single-linkage-noise-example}. Gdy dane nie zawierają znacznie odstających danych, algorytm wyznacza dwa klastry zgodnie z oczekiwaniami. Po dodaniu do nich pojedynczej danej o współrzędnej (10, 10), czyli w dużej odległości od reszty danych, dana ta klasyfikowana jest jako osobny klaster.
-
-\begin{figure}
-\centering
-%\includegraphics[width=\textwidth]{./img/single_linkage_noise_example.pdf}
-\caption{Ilustracja wpływu danych odstających na działanie algorytmu \SingleLinkage{}.}
-\label{fig:single-linkage-noise-example}
-\end{figure}
-
-Algorytm działa dobrze, gdy klastry są wyraźnie oddzielone od siebie. Jeżeli będą zbyt blisko siebie, możliwe jest, że zostaną połączone, jak pokazuje przykład na rys. \ref{fig:single-linkage-close-clusters-example}.
-
-\begin{figure}
-\centering
-%\includegraphics[width=\textwidth]{./img/single_linkage_close_clusters_example.pdf}
-\caption{Ilustracja działania algorytmu \SingleLinkage{}, gdy klastry są zbyt zbliżone.}
-\label{fig:single-linkage-close-clusters-example}
-\end{figure}
-
-Dla \SingleLinkage{} wykorzystać można szybsze, dedykowane algorytmy, na przykład algorytm minimalnego drzewa rozpinającego (\texttt{MST\_LINKAGE()}) o złożoności $O(n^2)$ \cite{id:hierarchical-algorithms}.
-
-\subsection{Complete Linkage}
-\label{sec:complete-linkage}
-
-Algorytm \CompleteLinkage{} jest odwrotnością \SingleLinkage{}: odległość między klastrami jest równa maksymalnej odległości między dwoma punktami należącymi do tych klastrów. W momencie złączenia dwóch klastrów w jeden, jego odległość od pozostałych klastrów określa się więc jako:
-\begin{align}
-\Odleglosc \left(A, B\right) = \max(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
-\end{align}
-
-Wzór również można przedstawić jako pseudokod \ref{alg:complete_linkage}, uzupełniający algorytm \ref{alg:primitive_clustering}.
-
-\begin{algorithm}[t]
-	\caption{Funkcja aktualizacji odległości między klastrami dla łączności \CompleteLinkage{}}
-	\label{alg:complete_linkage}
-	\begin{algorithmic}[1]
-		\Require $d_{a, x}, d_{b, x}$: wartości odległości między klastrem $x$ a łączonymi w jeden klastrami $a$ i $b$
-		\Procedure{UpdateFormula}{$d_{a, x}, d_{b, x}$}
-		\State \Return $\max(d_{a, x}, d_{b, x})$
-		\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
+%\begin{algorithm}[t]
+%	\caption{Naiwny algorytm aglomeracyjnego grupowania hierarchicznego \PrimitiveClustering{} \cite{id:hierarchical-algorithms}}
+%	\label{alg:primitive_clustering}
+%	\begin{algorithmic}[1]
+%		\Require $\wEtykieta$: etykiety elementów
+%		\Require $\mDistance$: macierz podobieństwa między każdą parą elementów
+%		\Procedure{PrimitiveClustering}{$S, \mDistance$}
+%		\State $N \gets $ liczba elementów
+%		\State $L \gets [] $ \Comment{Lista wynikowa zawierająca trójki: para klastrów łączonych w danej iteracji i odległość między nimi}
+%		\State $rozmiar \gets []$ \Comment{rozmiar klastrów o danych indeksach}
+%		\For{$x$ in $\wEtykieta$}
+%		\State $rozmiar[x] \gets 1$ \Comment{na początku wszystkie klastry są jednoelementowe}
+%		\EndFor
+%		\For{$i = 0$ to $N-2$}
+%		\State $(a,b) \gets \arg\min_{(\wEtykieta \times \wEtykieta) \setminus \Delta}\mDistance$ \Comment{Operacja $\arg\min$ na macierzy $\mDistance$, uwzględniająca elementy ze zbioru $\wEtykieta$ z wyłączeniem przekątnej głównej}
+%		\State $\wEtykieta \gets \wEtykieta \setminus \{a, b\}$  \Comment{Klastry $a$ i $b$ usuwane są ze zbioru rozpatrywanych etykiet}
+%		\State nowy element $n \notin \wEtykieta$  \Comment{Do zbioru etykiet dodawany jest nowy element, odpowiadający klastrowi powstałemu po złączeniu $a$ i $b$}
+%		\For{$x$ in $S$}
+%		\State $\mDistance[n, x] \gets \mDistance[x, n] \gets $ \Call{UpdateFormula}{...} \Comment{wzór dla odpowiedniej łączności, np. alg. \ref{alg:single_linkage}, alg. \ref{alg:complete_linkage}}
+%		\EndFor
+%		\State $rozmiar[n] \gets rozmiar[a] + rozmiar[b]$
+%		\State $S \gets S \cup n$
+%		\EndFor
+%		\State \Return $L$  \Comment{Zwracana lista zawiera zapis kolejnych scalań klastrów. }
+%		\EndProcedure
+%	\end{algorithmic}
+%\end{algorithm}
 %
-Algorytm dobrze działa dla kulistych, gęstych klastrów. Pokazuje to rys. \ref{fig:complete-linkage-close-clusters-example}, gdzie algorytm \CompleteLinkage{} wywołano dla tych samych danych, co \SingleLinkage{} na rys. \ref{fig:single-linkage-close-clusters-example}. W przeciwieństwie do niego, \CompleteLinkage{} odnajduje oczekiwane klastry niemal idealnie.
-
-\begin{figure}
-\centering
-%\includegraphics[width=\textwidth]{./img/complete_linkage_close_clusters_example.pdf}
-\caption{Ilustracja działania algorytmu \CompleteLinkage{}, dla zbliżonych, gęstych klastrów.}
-\label{fig:complete-linkage-close-clusters-example}
-\end{figure}
-
-W porównaniu z \SingleLinkage{}, algorytm \CompleteLinkage{} zwraca jednak gorsze wyniki dla danych o innych kształtach \cite{id:hierarchical-clustering, id:sklearn-linkage-comparison}. Ilustruje to przykład na rys. \ref{fig:complete-linkage-non-globular-example}. W przykładzie oczekiwane jest, że każdy z dwóch wyraźnie oddzielonych od siebie okręgów zaklasyfikowany zostanie jako osobny klaster. Algorytm \CompleteLinkage{} nie wyznacza tych klastrów -- granica między klastrami wydaje się być wyznaczona bez względu na faktyczny kształt danych.
-
-\begin{figure}
-\centering
-%\includegraphics[width=\textwidth]{./img/complete_linkage_non_globular_example.pdf}
-\caption{Ilustracja działania algorytmu \CompleteLinkage{}, dla klastrów w kształcie dwóch okręgów.}
-\label{fig:complete-linkage-non-globular-example}
-\end{figure}
-
-\section{Algorytm rozmytych $c$ średnich}
-\label{sec:fcm}
-
-Algorytm rozmytych $c$ średnich (ang. {fuzzy $c$-means}, FCM) należy do rodziny algorytmów opartych na minimalizacji funkcji kryterialnej. Algorytm wyznacza klastry, dla których przynależność każdego punktu danych jest liczbą z przedziału $\left[ 0,1 \right]$. Wynikiem klasteryzacji FCM jest macierz środków klastrów $\mCentre$ oraz macierz przynależności $\mClusterMembership$. Złożoność czasowa ze względu na liczbę danych tego algorytmu wynosi $O(n)$ \cite{id:fcm-kmeans-comparison}.
-
-Funkcja kryterialna algorytmu fuzzy c-means ma postać:
-\begin{align}
-	J(\mCentre, \mClusterMembership) = \sum_{\Iteracja=1}^{N} \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster}^{m} ||\wX_{\Iteracja} - \wCentre_{\klaster}||^{m},
-\end{align}
-%\sum_{\size=1}^{\nSize}  \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\size\klaster}^{m}
-%nie działa z \nSize ani \nLen
-gdzie $\wX_{\Iteracja}$ -- współrzędne $\Iteracja$-tego punktu danych, $\wCentre_{\klaster}$ -- współrzędne środka $\klaster$-tego klastra danych, $\ClusterMembership_{\Iteracja\klaster} \in \left[ 0,1 \right]$ -- wartość przynależności $\Iteracja$-tego punktu do $\klaster$-tego klastra. Parametr $m \in \left( 1,+\infty \right]$ jest współczynnikiem rozmycia algorytmu, najczęściej wykorzystuje się wartość 2 \cite{id:implementation-of-fcm-pcm-algs,id:scikit-fuzzy-cmeans-docs-fcm}.
-
-Dla każdego punktu, suma jego wartości przynależności do wszystkich klastrów wynosi 1:
-
-\begin{align}
-	\label{eq:cluster_mem_condition}
-	\forall \Iteracja \in [1, N] \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster} = 1
-\end{align}
-
-Pseudokod algorytmu rozmytych $c$-średnich przedstawia alg. \ref{alg:fcm}.
-
-W każdej iteracji algorytmu obliczane są najpierw nowe współrzędne środków klastrów:
-\begin{align}
-	\label{eq:center_update}
-	\wCentre_{\klaster} = \frac{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m} \wX_{\Iteracja}}{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m}},
-\end{align}
-a następnie wartości elementów macierzy przynależności:
-\begin{align}
-	\label{eq:membership_update}
-	\ClusterMembership_{\Iteracja\klaster} = \frac{1}{\sum_{j=1}^{\nKlaster}\left( \frac{||\wX_{\Iteracja} - \wCentre_{\klaster}||}{||\wX_{\Iteracja} - \wCentre_{j}||} \right)^{\frac{2}{m - 1}}}.
-\end{align}
-Kroki powtarzane są do momentu spełnienia warunku zatrzymania, na przykład:
-\begin{align}
-	\label{eq:fcm_stop_contidion}
-	||\mClusterMembership^{(t)} - \mClusterMembership^{(t-1)}|| < \epsilon,
-\end{align}
+%Algorytm ogólny \texttt{GENERAL\_LINKAGE()} zawiera dodatkową optymalizację w stosunku do algorytmu naiwnego: wykorzystywana jest kolejka priorytetowa zawierająca kandydatów na najbliższych sąsiadów klastrów, co pozwala ograniczyć czas poszukiwania minimum macierzy w kroku 1. Optymistyczna złożoność czasowa tego algorytmu wynosi $\Omega(n^{2})$, pesymistyczna -- nadal $O(n^{3})$.
 %
-gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warunkiem zatrzymania może też być z góry określona maksymalna liczba iteracji \cite{id:scikit-fuzzy-cmeans-docs-fcm, id:skfuzzy-docs-fcm}.
-
-\begin{algorithm}[t]
-	\caption{Algorytm rozmytych $c$ średnich}
-	\label{alg:fcm}
-	\begin{algorithmic}[1]
-		\Require $\zX$: dane do klasteryzacji
-		\Require $\nKlaster$: liczba klastrów docelowych
-		\Require $m$: współczynnik rozmycia
-		\Require $\nIteracja$: maksymalna liczba iteracji
-		\Require $\varepsilon$: tolerancja
-		\Procedure{FuzzyCMeans}{$\zX, \nKlaster, m, \nIteracja, \varepsilon$}
-		\State $\nX \gets $ liczba próbek
-		\State $\nAtrybut \gets $ liczba atrybutów \Comment{$\nX$ i $\nAtrybut$: wymiary $\zX$}
-		\State $\wCentre \gets $ losowe wartości początkowe środków klastrów
-		\State $\mClusterMembership \gets $ losowe wartości początkowe przynależności punktów do klastrów, spełniające warunek ze wzoru \ref{eq:cluster_mem_condition}
-		\State $i\gets 1$
-		\State koniec $\gets$ false
-		\While{$i < \nIteracja$ $\land$ $\lnot$ koniec}
-		\State aktualizacja wartości $\wCentre$ na podstawie wzoru \eqref{eq:center_update}
-		\State aktualizacja wartości $\mClusterMembership$ na podstawie wzoru \eqref{eq:membership_update}
-		\If{spełniony warunek \ref{eq:fcm_stop_contidion}}
-		\State  koniec $\gets$ true
-		\EndIf
-		\EndWhile
-		\State \Return $\wCentre, \mClusterMembership$
-		\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
-
-Algorytm rozmytych $c$-średnich stanowi podstawę dla wielu innych algorytmów. Należą do nich między innymi algorytm {possibilistic $c$-means} (PCM) \cite{id:pcm-algorithm}, w którym warunek \eqref{eq:cluster_mem_condition} nie musi być spełniony, oraz {fuzzy $c$-ordered-means} (FCOM) \cite{id:fcom-algorithm}, gdzie dane sortowane są według odległości od środków klastrów.
-\subsection{Granular computing}
-\subsection{Extensional fuzzy numbers}
+%\subsection{Single Linkage}
+%
+%W algorytmie \SingleLinkage{} \cite{id:hierarchical-clustering} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
+%Oznacza to, że w momencie złączenia klastrów $A_{1}$ i $A_{2}$ w jeden klaster $A$, odległość tego klastra do innego klastra $B$ zdefiniowana jest jako:
+%\begin{align}
+%\Odleglosc \left(A, B\right) = \min(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
+%\end{align}
+%
+%Wzór ten można przedstawić również w postaci pseudokodu \ref{alg:single_linkage}, którym uzupełnić można algorytm \ref{alg:primitive_clustering}.
+%
+%\begin{algorithm}[t]
+%	\caption{Funkcja aktualizacji odległości między klastrami dla łączności \SingleLinkage{}}
+%	\label{alg:single_linkage}
+%	\begin{algorithmic}[1]
+%		\Require $d_{a, x}, d_{b, x}$: wartości odległości między klastrem $x$ a łączonymi w jeden klastrami $a$ i $b$
+%		\Procedure{UpdateFormula}{$d_{a, x}, d_{b, x}$}
+%		\State \Return $\min(d_{a, x}, d_{b, x})$
+%		\EndProcedure
+%	\end{algorithmic}
+%\end{algorithm}
+%
+%%
+%Przykład takiego przypisania ilustruje rys. \ref{fig:single-linkage-example}. Odległość klastra $B$ od klastra $A_{1}$ jest znana i wynosi $\Odleglosc(A_{1}, B)$, czyli jest ona najmniejszą odległością między dowolnymi dwoma elementami klastrów $B$ i $A_{1}$. Odległość klastra $B$ od klastra $A_{2}$ również jest znana i wynosi $\Odleglosc(A_{2}, B)$. Klastry $A_{1}$ i $A_{2}$ scalane są w jeden klaster $A$, należy więc obliczyć odległość nowopowstałego klastra od pozostałych. Zamiast porównywać wszystkie możliwe kombinacje elementów klastrów $A$ i $B$, wystarczy znaleźć minimum z dwóch wartości: $\Odleglosc(A_{1}, B)$ i $\Odleglosc(A_{2}, B)$. W tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$, czyli $\Odleglosc(A, B) = \Odleglosc(A_{2}, B)$
+%
+%%rysunek?
+%\begin{figure}
+%\centering
+%%\includegraphics[width=\textwidth]{./img/single_linkage_example.pdf}
+%\caption{Ilustracja działania algorytmu \SingleLinkage{}. Odległość klastra $B$ od klastrów $A_{1}$ i $A_{2}$ jest znana. Po złączeniu $A_{1}$ i $A_{2}$ w klaster $A$, nowa odległość od klastra $B$ jest równa minimalnej z poprzednich dwóch -- w tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$.}
+%\label{fig:single-linkage-example}
+%\end{figure}
+%
+%Algorytm ten jest wrażliwy na dane odstające, szumy. Pojedynczy punkt znajdujący się w dużej odległości od reszty danych zostanie uznany za osobny klaster. Dodatkowym efektem tego błędnego przypisania będzie złączenie dwóch innych klastrów.
+%
+%Zachowanie to ilustruje rys. \ref{fig:single-linkage-noise-example}. Gdy dane nie zawierają znacznie odstających danych, algorytm wyznacza dwa klastry zgodnie z oczekiwaniami. Po dodaniu do nich pojedynczej danej o współrzędnej (10, 10), czyli w dużej odległości od reszty danych, dana ta klasyfikowana jest jako osobny klaster.
+%
+%\begin{figure}
+%\centering
+%%\includegraphics[width=\textwidth]{./img/single_linkage_noise_example.pdf}
+%\caption{Ilustracja wpływu danych odstających na działanie algorytmu \SingleLinkage{}.}
+%\label{fig:single-linkage-noise-example}
+%\end{figure}
+%
+%Algorytm działa dobrze, gdy klastry są wyraźnie oddzielone od siebie. Jeżeli będą zbyt blisko siebie, możliwe jest, że zostaną połączone, jak pokazuje przykład na rys. \ref{fig:single-linkage-close-clusters-example}.
+%
+%\begin{figure}
+%\centering
+%%\includegraphics[width=\textwidth]{./img/single_linkage_close_clusters_example.pdf}
+%\caption{Ilustracja działania algorytmu \SingleLinkage{}, gdy klastry są zbyt zbliżone.}
+%\label{fig:single-linkage-close-clusters-example}
+%\end{figure}
+%
+%Dla \SingleLinkage{} wykorzystać można szybsze, dedykowane algorytmy, na przykład algorytm minimalnego drzewa rozpinającego (\texttt{MST\_LINKAGE()}) o złożoności $O(n^2)$ \cite{id:hierarchical-algorithms}.
+%
+%\subsection{Complete Linkage}
+%\label{sec:complete-linkage}
+%
+%Algorytm \CompleteLinkage{} jest odwrotnością \SingleLinkage{}: odległość między klastrami jest równa maksymalnej odległości między dwoma punktami należącymi do tych klastrów. W momencie złączenia dwóch klastrów w jeden, jego odległość od pozostałych klastrów określa się więc jako:
+%\begin{align}
+%\Odleglosc \left(A, B\right) = \max(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
+%\end{align}
+%
+%Wzór również można przedstawić jako pseudokod \ref{alg:complete_linkage}, uzupełniający algorytm \ref{alg:primitive_clustering}.
+%
+%\begin{algorithm}[t]
+%	\caption{Funkcja aktualizacji odległości między klastrami dla łączności \CompleteLinkage{}}
+%	\label{alg:complete_linkage}
+%	\begin{algorithmic}[1]
+%		\Require $d_{a, x}, d_{b, x}$: wartości odległości między klastrem $x$ a łączonymi w jeden klastrami $a$ i $b$
+%		\Procedure{UpdateFormula}{$d_{a, x}, d_{b, x}$}
+%		\State \Return $\max(d_{a, x}, d_{b, x})$
+%		\EndProcedure
+%	\end{algorithmic}
+%\end{algorithm}
+%%
+%Algorytm dobrze działa dla kulistych, gęstych klastrów. Pokazuje to rys. \ref{fig:complete-linkage-close-clusters-example}, gdzie algorytm \CompleteLinkage{} wywołano dla tych samych danych, co \SingleLinkage{} na rys. \ref{fig:single-linkage-close-clusters-example}. W przeciwieństwie do niego, \CompleteLinkage{} odnajduje oczekiwane klastry niemal idealnie.
+%
+%\begin{figure}
+%\centering
+%%\includegraphics[width=\textwidth]{./img/complete_linkage_close_clusters_example.pdf}
+%\caption{Ilustracja działania algorytmu \CompleteLinkage{}, dla zbliżonych, gęstych klastrów.}
+%\label{fig:complete-linkage-close-clusters-example}
+%\end{figure}
+%
+%W porównaniu z \SingleLinkage{}, algorytm \CompleteLinkage{} zwraca jednak gorsze wyniki dla danych o innych kształtach \cite{id:hierarchical-clustering, id:sklearn-linkage-comparison}. Ilustruje to przykład na rys. \ref{fig:complete-linkage-non-globular-example}. W przykładzie oczekiwane jest, że każdy z dwóch wyraźnie oddzielonych od siebie okręgów zaklasyfikowany zostanie jako osobny klaster. Algorytm \CompleteLinkage{} nie wyznacza tych klastrów -- granica między klastrami wydaje się być wyznaczona bez względu na faktyczny kształt danych.
+%
+%\begin{figure}
+%\centering
+%%\includegraphics[width=\textwidth]{./img/complete_linkage_non_globular_example.pdf}
+%\caption{Ilustracja działania algorytmu \CompleteLinkage{}, dla klastrów w kształcie dwóch okręgów.}
+%\label{fig:complete-linkage-non-globular-example}
+%\end{figure}
+%
+%\section{Algorytm rozmytych $c$ średnich}
+%\label{sec:fcm}
+%
+%Algorytm rozmytych $c$ średnich (ang. {fuzzy $c$-means}, FCM) należy do rodziny algorytmów opartych na minimalizacji funkcji kryterialnej. Algorytm wyznacza klastry, dla których przynależność każdego punktu danych jest liczbą z przedziału $\left[ 0,1 \right]$. Wynikiem klasteryzacji FCM jest macierz środków klastrów $\mCentre$ oraz macierz przynależności $\mClusterMembership$. Złożoność czasowa ze względu na liczbę danych tego algorytmu wynosi $O(n)$ \cite{id:fcm-kmeans-comparison}.
+%
+%Funkcja kryterialna algorytmu fuzzy c-means ma postać:
+%\begin{align}
+%	J(\mCentre, \mClusterMembership) = \sum_{\Iteracja=1}^{N} \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster}^{m} ||\wX_{\Iteracja} - \wCentre_{\klaster}||^{m},
+%\end{align}
+%%\sum_{\size=1}^{\nSize}  \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\size\klaster}^{m}
+%%nie działa z \nSize ani \nLen
+%gdzie $\wX_{\Iteracja}$ -- współrzędne $\Iteracja$-tego punktu danych, $\wCentre_{\klaster}$ -- współrzędne środka $\klaster$-tego klastra danych, $\ClusterMembership_{\Iteracja\klaster} \in \left[ 0,1 \right]$ -- wartość przynależności $\Iteracja$-tego punktu do $\klaster$-tego klastra. Parametr $m \in \left( 1,+\infty \right]$ jest współczynnikiem rozmycia algorytmu, najczęściej wykorzystuje się wartość 2 \cite{id:implementation-of-fcm-pcm-algs,id:scikit-fuzzy-cmeans-docs-fcm}.
+%
+%Dla każdego punktu, suma jego wartości przynależności do wszystkich klastrów wynosi 1:
+%
+%\begin{align}
+%	\label{eq:cluster_mem_condition}
+%	\forall \Iteracja \in [1, N] \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster} = 1
+%\end{align}
+%
+%Pseudokod algorytmu rozmytych $c$-średnich przedstawia alg. \ref{alg:fcm}.
+%
+%W każdej iteracji algorytmu obliczane są najpierw nowe współrzędne środków klastrów:
+%\begin{align}
+%	\label{eq:center_update}
+%	\wCentre_{\klaster} = \frac{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m} \wX_{\Iteracja}}{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m}},
+%\end{align}
+%a następnie wartości elementów macierzy przynależności:
+%\begin{align}
+%	\label{eq:membership_update}
+%	\ClusterMembership_{\Iteracja\klaster} = \frac{1}{\sum_{j=1}^{\nKlaster}\left( \frac{||\wX_{\Iteracja} - \wCentre_{\klaster}||}{||\wX_{\Iteracja} - \wCentre_{j}||} \right)^{\frac{2}{m - 1}}}.
+%\end{align}
+%Kroki powtarzane są do momentu spełnienia warunku zatrzymania, na przykład:
+%\begin{align}
+%	\label{eq:fcm_stop_contidion}
+%	||\mClusterMembership^{(t)} - \mClusterMembership^{(t-1)}|| < \epsilon,
+%\end{align}
+%%
+%gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warunkiem zatrzymania może też być z góry określona maksymalna liczba iteracji \cite{id:scikit-fuzzy-cmeans-docs-fcm, id:skfuzzy-docs-fcm}.
+%
+%\begin{algorithm}[t]
+%	\caption{Algorytm rozmytych $c$ średnich}
+%	\label{alg:fcm}
+%	\begin{algorithmic}[1]
+%		\Require $\zX$: dane do klasteryzacji
+%		\Require $\nKlaster$: liczba klastrów docelowych
+%		\Require $m$: współczynnik rozmycia
+%		\Require $\nIteracja$: maksymalna liczba iteracji
+%		\Require $\varepsilon$: tolerancja
+%		\Procedure{FuzzyCMeans}{$\zX, \nKlaster, m, \nIteracja, \varepsilon$}
+%		\State $\nX \gets $ liczba próbek
+%		\State $\nAtrybut \gets $ liczba atrybutów \Comment{$\nX$ i $\nAtrybut$: wymiary $\zX$}
+%		\State $\wCentre \gets $ losowe wartości początkowe środków klastrów
+%		\State $\mClusterMembership \gets $ losowe wartości początkowe przynależności punktów do klastrów, spełniające warunek ze wzoru \ref{eq:cluster_mem_condition}
+%		\State $i\gets 1$
+%		\State koniec $\gets$ false
+%		\While{$i < \nIteracja$ $\land$ $\lnot$ koniec}
+%		\State aktualizacja wartości $\wCentre$ na podstawie wzoru \eqref{eq:center_update}
+%		\State aktualizacja wartości $\mClusterMembership$ na podstawie wzoru \eqref{eq:membership_update}
+%		\If{spełniony warunek \ref{eq:fcm_stop_contidion}}
+%		\State  koniec $\gets$ true
+%		\EndIf
+%		\EndWhile
+%		\State \Return $\wCentre, \mClusterMembership$
+%		\EndProcedure
+%	\end{algorithmic}
+%\end{algorithm}
+%
+%Algorytm rozmytych $c$-średnich stanowi podstawę dla wielu innych algorytmów. Należą do nich między innymi algorytm {possibilistic $c$-means} (PCM) \cite{id:pcm-algorithm}, w którym warunek \eqref{eq:cluster_mem_condition} nie musi być spełniony, oraz {fuzzy $c$-ordered-means} (FCOM) \cite{id:fcom-algorithm}, gdzie dane sortowane są według odległości od środków klastrów.
+ 
  
  \section{Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego}
  \label{sec:wlasne-rozwiazanie}
