@@ -353,6 +353,59 @@ It has some advantages such as \cite{id:Siminski2026Arithmetic}:
 \ksremark{Rysunki z przykładami \efn s, ich własnościami, operacjami arytmetycznymi.} 
 \ksremark{Trochę o artymetyce \efn s.}
 
+For a fuzzy $\tnorm$-similarity $S_t$
+
+\begin{align}
+	S_t(x,y) = \max\left\{1-\frac{|x-y|}{p}, 0\right\},
+\end{align}
+
+where $p>0$ with the Łukasiewicz t-norm $\tnorm$, the \efn\ constructed with $S_t$ is a triangular \efn\ represented on \zlremark{rysunek liczby trójkątnej}.
+
+For a fuzzy $\tnorm$-similarity $S_e$
+
+\begin{align}
+	S_e(x,y) = \exp\left(-\frac{|x-y|}{p}\right),
+\end{align}
+
+where $p>0$ with the product t-norm $\tnorm$, the \efn\ constructed with $S_e$ is a exponential \efn\ represented on \zlremark{rysunek liczby wykładniczej}.
+
+For a fuzzy $\tnorm$-similarity $S_g$
+
+\begin{align}
+	S_g(x,y) = \exp\left(-\frac{(x-y)^2}{2p^2}\right),
+\end{align}
+
+where $p>0$ with the Łukasiewicz t-norm $\tnorm$, the \efn\ constructed with $S_g$ is a gaussian \efn\ represented on \zlremark{rysunek liczby gaussowskiej}.
+
+For fuzzy $\tnorm$-similarities $S \in \{S_t, S_e, S_g\}$, one-argument and two-argument arithmetical operations are defined as follows:
+
+\begin{align}
+	\mathbf{op}(x_{S}) = \mathbf{op}(x)_{S},
+\end{align}
+
+\begin{align}
+	x_{S(p_x)} \; \mathbf{op} \; y_{S(p_y)} = (x \; \mathbf{op} \; y)_{\max\{p_x,p_y\}}.
+\end{align}
+
+Logical operations on \efn s are based on the fuzzy equality operator $=_S$:
+
+\begin{align}
+	\left(x_{S(p_x)} =_S y_{S(p_y)}\right) = S_{\left(\max\{p_x, p_y\}\right)}(x,y).
+\end{align}
+
+The fuzzy equality relation has a value from an interval $[0,1]$.
+
+The fuzzy operator $<_S$ is defined as:
+
+\begin{align}
+	\left(x_{S(p_{x})} <_{S} y_{S(p_{y})}\right) = \left\{ \begin{array}{cl}
+	1 -  \left(x_{S(p_{x})} =_{S} y_{S(p_{y})}\right) & : \  x \le y \\
+	0 & : \ x > y
+	\end{array} \right\}.
+\end{align}
+
+\zlremark{Nie wiem, czy opisywać pozostałe operacje logiczne, tylko te dwie są wykorzystywane}
+
 % --------------------------------------------------
 \clearpage 
 
