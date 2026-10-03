@@ -130,11 +130,14 @@
 \newcommand{\MojHierAlg}{\procedura{FuzzyAgglo}}
 
 
-\newcommand{\lS}{<_S}
-\newcommand{\eqS}{=_S}
-\newcommand{\gS}{>_S}
-\newcommand{\leqS}{\leqslant_S} 
-\newcommand{\geqS}{\geqslant_S}
+\DeclareMathOperator{\op}{\mathbf{op}}
+
+\newcommand{\relS}{S} 
+\newcommand{\lS}{<_\relS}
+\newcommand{\eqS}{=_\relS}
+\newcommand{\gS}{>_\relS}
+\newcommand{\leqS}{\leqslant_\refS} 
+\newcommand{\geqS}{\geqslant_\refS}
 \newcommand{\relation}[2]{R\left(#1,#2\right)}
 \newcommand{\ksFRel}[1]{\tilde{#1}}
 \newcommand{\FRsymbol}{\tilde{R}}
@@ -291,14 +294,20 @@ It aims at elaboration of a partition of data item in such a way that items in o
 
 Multiple paradigms are used for clustering algorithms \cite{id:clustering-alg-survey}, eg.:
 \begin{itemize}
-   \item Hierarchical approach based on either merging small clusters into larger ones (ascending approach) or splitting larger clusters into smaller ones (descending approach) \cite{id:clustering-alg-survey}, eg. single-linkage \cite{id:Florek1951Sur,id:Sneath1957Application}, SLINK \cite{id:Sibson1973SLINK}, complete-linkage \ksremark{cytowanie}, gravitational clustering \ksremark{cytowanie};
+   \item Hierarchical approach based on either merging small clusters into larger ones (ascending approach) or splitting larger clusters into smaller ones (descending approach) \cite{id:clustering-alg-survey}, eg. single-linkage \cite{id:Florek1951Sur,id:Sneath1957Application}, SLINK \cite{id:Sibson1973SLINK}, complete-linkage \cite{id:Sorensen1948Method}, gravitational clustering \cite{id:Wright1977Gravitational};
    \item Criterion function approach based on minimalisation of a certain criterion is represented by a huge FCM \cite{id:Bezdek1973clustervaliditywith}, family, eg. 
       FCOM \cite{id:Leski2016FuzzyC},
       FuBi \cite{id:Siminski2022FuBiNFS},
       Rough FCM \cite{id:Siminski2014Rough,id:Siminski2013Clustering},
       Subspace FCM \cite{id:Siminski2014Neuro} etc.
    \item Density approach locates clusters in the most dense regions of the input domain, eg. DBSCAN \cite{id:dbscan-algorithm,id:Suchy2023GrDBSCAN}, OPTICS \cite{id:optics-algorithm}.
-   \item Graph approach treats data items as graph vertices and similarities as graph edges \ksremark{cytowania} 
+   \item Graph approach treats data items as graph vertices and similarities as graph edges, eg. 
+      based on spectral clustering \cite{id:Nie2024Novel},  
+      deep methods                 \cite{id:Ren2024Dynamic},   
+      kernels                      \cite{id:Liu2024Local}, 
+      density                      \cite{id:Tang2025Density}, 
+      modularity                   \cite{id:Bhowmick2024DGcluster}, 
+      probability                  \cite{id:Wang2025Bidirectional}. 
 \end{itemize}
 
 % hierarchical clustering algorithms 
@@ -398,28 +407,115 @@ It has some advantages such as \cite{id:Siminski2026Arithmetic}:
 \Efn s can be constructed with any fuzzy $\tnorm$-similarity relation that is defined as a left continuous $t$-norm that is reflexive, symmetric and satisfies the triangle property \cite{id:Siminski2026Arithmetic}.
 $\tnorm$-similarity relations that correspond with common fuzzy sets are \cite{id:Siminski2026Arithmetic}:
 \begin{itemize}
-	\item for symmetric triangular fuzzy sets
+   \item for symmetric triangular fuzzy sets (Fig. \ref{fig:S:t})
 	   \begin{align}
-		\ksR{S_t}{x}{y} = \max \left\{ 1 - \frac{|x - y|}{p}, 0 \right\}, \label{eq:S:max}
+		\ksR{S_t}{x}{y} = \max \left\{ 1 - \frac{|x - y|}{p}, 0 \right\}, 
+      \label{eq:S:t}
 	\end{align}
 	where $p > 0$;
-	\item for symmetric trapezoidal fuzzy sets
+   %%%
+      \begin{figure}
+      \centering
+      \begin{tikzpicture}
+         \draw[<->] (0,2.5) -- (0,0) -- (6,0);
+         
+         \draw[dotted] (0,2) node[anchor=east] {$1$} -- +(5,0);
+         
+         \draw[dashed] (3,0) node[anchor=north] {$x$} -- +(0,2);
+         \draw (1,0) -- +(2,2) --+(4,0);
+         
+         \draw [dashed] (4,0) node[anchor=north] {$y$} -- +(0,1) -- +(-4, 1) node[anchor=east] {$S_t(x,y)$}; 
+         
+         \draw [decoration={brace,mirror,raise=0.5cm},decorate] (1,0) -- +(2,0) node[pos=0.5,anchor=north,yshift=-0.55cm] {$p$}; 
+      \end{tikzpicture}
+      \caption{Fuzzy $\tnorm$-similarity relation $S_t$ \cite{id:Siminski2026Arithmetic}.}
+      \label{fig:S:t}
+      \end{figure}
+   %%%
+   %---------------------------
+   \item for symmetric trapezoidal fuzzy sets (Fig. \ref{fig:S:r})
 	\begin{align}
-		\ksR{S_r}{x}{y} = \min\left\{1, \max \left\{ 1 - \frac{|x - y|}{p}, 0 \right\} \cdot \frac{1}{1 - k}\right\}, \label{eq:S:trapezoidal}
+		\ksR{S_r}{x}{y} = \min\left\{1, \max \left\{ 1 - \frac{|x - y|}{p}, 0 \right\} \cdot \frac{1}{1 - k}\right\}, 
+      \label{eq:S:r}
 	\end{align}
 	where $p > 0$ and $0 \leqslant k < 1$;
-	\item for exponential fuzzy sets
+   %%%
+   \begin{figure}
+      \centering
+      \begin{tikzpicture}
+         \draw[<->] (0,2.5) -- (0,0) -- (6,0);
+         
+         \draw[dotted] (0,2) node[anchor=east] {$1$} -- +(5,0);
+         
+         \draw[dashed] (3,0) node[anchor=north] {$x$} -- +(0,2);
+         
+         \draw (1,0) -- +(1,2) -- +(3,2) --+(4,0);
+         
+         \draw [dashed] (4.5,0) node[anchor=north] {$y$} -- +(0,1) -- +(-4.5, 1) node[anchor=east] {$S_r(x,y)$}; 
+         
+         \draw [decoration={brace,mirror,raise=0.5cm},decorate] (1,0) -- +(2,0) node[pos=0.5,anchor=north,yshift=-0.55cm] {$p$}; 
+         \draw [decoration={brace,raise=0.1cm},decorate] (2,2) -- +(1,0) node[pos=0.5,anchor=south,yshift=0.1cm] {$k\cdot p$}; 
+      \end{tikzpicture}
+      \caption{Fuzzy $\tnorm$-similarity relation $S_r$ \cite{id:Siminski2026Arithmetic}.}
+      \label{fig:S:r}
+   \end{figure}
+   %%%
+   %---------------------------
+   \item for exponential fuzzy sets (Fig. \ref{fig:S:e})
 	\begin{align}
 		\ksR{S_e}{x}{y} = \exp \left( -\frac{|x - y|}{p} \right),
-		\label{eq:S2}
+		\label{eq:S:e}
 	\end{align}
 	where $p > 0$;
-	\item for  Gaussian fuzzy sets
+   %%%
+   \begin{figure}
+      \centering
+      \begin{tikzpicture}
+         \draw[<->] (0,2.5) -- (0,0) -- (6,0);
+         
+         \draw[dotted] (0,2) node[anchor=east] {$1$} -- +(5,0);
+         
+         \draw[dashed] (3,0) node[anchor=north] {$x$} -- +(0,2);
+         
+         \draw[smooth] (3.0,	2.000) -- (2.9,	1.810) -- (2.8,	1.637) -- (2.7,	1.482) -- (2.6,	1.341) -- (2.5,	1.213) -- (2.4,	1.098) -- (2.3,	0.993) -- (2.2,	0.899) -- (2.1,	0.813) -- (2.0,	0.736) -- (1.9,	0.666) -- (1.8,	0.602) -- (1.7,	0.545) -- (1.6,	0.493) -- (1.5,	0.446) -- (1.4,	0.404) -- (1.3,	0.365) -- (1.2,	0.331) -- (1.1,	0.299) -- (1.0,	0.271) -- (0.9,	0.245) -- (0.8,	0.222) -- (0.7,	0.201) -- (0.6,	0.181) -- (0.5,	0.164) -- (0.4,	0.149) -- (0.3,	0.134) -- (0.2,	0.122) -- (0.1,	0.110) -- (0.0,	0.100) ;
+         \draw[smooth] (3.0,	2.000) -- (3.1,	1.810) -- (3.2,	1.637) -- (3.3,	1.482) -- (3.4,	1.341) -- (3.5,	1.213) -- (3.6,	1.098) -- (3.7,	0.993) -- (3.8,	0.899) -- (3.9,	0.813) -- (4.0,	0.736) -- (4.1,	0.666) -- (4.2,	0.602) -- (4.3,	0.545) -- (4.4,	0.493) -- (4.5,	0.446) -- (4.6,	0.404) -- (4.7,	0.365) -- (4.8,	0.331) -- (4.9,	0.299) -- (5.0,	0.271) -- (5.1,	0.245) -- (5.2,	0.222) -- (5.3,	0.201) -- (5.4,	0.181) -- (5.5,	0.164) -- (5.6,	0.149) -- (5.7,	0.134) -- (5.8,	0.122) -- (5.9,	0.110) -- (6.0,	0.100) ;
+         
+         \draw [dashed] (4,0) node[anchor=north] {$y$} -- +(0,0.74) -- +(-4, 0.74) node[anchor=east] {$S_e(x,y)$}; 
+         
+      \end{tikzpicture}
+      \caption{Fuzzy $\tnorm$-similarity relation $S_e$ for $p=1$ \cite{id:Siminski2026Arithmetic}.}
+      \label{fig:S:e}
+   \end{figure}
+   %%%
+   %---------------------------
+   \item for Gaussian fuzzy sets (Fig. \ref{fig:S:g})
 	\begin{align}
 		\ksR{S_g}{x}{y} = \exp \left( -\frac{(x - y)^2}{2p^2}\right),
 		\label{eq:S3}
 	\end{align}
 	where $p > 0$.
+   %%%
+   \begin{figure}
+      \centering
+      \begin{tikzpicture}
+         \draw[<->] (0,2.5) -- (0,0) -- (6,0);
+         
+         \draw[dotted] (0,2) node[anchor=east] {$1$} -- +(5,0);
+         
+         \draw[dashed] (3,0) node[anchor=north] {$x$} -- +(0,2);
+         
+         \draw[smooth] (3.0, 2.0) -- (3.1,	1.990) -- (3.2,	1.960) -- (3.3,	1.912) -- (3.4,	1.846) -- (3.5,	1.765) -- (3.6,	1.671) -- (3.7,	1.565) -- (3.8,	1.452) -- (3.9,	1.334) -- (4.0,	1.213) -- (4.1,	1.092) -- (4.2,	0.974) -- (4.3,	0.859) -- (4.4,	0.751) -- (4.5,	0.649) -- (4.6,	0.556) -- (4.7,	0.471) -- (4.8,	0.396) -- (4.9,	0.329) -- (5.0,	0.271) -- (5.1,	0.221) -- (5.2,	0.178) -- (5.3,	0.142) -- (5.4,	0.112) -- (5.5,	0.088) -- (5.6,	0.068) -- (5.7,	0.052) -- (5.8,	0.040) -- (5.9,	0.030) -- (6.0,	0.022);
+         
+         \draw[smooth] (3.0, 2.0) -- (2.9,	1.990) -- (2.8,	1.960) -- (2.7,	1.912) -- (2.6,	1.846) -- (2.5,	1.765) -- (2.4,	1.671) -- (2.3,	1.565) -- (2.2,	1.452) -- (2.1,	1.334) -- (2.0,	1.213) -- (1.9,	1.092) -- (1.8,	0.974) -- (1.7,	0.859) -- (1.6,	0.751) -- (1.5,	0.649) -- (1.4,	0.556) -- (1.3,	0.471) -- (1.2,	0.396) -- (1.1,	0.329) -- (1.0,	0.271) -- (0.9,	0.221) -- (0.8,	0.178) -- (0.7,	0.142) -- (0.6,	0.112) -- (0.5,	0.088) -- (0.4,	0.068) -- (0.3,	0.052) -- (0.2,	0.040) -- (0.1,	0.030) -- (0.0,	0.022);
+         
+         \draw [dashed] (4,0) node[anchor=north] {$y$} -- +(0,1.213) -- +(-4, 1.213) node[anchor=east] {$S_g(x,y)$}; 
+         
+      \end{tikzpicture}
+      \caption{Fuzzy $\tnorm$-similarity relation $S_g$ for $p=1$ \cite{id:Siminski2026Arithmetic}.}
+      \label{fig:S:g}
+   \end{figure}
+   %%%
+   %---------------------------
 \end{itemize}
 
 Having defined the $\tnorm$-similarity relation the \efn\ $x_S$ is defined as 
@@ -428,70 +524,76 @@ Having defined the $\tnorm$-similarity relation the \efn\ $x_S$ is defined as
 \end{align}
 Thus $x$ defines the core of the \efn\ and the parameter $p$ is responsible for its uzziness. So $x_{S(p)}$ fully defines a \efn.
 
-Arithmetical operations on \efn s based on a $\tnorm$-similarity relation $S$ are defined as \cite{id:Siminski2026Arithmetic}:
+A one-argument arithmetical operation $\op$ on \efn s based on a $\tnorm$-similarity relation $S$ is defined as \cite{id:Siminski2026Arithmetic}:
 \begin{align}
-	x_{S(p_x)} + y_{S(p_y)} & = (x+y)_{S(\max(p_x, p_y))} \\
-	x_{S(p_x)} \cdot y_{S(p_y)} & = (x\cdot y)_{S(\max(p_x, p_y))} \\
+	\op(x_{S}) = \op(x)_{S},
+\end{align}
+for example 
+\begin{align}
 	-\left(x_{S}\right) & = \left(-x\right)_{S} \\
 	\left(x_{S}\right)^{-1} & = \left(1/x\right)_{S}, \qquad \text{for } x_S \neq 0_S
 \end{align}
+A two-argument arithmetical operation $\op$ on \efn s is defined as \cite{id:Siminski2026Arithmetic}:
+\begin{align}
+	x_{S(p_x)} \op y_{S(p_y)} = (x \op y)_{\max\{p_x,p_y\}},
+\end{align}
+for example
+\begin{align}
+	x_{S(p_x)} + y_{S(p_y)} & = (x+y)_{S(\max(p_x, p_y))} \\
+	x_{S(p_x)} \cdot y_{S(p_y)} & = (x\cdot y)_{S(\max(p_x, p_y))} 
+\end{align}
 The above formulae make the arithmetic with \efn s very efficient computationally.
 
-\ksremark{Ewentualnie dodamy tutaj operator porównania.}
+%For a fuzzy $\tnorm$-similarity $S_t$
+%
+%\begin{align}
+	%S_t(x,y) = \max\left\{1-\frac{|x-y|}{p}, 0\right\},
+%\end{align}
+%
+%where $p>0$ with the Łukasiewicz t-norm $\tnorm$, the \efn\ constructed with $S_t$ is a triangular \efn\ represented on \zlremark{rysunek liczby trójkątnej}.
+%
+%For a fuzzy $\tnorm$-similarity $S_e$
+%
+%\begin{align}
+	%S_e(x,y) = \exp\left(-\frac{|x-y|}{p}\right),
+%\end{align}
+%
+%where $p>0$ with the product t-norm $\tnorm$, the \efn\ constructed with $S_e$ is a exponential \efn\ represented on \zlremark{rysunek liczby wykładniczej}.
+%
+%For a fuzzy $\tnorm$-similarity $S_g$
+%
+%\begin{align}
+	%S_g(x,y) = \exp\left(-\frac{(x-y)^2}{2p^2}\right),
+%\end{align}
+%
+%where $p>0$ with the Łukasiewicz t-norm $\tnorm$, the \efn\ constructed with $S_g$ is a gaussian \efn\ represented on \zlremark{rysunek liczby gaussowskiej}.
+%
+%For fuzzy $\tnorm$-similarities $S \in \{S_t, S_e, S_g\}$, one-argument and two-argument arithmetical operations are defined as follows:
+%
+%\begin{align}
+	%\mathbf{op}(x_{S}) = \mathbf{op}(x)_{S},
+%\end{align}
+%
+%\begin{align}
+	%x_{S(p_x)} \; \mathbf{op} \; y_{S(p_y)} = (x \; \mathbf{op} \; y)_{\max\{p_x,p_y\}}.
+%\end{align}
 
-For a fuzzy $\tnorm$-similarity $S_t$
-
+For \efn s, the equality operator returns a fuzzy value from the interval $[0,1]$ that is defined as a $\tnorm$-similarity relation $S$:
 \begin{align}
-	S_t(x,y) = \max\left\{1-\frac{|x-y|}{p}, 0\right\},
+	\left(x_{\relS(p_x)} \eqS y_{\relS(p_y)}\right) = \relS_{\left(\max\{p_x, p_y\}\right)}(x,y).
 \end{align}
-
-where $p>0$ with the Łukasiewicz t-norm $\tnorm$, the \efn\ constructed with $S_t$ is a triangular \efn\ represented on \zlremark{rysunek liczby trójkątnej}.
-
-For a fuzzy $\tnorm$-similarity $S_e$
-
-\begin{align}
-	S_e(x,y) = \exp\left(-\frac{|x-y|}{p}\right),
-\end{align}
-
-where $p>0$ with the product t-norm $\tnorm$, the \efn\ constructed with $S_e$ is a exponential \efn\ represented on \zlremark{rysunek liczby wykładniczej}.
-
-For a fuzzy $\tnorm$-similarity $S_g$
-
-\begin{align}
-	S_g(x,y) = \exp\left(-\frac{(x-y)^2}{2p^2}\right),
-\end{align}
-
-where $p>0$ with the Łukasiewicz t-norm $\tnorm$, the \efn\ constructed with $S_g$ is a gaussian \efn\ represented on \zlremark{rysunek liczby gaussowskiej}.
-
-For fuzzy $\tnorm$-similarities $S \in \{S_t, S_e, S_g\}$, one-argument and two-argument arithmetical operations are defined as follows:
-
-\begin{align}
-	\mathbf{op}(x_{S}) = \mathbf{op}(x)_{S},
-\end{align}
-
-\begin{align}
-	x_{S(p_x)} \; \mathbf{op} \; y_{S(p_y)} = (x \; \mathbf{op} \; y)_{\max\{p_x,p_y\}}.
-\end{align}
-
-Logical operations on \efn s are based on the fuzzy equality operator $=_S$:
-
-\begin{align}
-	\left(x_{S(p_x)} =_S y_{S(p_y)}\right) = S_{\left(\max\{p_x, p_y\}\right)}(x,y).
-\end{align}
-
-The fuzzy equality relation has a value from an interval $[0,1]$.
-
+%
 The fuzzy operator $<_S$ is defined as:
-
 \begin{align}
-	\left(x_{S(p_{x})} <_{S} y_{S(p_{y})}\right) = \left\{ \begin{array}{cl}
-	1 -  \left(x_{S(p_{x})} =_{S} y_{S(p_{y})}\right) & : \  x \le y \\
-	0 & : \ x > y
-	\end{array} \right\}.
+	\left(x_{\relS(p_{x})} \lS y_{\relS(p_{y})}\right) = 
+   \begin{cases}
+      1 -  \left(x_{\relS(p_{x})} \eqS y_{\relS(p_{y})}\right) & : \  x \le y \\
+      0 & : \ x > y
+   \end{cases}.
 \end{align}
 
 \zlremark{Nie wiem, czy opisywać pozostałe operacje logiczne, tylko te dwie są wykorzystywane}
-
+\ksremark{Na razie nie :-)}
 % --------------------------------------------------
 \clearpage 
 
