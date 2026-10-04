@@ -594,6 +594,32 @@ The fuzzy operator $<_S$ is defined as:
 
 \zlremark{Nie wiem, czy opisywać pozostałe operacje logiczne, tylko te dwie są wykorzystywane}
 \ksremark{Na razie nie :-)}
+
+
+\section{Fuzzy agglomerative clustering algorithm}
+
+\newcommand{\GrAgglo}{\procedura{GrAgglo}}
+
+This paper proposes a fuzzy agglomerative clustering algorithm \GrAgglo{}. It consists of three major steps:
+
+\begin{enumerate}
+	\item clusterize the original data into $\nGranula$ clusters with the FCM algorithm (time complexity $O(\nX)$),
+	\item transform the fuzzy clusters into granules (time complexity $O(\nX\nGranula)$),
+	\item group the granules into  with agglomerative clustering algorithm with respect to the fuzziness (time complexity $O(\nGranula^3)$).
+\end{enumerate}
+
+A granule is represented by a multidimensional \efn{}. For each dimension (attribute) $\Atrybut$, the strict value of the \efn\ is the center of the FCM cluster. The fuzziness is calculated as the standard deviation:
+
+\begin{align}
+	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m} (\X_{\Iteracja\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m}}}.
+\end{align}
+
+A general hierarchical algorithm implementation with time complexity $O(n^3)$ is used. Notably, it is used to group $\nGranula$ granules, where $\nGranula \ll \nX$.
+
+The total time complexity of \GrAgglo{} is $O(\nX + \nX\nGranula + \nGranula^3)$, linear depending on input data number.
+
+\zlremark{pseudokody?}
+
 % --------------------------------------------------
 \clearpage 
 
