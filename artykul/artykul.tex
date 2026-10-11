@@ -595,8 +595,32 @@ The fuzzy operator $<_S$ is defined as:
 
 \zlremark{Nie wiem, czy opisywać pozostałe operacje logiczne, tylko te dwie są wykorzystywane}
 \ksremark{Na razie nie :-)}
-% --------------------------------------------------
-\clearpage 
+
+
+\section{Fuzzy agglomerative clustering algorithm}
+
+\newcommand{\GrAgglo}{\procedura{GrAgglo}}
+
+This paper proposes a fuzzy agglomerative clustering algorithm \GrAgglo{}. It consists of three major steps:
+
+\begin{enumerate}
+	\item clusterize the original data into $\nGranula$ clusters with the FCM algorithm (time complexity $O(\nX)$),
+	\item transform the fuzzy clusters into granules (time complexity $O(\nX\nGranula)$),
+	\item group the granules into  with agglomerative clustering algorithm with respect to the fuzziness (time complexity $O(\nGranula^3)$).
+\end{enumerate}
+
+A granule is represented by a multidimensional \efn{}. For each dimension (attribute) $\Atrybut$, the strict value of the \efn\ is the center of the FCM cluster. The fuzziness is calculated as the standard deviation:
+
+\begin{align}
+	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m} (\X_{\Iteracja\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m}}}.
+\end{align}
+
+A general hierarchical algorithm implementation with time complexity $O(n^3)$ is used. Notably, it is used to group $\nGranula$ granules, where $\nGranula \ll \nX$.
+
+The total time complexity of \GrAgglo{} is $O(\nX + \nX\nGranula + \nGranula^3)$, linear depending on input data number.
+
+\zlremark{pseudokody?}
+
 
 %
 %Często wybierana euklidesowa metryka odległości \cite{id:hierarchical-overview} zdefiniowana jest jako
@@ -898,6 +922,26 @@ the fuzziness $p_{\Klaster\Atrybut}$, which is calculated based on the membershi
  	\end{algorithmic}
  \end{algorithm}
 
+\section{Experiments}
+
+\subsection{Datasets}
+
+Two groups of datasets are used in the experiments. The first one is synthetic labelled data in six shapes (\blobs, \circles, \corners, \crescents, \laguna and \spheres) and eight sizes (1000, 2000, 5000, 10000, 20000, 30000, 40000 and 50000 elements). The data is visualized by \ref{fig:data-shapes}. The second one is real-life unlabelled 2D data \brightkite \footnote{\url{https://snap.stanford.edu/data/loc-brightkite.html}} and \gowalla \footnote{\url{https://snap.stanford.edu/data/loc-gowalla.html}}. Only the latitude and longitude columns are used for the experiments. The data is visualized by \ref{fig:gowalla-brightkite-shapes}.
+
+ \begin{figure}
+ 	\centering
+ 	\includegraphics[width=\textwidth]{\graf/data_shapes_labels.pdf}
+ 	\caption{Visualization of synthetic datasets of size 1000. Points of the same color belong to the same target cluster.}
+ 	\label{fig:data-shapes}
+ \end{figure}
+
+ \begin{figure}
+ 	\centering
+ 	\includegraphics[width=\textwidth]{\graf/gowalla_brightkite_shapes.png}
+ 	\caption{Visualization of \brightkite and \gowalla datasets.}
+ 	\label{fig:gowalla-brightkite-shapes}
+ \end{figure}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage % dotad  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1025,7 +1069,7 @@ the fuzziness $p_{\Klaster\Atrybut}$, which is calculated based on the membershi
  	\centering
  	%\includegraphics[width=\textwidth]{\graf/data_shapes.pdf}
  	\caption{Wykresy danych o różnych kształtach z folderu \texttt{dane} o rozmiarze 1000 punktów.}
- 	\label{fig:data-shapes}
+ 	% \label{fig:data-shapes}
  \end{figure}
  
  \begin{table}
@@ -1046,7 +1090,7 @@ the fuzziness $p_{\Klaster\Atrybut}$, which is calculated based on the membershi
  	\centering
  	%\includegraphics[width=\textwidth]{\graf/gowalla_brightkite_shapes.png}
  	\caption{Wykresy danych \brightkite i \gowalla.}
- 	\label{fig:gowalla-brightkite-shapes}
+ 	% \label{fig:gowalla-brightkite-shapes}
  \end{figure}
  
  \subsection{Metodyka badań}
