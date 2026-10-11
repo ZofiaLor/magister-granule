@@ -620,6 +620,26 @@ The total time complexity of \GrAgglo{} is $O(\nX + \nX\nGranula + \nGranula^3)$
 
 \zlremark{pseudokody?}
 
+\section{Experiments}
+
+\subsection{Datasets}
+
+Two groups of datasets are used in the experiments. The first one is synthetic labelled data in six shapes (\blobs, \circles, \corners, \crescents, \laguna and \spheres) and eight sizes (1000, 2000, 5000, 10000, 20000, 30000, 40000 and 50000 elements). The data is visualized by \ref{fig:data-shapes}. The second one is real-life unlabelled 2D data \brightkite \footnote{\url{https://snap.stanford.edu/data/loc-brightkite.html}} and \gowalla \footnote{\url{https://snap.stanford.edu/data/loc-gowalla.html}}. Only the latitude and longitude columns are used for the experiments. The data is visualized by \ref{fig:gowalla-brightkite-shapes}.
+
+ \begin{figure}
+ 	\centering
+ 	\includegraphics[width=\textwidth]{\graf/data_shapes_labels.pdf}
+ 	\caption{Visualization of synthetic datasets of size 1000. Points of the same color belong to the same target cluster.}
+ 	\label{fig:data-shapes}
+ \end{figure}
+
+ \begin{figure}
+ 	\centering
+ 	\includegraphics[width=\textwidth]{\graf/gowalla_brightkite_shapes.png}
+ 	\caption{Visualization of \brightkite and \gowalla datasets.}
+ 	\label{fig:gowalla-brightkite-shapes}
+ \end{figure}
+
 % --------------------------------------------------
 \clearpage 
 
@@ -1049,7 +1069,7 @@ The total time complexity of \GrAgglo{} is $O(\nX + \nX\nGranula + \nGranula^3)$
  	\centering
  	%\includegraphics[width=\textwidth]{\graf/data_shapes.pdf}
  	\caption{Wykresy danych o różnych kształtach z folderu \texttt{dane} o rozmiarze 1000 punktów.}
- 	\label{fig:data-shapes}
+ 	% \label{fig:data-shapes}
  \end{figure}
  
  \begin{table}
@@ -1070,7 +1090,7 @@ The total time complexity of \GrAgglo{} is $O(\nX + \nX\nGranula + \nGranula^3)$
  	\centering
  	%\includegraphics[width=\textwidth]{\graf/gowalla_brightkite_shapes.png}
  	\caption{Wykresy danych \brightkite i \gowalla.}
- 	\label{fig:gowalla-brightkite-shapes}
+ 	% \label{fig:gowalla-brightkite-shapes}
  \end{figure}
  
  \subsection{Metodyka badań}
