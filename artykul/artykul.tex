@@ -128,7 +128,8 @@
 \newcommand{\CompleteLinkage}{\procedura{Com\-ple\-te\-Lin\-ka\-ge}}
 \newcommand{\MojAlg}{\procedura{GrAgglo}}
 \newcommand{\MojHierAlg}{\procedura{FuzzyAgglo}}
-
+\newcommand{\CtoG}{\procedura{ClustersToGranules}}
+\newcommand{\dendrogram}{d} 
 
 \DeclareMathOperator{\op}{\mathbf{op}}
 
@@ -159,7 +160,7 @@
  \usepackage{algpseudocode}
  
  
- \floatname{algorithm}{Algorytm}
+ %\floatname{algorithm}{Algorytm}
  
 \input{./libraries/oznaczenia.tex}
 \input{./libraries/remarks.tex}
@@ -822,59 +823,86 @@ The fuzzy operator $<_S$ is defined as:
 %
 %Algorytm rozmytych $c$-średnich stanowi podstawę dla wielu innych algorytmów. Należą do nich między innymi algorytm {possibilistic $c$-means} (PCM) \cite{id:pcm-algorithm}, w którym warunek \eqref{eq:cluster_mem_condition} nie musi być spełniony, oraz {fuzzy $c$-ordered-means} (FCOM) \cite{id:fcom-algorithm}, gdzie dane sortowane są według odległości od środków klastrów.
  
- 
- \section{Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego}
- \label{sec:wlasne-rozwiazanie}
- 
- %\begin{itemize}
- %\item  Jak ja rozwiązuję problem?
- %\begin{itemize}
- %\item rozwiązanie zaproponowane przez dyplomanta
- %\item analiza teoretyczna rozwiązania
- %\item uzasadnienie wyboru zastosowanych metod, algorytmów, narzędzi
- %\end{itemize}
- %\end{itemize}
- 
- %\section{Plan rozwiązania}
- 
- Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasowa -- w przypadku algorytmu ogólnego aż do $O(\nX^{3})$, gdzie $\nX$ to liczba danych. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(\nX)$).
- 
- Zaproponowano rozmyty algorytm aglomeracyjnego grupowania hierarchicznego: \MojAlg{}. Składa się on z trzech głównych kroków:
- 
- \begin{enumerate}
- 	\item granulacja oryginalnych danych przy pomocy algorytmu rozmytych $c$-średnich (roz. \ref{sec:granulacja-danych-oryginalnych}),
- 	\item przekształcenie otrzymanych wyników w granule o potrzebnych parametrach (roz. \ref{sec:przeksztalcenie-granul}),
- 	\item aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia: \MojHierAlg\ (roz. \ref{sec:rozmyte-grupowanie-hierarchiczne}).
- \end{enumerate}
- 
- Złożoność czasowa tego algorytmu może zostać określona jako $O(\nX + \nX\nGranula + \nGranula^3)$, przy czym $\nGranula \ll \nX$ odpowiada liczbie granul.
- 
- Implementacja algorytmu, skrypty pomocnicze pozwalające na analizę jego działania, badane dane syntetyczne oraz wyniki uzyskane na ich podstawie zamieszczono w repozytorium pod adresem \url{https://github.com/ZofiaLor/magister-granule}.
- 
- \subsection{Granulacja danych oryginalnych}
- \label{sec:granulacja-danych-oryginalnych}
- 
- W pierwszym kroku oryginalne dane są granulowane przez algorytm rozmytych $c$-średnich. Dane mają postać macierzy liczb rzeczywistych o wymiarach $\nX \times \nAtrybut$, gdzie $\nX$ -- liczba danych, $\nAtrybut$ -- liczba atrybutów. Wartość parametru rozmycia $m$ algorytmu określona jest na stałe jako 2. Liczba docelowych klastrów $\nKlaster$ jest jednym z parametrów badawczych i jest znacznie mniejsza od $\nX$. 
- 
- Wyjściem tego kroku algorytmu będą struktury wyznaczone przez algorytm FCM, w szczególności wektor środków klastrów $\wCentre$ oraz macierz przynależności danych do klastrów $\mClusterMembership$.
- 
- \subsection{Przekształcenie granul}
- \label{sec:przeksztalcenie-granul}
- 
- Granule wykorzystywane do grupowania hierarchicznego mają postać wielowymiarowych rozszerzalnych liczb rozmytych. Dla każdego wymiaru musi zostać określona wartość ostra liczby $x$ oraz jej rozmycie $p$.
- 
- Wartości ostre są tożsame ze środkami klastrów będących wynikiem algorytmu rozmytych $c$-średnich, czyli z wektorem $\wCentre$ (wzór \ref{eq:center_update}).
- 
- Wartościom rozmycia nie odpowiada bezpośrednio żadna ze struktur zwracanych przez FCM. Dla każdego klastra $\Klaster$ i wymiaru (atrybutu) $\Atrybut$, rozmycie oblicza się jako następujące odchylenie standardowe:
+\section{Granular agglomerative hierarchical clustering} 
+\label{sec:GrAHC}
+The hierarchical clustering algorithms have in general a high time complexity -- in the case of the general algorithm up to $O(\nX^{3})$, where $\nX$ is the number of data points. 
+This problem can be mitigated with granular computation.
+Instead of clustering the original data, first the data is granulated, and then the hierarchical clustering is applied to the granules.
+In our approach, the granules are represented as extensional fuzzy numbers. 
+The proposed algorithm is called \MojAlg{} and consists of three main steps: 
+\begin{enumerate}
+   \item granulation of the original data using the fuzzy $c$-means algorithm FCM (line \ref{alg:MojAlg:fcm} in  Alg. \ref{alg:MojAlg}),
+   \item transformation of the obtained results into granules with the required parameters (line \ref{alg:MojAlg:TransformToGranules} in Alg. \ref{alg:MojAlg}), and
+   \item agglomerative hierarchical clustering of granules taking into account their fuzziness (line \ref{alg:MojAlg:MojHierAlg} in Alg. \ref{alg:MojAlg}).
+\end{enumerate}
+Time complexity of this algorithm can be determined as $O(\nX + \nX\nGranula + \nGranula^3)$, where $\nGranula \ll \nX$ corresponds to the number of granules.
+
+\ksremark{\url{https://github.com/ZofiaLor/magister-granule}}
+
+ \begin{algorithm}[]
+    \caption{\MojAlg{} -- granular agglomerative hierarchical clustering}
+ 	\label{alg:MojAlg}
+ 	\begin{algorithmic}[1]
+ 		\Require $\zX$: input data
+      \Require $\nGranula$: number of granules 
+ 		\Require $r$: type of the $\tnorm$-relation
+ 		\Require $\xi$: threshold for the fuzzy minimum operation
+      \Procedure{\MojAlg}{$zX, \nGranula, r, \xi$}
+      \State $\mCentre, \mMembership \gets $ \Call{FCM}{$\zX, \nGranula$} \Comment{clusterisation of the input data, $\mCentre$: centres of clusters, $\mMembership$: memberships of data items to clusters}\label{alg:MojAlg:fcm}
+      \State $\zGranula \gets $ \Call{\CtoG}{$\mCentre, \mMembership, r$} \Comment{transformation of the obtained clusters into granules} %(Alg. \ref{alg:MojAlg:TransformToGranules})}
+      \label{alg:MojAlg:TransformToGranules}
+      \State $\dendrogram \gets $ \Call{\MojHierAlg}{$\zGranula, \xi$} \Comment{agglomerative hierarchical clustering of granules (Alg. \ref{alg:MojHierAlg})}\label{alg:MojAlg:MojHierAlg}
+      \State \Return $\dendrogram$   \Comment{dendrogram of the obtained clusters} 
+      \EndProcedure
+ 	\end{algorithmic}
+ \end{algorithm}
+
+In the first step (line \ref{alg:MojAlg:fcm} in Alg. \ref{alg:MojAlg}), the original data $\zX$ is clustered with the fuzzy $c$-means algorithm FCM. 
+FCM returns the centres of $\nGranula$ clusters $\mCentre$ and the memberships of data points to clusters $\mMembership$.
+The obtained results are then transformed into granules (line \ref{alg:MojAlg:TransformToGranules} in Alg. \ref{alg:MojAlg}).
+Granules are represented with \efn s, which are defined by the following parameters: 
+the centre of the granule $\Centre_{\Klaster\Atrybut}$, which is equal to the centre of the cluster obtained from FCM, and 
+the fuzziness $p_{\Klaster\Atrybut}$, which is calculated based on the memberships $\mMembership$ of data points to clusters with the following formula:
  \begin{align}
  	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m} (\X_{\Iteracja\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m}}}.
- \end{align}
+\end{align} 
  
- Wyjściem tego kroku jest zbiór granul $\zGranula$ -- obiektów posiadających listę $\Atrybut$-elementową liczb rozmytych, które z kolei zawierają informacje o wartościach $x$ i $p$. Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytych, które składają się na ich wymiary. Kształt jest więc parametrem dla operacji logicznych na nich wykonywanych. Złożoność czasowa tego kroku wynosi $O(\nX\nGranula)$
+% Wyjściem tego kroku jest zbiór granul $\zGranula$ -- obiektów posiadających listę $\Atrybut$-elementową liczb rozmytych, które z kolei zawierają informacje o wartościach $x$ i $p$. Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytych, które składają się na ich wymiary. Kształt jest więc parametrem dla operacji logicznych na nich wykonywanych. Złożoność czasowa tego kroku wynosi $O(\nX\nGranula)$
  
- Liczby rozmyte stanowią rozszerzenie liczb ostrych, więc każda arytmetyczne i logiczna operacja rozmyta zwraca poprawny wynik również wtedy, gdy ich parametrami są liczby, dla których $p=0$. Implementacja operacji $=_\nPodobienstwo$ w przypadku, gdy obydwie liczby są ostre, wykonuje zwykłą, ostrą operację logiczną $=$, w przeciwnym razie wystąpiłoby dzielenie przez 0. Operacja zwraca 1, jeżeli liczby są równe, 0, jeżeli nie są zamiast wartości logicznych odpowiednio prawda lub fałsz.
+ %Liczby rozmyte stanowią rozszerzenie liczb ostrych, więc każda arytmetyczne i logiczna operacja rozmyta zwraca poprawny wynik również wtedy, gdy ich parametrami są liczby, dla których $p=0$. Implementacja operacji $=_\nPodobienstwo$ w przypadku, gdy obydwie liczby są ostre, wykonuje zwykłą, ostrą operację logiczną $=$, w przeciwnym razie wystąpiłoby dzielenie przez 0. Operacja zwraca 1, jeżeli liczby są równe, 0, jeżeli nie są zamiast wartości logicznych odpowiednio prawda lub fałsz.
  
- \subsection{Rozmyte grupowanie hierarchiczne}
+ \begin{algorithm}[]
+ 	\caption{Algorytm rozmytego aglomeracyjnego grupowania hierarchicznego \MojHierAlg{} (\SingleLinkage{})}
+ 	\label{alg:fuzzy_single_linkage}
+ 	\begin{algorithmic}[1]
+ 		\Require $\zX$: dane do klasteryzacji
+ 		\Require $\nKlaster$: docelowa liczba klastrów 
+ 		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
+ 		\Require $\xi$: wartość progowa
+ 		\Procedure{\MojHierAlg}{$\zX, \nKlaster, r, \xi$}
+ 		\State $\nX \gets |\zX|$ \Comment{liczba danych}
+ 		\State $\mDistance \gets $ \Call{FuzzyDistance}{$\zX$} \Comment{symetryczna macierz $\nX \times \nX$ rozmytych odległości euklidesowych między każdą parą danych}
+ 		\State $\wPunkt \gets [1, 2, ..., \nX-1, \nX]$ \Comment{wektor indeksów, które będą sprawdzane}
+ 		\State $\wEtykieta \gets [1, 2, ..., \nX-1, \nX]$ \Comment{etykiety}
+ 		\For{$i = 1$ to $\nX - \nKlaster$} 
+ 		\State $w, k \gets $ \Call{FuzzyArgMin}{$\mDistance, \wPunkt, r, \xi$} \Comment{znalezienie indeksów dwóch najbliższych klastrów}
+ 		\State $\wPunkt \gets \wPunkt \setminus {k}$ \Comment{nieużywane w dalszych iteracjach}
+ 		\For{$\Punkt \in \wPunkt$}
+ 		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności}\label{alg:lacznosc}
+ 		\EndFor
+ 		\State $\wEtykieta \gets$ \Call{scal}{$\wEtykieta, w, k$} \Comment{zamiana wszystkich etykiet o wartości $k$ na wartość $w$.}
+ 		\EndFor
+ 		\State $\wEtykieta \gets$ \Call{przemianuj}{$\wEtykieta$} \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne liczby od 0.}
+ 		\State \Return $\wEtykieta$
+ 		\EndProcedure
+ 	\end{algorithmic}
+ \end{algorithm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage % dotad  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Rozmyte grupowanie hierarchiczne}
  \label{sec:rozmyte-grupowanie-hierarchiczne}
  
  Zbiór granul $\zGranula$ oraz ich kształt są parametrami wejściowymi algorytmu rozmytego aglomeracyjnego grupowania hierarchicznego \MojHierAlg.
@@ -968,32 +996,6 @@ The fuzzy operator $<_S$ is defined as:
  	\end{algorithmic}
  \end{algorithm}
  
- \begin{algorithm}[t]
- 	\caption{Algorytm rozmytego aglomeracyjnego grupowania hierarchicznego \MojHierAlg{} (\SingleLinkage{})}
- 	\label{alg:fuzzy_single_linkage}
- 	\begin{algorithmic}[1]
- 		\Require $\zX$: dane do klasteryzacji
- 		\Require $\nKlaster$: docelowa liczba klastrów 
- 		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
- 		\Require $\xi$: wartość progowa
- 		\Procedure{\MojHierAlg}{$\zX, \nKlaster, r, \xi$}
- 		\State $\nX \gets |\zX|$ \Comment{liczba danych}
- 		\State $\mDistance \gets $ \Call{FuzzyDistance}{$\zX$} \Comment{symetryczna macierz $\nX \times \nX$ rozmytych odległości euklidesowych między każdą parą danych}
- 		\State $\wPunkt \gets [1, 2, ..., \nX-1, \nX]$ \Comment{wektor indeksów, które będą sprawdzane}
- 		\State $\wEtykieta \gets [1, 2, ..., \nX-1, \nX]$ \Comment{etykiety}
- 		\For{$i = 1$ to $\nX - \nKlaster$} 
- 		\State $w, k \gets $ \Call{FuzzyArgMin}{$\mDistance, \wPunkt, r, \xi$} \Comment{znalezienie indeksów dwóch najbliższych klastrów}
- 		\State $\wPunkt \gets \wPunkt \setminus {k}$ \Comment{nieużywane w dalszych iteracjach}
- 		\For{$\Punkt \in \wPunkt$}
- 		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności}\label{alg:lacznosc}
- 		\EndFor
- 		\State $\wEtykieta \gets$ \Call{scal}{$\wEtykieta, w, k$} \Comment{zamiana wszystkich etykiet o wartości $k$ na wartość $w$.}
- 		\EndFor
- 		\State $\wEtykieta \gets$ \Call{przemianuj}{$\wEtykieta$} \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne liczby od 0.}
- 		\State \Return $\wEtykieta$
- 		\EndProcedure
- 	\end{algorithmic}
- \end{algorithm}
  
  \section{Badania}
  \label{sec:badania}
