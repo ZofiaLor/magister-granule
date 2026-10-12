@@ -869,14 +869,29 @@ Time complexity of this algorithm can be determined as $O(\nX + \nX\nGranula + \
  	\begin{algorithmic}[1]
  		\Require $\zX$: input data
       \Require $\nGranula$: number of granules 
+ 		\Require $\nKlaster$: expected number of clusters 
  		\Require $r$: type of the $\tnorm$-relation
  		\Require $\xi$: threshold for the fuzzy minimum operation
       \Procedure{\MojAlg}{$zX, \nGranula, r, \xi$}
       \State $\mCentre, \mMembership \gets $ \Call{FCM}{$\zX, \nGranula$} \Comment{clusterisation of the input data, $\mCentre$: centres of clusters, $\mMembership$: memberships of data items to clusters}\label{alg:MojAlg:fcm}
       \State $\zGranula \gets $ \Call{\CtoG}{$\mCentre, \mMembership, r$} \Comment{transformation of the obtained clusters into granules} %(Alg. \ref{alg:MojAlg:TransformToGranules})}
       \label{alg:MojAlg:TransformToGranules}
-      \State $\dendrogram \gets $ \Call{\MojHierAlg}{$\zGranula, \xi$} \Comment{agglomerative hierarchical clustering of granules (Alg. \ref{alg:MojHierAlg})}\label{alg:MojAlg:MojHierAlg}
-      \State \Return $\dendrogram$   \Comment{dendrogram of the obtained clusters} 
+      \For {granule $\Granula_1$ in $\zGranula$} 
+         \For {granule $\Granula_2$ in $\zGranula$}
+            \State $\mDistance[\Granula_1, \Granula_2] \gets $ \Call{FuzzyDistance}{$\Granula_1, \Granula_2$} \Comment{calculate the fuzzy distance between granules}
+         \EndFor
+      \EndFor 
+      \State $n \gets \nGranula$ \Comment{each granule is a separate cluster}
+      \While{$n > \nKlaster$} 
+         \State $i,j \gets $ \Call{FuzzyArgMin}{$\mDistance, \wPunkt, r, \xi$} \Comment{find the indices of the two closest clusters} 
+         \ForAll{granules $\Granula$ in $\zGranula$} \Comment{merge the found clusters into one}
+            \State create a new row $\wR$ and a new column $\wC$ for the distance matrix $\mDistance$ \Comment{the new row and column correspond to the merged cluster}
+            \State $\wR[\Granula] = \wC[\Granula] = $ \Call{FuzzyMinimum}{$\mDistance[i, \Granula], \mDistance[j, \Granula], r, \xi$} \Comment{assign the result of the fuzzy minimum operation}\label{alg:lacznosc}
+         \EndFor
+         \State remove the $i$-th and $j$-th rows and columns from the distance matrix $\mDistance$ 
+         \State add the new row $\wR$ and column $\wC$ to the distance matrix $\mDistance$
+         \State $n \gets n - 1$\Comment{update the number of clusters}
+      \EndWhile
       \EndProcedure
  	\end{algorithmic}
  \end{algorithm}
@@ -895,33 +910,6 @@ the fuzziness $p_{\Klaster\Atrybut}$, which is calculated based on the membershi
  
  %Liczby rozmyte stanowią rozszerzenie liczb ostrych, więc każda arytmetyczne i logiczna operacja rozmyta zwraca poprawny wynik również wtedy, gdy ich parametrami są liczby, dla których $p=0$. Implementacja operacji $=_\nPodobienstwo$ w przypadku, gdy obydwie liczby są ostre, wykonuje zwykłą, ostrą operację logiczną $=$, w przeciwnym razie wystąpiłoby dzielenie przez 0. Operacja zwraca 1, jeżeli liczby są równe, 0, jeżeli nie są zamiast wartości logicznych odpowiednio prawda lub fałsz.
  
- \begin{algorithm}[]
- 	\caption{Algorytm rozmytego aglomeracyjnego grupowania hierarchicznego \MojHierAlg{} (\SingleLinkage{})}
- 	\label{alg:fuzzy_single_linkage}
- 	\begin{algorithmic}[1]
- 		\Require $\zX$: dane do klasteryzacji
- 		\Require $\nKlaster$: docelowa liczba klastrów 
- 		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
- 		\Require $\xi$: wartość progowa
- 		\Procedure{\MojHierAlg}{$\zX, \nKlaster, r, \xi$}
- 		\State $\nX \gets |\zX|$ \Comment{liczba danych}
- 		\State $\mDistance \gets $ \Call{FuzzyDistance}{$\zX$} \Comment{symetryczna macierz $\nX \times \nX$ rozmytych odległości euklidesowych między każdą parą danych}
- 		\State $\wPunkt \gets [1, 2, ..., \nX-1, \nX]$ \Comment{wektor indeksów, które będą sprawdzane}
- 		\State $\wEtykieta \gets [1, 2, ..., \nX-1, \nX]$ \Comment{etykiety}
- 		\For{$i = 1$ to $\nX - \nKlaster$} 
- 		\State $w, k \gets $ \Call{FuzzyArgMin}{$\mDistance, \wPunkt, r, \xi$} \Comment{znalezienie indeksów dwóch najbliższych klastrów}
- 		\State $\wPunkt \gets \wPunkt \setminus {k}$ \Comment{nieużywane w dalszych iteracjach}
- 		\For{$\Punkt \in \wPunkt$}
- 		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności}\label{alg:lacznosc}
- 		\EndFor
- 		\State $\wEtykieta \gets$ \Call{scal}{$\wEtykieta, w, k$} \Comment{zamiana wszystkich etykiet o wartości $k$ na wartość $w$.}
- 		\EndFor
- 		\State $\wEtykieta \gets$ \Call{przemianuj}{$\wEtykieta$} \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne liczby od 0.}
- 		\State \Return $\wEtykieta$
- 		\EndProcedure
- 	\end{algorithmic}
- \end{algorithm}
-
 \section{Experiments}
 
 \subsection{Datasets}
