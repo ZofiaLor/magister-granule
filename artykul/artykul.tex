@@ -597,29 +597,29 @@ The fuzzy operator $<_S$ is defined as:
 \ksremark{Na razie nie :-)}
 
 
-\section{Fuzzy agglomerative clustering algorithm}
-
-\newcommand{\GrAgglo}{\procedura{GrAgglo}}
-
-This paper proposes a fuzzy agglomerative clustering algorithm \GrAgglo{}. It consists of three major steps:
-
-\begin{enumerate}
-	\item clusterize the original data into $\nGranula$ clusters with the FCM algorithm (time complexity $O(\nX)$),
-	\item transform the fuzzy clusters into granules (time complexity $O(\nX\nGranula)$),
-	\item group the granules into  with agglomerative clustering algorithm with respect to the fuzziness (time complexity $O(\nGranula^3)$).
-\end{enumerate}
-
-A granule is represented by a multidimensional \efn{}. For each dimension (attribute) $\Atrybut$, the strict value of the \efn\ is the center of the FCM cluster. The fuzziness is calculated as the standard deviation:
-
-\begin{align}
-	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m} (\X_{\Iteracja\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m}}}.
-\end{align}
-
-A general hierarchical algorithm implementation with time complexity $O(n^3)$ is used. Notably, it is used to group $\nGranula$ granules, where $\nGranula \ll \nX$.
-
-The total time complexity of \GrAgglo{} is $O(\nX + \nX\nGranula + \nGranula^3)$, linear depending on input data number.
-
-\zlremark{pseudokody?}
+%\section{Fuzzy agglomerative clustering algorithm}
+%
+%\newcommand{\GrAgglo}{\procedura{GrAgglo}}
+%
+%This paper proposes a fuzzy agglomerative clustering algorithm \GrAgglo{}. It consists of three major steps:
+%
+%\begin{enumerate}
+	%\item clusterize the original data into $\nGranula$ clusters with the FCM algorithm (time complexity $O(\nX)$),
+	%\item transform the fuzzy clusters into granules (time complexity $O(\nX\nGranula)$),
+	%\item group the granules into  with agglomerative clustering algorithm with respect to the fuzziness (time complexity $O(\nGranula^3)$).
+%\end{enumerate}
+%
+%A granule is represented by a multidimensional \efn{}. For each dimension (attribute) $\Atrybut$, the strict value of the \efn\ is the center of the FCM cluster. The fuzziness is calculated as the standard deviation:
+%
+%\begin{align}
+	%p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m} (\X_{\Iteracja\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m}}}.
+%\end{align}
+%
+%A general hierarchical algorithm implementation with time complexity $O(n^3)$ is used. Notably, it is used to group $\nGranula$ granules, where $\nGranula \ll \nX$.
+%
+%The total time complexity of \GrAgglo{} is $O(\nX + \nX\nGranula + \nGranula^3)$, linear depending on input data number.
+%
+%\zlremark{pseudokody?}
 
 
 %
@@ -853,14 +853,12 @@ The hierarchical clustering algorithms have in general a high time complexity --
 This problem can be mitigated with granular computation.
 Instead of clustering the original data, first the data is granulated, and then the hierarchical clustering is applied to the granules.
 In our approach, the granules are represented as extensional fuzzy numbers. 
-The proposed algorithm is called \MojAlg{} and consists of three main steps: 
-\begin{enumerate}
-   \item granulation of the original data using the fuzzy $c$-means algorithm FCM (line \ref{alg:MojAlg:fcm} in  Alg. \ref{alg:MojAlg}),
-   \item transformation of the obtained results into granules with the required parameters (line \ref{alg:MojAlg:TransformToGranules} in Alg. \ref{alg:MojAlg}), and
-   \item agglomerative hierarchical clustering of granules taking into account their fuzziness (line \ref{alg:MojAlg:MojHierAlg} in Alg. \ref{alg:MojAlg}).
-\end{enumerate}
-Time complexity of this algorithm can be determined as $O(\nX + \nX\nGranula + \nGranula^3)$, where $\nGranula \ll \nX$ corresponds to the number of granules.
-
+%The proposed algorithm is called \MojAlg{} and consists of three main steps: 
+%\begin{enumerate}
+   %\item granulation of the original data using the fuzzy $c$-means algorithm FCM (line \ref{alg:MojAlg:fcm} in  Alg. \ref{alg:MojAlg}),
+   %\item transformation of the obtained results into granules with the required parameters (line \ref{alg:MojAlg:TransformToGranules} in Alg. \ref{alg:MojAlg}), and
+   %\item agglomerative hierarchical clustering of granules taking into account their fuzziness (line \ref{alg:MojAlg:MojHierAlg} in Alg. \ref{alg:MojAlg}).
+%\end{enumerate}
 \ksremark{\url{https://github.com/ZofiaLor/magister-granule}}
 
  \begin{algorithm}[]
@@ -874,38 +872,52 @@ Time complexity of this algorithm can be determined as $O(\nX + \nX\nGranula + \
  		\Require $\xi$: threshold for the fuzzy minimum operation
       \Procedure{\MojAlg}{$zX, \nGranula, r, \xi$}
       \State $\mCentre, \mMembership \gets $ \Call{FCM}{$\zX, \nGranula$} \Comment{clusterisation of the input data, $\mCentre$: centres of clusters, $\mMembership$: memberships of data items to clusters}\label{alg:MojAlg:fcm}
-      \State $\zGranula \gets $ \Call{\CtoG}{$\mCentre, \mMembership, r$} \Comment{transformation of the obtained clusters into granules} %(Alg. \ref{alg:MojAlg:TransformToGranules})}
+      \State $\zGranula \gets $ \Call{\CtoG}{$\mCentre, \mMembership, r$} \Comment{create granules from clusters} %(Alg. \ref{alg:MojAlg:TransformToGranules})}
       \label{alg:MojAlg:TransformToGranules}
-      \For {granule $\Granula_1$ in $\zGranula$} 
-         \For {granule $\Granula_2$ in $\zGranula$}
-            \State $\mDistance[\Granula_1, \Granula_2] \gets $ \Call{FuzzyDistance}{$\Granula_1, \Granula_2$} \Comment{calculate the fuzzy distance between granules}
+      \For {each granule $\Granula_1$ in $\zGranula$}\label{alg:MojAlg:loop:begin} 
+         \For {each granule $\Granula_2 \neq \Granula_1$ in $\zGranula$}
+            \State $\mDistance[\Granula_1, \Granula_2] \gets $ \Call{FuzzyDistance}{$\Granula_1, \Granula_2$} 
          \EndFor
-      \EndFor 
+      \EndFor\label{alg:MojAlg:loop:end} 
       \State $n \gets \nGranula$ \Comment{each granule is a separate cluster}
-      \While{$n > \nKlaster$} 
-         \State $i,j \gets $ \Call{FuzzyArgMin}{$\mDistance, \wPunkt, r, \xi$} \Comment{find the indices of the two closest clusters} 
+      \While{$n > \nKlaster$}\label{alg:MojAlg:while:begin} 
+         \State $i,j \gets $ \Call{FindIndicesOfTheClosestGranules}{$\mDistance, \wPunkt, r, \xi$} 
+         \State $\wR \gets []$ \Comment{for the merged cluster, create a new row $\wR$\ldots}
+         \State $\wC \gets []$ \Comment{\ldots{} and a new column $\wC$ for the distance matrix $\mDistance$} 
          \ForAll{granules $\Granula$ in $\zGranula$} \Comment{merge the found clusters into one}
-            \State create a new row $\wR$ and a new column $\wC$ for the distance matrix $\mDistance$ \Comment{the new row and column correspond to the merged cluster}
-            \State $\wR[\Granula] = \wC[\Granula] = $ \Call{FuzzyMinimum}{$\mDistance[i, \Granula], \mDistance[j, \Granula], r, \xi$} \Comment{assign the result of the fuzzy minimum operation}\label{alg:lacznosc}
+            \State $\wR[\Granula] = \wC[\Granula] = $ \Call{FuzzyAggregation}{$\mDistance[i, \Granula], \mDistance[j, \Granula], r, \xi$} \label{alg:lacznosc}
          \EndFor
-         \State remove the $i$-th and $j$-th rows and columns from the distance matrix $\mDistance$ 
+         \State remove the $i$-th and $j$-th rows and columns from the matrix $\mDistance$ 
          \State add the new row $\wR$ and column $\wC$ to the distance matrix $\mDistance$
-         \State $n \gets n - 1$\Comment{update the number of clusters}
-      \EndWhile
+         \State $n \gets n - 1$\Comment{update the number of clusters}\label{alg:MojAlg:n}
+      \EndWhile\label{alg:MojAlg:while:end}
       \EndProcedure
  	\end{algorithmic}
  \end{algorithm}
 
 In the first step (line \ref{alg:MojAlg:fcm} in Alg. \ref{alg:MojAlg}), the original data $\zX$ is clustered with the fuzzy $c$-means algorithm FCM. 
-FCM returns the centres of $\nGranula$ clusters $\mCentre$ and the memberships of data points to clusters $\mMembership$.
-The obtained results are then transformed into granules (line \ref{alg:MojAlg:TransformToGranules} in Alg. \ref{alg:MojAlg}).
+FCM returns the matrix of centres $\mCentre$ of $\nGranula$ clusters and the matrix $\mMembership$ of memberships of data points to clusters.
+The obtained results are then transformed into granules with the \CtoG\ procedure (line \ref{alg:MojAlg:TransformToGranules} in Alg. \ref{alg:MojAlg}).
 Granules are represented with \efn s, which are defined by the following parameters: 
 the centre of the granule $\Centre_{\Klaster\Atrybut}$, which is equal to the centre of the cluster obtained from FCM, and 
 the fuzziness $p_{\Klaster\Atrybut}$, which is calculated based on the memberships $\mMembership$ of data points to clusters with the following formula:
  \begin{align}
  	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m} (\X_{\Iteracja\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m}}}.
 \end{align} 
- 
+Then (lines \ref{alg:MojAlg:loop:begin}--\ref{alg:MojAlg:loop:end}) two nested loops are responsible for elaboration of fuzzy distance between granules. 
+The distances are stored in the distance matrix $\mDistance$. 
+The crucial part of the algorithm is the while loop (lines \ref{alg:MojAlg:while:begin}--\ref{alg:MojAlg:while:end}), which implements the agglomerative hierarchical clustering of granules.
+Each iteration of the loop merges the two closest granules into one, and updates the distance matrix $\mDistance$ according to the selected type of aggregation method (line \ref{alg:lacznosc}).
+Thus, each iteration reduces the number of granules by one (line \ref{alg:MojAlg:n}), until the expected number of clusters $\nKlaster$ is reached.
+
+The granulation of the input data $\zX$ with the FCM algorithm and tranformation of clusters into granules has a time complexity of $O(\nX\nGranula)$, where $\nX$ is the number of data points and $\nGranula$ number of granules.
+The most time-consuming part of the algorithm is the while loop, which has to be executed $\nGranula - \nKlaster$ times. 
+In each iteration, the algorithm has to find the two closest granules in the distance matrix $\mDistance$, which has a size of $\nGranula \times \nGranula$.
+This makes the time complexity of the while loop $O(\nGranula^3)$. 
+Finally, the overall time complexity of the \MojAlg{} algorithm is $O(\nX\nGranula + \nGranula^3)$, which is significantly lower than the time complexity of the general agglomerative hierarchical clustering algorithm $O(\nX^3)$, because $\nGranula \ll \nX$.
+
+
+
 % Wyjściem tego kroku jest zbiór granul $\zGranula$ -- obiektów posiadających listę $\Atrybut$-elementową liczb rozmytych, które z kolei zawierają informacje o wartościach $x$ i $p$. Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytych, które składają się na ich wymiary. Kształt jest więc parametrem dla operacji logicznych na nich wykonywanych. Złożoność czasowa tego kroku wynosi $O(\nX\nGranula)$
  
  %Liczby rozmyte stanowią rozszerzenie liczb ostrych, więc każda arytmetyczne i logiczna operacja rozmyta zwraca poprawny wynik również wtedy, gdy ich parametrami są liczby, dla których $p=0$. Implementacja operacji $=_\nPodobienstwo$ w przypadku, gdy obydwie liczby są ostre, wykonuje zwykłą, ostrą operację logiczną $=$, w przeciwnym razie wystąpiłoby dzielenie przez 0. Operacja zwraca 1, jeżeli liczby są równe, 0, jeżeli nie są zamiast wartości logicznych odpowiednio prawda lub fałsz.
