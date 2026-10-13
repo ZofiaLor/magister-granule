@@ -129,6 +129,7 @@
 \newcommand{\MojAlg}{\procedura{GrAgglo}}
 \newcommand{\MojHierAlg}{\procedura{FuzzyAgglo}}
 \newcommand{\CtoG}{\procedura{ClustersToGranules}}
+\newcommand{\FuzzyAggregation}{\procedura{FuzzyAggregation}}
 \newcommand{\dendrogram}{d} 
 
 \DeclareMathOperator{\op}{\mathbf{op}}
@@ -871,21 +872,20 @@ In our approach, the granules are represented as extensional fuzzy numbers.
  		\Require $r$: type of the $\tnorm$-relation
  		\Require $\xi$: threshold for the fuzzy minimum operation
       \Procedure{\MojAlg}{$zX, \nGranula, r, \xi$}
-      \State $\mCentre, \mMembership \gets $ \Call{FCM}{$\zX, \nGranula$} \Comment{clusterisation of the input data, $\mCentre$: centres of clusters, $\mMembership$: memberships of data items to clusters}\label{alg:MojAlg:fcm}
-      \State $\zGranula \gets $ \Call{\CtoG}{$\mCentre, \mMembership, r$} \Comment{create granules from clusters} %(Alg. \ref{alg:MojAlg:TransformToGranules})}
-      \label{alg:MojAlg:TransformToGranules}
+      \State $\mCentre, \mMembership \gets $ \Call{FCM}{$\zX, \nGranula$} \Comment{clusterisation of the input data, $\mCentre$: centres of clusters, $\mMembership$: memberships of data items to clusters, $O(\nX\nGranula)$}\label{alg:MojAlg:fcm}
+      \State $\zGranula \gets $ \Call{\CtoG}{$\mCentre, \mMembership, r$} \Comment{$O(\nX\nGranula)$} \label{alg:MojAlg:TransformToGranules}
       \For {each granule $\Granula_1$ in $\zGranula$}\label{alg:MojAlg:loop:begin} 
          \For {each granule $\Granula_2 \neq \Granula_1$ in $\zGranula$}
             \State $\mDistance[\Granula_1, \Granula_2] \gets $ \Call{FuzzyDistance}{$\Granula_1, \Granula_2$} 
          \EndFor
       \EndFor\label{alg:MojAlg:loop:end} 
       \State $n \gets \nGranula$ \Comment{each granule is a separate cluster}
-      \While{$n > \nKlaster$}\label{alg:MojAlg:while:begin} 
-         \State $i,j \gets $ \Call{FindIndicesOfTheClosestGranules}{$\mDistance, \wPunkt, r, \xi$} 
+      \While{$n > \nKlaster$}\label{alg:MojAlg:while:begin}\Comment{$O(\nGranula)$}  
+         \State $i,j \gets $ \Call{FindIndicesOfTheClosestGranules}{$\mDistance, \wPunkt, r, \xi$} \Comment{$O(\nGranula^2)$}
          \State $\wR \gets []$ \Comment{for the merged cluster, create a new row $\wR$\ldots}
          \State $\wC \gets []$ \Comment{\ldots{} and a new column $\wC$ for the distance matrix $\mDistance$} 
          \ForAll{granules $\Granula$ in $\zGranula$} \Comment{merge the found clusters into one}
-            \State $\wR[\Granula] = \wC[\Granula] = $ \Call{FuzzyAggregation}{$\mDistance[i, \Granula], \mDistance[j, \Granula], r, \xi$} \label{alg:lacznosc}
+            \State $\wR[\Granula] = \wC[\Granula] = $ \Call{\FuzzyAggregation}{$\mDistance[i, \Granula], \mDistance[j, \Granula], r, \xi$} \label{alg:MojAlg:aggregation}
          \EndFor
          \State remove the $i$-th and $j$-th rows and columns from the matrix $\mDistance$ 
          \State add the new row $\wR$ and column $\wC$ to the distance matrix $\mDistance$
@@ -907,7 +907,8 @@ the fuzziness $p_{\Klaster\Atrybut}$, which is calculated based on the membershi
 Then (lines \ref{alg:MojAlg:loop:begin}--\ref{alg:MojAlg:loop:end}) two nested loops are responsible for elaboration of fuzzy distance between granules. 
 The distances are stored in the distance matrix $\mDistance$. 
 The crucial part of the algorithm is the while loop (lines \ref{alg:MojAlg:while:begin}--\ref{alg:MojAlg:while:end}), which implements the agglomerative hierarchical clustering of granules.
-Each iteration of the loop merges the two closest granules into one, and updates the distance matrix $\mDistance$ according to the selected type of aggregation method (line \ref{alg:lacznosc}).
+Each iteration of the loop merges the two closest granules into one, and updates the distance matrix $\mDistance$ according to the selected type of aggregation method in the \FuzzyAggregation{} procedure (line \ref{alg:MojAlg:aggregation}).
+In the granular single-linkage method, the fuzzy minimum operation is used, while in the granular complete-linkage method, the fuzzy maximum operation is used.
 Thus, each iteration reduces the number of granules by one (line \ref{alg:MojAlg:n}), until the expected number of clusters $\nKlaster$ is reached.
 
 The granulation of the input data $\zX$ with the FCM algorithm and tranformation of clusters into granules has a time complexity of $O(\nX\nGranula)$, where $\nX$ is the number of data points and $\nGranula$ number of granules.
@@ -915,7 +916,6 @@ The most time-consuming part of the algorithm is the while loop, which has to be
 In each iteration, the algorithm has to find the two closest granules in the distance matrix $\mDistance$, which has a size of $\nGranula \times \nGranula$.
 This makes the time complexity of the while loop $O(\nGranula^3)$. 
 Finally, the overall time complexity of the \MojAlg{} algorithm is $O(\nX\nGranula + \nGranula^3)$, which is significantly lower than the time complexity of the general agglomerative hierarchical clustering algorithm $O(\nX^3)$, because $\nGranula \ll \nX$.
-
 
 
 % Wyjściem tego kroku jest zbiór granul $\zGranula$ -- obiektów posiadających listę $\Atrybut$-elementową liczb rozmytych, które z kolei zawierają informacje o wartościach $x$ i $p$. Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytych, które składają się na ich wymiary. Kształt jest więc parametrem dla operacji logicznych na nich wykonywanych. Złożoność czasowa tego kroku wynosi $O(\nX\nGranula)$
@@ -957,7 +957,7 @@ Two groups of datasets are used in the experiments. The first one is synthetic l
  
  Minimum i maksimum wyznacza się przy pomocy operacji porównania. W przypadku rozszerzalnych liczb rozmytych, wynikami takich operacji są liczby z przedziału $[0, 1]$. W celu określenia, która z liczb rozmytych jest większa lub mniejsza, wprowadzony zostaje parametr progowy $\xi$, będący parametrem badawczym. Algorytmy rozmytego minimum i maksimum przedstawiają odpowiednio pseudokody \ref{alg:fuzzy-min} i \ref{alg:fuzzy-max}. Na podstawie alg. \ref{alg:fuzzy-min} można też utworzyć rozmytą funkcję $\arg\min$ (alg. \ref{alg:fuzzy-argmin}).
  
- Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną pseudokodem \ref{alg:fuzzy_single_linkage}. Ten sam algorytm dla łączności \CompleteLinkage{} jest niemal identyczny: należy jedynie podmienić wywołanie algorytmu rozmytego minimum (alg. \ref{alg:fuzzy-min}) w linii \ref{alg:lacznosc} na algorytm rozmytego maksimum (alg. \ref{alg:fuzzy-max}).
+Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną pseudokodem \ref{alg:fuzzy_single_linkage}. Ten sam algorytm dla łączności \CompleteLinkage{} jest niemal identyczny: należy jedynie podmienić wywołanie algorytmu rozmytego minimum (alg. \ref{alg:fuzzy-min}) w linii \ref{alg:MojAlg:aggregation} na algorytm rozmytego maksimum (alg. \ref{alg:fuzzy-max}).
  
  \begin{algorithm}[t]
  	\caption{Minimum rozmyte}
