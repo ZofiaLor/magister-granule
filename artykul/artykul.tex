@@ -943,11 +943,38 @@ The data is visualized in Fig.~\ref{fig:gowalla-brightkite-shapes}.
  \begin{figure}
  	\centering
  	\includegraphics[width=\textwidth]{\graf/gowalla_brightkite_shapes.png}
- 	\caption{Visualization of \brightkite and \gowalla datasets.}
+    \caption{Visualization of \brightkite{} and \gowalla{} datasets.}
  	\label{fig:gowalla-brightkite-shapes}
  \end{figure}
 
 \subsection{Clustering time} 
+
+The clustering time is measured for both the general agglomerative hierarchical clustering algorithm and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{}.
+The experiments is run for various number of input data points $\nX \in \{500, 1000, 1500, \ldots, 10000\}$ \ksremark{¿na pewno?} and various number of granules $\nGranula \in \{50, 100, 200\}$ \ksremark{¿na pewno?}.
+Each experiment is repeated 10 \ksremark{¿na pewno?} times and the average time is reported.
+
+\begin{figure}
+ 	\centering
+ 	\includegraphics{\graf/comparing_times.pdf}
+   \caption{Execution time of the general agglomerative hierarchical clustering algorithm and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$.}
+ 	\label{fig:comparing-times}
+\end{figure}
+
+
+\begin{figure}
+ 	\centering
+ 	\includegraphics{\graf/comparing_times_sklearn.pdf}
+   \caption{Execution time of the general agglomerative hierarchical clustering algorithm \texttt{AgglomerativeClustering} from the \texttt{scikit-learn} library and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$.}
+ 	\label{fig:comparing-times-sklearn}
+\end{figure}
+
+
+ \begin{figure}
+ 	\centering
+ 	\includegraphics[width=\textwidth]{\graf/gowalla_times.pdf}
+    \caption{Execution time of the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$ for the \gowalla{} dataset.}
+ 	\label{fig:gowalla-times}
+ \end{figure}
 
 
 \subsection{Quality of clustering} 
