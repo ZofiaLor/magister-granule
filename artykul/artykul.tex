@@ -924,9 +924,14 @@ Finally, the overall time complexity of the \MojAlg{} algorithm is $O(\nX\nGranu
  
 \section{Experiments}
 
+The experiments aim at evaluating the performance of the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} in comparison to the general agglomerative hierarchical clustering algorithm in the perspective of the time complexity and the quality of clustering results. 
+
 \subsection{Datasets}
 
-Two groups of datasets are used in the experiments. The first one is synthetic labelled data in six shapes (\blobs, \circles, \corners, \crescents, \laguna and \spheres) and eight sizes (1000, 2000, 5000, 10000, 20000, 30000, 40000 and 50000 elements). The data is visualized by \ref{fig:data-shapes}. The second one is real-life unlabelled 2D data \brightkite \footnote{\url{https://snap.stanford.edu/data/loc-brightkite.html}} and \gowalla \footnote{\url{https://snap.stanford.edu/data/loc-gowalla.html}}. Only the latitude and longitude columns are used for the experiments. The data is visualized by \ref{fig:gowalla-brightkite-shapes}.
+Two groups of datasets are used in the experiments. The first one is synthetic labelled data in six shapes (\blobs, \circles, \corners, \crescents, \laguna and \spheres) and eight sizes (1000, 2000, 5000, 10000, 20000, 30000, 40000 and 50000 elements). The data is visualized in Fig.~\ref{fig:data-shapes}. 
+The second type are the real-life unlabelled 2D data \brightkite \footnote{\url{https://snap.stanford.edu/data/loc-brightkite.html}} (with \num{4491143} data items) and \gowalla \footnote{\url{https://snap.stanford.edu/data/loc-gowalla.html}} (with \num{6442890} data items). 
+In these two datesets, only the latitude and longitude columns are used for the experiments. 
+The data is visualized in Fig.~\ref{fig:gowalla-brightkite-shapes}.
 
  \begin{figure}
  	\centering
@@ -941,6 +946,14 @@ Two groups of datasets are used in the experiments. The first one is synthetic l
  	\caption{Visualization of \brightkite and \gowalla datasets.}
  	\label{fig:gowalla-brightkite-shapes}
  \end{figure}
+
+\subsection{Clustering time} 
+
+
+\subsection{Quality of clustering} 
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage % dotad  
