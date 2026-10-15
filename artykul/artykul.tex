@@ -953,9 +953,72 @@ The clustering time is measured for both the general agglomerative hierarchical 
 The experiments is run for various number of input data points $\nX \in \{500, 1000, 1500, \ldots, 10000\}$ \ksremark{¿na pewno?} and various number of granules $\nGranula \in \{50, 100, 200\}$ \ksremark{¿na pewno?}.
 Each experiment is repeated 10 \ksremark{¿na pewno?} times and the average time is reported.
 
+\begin{table}
+ 	\centering
+ 	\caption{Comparison of average execution times of the strict and fuzzy agglomerative hierarchical clustering algorithms for different data and granule numbers.}
+ 	\label{id:tab:comparing-times}
+ 	\begin{tabular}{rrrrr}
+ 		\toprule
+ 		Data number & Strict data [ms] & 50 granules [ms] & 100 granules [ms] & 200 granules [ms]  \\
+ 		\midrule
+ 		500 & 256.15 & 79.31 & 166.93 & 527.55 \\
+		1000 & 1092.4 & 131.34 & 300.99 & 944.47 \\
+		1500 & 2725.91 & 189.25 & 564.14 & 1269.19 \\
+		2000 & 7125.25 & 280.46 & 664.66 & 1546.45 \\
+		2500 & 14676.58 & 331.97 & 821.36 & 1848.87 \\
+		3000 & 24289.29 & 474.25 & 1000.07 & 2197.36 \\
+		3500 & 36747.48 & 554.55 & 1122.44 & 2546.56 \\
+		4000 & 52439.32 & 629.62 & 1310.48 & 2901.85 \\
+		4500 & 71895.08 & 696.23 & 1460.06 & 3233.01 \\
+		5000 & 95497.87 & 778.06 & 1590.62 & 3540.35 \\
+ 		\bottomrule
+ 	\end{tabular}
+ \end{table}
+
+ \begin{table}
+ 	\centering
+ 	\caption{Comparison of average execution times of the \texttt{scikit-learn} library's strict and proposed fuzzy agglomerative hierarchical clustering algorithms for different data and granule numbers.}
+ 	\label{id:tab:comparing-times-sklearn}
+ 	\begin{tabular}{rrrrr}
+ 		\toprule
+ 		Data number & Strict data [ms] & 50 granules [ms] & 100 granules [ms] & 200 granules [ms]  \\
+ 		\midrule
+ 		1000 & 27.68 & 140.37 & 278.82 & 922.37 \\
+		2000 & 39.44 & 252.88 & 662.75 & 1488.29 \\
+		5000 & 312.7 & 774.75 & 1535.61 & 3344.13 \\
+		10000 & 1425.18 & 1465.33 & 3017.63 & 6566.77 \\
+		20000 & 6434.67 & 2925.11 & 6101.59 & 13076.91 \\
+		30000 & 15171.27 & 4659.39 & 9518.74 & 20115.51 \\
+		40000 & 29034.08 & 6226.38 & 12677.87 & 26848.27 \\
+		50000 & 47815.4 & 7811.42 & 15775.42 & 33288.67 \\
+ 		\bottomrule
+ 	\end{tabular}
+ \end{table}
+
+ \begin{table}
+ 	\centering
+ 	\caption{Comparison of execution times of fuzzy agglomerative hierarchical clustering algorithm for different data and granule numbers, for large data numbers.}
+ 	\label{id:tab:comparing-times-large}
+ 	\begin{tabular}{rrrr}
+ 		\toprule
+ 		Data number [mln] & 50 granules [s] & 100 granules [s] & 200 granules [s]  \\
+ 		\midrule
+ 		0.05 & 7.72 & 15.84 & 33.23 \\
+		0.1 & 15.53 & 31.72 & 67.03 \\
+		0.5 & 79.73 & 177.07 & 348.11 \\
+		1 & 158.69 & 322.65 & 675.32 \\
+		2 & 300.08 & 641.6 & 1348.01 \\
+		3 & 468.2 & 967.35 & 2126.28 \\
+		4 & 628.2 & 1328.02 & 5400.4 \\
+		5 & 799.02 & 1696.94 & 8650.32 \\
+		6 & 964.8 & -- & -- \\
+ 		\bottomrule
+ 	\end{tabular}
+ \end{table}
+
 \begin{figure}
  	\centering
- 	\includegraphics{\graf/comparing_times.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/comparing_times_monochrome.pdf}
    \caption{Execution time of the general agglomerative hierarchical clustering algorithm and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$.}
  	\label{fig:comparing-times}
 \end{figure}
@@ -963,7 +1026,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} times and the average time
 
 \begin{figure}
  	\centering
- 	\includegraphics{\graf/comparing_times_sklearn.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/comparing_times_sklearn_monochrome.pdf}
    \caption{Execution time of the general agglomerative hierarchical clustering algorithm \texttt{AgglomerativeClustering} from the \texttt{scikit-learn} library and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$.}
  	\label{fig:comparing-times-sklearn}
 \end{figure}
@@ -971,7 +1034,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} times and the average time
 
  \begin{figure}
  	\centering
- 	\includegraphics[width=\textwidth]{\graf/gowalla_times.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/gowalla_times_monochrome.pdf}
     \caption{Execution time of the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$ for the \gowalla{} dataset.}
  	\label{fig:gowalla-times}
  \end{figure}
