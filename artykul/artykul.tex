@@ -752,7 +752,7 @@ The fuzzy operator $<_S$ is defined as:
 %%rysunek?
 %\begin{figure}
 %\centering
-%%\includegraphics[width=\textwidth]{./img/single_linkage_example.pdf}
+%\includegraphics[width=\textwidth]{./img/single_linkage_example.pdf}
 %\caption{Ilustracja działania algorytmu \SingleLinkage{}. Odległość klastra $B$ od klastrów $A_{1}$ i $A_{2}$ jest znana. Po złączeniu $A_{1}$ i $A_{2}$ w klaster $A$, nowa odległość od klastra $B$ jest równa minimalnej z poprzednich dwóch -- w tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$.}
 %\label{fig:single-linkage-example}
 %\end{figure}
@@ -763,7 +763,7 @@ The fuzzy operator $<_S$ is defined as:
 %
 %\begin{figure}
 %\centering
-%%\includegraphics[width=\textwidth]{./img/single_linkage_noise_example.pdf}
+%\includegraphics[width=\textwidth]{./img/single_linkage_noise_example.pdf}
 %\caption{Ilustracja wpływu danych odstających na działanie algorytmu \SingleLinkage{}.}
 %\label{fig:single-linkage-noise-example}
 %\end{figure}
@@ -772,7 +772,7 @@ The fuzzy operator $<_S$ is defined as:
 %
 %\begin{figure}
 %\centering
-%%\includegraphics[width=\textwidth]{./img/single_linkage_close_clusters_example.pdf}
+%\includegraphics[width=\textwidth]{./img/single_linkage_close_clusters_example.pdf}
 %\caption{Ilustracja działania algorytmu \SingleLinkage{}, gdy klastry są zbyt zbliżone.}
 %\label{fig:single-linkage-close-clusters-example}
 %\end{figure}
@@ -804,7 +804,7 @@ The fuzzy operator $<_S$ is defined as:
 %
 %\begin{figure}
 %\centering
-%%\includegraphics[width=\textwidth]{./img/complete_linkage_close_clusters_example.pdf}
+%\includegraphics[width=\textwidth]{./img/complete_linkage_close_clusters_example.pdf}
 %\caption{Ilustracja działania algorytmu \CompleteLinkage{}, dla zbliżonych, gęstych klastrów.}
 %\label{fig:complete-linkage-close-clusters-example}
 %\end{figure}
@@ -813,7 +813,7 @@ The fuzzy operator $<_S$ is defined as:
 %
 %\begin{figure}
 %\centering
-%%\includegraphics[width=\textwidth]{./img/complete_linkage_non_globular_example.pdf}
+%\includegraphics[width=\textwidth]{./img/complete_linkage_non_globular_example.pdf}
 %\caption{Ilustracja działania algorytmu \CompleteLinkage{}, dla klastrów w kształcie dwóch okręgów.}
 %\label{fig:complete-linkage-non-globular-example}
 %\end{figure}
@@ -1126,7 +1126,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
 
 %\begin{figure}
  	%\centering
- 	%\includegraphics[width=\textwidth]{\graf/comparing_times_monochrome.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/comparing_times_monochrome.pdf}
    %\caption{Execution time of the general agglomerative hierarchical clustering algorithm and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$.}
  	%\label{fig:comparing-times}
 %\end{figure}
@@ -1134,7 +1134,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
 %
 %\begin{figure}
  	%\centering
- 	%\includegraphics[width=\textwidth]{\graf/comparing_times_sklearn_monochrome.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/comparing_times_sklearn_monochrome.pdf}
    %\caption{Execution time of the general agglomerative hierarchical clustering algorithm \texttt{AgglomerativeClustering} from the \texttt{scikit-learn} library and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$.}
  	%\label{fig:comparing-times-sklearn}
 %\end{figure}
@@ -1142,7 +1142,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
 %
  %\begin{figure}
  	%\centering
- 	%\includegraphics[width=\textwidth]{\graf/gowalla_times_monochrome.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/gowalla_times_monochrome.pdf}
     %\caption{Execution time of the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$ for the \gowalla{} dataset.}
  	%\label{fig:gowalla-times}
  %\end{figure}
@@ -1150,8 +1150,233 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
 
 \subsection{Quality of clustering} 
 
+The aim of the \MojAlg{} algorithm is to reduce the time complexity of the agglomerative hierarchical clustering algorithm, while maintaining the quality of clustering results.
+Our approach is expected to elaborate the same or similar clustering results as the general agglomerative hierarchical clustering algorithm, but in a shorter time.
+\MojAlg{} clusters fuzzy granules instead of the original crips data. 
+The assingment of original data points to clusters is based on the membeships of the data items to fuzzy granules and the memberships of fuzzy granules to clusters.
+The procedure is presented in Alg. \ref{alg:similarity_membership}.
+The procedure takes as input the original data points $\zX$, the granules $\zGranula$ and their labels $\wEtykieta_\Granula$.
+For each data item $\wX$ (line \ref{alg:similarity_membership:loop:x}, the procedure calculates its membership to each granule (line \ref{alg:similarity_membership:loop:g}).
+The data item is assigned to the granule with the highest membership value (line \ref{alg:similarity_membership:memb:max}).
+In case of granules based on triangular \efn s, it is possible that the membership of a data point to all granules is equal to 0.
+This is due to the finite support of triangular \efn s.
+The procedure returns the array of labels $\wEtykieta_\X$ with labels for each data point (line \ref{alg:similarity_membership:return}).
 
 
+ \begin{algorithm}[t]
+    \caption{Elaboration of the membership of a data point to a granule based on the $\ast$-similarity relation $\nPodobienstwo$}
+ 	\label{alg:similarity_membership}
+ 	\begin{algorithmic}[1]
+ 		\Require $\zX$: original data points 
+ 		\Require $\zGranula$: granules elaborated by \MojAlg{}
+ 		\Require $\wEtykieta_{\Granula}$: array of label elaborated for granules
+ 		\Require $r$: relation 
+ 		\Procedure{CalculateSimilarityMembership}{$\zX, \zGranula, \wEtykieta_\Granula, r$}
+      \State $\wEtykieta_{\X} \gets$ array 1..$\nX$ of $\varnothing$ \Comment{array of labels for each data point}
+ 		\State $\zN \gets 0$ \Comment{noise: set of data not belonging to any granule}
+      \For{$\X \in \zX$}\label{alg:similarity_membership:loop:x}
+ 		\State $\Etykieta \gets 0$
+ 		\State $\ClusterMembership_{max} \gets 0$
+      \For{$\Granula \in \zGranula$}\label{alg:similarity_membership:loop:g}
+      \State $\ClusterMembership \gets 1$ \Comment{initial membership of the data point to the granule}
+      \For{$\Atrybut \in \zAtrybut$} \Comment{for each attribute $\Atrybut$ of data point $\wX$ and granule $\Granula$}
+ 		\State $\ClusterMembership \gets \ClusterMembership \tnorm (\Granula[\Atrybut] \eqS \wX[\Atrybut])$ \Comment{$\tnorm$  t-norm}
+ 		\EndFor
+ 		\If{$\ClusterMembership > \ClusterMembership_{max}$}
+ 		\State $\ClusterMembership_{max} \gets \ClusterMembership$
+      \State $\Etykieta \gets \wEtykieta_\Granula[\Granula]$ \Comment{label of the granule $\Granula$}\label{alg:similarity_membership:memb:max}
+ 		\EndIf
+ 		\EndFor
+ 		\If{$\ClusterMembership_{max} > 0$}
+      \State $\wEtykieta_{\X}\gets e$  \Comment{assign the label of  the data point}
+ 		\Else \Comment{data item does not belong to any granule}
+      \State $\wEtykieta_{\X}\gets \varnothing$ \label{alg:similarity_membership:noise} 
+ 		\State $\zN \gets \zN \cup \wX$
+ 		\EndIf
+ 		\EndFor
+      \State \Return $\wEtykieta_{\X}$ \Comment{vector of labels for each data point}\label{alg:similarity_membership:return}
+ 		\EndProcedure
+ 	\end{algorithmic}
+ \end{algorithm}
+
+Two arrays of labels are compared: the first one is the array of labels $\wEtykieta_\X$ elaborated by the \MojAlg{} algorithm, and the second one is the array of labels $\wEtykieta_\X^{\text{a}}$ \ksremark{To oznaczenie trzeba będzie zmienić na coś sensowniejszego, ale na razie to tak zostawiam.} elaborated by the general agglomerative hierarchical clustering algorithm.
+Thus we get the multiclass classification problem and we use the confusion matrix $\mConfusionMatrix$ to measure the quality of clustering with \MojAlg. 
+The labels elaborted by the crisp agglomerative hierarchical clustering algorithm are considered as the ground truth, while the labels elaborated by \MojAlg{} are considered as predicted labels.
+
+The total accuracy $\accuracy$ is elaborated from the confusion matrix $\mConfusionMatrix$ as follows.
+ \begin{align}
+ 	\accuracy = \frac{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{ii}}{\sum_{i=0}^{\nKlaster}\sum_{j=0}^{\nKlaster}\ConfusionMatrix_{ij}} 
+ 	 = \frac{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{ii}}{\nX},
+ \end{align}
+ where $\nX$ is the number of data points.
+The recall $\recall$ and precision $\precision$ are first calculated separately for each cluster $\klaster$: 
+ %
+ \begin{align}
+ 	\recall_{\klaster} = \frac{\ConfusionMatrix_{\klaster\klaster}}{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{\klaster i}},
+ 	\label{eq:recall}
+ \end{align}
+ %
+ \begin{align}
+ 	\precision_{\klaster} = \frac{\ConfusionMatrix_{\klaster\klaster}}{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{i \klaster}}.
+ 	\label{eq:precision}
+ \end{align}
+ %
+ The the recall $\recall$ and precision $\precision$ for the whole clustering are calculated as the arithmetic mean of the partial metrics:
+ \begin{align}
+ 	\recall = \frac{\sum_{i=0}^{\nKlaster}\recall_{i}}{\nKlaster},
+ \end{align}
+ where $\nKlaster$ is the number of clusters, and
+ \begin{align}
+ 	\precision = \frac{\sum_{i=0}^{\nKlaster}\precision_{i}}{\nKlaster}.
+ \end{align}
+ %
+ 
+In case if the noise set $\zN$ is not empty, two approaches are possible to calculate the metrics:
+ \begin{enumerate}
+   \item The noise is not taken into account, and the metrics are calculated only for the data points that are not noise. 
+   \item The noise is considered as misclassified data.
+      To correct the value of the metric for noise, it should be multiplied by the percentage of non-noise points in relation to the total data.
+ \end{enumerate}
+ 
+
+
+\subsection{Results}
+
+Tab. 
+\ref{id:tab:acc-sl-strict}-\ref{id:tab:prec-cl-strict}
+present the accuracy, recall, and precision for the single and complete linkage, respectively.
+
+ \begin{table}
+	\centering
+    \caption{Accuracy of hierarchical clustering of data with the strict \SingleLinkage{} algorithm}
+	\label{id:tab:acc-sl-strict}
+	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+		\toprule
+		& \multicolumn{4}{c}{accuracy}\\
+		\cmidrule{2-5}
+      & {crisp data} & \multicolumn{3}{c}{granular data} \\
+		\cmidrule{3-5}
+		{dataset} & &  \multicolumn{1}{c}{50 granules} & \multicolumn{1}{c}{100 granules} & \multicolumn{1}{c}{200 granules} \\
+		\midrule
+		\blobs\ & 0.9899 & 0.9999 & 0.9939 & 0.9696 \\
+		\circles\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\corners\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\crescents\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\laguna\ & 0.9125 & 0.9997 & 0.9998 & 0.9999 \\
+		\spheres\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}
+	\centering
+   \caption{Recall of hierarchical clustering of data with the strict \SingleLinkage{} algorithm}
+	\label{id:tab:rec-sl-strict}
+	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+		\toprule
+		& \multicolumn{4}{c}{recall}\\
+		\cmidrule{2-5}
+& {crisp data} & \multicolumn{3}{c}{granular data} \\
+\cmidrule{3-5}
+{dataset} & &  \multicolumn{1}{c}{50 granules} & \multicolumn{1}{c}{100 granules} & \multicolumn{1}{c}{200 granules} \\
+\midrule
+		\blobs\ & 0.8333 & 1.0000 & 0.9571 & 0.7487 \\
+		\circles\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\corners\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\crescents\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\laguna\ & 0.7084 & 0.9990 & 0.9995 & 0.9997 \\
+		\spheres\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\bottomrule
+	\end{tabular}
+\end{table}  
+
+\begin{table}
+	\centering
+   \caption{Precision of hierarchical clustering of data with the strict \SingleLinkage{} algorithm}
+	\label{id:tab:prec-sl-strict}
+	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+		\toprule
+		& \multicolumn{4}{c}{precision}\\
+		\cmidrule{2-5}
+& {crisp data} & \multicolumn{3}{c}{granular data} \\
+\cmidrule{3-5}
+{dataset} & &  \multicolumn{1}{c}{50 granules} & \multicolumn{1}{c}{100 granules} & \multicolumn{1}{c}{200 granules} \\
+\midrule
+		\blobs\ & 0.8295 & 0.9990 & 0.9392 & 0.7282 \\
+		\circles\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\corners\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\crescents\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\laguna\ & 0.8375 & 0.9996 & 0.9998 & 0.9998 \\
+		\spheres\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\bottomrule
+	\end{tabular}
+\end{table}  
+
+\begin{table}
+	\centering
+   \caption{Accuracy of hierarchical clustering of data with the strict \SingleLinkage{} algorithm}
+	\label{id:tab:acc-cl-strict}
+	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+		\toprule
+		& \multicolumn{4}{c}{accuracy}\\
+		\cmidrule{2-5}
+& {crisp data} & \multicolumn{3}{c}{granular data} \\
+\cmidrule{3-5}
+{dataset} & &  \multicolumn{1}{c}{50 granules} & \multicolumn{1}{c}{100 granules} & \multicolumn{1}{c}{200 granules} \\
+\midrule
+		\blobs\ & 0.7261 & 0.9999 & 0.8956 & 0.7237 \\
+		\circles\ & 0.5620 & 0.5533 & 0.5330 & 0.5627 \\
+		\corners\ & 0.5265 & 0.4818 & 0.5053 & 0.5130 \\
+		\crescents\ & 0.7986 & 0.8012 & 0.8032 & 0.7822 \\
+		\laguna\ & 0.4508 & 0.4875 & 0.4653 & 0.4664 \\
+		\spheres\ & 0.5852 & 0.5712 & 0.5650 & 0.6615 \\
+		\bottomrule
+	\end{tabular}
+\end{table}  
+
+\begin{table}
+	\centering
+   \caption{Recall of hierarchical clustering of data with the strict \CompleteLinkage{} algorithm}
+	\label{id:tab:rec-cl-strict}
+	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+		\toprule
+		& \multicolumn{4}{c}{recall}\\
+			\cmidrule{2-5}
+	& {crisp data} & \multicolumn{3}{c}{granular data} \\
+	\cmidrule{3-5}
+	{dataset} & &  \multicolumn{1}{c}{50 granules} & \multicolumn{1}{c}{100 granules} & \multicolumn{1}{c}{200 granules} \\
+	\midrule
+		\blobs\ & 0.7825 & 1.0000 & 0.8822 & 0.9041 \\
+		\circles\ & 0.4900 & 0.4940 & 0.4876 & 0.5071 \\
+		\corners\ & 0.5265 & 0.4818 & 0.5053 & 0.5130 \\
+		\crescents\ & 0.7986 & 0.8012 & 0.8033 & 0.7822 \\
+		\laguna\ & 0.5447 & 0.6026 & 0.4856 & 0.5072 \\
+		\spheres\ & 0.5473 & 0.3729 & 0.4805 & 0.5897 \\
+		\bottomrule
+	\end{tabular}
+\end{table}  
+
+\begin{table}
+	\centering
+   \caption{Precision of hierarchical clustering of data with the strict \CompleteLinkage{} algorithm}
+	\label{id:tab:prec-cl-strict}
+	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+		\toprule
+		& \multicolumn{4}{c}{precision}\\
+			\cmidrule{2-5}
+	& {crisp data} & \multicolumn{3}{c}{granular data} \\
+	\cmidrule{3-5}
+	{dataset} & &  \multicolumn{1}{c}{50 granules} & \multicolumn{1}{c}{100 granules} & \multicolumn{1}{c}{200 granules} \\
+	\midrule
+		\blobs\ & 0.6054 & 0.9990 & 0.8753 & 0.6591 \\
+		\circles\ & 0.4881 & 0.4948 & 0.4880 & 0.5052 \\
+		\corners\ & 0.4956 & 0.4779 & 0.4631 & 0.4828 \\
+		\crescents\ & 0.8372 & 0.8072 & 0.8285 & 0.8093 \\
+		\laguna\ & 0.3984 & 0.4302 & 0.3561 & 0.3804 \\
+		\spheres\ & 0.5143 & 0.4480 & 0.4891 & 0.5324 \\
+		\bottomrule
+	\end{tabular}
+\end{table}  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage % dotad  
@@ -1278,7 +1503,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/data_shapes.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/data_shapes.pdf}
  	\caption{Wykresy danych o różnych kształtach z folderu \texttt{dane} o rozmiarze 1000 punktów.}
  	% \label{fig:data-shapes}
  \end{figure}
@@ -1299,7 +1524,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/gowalla_brightkite_shapes.png}
+ 	\includegraphics[width=\textwidth]{\graf/gowalla_brightkite_shapes.png}
  	\caption{Wykresy danych \brightkite i \gowalla.}
  	% \label{fig:gowalla-brightkite-shapes}
  \end{figure}
@@ -1358,14 +1583,14 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/data_shapes_labels.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/data_shapes_labels.pdf}
  	\caption{Wykresy danych o różnych kształtach z folderu \texttt{dane\_labelled} o rozmiarze 1000 punktów, o etykietach oznaczonych kolorami.}
  	\label{fig:data-shapes-labels}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/laguna20000_labelled.png}
+ 	\includegraphics[width=\textwidth]{\graf/laguna20000_labelled.png}
  	\caption{Wykres danych \laguna{} z folderu \texttt{dane\_labelled} o rozmiarze \num{20000} punktów, o etykietach oznaczonych kolorami.}
  	\label{fig:laguna20000-labels}
  \end{figure}
@@ -1463,17 +1688,17 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.32\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/shape_dep_t.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/shape_dep_t.pdf}
  		\caption{Liczby trójkątne}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.32\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/shape_dep_e.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/shape_dep_e.pdf}
  		\caption{Liczby wykładnicze}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.32\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/shape_dep_g.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/shape_dep_g.pdf}
  		\caption{Liczby gaussowskie}
  	\end{subfigure}
  	\caption{Przynależność punktów do granul w zależności od kształtu liczb rozmytych. 10 środków granul oznaczono kolorem czerwonym, punkty należące do różnych granul oznaczone są różnymi kolorami. Kolorem szarym oznaczono punkty stanowiące szum.}
@@ -1610,7 +1835,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  
  \begin{figure}
  	\centering
- 	%\includegraphics{\graf/comparing_times.pdf}
+% 	\includegraphics{\graf/comparing_times.pdf}
  	\caption{Charakterystyka czasu wykonania własnych implementacji algorytmów ostrego i rozmytego dla różnej liczby granul od liczby danych wejściowych.}
  	\label{fig:comparing-times}
  \end{figure}
@@ -1623,7 +1848,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  
  \begin{figure}
  	\centering
- 	%\includegraphics{\graf/comparing_times_sklearn.pdf}
+% 	\includegraphics{\graf/comparing_times_sklearn.pdf}
  	\caption{Charakterystyka czasu wykonania algorytmu ostrego \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} i własnej implementacji algorytmu rozmytego dla różnej liczby granul od liczby danych wejściowych.}
  	\label{fig:comparing-times-sklearn}
  \end{figure}
@@ -1634,7 +1859,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/gowalla_times.pdf}
+% 	\includegraphics[width=\textwidth]{\graf/gowalla_times.pdf}
  	\caption{Charakterystyka czasu wykonania algorytmu rozmytego dla różnej liczby granul od liczby danych wejściowych dla dużych danych.}
  	\label{fig:gowalla-times}
  \end{figure}
@@ -1924,56 +2149,56 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/blobs1000e_s.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/blobs1000e_s.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \blobs\  o~rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:blobs1000e}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/circles50000e_s.png}
+ 	\includegraphics[width=\textwidth]{\graf/circles50000e_s.png}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze \num{50000} i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:circles50000e}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/corners1000g_s.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/corners1000g_s.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \corners\  o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:corners1000g}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/crescents5000e_s.png}
+ 	\includegraphics[width=\textwidth]{\graf/crescents5000e_s.png}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 5000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:crescents5000e}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/laguna1000e_s.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/laguna1000e_s.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:laguna1000e}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/laguna1000_blue.png}
+ 	\includegraphics[width=\textwidth]{\graf/laguna1000_blue.png}
  	\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze 1000.}
  	\label{fig:laguna1000-blue}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/laguna40000_blue.png}
+ 	\includegraphics[width=\textwidth]{\graf/laguna40000_blue.png}
  	\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze \num{40000}.}
  	\label{fig:laguna40000-blue}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/spheres5000g_s.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/spheres5000g_s.pdf}
  	\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 5000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
  	\label{fig:spheres5000g}
  \end{figure}
@@ -1989,42 +2214,42 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/blobs1000t_c.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/blobs1000t_c.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \blobs\  o~rozmiarze 1000 i trójkątnej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:blobs1000tc}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/circles1000g_c.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/circles1000g_c.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:circles1000gc}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/corners1000e_c.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/corners1000e_c.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \corners\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:corners1000ec}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/crescents1000t_c.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/crescents1000t_c.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 1000 i trójkątnej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:crescents1000tc}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/laguna1000g_c.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/laguna1000g_c.pdf}
  	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:laguna1000gc}
  \end{figure}
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/spheres1000e_c.pdf}
+ 	\includegraphics[width=\textwidth]{\graf/spheres1000e_c.pdf}
  	\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 5000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
  	\label{fig:spheres1000ec}
  \end{figure}
@@ -2118,7 +2343,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  
  \begin{figure}
  	\centering
- 	%\includegraphics[width=\textwidth]{\graf/blobs1000_blue.png}
+ 	\includegraphics[width=\textwidth]{\graf/blobs1000_blue.png}
  	\caption{Przynależność punktów do klastrów dla danych \blobs{} o rozmiarze 1000.}
  	\label{fig:blobs1000-blue}
  \end{figure}
@@ -2315,13 +2540,13 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.48\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/xi_acc_sl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/xi_acc_sl.pdf}
  		\caption{\SingleLinkage}
  		\label{fig:xi-acc-sl}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.48\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/xi_acc_cl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/xi_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  		\label{fig:xi-acc-cl}
  	\end{subfigure}
@@ -2370,12 +2595,12 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/blobs_complex_acc_sl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/blobs_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/blobs_complex_acc_cl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/blobs_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -2394,12 +2619,12 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/circles_complex_acc_sl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/circles_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/circles_complex_acc_cl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/circles_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -2416,12 +2641,12 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/corners_complex_acc_sl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/corners_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/corners_complex_acc_cl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/corners_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -2436,12 +2661,12 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/crescents_complex_acc_sl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/crescents_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/crescents_complex_acc_cl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/crescents_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -2458,12 +2683,12 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/laguna_complex_acc_sl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/laguna_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/laguna_complex_acc_cl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/laguna_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -2482,12 +2707,12 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/spheres_complex_acc_sl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/spheres_complex_acc_sl.pdf}
  		\caption{\SingleLinkage}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/spheres_complex_acc_cl.pdf}
+ 		\includegraphics[width=\textwidth]{\graf/spheres_complex_acc_cl.pdf}
  		\caption{\CompleteLinkage}
  	\end{subfigure}
  	
@@ -2515,12 +2740,12 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/brightkite_500000_strict.png}
+ 		\includegraphics[width=\textwidth]{\graf/brightkite_500000_strict.png}
  		\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/brightkite_full_100.png}
+ 		\includegraphics[width=\textwidth]{\graf/brightkite_full_100.png}
  		\caption{Grupowanie algorytmem \MojAlg{} całości danych}
  	\end{subfigure}
  	
@@ -2531,12 +2756,12 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  \begin{figure}
  	\centering
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/gowalla_500000_strict.png}
+ 		\includegraphics[width=\textwidth]{\graf/gowalla_500000_strict.png}
  		\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
  	\end{subfigure}
  	\hfill
  	\begin{subfigure}{0.8\textwidth}
- 		%\includegraphics[width=\textwidth]{\graf/gowalla_full_100.png}
+ 		\includegraphics[width=\textwidth]{\graf/gowalla_full_100.png}
  		\caption{Grupowanie algorytmem \MojAlg{} całości danych}
  	\end{subfigure}
  	
