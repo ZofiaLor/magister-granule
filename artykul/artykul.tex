@@ -993,6 +993,10 @@ The clustering time is measured for both the general agglomerative hierarchical 
 The experiments is run for various number of input data points $\nX \in \{500, 1000, 1500, \ldots, 10000\}$ \ksremark{¿na pewno?} \zlremark{liczebności takie, jak w tabelach, inne dla każdego zestawu pomiarów} and various number of granules $\nGranula \in \{50, 100, 200\}$.
 Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych danych (pierwsze 2) 4 razy, dla dużych -- 1 raz} times and the average time is reported.
 
+All experiments confirm the linear time complexity of \MojAlg{} algorithm. Figure \ref{id:fig:comparing-times-sklearn} compares its execution time to 
+\texttt{scikit-learn}'s \texttt{AgglomerativeClustering} algorithm (single-linkage). For more than 40000 data points, \MojAlg{} algorithm is faster than \texttt{AgglomerativeClustering} even with 200 granules. 
+
+However, FCM's memory complexity must be taken into account: the algorithm allocates a membership array of floating-point numbers with size $\nGranula \times \nX$. Figure \ref{id:fig:comparing-times-large} shows that for a combination of large numbers of data points and granules, the execution time may increase significantly (200 granules, above 3 million data points case) or FCM might fail to allocate the array due to lack of memory (100 and 200 granules, 6 million data points case).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1025,7 +1029,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
  \centering
  \begin{tikzpicture}
      \begin{axis}[
-         xlabel={number of granules},
+         xlabel={number of data},
          ylabel={time [ms]},
          legend style={at={(1.8,0.8)}}
          ]
@@ -1043,7 +1047,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
 
  \begin{table}
  	\centering
- 	\caption{Comparison of average execution times of the \texttt{scikit-learn} library's strict and proposed fuzzy agglomerative hierarchical clustering algorithms for different data and granule numbers.}
+ 	\caption{Comparison of average execution times (in [ms]) of the \texttt{scikit-learn} library's strict and proposed fuzzy agglomerative hierarchical clustering algorithms for different data and granule numbers.}
  	\label{id:tab:comparing-times-sklearn}
  	\begin{tabular}{rrrrr}
  		\toprule
@@ -1067,7 +1071,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
  \centering
  \begin{tikzpicture}
      \begin{axis}[
-         xlabel={number of granules},
+         xlabel={number of data},
          ylabel={time [ms]},
          legend style={at={(1.8,0.8)}}
          ]
@@ -1084,7 +1088,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
 
  \begin{table}
  	\centering
-    \caption{Comparison of execution times of fuzzy agglomerative hierarchical clustering algorithm \MojAlg{} for different data and granule numbers, for large data numbers.}
+    \caption{Comparison of execution times (in [s]) of fuzzy agglomerative hierarchical clustering algorithm \MojAlg{} for different data and granule numbers, for large data numbers.}
  	\label{id:tab:comparing-times-large}
  	\begin{tabular}{rrrr}
  		\toprule
@@ -1109,8 +1113,8 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
  \centering
  \begin{tikzpicture}
      \begin{axis}[
-         xlabel={number of granules},
-         ylabel={time [ms]},
+         xlabel={number of data},
+         ylabel={time [s]},
          legend style={at={(1.8,0.8)}},
          unbounded coords=discard
          ]
@@ -1126,7 +1130,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
 
 %\begin{figure}
  	%\centering
- 	\includegraphics[width=\textwidth]{\graf/comparing_times_monochrome.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/comparing_times_monochrome.pdf}
    %\caption{Execution time of the general agglomerative hierarchical clustering algorithm and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$.}
  	%\label{fig:comparing-times}
 %\end{figure}
@@ -1134,7 +1138,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
 %
 %\begin{figure}
  	%\centering
- 	\includegraphics[width=\textwidth]{\graf/comparing_times_sklearn_monochrome.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/comparing_times_sklearn_monochrome.pdf}
    %\caption{Execution time of the general agglomerative hierarchical clustering algorithm \texttt{AgglomerativeClustering} from the \texttt{scikit-learn} library and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$.}
  	%\label{fig:comparing-times-sklearn}
 %\end{figure}
@@ -1142,7 +1146,7 @@ Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych dany
 %
  %\begin{figure}
  	%\centering
- 	\includegraphics[width=\textwidth]{\graf/gowalla_times_monochrome.pdf}
+ 	%\includegraphics[width=\textwidth]{\graf/gowalla_times_monochrome.pdf}
     %\caption{Execution time of the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$ for the \gowalla{} dataset.}
  	%\label{fig:gowalla-times}
  %\end{figure}
