@@ -1382,6 +1382,94 @@ present the accuracy, recall, and precision for the single and complete linkage,
 	\end{tabular}
 \end{table}  
 
+% % % % % % % % % % % % % % % % % % % % % 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{\graf/corners1000g_s.pdf}
+	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze \num{50000} i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+   \caption{Results of clustering \MojAlg{} for the \corners{} dataset of size \num{1000} and Euclidean relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
+	\label{fig:circles:1000g}
+\end{figure}
+\ksremark{Rys. \ref{fig:circles:1000g}, rys. \ref{fig:circles:50000e}: Czy tutaj jest na pewno relacja euklidesowa?}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{\graf/circles50000e_s.png}
+	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze \num{50000} i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+   \caption{Results of clustering \MojAlg{} for the \circles{} dataset of size \num{50000} and Euclidean relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
+	\label{fig:circles:50000e}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{\graf/crescents5000e_s.png}
+	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 5000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+   \caption{Results of clustering \MojAlg{} for the \crescents{} dataset of size \num{5000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
+	\label{fig:crescents:5000e}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{\graf/laguna1000e_s.pdf}
+	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+   \caption{Results of clustering \MojAlg{} for the \laguna{} dataset of size \num{1000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
+	\label{fig:laguna:1000e}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{1.0\textwidth}
+	\includegraphics[width=\textwidth]{\graf/laguna1000_blue.png}
+	%\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze 1000.}
+   \caption{\num{1000} points}
+      \label{fig:laguna-blue:1000}
+	\end{subfigure}
+   \hfill
+	\begin{subfigure}{1.0\textwidth}
+	\includegraphics[width=\textwidth]{\graf/laguna40000_blue.png}
+	%\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze \num{40000}.}
+   \caption{\num{40000} data points}
+      \label{fig:laguna-blue:40000}
+	\end{subfigure}
+   \caption{Membership of points to clusters for the \laguna{} dataset.}
+   \label{fig:laguna-blue}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth]{\graf/brightkite_500000_strict.png}
+		%\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
+      \caption{Clustering of a random sample of \num{500000} points with the strict algorithm.}
+	\end{subfigure}
+%	
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth]{\graf/brightkite_full_100.png}
+		%\caption{Grupowanie algorytmem \MojAlg{} całości danych}
+      \caption{Clustering of the entire dataset with the \MojAlg{} algorithm.}
+	\end{subfigure}
+	
+	%\caption{Wyniki grupowania hierarchicznego algorytmem ostrym \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} i algorytmem \MojAlg{} danych \brightkite{}}
+   \caption{Results of hierarchical clustering with the crisp agglomerative clustering algorithm and the \MojAlg{} algorithm for the \brightkite{} dataset.}
+	\label{fig:brightkite:strict-fuzzy}
+\end{figure}
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{\graf/crescents1000t_c.pdf}
+	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 1000 i trójkątnej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+	\label{fig:crescents1000tc}
+\end{figure}
+
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage % dotad  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
