@@ -1166,6 +1166,10 @@ In case of granules based on triangular \efn s, it is possible that the membersh
 This is due to the finite support of triangular \efn s.
 The procedure returns the array of labels $\wEtykieta_\X$ with labels for each data point (line \ref{alg:similarity_membership:return}).
 
+\zlremark{To jest bardziej skomplikowany sposób, który był omawiany w pracy magisterskiej. Poza tym, że mogły pojawić się szumy, nie wprowadził on żadnych nowych informacji. Wszystkie tabele z wartościami wyników, które zostały w artykule, dotyczą prostszej metody, opisanej w następującym akapicie:}
+
+Each data item $\wX_i$ is assigned to the granule $\Granula_j$, such that the value of $\ClusterMembership_{ij} = \max{\wClusterMembership_i}$. 
+
 
  \begin{algorithm}[t]
     \caption{Elaboration of the membership of a data point to a granule based on the $\ast$-similarity relation $\nPodobienstwo$}
@@ -1203,9 +1207,9 @@ The procedure returns the array of labels $\wEtykieta_\X$ with labels for each d
  	\end{algorithmic}
  \end{algorithm}
 
-Two arrays of labels are compared: the first one is the array of labels $\wEtykieta_\X$ elaborated by the \MojAlg{} algorithm, and the second one is the array of labels $\wEtykieta_\X^{\text{a}}$ \ksremark{To oznaczenie trzeba będzie zmienić na coś sensowniejszego, ale na razie to tak zostawiam.} elaborated by the general agglomerative hierarchical clustering algorithm.
-Thus we get the multiclass classification problem and we use the confusion matrix $\mConfusionMatrix$ to measure the quality of clustering with \MojAlg. 
-The labels elaborted by the crisp agglomerative hierarchical clustering algorithm are considered as the ground truth, while the labels elaborated by \MojAlg{} are considered as predicted labels.
+Two arrays of labels are compared: the first one is the array of labels $\wEtykieta_\X$ elaborated by the \MojAlg{} algorithm or the general agglomerative hierarchical clustering algorithm, and the second one is the array of expected labels $\wEtykieta_\X^{\text{a}}$ \ksremark{To oznaczenie trzeba będzie zmienić na coś sensowniejszego, ale na razie to tak zostawiam.}.
+Thus we get the multiclass classification problem and we use the confusion matrix $\mConfusionMatrix$ to measure the quality of clustering of either algorithm. 
+The expected labels are considered as the ground truth, while the labels elaborated by \MojAlg{} or the crisp agglomerative hierarchical clustering algorithm are considered as predicted labels.
 
 The total accuracy $\accuracy$ is elaborated from the confusion matrix $\mConfusionMatrix$ as follows.
  \begin{align}
@@ -1235,6 +1239,7 @@ The recall $\recall$ and precision $\precision$ are first calculated separately 
  \end{align}
  %
  
+\zlremark{Do wyrzucenia, jeśli nie opisujemy metody z alg. \ref{alg:similarity_membership}}
 In case if the noise set $\zN$ is not empty, two approaches are possible to calculate the metrics:
  \begin{enumerate}
    \item The noise is not taken into account, and the metrics are calculated only for the data points that are not noise. 
@@ -1252,7 +1257,7 @@ present the accuracy, recall, and precision for the single and complete linkage,
 
  \begin{table}
 	\centering
-    \caption{Accuracy of hierarchical clustering of data with the strict \SingleLinkage{} algorithm}
+    \caption{Maximal accuracy of hierarchical clustering of data with the strict \SingleLinkage{} algorithm}
 	\label{id:tab:acc-sl-strict}
 	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 		\toprule
@@ -1274,7 +1279,7 @@ present the accuracy, recall, and precision for the single and complete linkage,
 
 \begin{table}
 	\centering
-   \caption{Recall of hierarchical clustering of data with the strict \SingleLinkage{} algorithm}
+   \caption{Maximal recall of hierarchical clustering of data with the strict \SingleLinkage{} algorithm}
 	\label{id:tab:rec-sl-strict}
 	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 		\toprule
@@ -1296,7 +1301,7 @@ present the accuracy, recall, and precision for the single and complete linkage,
 
 \begin{table}
 	\centering
-   \caption{Precision of hierarchical clustering of data with the strict \SingleLinkage{} algorithm}
+   \caption{Maximal precision of hierarchical clustering of data with the strict \SingleLinkage{} algorithm}
 	\label{id:tab:prec-sl-strict}
 	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 		\toprule
@@ -1318,7 +1323,7 @@ present the accuracy, recall, and precision for the single and complete linkage,
 
 \begin{table}
 	\centering
-   \caption{Accuracy of hierarchical clustering of data with the strict \SingleLinkage{} algorithm}
+   \caption{Maximal accuracy of hierarchical clustering of data with the strict \CompleteLinkage{} algorithm}
 	\label{id:tab:acc-cl-strict}
 	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 		\toprule
@@ -1340,7 +1345,7 @@ present the accuracy, recall, and precision for the single and complete linkage,
 
 \begin{table}
 	\centering
-   \caption{Recall of hierarchical clustering of data with the strict \CompleteLinkage{} algorithm}
+   \caption{Maximal recall of hierarchical clustering of data with the strict \CompleteLinkage{} algorithm}
 	\label{id:tab:rec-cl-strict}
 	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 		\toprule
@@ -1362,7 +1367,7 @@ present the accuracy, recall, and precision for the single and complete linkage,
 
 \begin{table}
 	\centering
-   \caption{Precision of hierarchical clustering of data with the strict \CompleteLinkage{} algorithm}
+   \caption{Maximal precision of hierarchical clustering of data with the strict \CompleteLinkage{} algorithm}
 	\label{id:tab:prec-cl-strict}
 	\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
 		\toprule
@@ -1386,16 +1391,16 @@ present the accuracy, recall, and precision for the single and complete linkage,
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{\graf/corners1000g_s.pdf}
+	\includegraphics[width=\textwidth]{\graf/corners1000g_s_monochrome_p_only.pdf}
 	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze \num{50000} i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
-   \caption{Results of clustering \MojAlg{} for the \corners{} dataset of size \num{1000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
+   \caption{Results of clustering \MojAlg{} for the \corners{} dataset of size \num{1000} and gaussian relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
 	\label{fig:circles:1000g}
 \end{figure}
 \ksremark{Rys. \ref{fig:circles:1000g}, rys. \ref{fig:circles:50000e}: Czy tutaj jest na pewno relacja euklidesowa?}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{\graf/circles50000e_s.png}
+	\includegraphics[width=\textwidth]{\graf/circles50000e_s_monochrome_p_only.png}
 	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze \num{50000} i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
    \caption{Results of clustering \MojAlg{} for the \circles{} dataset of size \num{50000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
 	\label{fig:circles:50000e}
@@ -1403,7 +1408,7 @@ present the accuracy, recall, and precision for the single and complete linkage,
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{\graf/crescents5000e_s.png}
+	\includegraphics[width=\textwidth]{\graf/crescents5000e_s_monochrome_p_only.png}
 	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 5000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
    \caption{Results of clustering \MojAlg{} for the \crescents{} dataset of size \num{5000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
 	\label{fig:crescents:5000e}
@@ -1411,7 +1416,7 @@ present the accuracy, recall, and precision for the single and complete linkage,
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{\graf/laguna1000e_s.pdf}
+	\includegraphics[width=\textwidth]{\graf/laguna1000e_s_monochrome_p_only.pdf}
 	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
    \caption{Results of clustering \MojAlg{} for the \laguna{} dataset of size \num{1000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
 	\label{fig:laguna:1000e}
@@ -1420,14 +1425,14 @@ present the accuracy, recall, and precision for the single and complete linkage,
 \begin{figure}
 	\centering
 	\begin{subfigure}{1.0\textwidth}
-	\includegraphics[width=\textwidth]{\graf/laguna1000_blue.png}
+	\includegraphics[width=\textwidth]{\graf/laguna1000_gray.png}
 	%\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze 1000.}
    \caption{\num{1000} points}
       \label{fig:laguna-blue:1000}
 	\end{subfigure}
    \hfill
 	\begin{subfigure}{1.0\textwidth}
-	\includegraphics[width=\textwidth]{\graf/laguna40000_blue.png}
+	\includegraphics[width=\textwidth]{\graf/laguna40000_gray.png}
 	%\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze \num{40000}.}
    \caption{\num{40000} data points}
       \label{fig:laguna-blue:40000}
@@ -1439,13 +1444,13 @@ present the accuracy, recall, and precision for the single and complete linkage,
 \begin{figure}
 	\centering
 	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=\textwidth]{\graf/brightkite_500000_strict.png}
+		\includegraphics[width=\textwidth]{\graf/brightkite_500000_strict_monochrome.png}
 		%\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
       \caption{Clustering of a random sample of \num{500000} points with the strict algorithm.}
 	\end{subfigure}
 %	
 	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=\textwidth]{\graf/brightkite_full_100.png}
+		\includegraphics[width=\textwidth]{\graf/brightkite_full_100_monochrome.png}
 		%\caption{Grupowanie algorytmem \MojAlg{} całości danych}
       \caption{Clustering of the entire dataset with the \MojAlg{} algorithm.}
 	\end{subfigure}
