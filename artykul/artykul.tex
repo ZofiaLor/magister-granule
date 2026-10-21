@@ -22,7 +22,8 @@
 %    \setmainfont{Ubuntu Condensed}
 %   \setsansfont{Linux Biolinum O}
 %   \setmainfont[Ligatures={Common,TeX}, Numbers={OldStyle}]{Linux Libertine O}
-    \setmainfont{Fira Sans}
+    %\setmainfont{Fira Sans}
+    \setmainfont{Gentium Plus}
 \else  % LaTeX
    \usepackage[T1]{fontenc}
    \usepackage[utf8]{inputenc}
@@ -987,16 +988,28 @@ The data is visualized in Fig.~\ref{fig:gowalla-brightkite-shapes}.
  	\label{fig:gowalla-brightkite-shapes}
  \end{figure}
 
+\clearpage
 \subsection{Clustering time} 
 
 The clustering time is measured for both the general agglomerative hierarchical clustering algorithm and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{}.
-The experiments is run for various number of input data points $\nX \in \{500, 1000, 1500, \ldots, 10000\}$ \ksremark{¿na pewno?} \zlremark{liczebności takie, jak w tabelach, inne dla każdego zestawu pomiarów} and various number of granules $\nGranula \in \{50, 100, 200\}$.
-Each experiment is repeated 10 \ksremark{¿na pewno?} \zlremark{dla małych danych (pierwsze 2) 4 razy, dla dużych -- 1 raz} times and the average time is reported.
+The experiments were run for various number of input data points and various number of granules.
 
-All experiments confirm the linear time complexity of \MojAlg{} algorithm. Figure \ref{id:fig:comparing-times-sklearn} compares its execution time to 
-\texttt{scikit-learn}'s \texttt{AgglomerativeClustering} algorithm (single-linkage). For more than 40000 data points, \MojAlg{} algorithm is faster than \texttt{AgglomerativeClustering} even with 200 granules. 
+All experiments confirm the linear time complexity of \MojAlg{} algorithm. 
+Fig. \ref{id:fig:comparing-times} and Table \ref{id:tab:comparing-times} 
+compare the execution time of the general agglomerative hierarchical clustering algorithm and the \MojAlg{} algorithm for different numbers of data points and granules.
+The results show that the \MojAlg{} algorithm is significantly faster. 
 
-However, FCM's memory complexity must be taken into account: the algorithm allocates a membership array of floating-point numbers with size $\nGranula \times \nX$. Figure \ref{id:fig:comparing-times-large} shows that for a combination of large numbers of data points and granules, the execution time may increase significantly (200 granules, above 3 million data points case) or FCM might fail to allocate the array due to lack of memory (100 and 200 granules, 6 million data points case).
+Figure \ref{id:fig:comparing-times-sklearn} 
+and Table \ref{id:tab:comparing-times-sklearn}
+compare \MojAlg{} with the optimised implementation \texttt{AgglomerativeClustering} in the 
+\texttt{scikit-learn} library. 
+For more than 40000 data points, \MojAlg{} algorithm is faster than \texttt{AgglomerativeClustering} even with 200 granules. 
+
+An interesting issue needs a short comment. 
+The memory complexity of FCM must be taken into account: the algorithm allocates a membership array of floating-point numbers with size $\nGranula \times \nX$. 
+Figure \ref{id:fig:comparing-times-large}
+and Tab. \ref{id:tab:comparing-times-large}
+show that for a combination of large numbers of data points and granules, the execution time may increase significantly (200 granules, above 3 million data points case) or FCM might fail to allocate the array due to lack of memory (100 and 200 granules, 6 million data points case).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1128,36 +1141,13 @@ However, FCM's memory complexity must be taken into account: the algorithm alloc
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%\begin{figure}
- 	%\centering
- 	%\includegraphics[width=\textwidth]{\graf/comparing_times_monochrome.pdf}
-   %\caption{Execution time of the general agglomerative hierarchical clustering algorithm and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$.}
- 	%\label{fig:comparing-times}
-%\end{figure}
-%
-%
-%\begin{figure}
- 	%\centering
- 	%\includegraphics[width=\textwidth]{\graf/comparing_times_sklearn_monochrome.pdf}
-   %\caption{Execution time of the general agglomerative hierarchical clustering algorithm \texttt{AgglomerativeClustering} from the \texttt{scikit-learn} library and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$.}
- 	%\label{fig:comparing-times-sklearn}
-%\end{figure}
-%
-%
- %\begin{figure}
- 	%\centering
- 	%\includegraphics[width=\textwidth]{\graf/gowalla_times_monochrome.pdf}
-    %\caption{Execution time of the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} for various number of input data points $\nX$ and various number of granules $\nGranula$ for the \gowalla{} dataset.}
- 	%\label{fig:gowalla-times}
- %\end{figure}
-
-
+\clearpage
 \subsection{Quality of clustering} 
 
 The aim of the \MojAlg{} algorithm is to reduce the time complexity of the agglomerative hierarchical clustering algorithm, while maintaining the quality of clustering results.
 Our approach is expected to elaborate the same or similar clustering results as the general agglomerative hierarchical clustering algorithm, but in a shorter time.
 \MojAlg{} clusters fuzzy granules instead of the original crips data. 
-The assingment of original data points to clusters is based on the membeships of the data items to fuzzy granules and the memberships of fuzzy granules to clusters.
+The assignment of original data points to clusters is based on the membeships of the data items to fuzzy granules and the memberships of fuzzy granules to clusters.
 The procedure is presented in Alg. \ref{alg:similarity_membership}.
 The procedure takes as input the original data points $\zX$, the granules $\zGranula$ and their labels $\wEtykieta_\Granula$.
 For each data item $\wX$ (line \ref{alg:similarity_membership:loop:x}, the procedure calculates its membership to each granule (line \ref{alg:similarity_membership:loop:g}).
@@ -1236,19 +1226,21 @@ The recall $\recall$ and precision $\precision$ are first calculated separately 
  %
  
 In case if the noise set $\zN$ is not empty, two approaches are possible to calculate the metrics:
- \begin{enumerate}
+\begin{enumerate}
    \item The noise is not taken into account, and the metrics are calculated only for the data points that are not noise. 
    \item The noise is considered as misclassified data.
       To correct the value of the metric for noise, it should be multiplied by the percentage of non-noise points in relation to the total data.
- \end{enumerate}
+\end{enumerate}
+The noise set is not empty if the fuzzy relation produces a fuzzy set with a finite support. 
+In our research, this is the case of triangular \efn s (Fig. \ref{fig:S:t}).
  
-
-
-\subsection{Results}
 
 Tab. 
 \ref{id:tab:acc-sl-strict}-\ref{id:tab:prec-cl-strict}
 present the accuracy, recall, and precision for the single and complete linkage, respectively.
+The values are \num{1.0000} for all almost all datasets, data sizes, and numbers of granules.
+Only for some cases the values are slightly lower 
+0.9696
 
  \begin{table}
 	\centering
@@ -1442,17 +1434,19 @@ present the accuracy, recall, and precision for the single and complete linkage,
 		\includegraphics[width=\textwidth]{\graf/brightkite_500000_strict.png}
 		%\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
       \caption{Clustering of a random sample of \num{500000} points with the strict algorithm.}
+      \label{fig:brightkite:strict-500000}
 	\end{subfigure}
 %	
 	\begin{subfigure}{0.45\textwidth}
 		\includegraphics[width=\textwidth]{\graf/brightkite_full_100.png}
 		%\caption{Grupowanie algorytmem \MojAlg{} całości danych}
       \caption{Clustering of the entire dataset with the \MojAlg{} algorithm.}
+      \label{fig:brightkite:full-100}
 	\end{subfigure}
 	
 	%\caption{Wyniki grupowania hierarchicznego algorytmem ostrym \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} i algorytmem \MojAlg{} danych \brightkite{}}
    \caption{Results of hierarchical clustering with the crisp agglomerative clustering algorithm and the \MojAlg{} algorithm for the \brightkite{} dataset.}
-	\label{fig:brightkite:strict-fuzzy}
+	\label{fig:brightkite}
 \end{figure}
 
 
