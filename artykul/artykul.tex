@@ -1242,10 +1242,16 @@ In our research, this is the case of triangular \efn s (Fig. \ref{fig:S:t}).
 
 Tab. 
 \ref{id:tab:acc-sl-strict}-\ref{id:tab:prec-cl-strict}
-present the accuracy, recall, and precision for the single and complete linkage, respectively.
+present the maximal accuracy, recall, and precision for the single and complete linkage, respectively for all combinations of $\xi$ values and granule shapes, averaged for each original data size.
 The values are \num{1.0000} for all almost all datasets, data sizes, and numbers of granules.
-Only for some cases the values are slightly lower 
+Only for some cases the values are slightly lower and for all cases except \blobs{} and 200 granules they are still higher than the crisp algorithm's results.
 0.9696
+
+Fig. \ref{fig:corners:1000g}-\ref{fig:laguna:1000e} show the impact of the $\xi$ parameter's value and the number of granules on the results. For \SingleLinkage{}, the lower the value of $\xi$ the better. The results are usually better for larger numbers of granules though it depends on data shape and distribution. Fig. \ref{fig:crescents:5000e} shows an incorrect clustering for 100 granules while both the lower (50 granules) and higher (200 granules) with the same $\xi = 0.9$ value are clustered according to expectations. \zlremark{Zależność odwróconą mamy też dla \blobs{} -- może warto jednak pokazać ten wykres?}
+
+The lower results of \laguna{} datasets' clusterization are explained by fig. \ref{fig:laguna-blue}. For smaller datasets, all clusters are clearly separated. For larger datasets the middle two clusters are joined, the datapoints in the middle of that joining might be classified as the other cluster than expected. Notably, \MojAlg{} performs better than the crisp \SingleLinkage{} algorithm, which tends to merge the two middle clusters into one.
+
+Clustering of \brightkite\ dataset is shown on fig. \ref{fig:brightkite}. Since the dataset is unlabelled, the results can be evaluated visually. Clustering with the strict algorithm produces one big cluster consisting of most of the data and five small clusters representing singular points. Clustering with \MojAlg{} results in groups mostly split by continent, concentrated in areas of higher density of datapoints. It is considerably closer to the expected result compared to the strict algorithm.
 
  \begin{table}
 	\centering
@@ -1386,9 +1392,8 @@ Only for some cases the values are slightly lower
 	\includegraphics[width=\textwidth]{\graf/corners1000g_s_monochrome_p_only.pdf}
 	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze \num{50000} i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
    \caption{Results of clustering \MojAlg{} for the \corners{} dataset of size \num{1000} and gaussian relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
-	\label{fig:circles:1000g}
+	\label{fig:corners:1000g}
 \end{figure}
-\ksremark{Rys. \ref{fig:circles:1000g}, rys. \ref{fig:circles:50000e}: Czy tutaj jest na pewno relacja euklidesowa?}
 
 \begin{figure}
 	\centering
