@@ -1251,6 +1251,8 @@ Fig. \ref{fig:corners:1000g}-\ref{fig:laguna:1000e} show the impact of the $\xi$
 
 The lower results of \laguna{} datasets' clusterization are explained by fig. \ref{fig:laguna-blue}. For smaller datasets, all clusters are clearly separated. For larger datasets the middle two clusters are joined, the datapoints in the middle of that joining might be classified as the other cluster than expected. Notably, \MojAlg{} performs better than the crisp \SingleLinkage{} algorithm, which tends to merge the two middle clusters into one.
 
+The impact of fuzzy relation type is the least pronounced. For each dataset, 100\% (or almost 100\% in \blobs{} and \laguna{} cases) accuracy can be achieved with any of the 3 relation types. However, there are differences when every parameter combination is taken into account: the total average accuracy is then highest for triangular relation and lowest for exponential relation. \zlremark{Tabela? Wykres?}
+
 Clustering of \brightkite\ dataset is shown on fig. \ref{fig:brightkite}. Since the dataset is unlabelled, the results can be evaluated visually. Clustering with the strict algorithm produces one big cluster consisting of most of the data and five small clusters representing singular points. Clustering with \MojAlg{} results in groups mostly split by continent, concentrated in areas of higher density of datapoints. It is considerably closer to the expected result compared to the strict algorithm.
 
  \begin{table}
@@ -1450,7 +1452,7 @@ Clustering of \brightkite\ dataset is shown on fig. \ref{fig:brightkite}. Since 
 	\begin{subfigure}{0.45\textwidth}
 		\includegraphics[width=\textwidth]{\graf/brightkite_full_100_monochrome.png}
 		%\caption{Grupowanie algorytmem \MojAlg{} całości danych}
-      \caption{Clustering of the entire dataset with the \MojAlg{} algorithm.}
+      \caption{Clustering of the entire dataset with the \MojAlg{} algorithm with 100 granules, triangular fuzzy relation, $\xi=0.1$.}
       \label{fig:brightkite:full-100}
 	\end{subfigure}
 	
