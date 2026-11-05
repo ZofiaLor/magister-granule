@@ -923,8 +923,8 @@ In our approach, the granules are represented as extensional fuzzy numbers.
       \State $n \gets \nGranula$ \Comment{each granule is a separate cluster}
       \While{$n > \nKlaster$}\label{alg:MojAlg:while:begin}\Comment{$O(\nGranula)$}  
          \State $i,j \gets $ \Call{FindIndicesOfTheClosestGranules}{$\mDistance, \wPunkt, r, \xi$} \Comment{$O(\nGranula^2)$}
-         \State $\wR \gets []$ \Comment{for the merged cluster, create a new row $\wR$\ldots}
-         \State $\wC \gets []$ \Comment{\ldots{} and a new column $\wC$ for the distance matrix $\mDistance$} 
+         \State $\wR \gets [\,]$ \Comment{for the merged cluster, create a new row $\wR$\ldots}
+         \State $\wC \gets [\,]$ \Comment{\ldots{} and a new column $\wC$ for the distance matrix $\mDistance$} 
          \ForAll{granules $\Granula$ in $\zGranula$} \Comment{merge the found clusters into one}
             \State $\wR[\Granula] = \wC[\Granula] = $ \Call{\FuzzyAggregation}{$\mDistance[i, \Granula], \mDistance[j, \Granula], r, \xi$} \label{alg:MojAlg:aggregation}
          \EndFor
@@ -970,7 +970,7 @@ The experiments aim at evaluating the performance of the proposed granular agglo
 \subsection{Datasets}
 
 Two groups of datasets are used in the experiments. The first one is synthetic labelled data in six shapes (\blobs, \circles, \corners, \crescents, \laguna and \spheres) and eight sizes (1000, 2000, 5000, 10000, 20000, 30000, 40000 and 50000 elements \ksremark{¿Czy tutaj są dobre wartości?}. The data is visualized in Fig.~\ref{fig:data-shapes}. 
-The second type are the real-life unlabelled 2D data \brightkite \footnote{\url{https://snap.stanford.edu/data/loc-brightkite.html}} (with \num{4491143} data items) and \gowalla \footnote{\url{https://snap.stanford.edu/data/loc-gowalla.html}} (with \num{6442890} data items). 
+The second type are the real-life unlabelled 2D data \brightkite \footnote{\url{https://snap.stanford.edu/data/loc-brightkite.html}} (with \num{4491143} data items) and \gowalla \footnote{\url{https://snap.stanford.edu/data/loc-gowalla.html}} (with \num{6442890} data items) \cite{id:Cho2011Friendship}. 
 In these two datesets, only the latitude and longitude columns are used for the experiments. 
 The data is visualized in Fig.~\ref{fig:gowalla-brightkite-shapes}.
 
@@ -1006,7 +1006,7 @@ compare \MojAlg{} with the optimised implementation \texttt{AgglomerativeCluster
 For more than 40000 data points, \MojAlg{} algorithm is faster than \texttt{AgglomerativeClustering} even with 200 granules. 
 
 An interesting issue needs a short comment. 
-The memory complexity of FCM must be taken into account: the algorithm allocates a membership array of floating-point numbers with size $\nGranula \times \nX$. 
+The memory complexity of FCM must be taken into account: the algorithm allocates a membership array of float\-ing-point numbers with size $\nGranula \times \nX$. 
 Figure \ref{id:fig:comparing-times-large}
 and Tab. \ref{id:tab:comparing-times-large}
 show that for a combination of large numbers of data points and granules, the execution time may increase significantly (200 granules, above 3 million data points case) or FCM might fail to allocate the array due to lack of memory (100 and 200 granules, 6 million data points case).
@@ -1162,7 +1162,7 @@ Each data item $\wX_i$ is assigned to the granule $\Granula_j$, such that the va
 
 
  \begin{algorithm}[t]
-    \caption{Elaboration of the membership of a data point to a granule based on the $\ast$-similarity relation $\nPodobienstwo$}
+    \caption{Elaboration of the membership of a data point to a granule based on the $\tnorm$-similarity relation $\nPodobienstwo$}
  	\label{alg:similarity_membership}
  	\begin{algorithmic}[1]
  		\Require $\zX$: original data points 
@@ -1172,7 +1172,7 @@ Each data item $\wX_i$ is assigned to the granule $\Granula_j$, such that the va
  		\Procedure{CalculateSimilarityMembership}{$\zX, \zGranula, \wEtykieta_\Granula, r$}
       \State $\wEtykieta_{\X} \gets$ array 1..$\nX$ of $\varnothing$ \Comment{array of labels for each data point}
  		\State $\zN \gets 0$ \Comment{noise: set of data not belonging to any granule}
-      \For{$\X \in \zX$}\label{alg:similarity_membership:loop:x}
+      \For{$\wX \in \zX$}\label{alg:similarity_membership:loop:x}
  		\State $\Etykieta \gets 0$
  		\State $\ClusterMembership_{max} \gets 0$
       \For{$\Granula \in \zGranula$}\label{alg:similarity_membership:loop:g}
@@ -1247,13 +1247,13 @@ The values are \num{1.0000} for all almost all datasets, data sizes, and numbers
 Only for some cases the values are slightly lower and for all cases except \blobs{} and 200 granules they are still higher than the crisp algorithm's results.
 0.9696
 
-Fig. \ref{fig:corners:1000g}-\ref{fig:laguna:1000e} show the impact of the $\xi$ parameter's value and the number of granules on the results. For \SingleLinkage{}, the lower the value of $\xi$ the better. The results are usually better for larger numbers of granules though it depends on data shape and distribution. Fig. \ref{fig:crescents:5000e} shows an incorrect clustering for 100 granules while both the lower (50 granules) and higher (200 granules) with the same $\xi = 0.9$ value are clustered according to expectations. \zlremark{Zależność odwróconą mamy też dla \blobs{} -- może warto jednak pokazać ten wykres?}
+Fig. \ref{fig:corners:1000g}-\ref{fig:laguna:1000e} show the impact of the $\xi$ parameter's value and the number of granules on the results. For \SingleLinkage{}, the lower the value of $\xi$ the better. The results are usually better for larger numbers of granules though it depends on data shape and distribution. Fig. \ref{fig:crescents:5000e} shows an incorrect clustering for 100 granules while both the lower (50 granules) and higher (200 granules) with the same $\xi = 0.9$ value are clustered according to expectations. \zlremark{Zależność odwróconą mamy też dla \blobs{} -- może warto jednak pokazać ten wykres?} \ksremark{Tak, dajmy to.}
 
-The lower results of \laguna{} datasets' clusterization are explained by fig. \ref{fig:laguna-blue}. For smaller datasets, all clusters are clearly separated. For larger datasets the middle two clusters are joined, the datapoints in the middle of that joining might be classified as the other cluster than expected. Notably, \MojAlg{} performs better than the crisp \SingleLinkage{} algorithm, which tends to merge the two middle clusters into one.
+The lower results of clusterization of the \laguna{} dataset are explained in Fig. \ref{fig:laguna-blue}. For smaller datasets, all clusters are clearly separated. For larger datasets the middle two clusters are joined, the datapoints in the middle of that joining might be classified as the other cluster than expected. Notably, \MojAlg{} performs better than the crisp \SingleLinkage{} algorithm, which tends to merge the two middle clusters into one.
 
-The impact of fuzzy relation type is the least pronounced. For each dataset, 100\% (or almost 100\% in \blobs{} and \laguna{} cases) accuracy can be achieved with any of the 3 relation types. However, there are differences when every parameter combination is taken into account: the total average accuracy is then highest for triangular relation and lowest for exponential relation. \zlremark{Tabela? Wykres?}
+The impact of fuzzy relation type is the least pronounced. For each dataset, 100\% (or almost 100\% in \blobs{} and \laguna{} cases) accuracy can be achieved with any of the 3 relation types. However, there are differences when every parameter combination is taken into account: the total average accuracy is then highest for triangular relation and lowest for exponential relation. \ksremark{Czy to jest związane z tym, że trójkątna relacja może generować szum?} \zlremark{Tabela? Wykres?}
 
-Clustering of \brightkite\ dataset is shown on fig. \ref{fig:brightkite}. Since the dataset is unlabelled, the results can be evaluated visually. Clustering with the strict algorithm produces one big cluster consisting of most of the data and five small clusters representing singular points. Clustering with \MojAlg{} results in groups mostly split by continent, concentrated in areas of higher density of datapoints. It is considerably closer to the expected result compared to the strict algorithm.
+Clustering of the \brightkite\ dataset is shown in Fig. \ref{fig:brightkite}. Since the dataset is unlabelled, the results can be evaluated visually. Clustering with the strict algorithm produces one big cluster consisting of most of the data and five small clusters representing singular points. Clustering with \MojAlg{} results in groups mostly split by continent, concentrated in areas of higher density of datapoints. It is considerably closer to the expected result compared to the strict algorithm.
 
  \begin{table}
 	\centering
@@ -1462,6 +1462,13 @@ Clustering of \brightkite\ dataset is shown on fig. \ref{fig:brightkite}. Since 
 \end{figure}
 
 
+\section{Summary}
+
+
+\bibliographystyle{plain} 
+\bibliography{./bibliografia/bibliografia}
+
+\end{document}
 
 \begin{figure}
 	\centering
@@ -1469,8 +1476,6 @@ Clustering of \brightkite\ dataset is shown on fig. \ref{fig:brightkite}. Since 
 	\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 1000 i trójkątnej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
 	\label{fig:crescents1000tc}
 \end{figure}
-
-
 
 
 
@@ -1591,7 +1596,7 @@ Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną ps
  Dane te nie posiadają etykiet. W sposób opisany w sekcji na stronie \pageref{sec:etykietowanie-danych} każdemu punktowi przypisano etykietę w postaci liczby całkowitej $[0, \nKlaster-1]$ i zapisano w folderze \url{dane_labelled} w analogicznym formacie.
  
  % czy 2011 to dobra data dla tych stron?
- Wykorzystano również zbiory danych \brightkite\ \cite{id:brightkite} (\num{4491143} wierszy) oraz \gowalla\ \cite{id:gowalla} (\num{6442890} wierszy).
+ Wykorzystano również zbiory danych \brightkite\ \cite{id:Cho2011Friendship} (\num{4491143} wierszy) oraz \gowalla\ \cite{id:Cho2011Friendship} (\num{6442890} wierszy).
  Dane przedstawiają informacje o logowaniach się użytkowników platform społecznościowych.
  Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' -- dwuwymiarowe współrzędne lokalizacji logowań. Dane nie są etykietowane i nie mają przypisanych klas. 
  %
