@@ -321,16 +321,13 @@ This problem can be addressed with granular computing.
 Granular computing (GrC) is a paradigm of data analysis with informative granules. 
 The data are gathered in granules and the granules are an input of further algorithms. 
 The representation of granules heavily depends on the application. 
-Commonly set, fuzzy sets, rough sets, intervals and many other are used for granules. 
+Commonly sets, fuzzy sets, rough sets, intervals and many other are used for granules. 
 
-Unfortunately, the mathematical representation of granules is not straightfoward for mathematical operations. 
-Commonly, Zadeh's extension principle is used to elaborate the results. 
-It causes three main problems \cite{id:Siminski2026Arithmetic}:
-\begin{itemize}
-   \item for some fuzzy sets, interative numerical procedures are needed, the operations cannot be presented with closed-form formulae;
-   \item for some fuzzy sets and operations, the fuzzy set in the result of an operation does not preserve the properties of the operands (the set of fuzzy numbers with operations is not complete);
-   \item multiple arithmetical operations causes spread of fuzziness, the more operations run, the more fuzzy result, even beyond reasonable interpretability.
-\end{itemize}
+Unfortunately, the application of fuzzy sets as a representation of granules is not straightforward for mathematical operations. 
+Commonly, Zadeh's extension principle is used to elaborate the results, which causes three main problems \cite{id:Siminski2026Arithmetic}. 
+First, for some fuzzy sets, iterative numerical procedures are needed because the operations cannot be presented with closed-form formulae. 
+Second, for certain fuzzy sets and operations, the fuzzy set resulting from an operation does not preserve the properties of the operands, meaning that the set of fuzzy numbers with operations is not complete. 
+Finally, multiple arithmetical operations cause a spread of fuzziness; the more operations are run, the more fuzzy the result becomes, eventually moving even beyond reasonable interpretability.
 
 In this paper, we would like to address these two problems.
 We would like to use granular approach to accelerate hierarchical clustering algorithms with extensional fuzzy numbers.
