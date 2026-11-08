@@ -132,13 +132,15 @@
 \newcommand{\FuzzyAggregation}{\procedura{FuzzyAggregation}}
 \newcommand{\dendrogram}{d} 
 
-\DeclareMathOperator{\op}{\mathbf{op}}
+%\DeclareMathOperator{\op}{\mathbf{op}}
+\DeclareMathOperator{\op}{\diamond}
 
 \newcommand{\relS}{S} 
 \newcommand{\lS}{<_\relS}
+\newcommand{\leqS}{\leq_\relS}
+\newcommand{\leqslantS}{\leqslant_\relS}
 \newcommand{\eqS}{=_\relS}
-\newcommand{\gS}{>_\relS}
-\newcommand{\leqS}{\leqslant_\refS} 
+\newcommand{\gS}{>_\relS} 
 \newcommand{\geqS}{\geqslant_\refS}
 \newcommand{\relation}[2]{R\left(#1,#2\right)}
 \newcommand{\ksFRel}[1]{\tilde{#1}}
@@ -325,8 +327,8 @@ Commonly sets, fuzzy sets, rough sets, intervals and many other are used for gra
 
 Unfortunately, the application of fuzzy sets as a representation of granules is not straightforward for mathematical operations. 
 Commonly, Zadeh's extension principle is used to elaborate the results, which causes three main problems \cite{id:Siminski2026Arithmetic}. 
-First, for some fuzzy sets, iterative numerical procedures are needed because the operations cannot be presented with closed-form formulae. 
-Second, for certain fuzzy sets and operations, the fuzzy set resulting from an operation does not preserve the properties of the operands, meaning that the set of fuzzy numbers with operations is not complete. 
+First, for some fuzzy sets (eg. Gaussian fuzzy sets), iterative numerical procedures are needed because the operations cannot be presented with closed-form formulae. 
+Second, for certain fuzzy sets and operations (eg. multiplication with triangular fuzzy sets), the fuzzy set resulting from an operation does not preserve the properties of the operands, meaning that the set of fuzzy numbers with operations is not complete. 
 Finally, multiple arithmetical operations cause a spread of fuzziness; the more operations are run, the more fuzzy the result becomes, eventually moving even beyond reasonable interpretability.
 
 In this paper, we would like to address these two problems.
@@ -341,23 +343,11 @@ We would like to use granular approach to accelerate hierarchical clustering alg
 Clustering is a well known technique for unsupervised data analysis.
 It aims at elaboration of a partition of data item in such a way that items in one cluster are more similar to items in the same cluster than to items in other clusters \cite{id:fcm-for-optimizing,id:clustering-alg-survey}.
 
-Multiple paradigms are used for clustering algorithms \cite{id:clustering-alg-survey}, eg.:
-\begin{itemize}
-   \item Hierarchical approach based on either merging small clusters into larger ones (ascending approach) or splitting larger clusters into smaller ones (descending approach) \cite{id:clustering-alg-survey}, eg. single-linkage \cite{id:Florek1951Sur,id:Sneath1957Application}, SLINK \cite{id:Sibson1973SLINK}, complete-linkage \cite{id:Sorensen1948Method}, gravitational clustering \cite{id:Wright1977Gravitational};
-   \item Criterion function approach based on minimalisation of a certain criterion is represented by a huge FCM \cite{id:Bezdek1973clustervaliditywith}, family, eg. 
-      FCOM \cite{id:Leski2016FuzzyC},
-      FuBi \cite{id:Siminski2022FuBiNFS},
-      Rough FCM \cite{id:Siminski2014Rough,id:Siminski2013Clustering},
-      Subspace FCM \cite{id:Siminski2014Neuro} etc.
-   \item Density approach locates clusters in the most dense regions of the input domain, eg. DBSCAN \cite{id:dbscan-algorithm,id:Suchy2023GrDBSCAN}, OPTICS \cite{id:optics-algorithm}.
-   \item Graph approach treats data items as graph vertices and similarities as graph edges, eg. 
-      based on spectral clustering \cite{id:Nie2024Novel},  
-      deep methods                 \cite{id:Ren2024Dynamic},   
-      kernels                      \cite{id:Liu2024Local}, 
-      density                      \cite{id:Tang2025Density}, 
-      modularity                   \cite{id:Bhowmick2024DGcluster}, 
-      probability                  \cite{id:Wang2025Bidirectional}. 
-\end{itemize}
+Multiple paradigms are used for clustering algorithms \cite{id:clustering-alg-survey}, including hierarchical, criterion function, density, and graph-based approaches.
+The hierarchical approach is based on either merging small clusters into larger ones in an ascending approach or splitting larger clusters into smaller ones in a descending approach \cite{id:clustering-alg-survey}, as seen in methods like single-linkage \cite{id:Florek1951Sur,id:Sneath1957Application}, SLINK \cite{id:Sibson1973SLINK}, complete-linkage \cite{id:Sorensen1948Method}, and gravitational clustering \cite{id:Wright1977Gravitational}. 
+Alternatively, the criterion function approach relies on the minimization of a certain criterion and is represented by the extensive FCM family, which includes FCOM \cite{id:Leski2016FuzzyC}, FuBi \cite{id:Siminski2022FuBiNFS}, Rough FCM \cite{id:Siminski2014Rough,id:Siminski2013Clustering}, and Subspace FCM \cite{id:Siminski2014Neuro}. 
+Another common paradigm is the density approach, which locates clusters in the most dense regions of the input domain, with examples such as DBSCAN \cite{id:dbscan-algorithm,id:Suchy2023GrDBSCAN} and OPTICS \cite{id:optics-algorithm}. 
+Finally, the graph approach treats data items as graph vertices and similarities as graph edges, utilizing techniques based on spectral clustering \cite{id:Nie2024Novel}, deep methods \cite{id:Ren2024Dynamic}, kernels \cite{id:Liu2024Local}, density \cite{id:Tang2025Density}, modularity \cite{id:Bhowmick2024DGcluster}, and probability \cite{id:Wang2025Bidirectional}.
 
 % hierarchical clustering algorithms 
 
@@ -367,7 +357,7 @@ Then, the closest clusters are merged into one cluster.
 This process is repeated until all data items are in one cluster. 
 Clustering can be visualized with a dendrogram (Fig. \ref{id:fig:dendrogram}), which is a tree-like diagram that shows the hierarchical relationships between clusters. 
 The height of the branches in the dendrogram represents the distance between clusters. 
-A cut-off line can be drawn to determine the number of clusters.
+If it is needen, a cut-off line can be drawn to determine the number of clusters.
 % --------------------------------------------------
 \begin{figure}
    \centering 
@@ -380,14 +370,14 @@ The distance between clusters can be defined in different ways, such as single-l
 This choice affects the shape and size of the resulting clusters (Fig. \ref{id:fig:linkage}). 
 In the single-linkage approach \cite{id:Florek1951Sur,id:Sneath1957Application}, the distance $\Distance$ between two clusters is defined as the minimum distance between any pair of points in the two clusters $\zA$ and $\zB$:
 \begin{align}
-   \Odleglosc \left(\zA, \zB\right) = \min_{\wA \in \zA, \wB \in \zB}\Odleglosc\left(\wA, \wB\right).
+   \Distance \left(\zA, \zB\right) = \min_{\wA \in \zA, \wB \in \zB}\Distance\left(\wA, \wB\right).
 \end{align}
 For complete-linkage \cite{id:Sorensen1948Method,id:McQuitty1957Elementary,id:Defays1977Efficient}, the distance between two clusters is defined as the maximum distance between any pair of points in the two clusters:
 \begin{align}
-   \Odleglosc \left(\zA, \zB\right) = \max_{\wA \in \zA, \wB \in \zB}\Odleglosc\left(\wA, \wB\right).
+   \Distance \left(\zA, \zB\right) = \max_{\wA \in \zA, \wB \in \zB}\Distance\left(\wA, \wB\right).
 \end{align}
-In the complete-linkage approach when the distance between all data items do not exist, the dendrogram is not connected and has several not connected components.
-
+In the complete-linkage approach when the distance between all data items do not exist, the dendrogram is not a connected graph and has several not connected components.
+%
 Some more strategies are also used for defining the distance between clusters, such as WPGMA (Weighted Pair Group Method with Arithmetic Mean) \cite{id:Sokal1958Statistical}, UPGMA (Unweighted Pair Group Method with Arithmetic Mean) \cite{id:Sokal1958Statistical}, or the Ward's method \cite{id:Ward1963Hierarchical}.
 
 \begin{figure}
@@ -407,13 +397,13 @@ In contrast, the FCM algorithm has a time complexity of $O(n)$, which is signifi
 Lofti Zadeh introduced a new paradigm of computation based on informative granules \cite{id:Zadeh1979Fuzzy}.
 This is an abstraction that fills the gap between numbers and human concepts. 
 Humans commonly do not operate on numbers in every day life. 
-We simple operate on concepts that can be described with numbers. 
+%We simply operate on concepts that can be described with numbers. 
 Zadeh named these concepts informative granules. 
-
+%
 The main idea of granular computing (GrC) is to provide ideas, methods, algorithms, and techniques to make computer work in a way that is similar to human cognition \cite{id:Zadeh1997Toward}.
 The next step dreamt by Zadeh were computers calculating with words \cite{id:Zadeh2002Computing,id:Piegat2015Computing}.
 
-Informative granule is a collection of similar items with a clear significance. 
+An informative granule is a collection of similar items with a clear significance. 
 This definition is very general. 
 It does not define the similarity of the items nor the significance. 
 These notions are specified in an application they are used for. 
@@ -434,13 +424,13 @@ The next level of abstraction over informative granules is the triarchic theory 
 philosophical, methodological, and computational  \cite{id:Yao2016triarchic}.
 This is a base of the three-way decision approach \cite{id:Yao2009Three,id:Yao2011Superiority,id:Siminski20233WDNFS,id:Ptas2026Art,id:Siminski2026Towards}.
 
-One of representations of informative granules are \efn s.
+In our approach, we represents informative granules with \efn s.
  
 
 \subsubsection{\Efn s}
 
 
-\Efn\ is a number constructed with a extension of crisp numbers with a fuzzy $\tnorm$-similarity
+An \efn\ is a number constructed with a extension of crisp numbers with a fuzzy $\tnorm$-similarity
 relation deﬁned for a left continuous t-norm $\tnorm$
 \cite{id:Holcapek2012Arithmethics-I,id:Holcapek2012Arithmethics-II,id:Holcapek2014MI-Algebras,id:Siminski2026Arithmetic}.
 This is an alternative to the Zadeh's extension principle \cite{id:Zadeh1965FuzzySets} way for constructing fuzzy numbers. 
@@ -571,7 +561,7 @@ Having defined the $\tnorm$-similarity relation the \efn\ $x_S$ is defined as
 \begin{align}
 	\forall_{y\in\zR} \qquad x_S(y) = \ksR{S}{x}{y}.
 \end{align}
-Thus $x$ defines the core of the \efn\ and the parameter $p$ is responsible for its uzziness. So $x_{S(p)}$ fully defines a \efn.
+Thus $x$ defines the core of the \efn\ and the parameter $p$ is responsible for its fuzziness. So $x_{S(p)}$ fully defines a \efn.
 
 A one-argument arithmetical operation $\op$ on \efn s based on a $\tnorm$-similarity relation $S$ is defined as \cite{id:Siminski2026Arithmetic}:
 \begin{align}
@@ -632,18 +622,25 @@ For \efn s, the equality operator returns a fuzzy value from the interval $[0,1]
 	\left(x_{\relS(p_x)} \eqS y_{\relS(p_y)}\right) = \relS_{\left(\max\{p_x, p_y\}\right)}(x,y).
 \end{align}
 %
-The fuzzy operator $<_S$ is defined as:
+The fuzzy operator $\lS$ is defined as:
 \begin{align}
 	\left(x_{\relS(p_{x})} \lS y_{\relS(p_{y})}\right) = 
    \begin{cases}
-      1 -  \left(x_{\relS(p_{x})} \eqS y_{\relS(p_{y})}\right) & : \  x \le y \\
+      1 -  \left(x_{\relS(p_{x})} \eqS y_{\relS(p_{y})}\right) & : \  x \leqslant y \\
       0 & : \ x > y
    \end{cases}.
 \end{align}
+The fuzzy operator $\leqslantS$ is defined as:
+\begin{align}
+	\left(x_{\relS(p_{x})} \lS y_{\relS(p_{y})}\right) = 
+	\begin{cases}
+		1 & x \leqslant y \\
+		\left(x_{\relS(p_{x})} \eqS y_{\relS(p_{y})}\right) & : \  x > y 		
+	\end{cases}.
+\end{align}
 
-\zlremark{Nie wiem, czy opisywać pozostałe operacje logiczne, tylko te dwie są wykorzystywane}
-\ksremark{Na razie nie :-)}
 
+ 
 
 %\section{Fuzzy agglomerative clustering algorithm}
 %
