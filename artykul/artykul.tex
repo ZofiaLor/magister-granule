@@ -126,6 +126,8 @@
 \newcommand{\PrimitiveClustering}{\procedura{Pri\-mi\-ti\-ve\-Clu\-s\-te\-r\-ing}}
 \newcommand{\SingleLinkage}{\procedura{Si\-ng\-le\-Lin\-ka\-ge}}
 \newcommand{\CompleteLinkage}{\procedura{Com\-ple\-te\-Lin\-ka\-ge}}
+\newcommand{\AgglomerativeClustering}{\procedura{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-r\-ing}}
+\newcommand{\abbrAgglomerativeClustering}{\procedura{AggClus}}
 \newcommand{\MojAlg}{\procedura{GrAgglo}}
 \newcommand{\MojHierAlg}{\procedura{FuzzyAgglo}}
 \newcommand{\CtoG}{\procedura{ClustersToGranules}}
@@ -277,7 +279,7 @@ morekeywords={output,input,return},
 \end{filecontents}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\title{\Huge\bfseries GrAgglo: A granular agglomerative clustering algorithm \ksremark{tytuł}}
+\title{\Huge\bfseries GrAgglo: Granular hierarchical agglomerative clustering algorithm}
 %\author{Krzysztof Siminski\\Silesian University of Technology, Gliwice, Poland\\\url{krzysztof.siminski@polsl.pl}\\orcid: \orcid}
 
 
@@ -285,7 +287,7 @@ morekeywords={output,input,return},
 \begin{document}
 \kslistofremarks
 
-\tableofcontents
+%\tableofcontents
 
 \maketitle
 
@@ -976,7 +978,7 @@ Comparison operators
 \eqref{eq:leqslantS}
  for the \efn s do not return true or false values, but values from $[0,1]$ interval. 
 To get the boolean value, the fuzzy interval value is thresholded with the $\xi$ parameter.
-Higher values of $\xi$ diminish the importance and influence of fuzziness on the results of comparison.
+%Higher values of $\xi$ diminish the importance and influence of fuzziness on the results of comparison.
 
 Having found the closest granules, the algorithm merges them into one and updates the distance matrix $\mDistance$ according to the selected type of aggregation method in the \FuzzyAggregation{} procedure (line \ref{alg:MojAlg:aggregation}).
 In the granular single-linkage method, the fuzzy minimum operation is used, while in the granular complete-linkage method, the fuzzy maximum operation is used.
@@ -1002,11 +1004,16 @@ The Python \ksremark{To jest pythonowa implementacja, ¿prawda?} implementation 
 
 Two groups of datasets are used in the experiments. The first group are synthetic labelled dataset in six shapes (\blobs, \circles, \corners, \crescents, \laguna and \spheres) and eight sizes (1000, 2000, 5000, 10000, 20000, 30000, 40000 and 50000 elements \ksremark{¿Czy tutaj są dobre wartości?}. The data is visualized in Fig.~\ref{fig:data-shapes}.
 These dataset present non hyperellipsoid clusters.
-They cannot be correctly identified with the FCM family algorithms.
+They cannot be correctly identified with the FCM family algorithms, however, they are easily recognisable in plots. 
 
-The second type are the real-life unlabelled two dimensional data \brightkite \footnote{\url{https://snap.stanford.edu/data/loc-brightkite.html}} (with \num{4491143} data items) and \gowalla \footnote{\url{https://snap.stanford.edu/data/loc-gowalla.html}} (with \num{6442890} data items) \cite{id:Cho2011Friendship}. 
-In these two datesets, only the latitude and longitude columns are used for the experiments. 
-The data is visualized in Fig.~\ref{fig:gowalla-brightkite-shapes}.
+The second type are the real-life unlabelled two dimensional large datasets: \brightkite 
+%\footnote{\url{https://snap.stanford.edu/data/loc-brightkite.html}} 
+(with \num{4491143} data items) 
+and \gowalla 
+%\footnote{\url{https://snap.stanford.edu/data/loc-gowalla.html}} 
+(with \num{6442890} data items) \cite{id:Cho2011Friendship}. 
+The datasets represent geographical data (Fig.~\ref{fig:gowalla-brightkite-shapes}).
+In our experiments, we use the columns for the latitude and longitude. 
 
  \begin{figure}
  	\centering
@@ -1018,11 +1025,12 @@ The data is visualized in Fig.~\ref{fig:gowalla-brightkite-shapes}.
  \begin{figure}
  	\centering
  	\includegraphics[width=\textwidth]{\graf/gowalla_brightkite_shapes.png}
-    \caption{Visualization of \brightkite{} and \gowalla{} datasets.}
+    \caption{Visualization of \brightkite{} (left) and \gowalla{} (right) datasets.}
  	\label{fig:gowalla-brightkite-shapes}
  \end{figure}
+ \ksremark{Będziemy potrzebowali czarno-białej wersji rys. \ref{fig:gowalla-brightkite-shapes}. Czy dałoby się, żeby punkty były mniejsze na tych rysunkach?}
 
-\clearpage
+
 \subsection{Clustering time} 
 
 The clustering time is measured for both the general agglomerative hierarchical clustering algorithm and the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{}.
@@ -1030,14 +1038,14 @@ The experiments were run for various number of input data points and various num
 
 All experiments confirm the linear time complexity of \MojAlg{} algorithm. 
 Fig. \ref{id:fig:comparing-times} and Table \ref{id:tab:comparing-times} 
-compare the execution time of the general agglomerative hierarchical clustering algorithm and the \MojAlg{} algorithm for different numbers of data points and granules.
+compare the execution time of the general agglomerative hierarchical clustering algorithm (\abbrAgglomerativeClustering) and the \MojAlg{} algorithm for different numbers of data points and granules.
 The results show that the \MojAlg{} algorithm is significantly faster. 
 
 Figure \ref{id:fig:comparing-times-sklearn} 
 and Table \ref{id:tab:comparing-times-sklearn}
-compare \MojAlg{} with the optimised implementation \texttt{AgglomerativeClustering} in the 
+compare \MojAlg{} with the optimised implementation \AgglomerativeClustering{} in the 
 \texttt{scikit-learn} library. 
-For more than 40000 data points, \MojAlg{} algorithm is faster than \texttt{AgglomerativeClustering} even with 200 granules. 
+For datasets with more than \num{40000} data items, \MojAlg{} algorithm (even with 200 granules) is faster than \AgglomerativeClustering{}. 
 
 An interesting issue needs a short comment. 
 The memory complexity of FCM must be taken into account: the algorithm allocates a membership array of float\-ing-point numbers with size $\nGranula \times \nX$. 
@@ -1050,13 +1058,13 @@ show that for a combination of large numbers of data points and granules, the ex
 
 \begin{table}
  	\centering
-   \caption{Comparison of the average execution times (in [ms]) of the agglomerative clustering and the \MojAlg{} for different data sizes and granule numbers.}
+   \caption{Comparison of the average execution times (in [ms]) of the \abbrAgglomerativeClustering{} and the \MojAlg{} for different data sizes and granule numbers.}
  	\label{id:tab:comparing-times}
  	\begin{tabular}{rrrrr}
  		\toprule
-                & agglomerative & \multicolumn{3}{c}{\MojAlg, number of granules} \\
+                &  & \multicolumn{3}{c}{\MojAlg, number of granules} \\
       \cmidrule(lr){3-5}
- 		data size & clustering & 50  & 100  & 200   \\
+ 		data size & \abbrAgglomerativeClustering & 50  & 100  & 200   \\
  		\midrule
  		500  & 256.15 & 79.31 & 166.93 & 527.55 \\
 		1000 & 1092.4 & 131.34 & 300.99 & 944.47 \\
@@ -1080,13 +1088,13 @@ show that for a combination of large numbers of data points and granules, the ex
          ylabel={time [ms]},
          legend style={at={(1.8,0.8)}}
          ]
-         \addplot[mark=*]        table[x=n,y=sl]    {\jobname-times.data}; \addlegendentry{agglomerative clustering};
+         \addplot[mark=*]        table[x=n,y=sl]    {\jobname-times.data}; \addlegendentry{\abbrAgglomerativeClustering};
          \addplot[mark=triangle] table[x=n,y=G50]   {\jobname-times.data}; \addlegendentry{\MojAlg{} 50 granules};
          \addplot[mark=square]   table[x=n,y=G100]  {\jobname-times.data}; \addlegendentry{\MojAlg{} 100 granules};
          \addplot[mark=o]        table[x=n,y=G200]  {\jobname-times.data}; \addlegendentry{\MojAlg{} 200 granules};
      \end{axis}
  \end{tikzpicture}
-   \caption{Comparison of the average execution times (in [ms]) of the agglomerative clustering and the \MojAlg{} for different data sizes and granule numbers.}
+   \caption{Comparison of the average execution times (in [ms]) of the \abbrAgglomerativeClustering{} and the \MojAlg{} for different data sizes and granule numbers.}
  	\label{id:fig:comparing-times}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1098,9 +1106,9 @@ show that for a combination of large numbers of data points and granules, the ex
  	\label{id:tab:comparing-times-sklearn}
  	\begin{tabular}{rrrrr}
  		\toprule
-                & agglomerative & \multicolumn{3}{c}{\MojAlg, number of granules} \\
+                &  & \multicolumn{3}{c}{\MojAlg, number of granules} \\
       \cmidrule(lr){3-5}
- 		data size & clustering & 50  & 100  & 200   \\
+ 		data size & \abbrAgglomerativeClustering & 50  & 100  & 200   \\
  		\midrule
  		 1000 &    27.68 &  140.37 &   278.82 &   922.37 \\
 		 2000 &    39.44 &  252.88 &   662.75 &  1488.29 \\
@@ -1179,29 +1187,29 @@ show that for a combination of large numbers of data points and granules, the ex
 \subsection{Quality of clustering} 
 
 The aim of the \MojAlg{} algorithm is to reduce the time complexity of the agglomerative hierarchical clustering algorithm, while maintaining the quality of clustering results.
-Our approach is expected to elaborate the same or similar clustering results as the general agglomerative hierarchical clustering algorithm, but in a shorter time.
-\MojAlg{} clusters fuzzy granules instead of the original crips data. 
-The assignment of original data points to clusters is based on the membeships of the data items to fuzzy granules and the memberships of fuzzy granules to clusters.
+Our approach is expected to elaborate the same or similar clustering results as the general agglomerative hierarchical clustering algorithm \abbrAgglomerativeClustering, but in a shorter time.
+The \abbrAgglomerativeClustering{} algorithm assigns each data item with a cluster label.
+\MojAlg{} clusters fuzzy granules instead of the original crisp data. 
+The assignment of original data points to clusters is based on the memberships of the data items to fuzzy granules and the memberships of fuzzy granules to clusters.
+This is why the assignment of data points with labels is not as straightforward.
+
 The procedure is presented in Alg. \ref{alg:similarity_membership}.
-The procedure takes as input the original data points $\zX$, the granules $\zGranula$ and their labels $\wEtykieta_\Granula$.
-For each data item $\wX$ (line \ref{alg:similarity_membership:loop:x}, the procedure calculates its membership to each granule (line \ref{alg:similarity_membership:loop:g}).
+The procedure takes as input the original data points $\zX$, the set of granules $\zGranula$ and labels of the granules $\wEtykieta_\Granula$.
+For each data item $\wX$ (line \ref{alg:similarity_membership:loop:x}), the procedure calculates its membership to each granule (line \ref{alg:similarity_membership:loop:g}).
 The data item is assigned to the granule with the highest membership value (line \ref{alg:similarity_membership:memb:max}).
 In case of granules based on triangular \efn s, it is possible that the membership of a data point to all granules is equal to 0.
 This is due to the finite support of triangular \efn s.
-The procedure returns the array of labels $\wEtykieta_\X$ with labels for each data point (line \ref{alg:similarity_membership:return}).
+The procedure returns the array of labels $\wEtykieta_\X$ for each data point (line \ref{alg:similarity_membership:return}).
 
-\zlremark{To jest bardziej skomplikowany sposób, który był omawiany w pracy magisterskiej. Poza tym, że mogły pojawić się szumy, nie wprowadził on żadnych nowych informacji. Wszystkie tabele z wartościami wyników, które zostały w artykule, dotyczą prostszej metody, opisanej w następującym akapicie:}
+\zlremark{To jest bardziej skomplikowany sposób, który był omawiany w pracy magisterskiej. Poza tym, że mogły pojawić się szumy, nie wprowadził on żadnych nowych informacji. Wszystkie tabele z wartościami wyników, które zostały w artykule, dotyczą prostszej metody, opisanej w następującym akapicie:} \ksremark{Zgubiłem się. Jak powinno być?}
 
-Each data item $\wX_i$ is assigned to the granule $\Granula_j$, such that the value of $\ClusterMembership_{ij} = \max{\wClusterMembership_i}$. 
-
-
- \begin{algorithm}[t]
+\begin{algorithm}[t]
     \caption{Elaboration of the membership of a data point to a granule based on the $\tnorm$-similarity relation $\nPodobienstwo$}
  	\label{alg:similarity_membership}
  	\begin{algorithmic}[1]
  		\Require $\zX$: original data points 
  		\Require $\zGranula$: granules elaborated by \MojAlg{}
- 		\Require $\wEtykieta_{\Granula}$: array of label elaborated for granules
+ 		\Require $\wEtykieta_{\Granula}$: array of $\nGranula$ labels elaborated for granules
  		\Require $r$: relation 
  		\Procedure{CalculateSimilarityMembership}{$\zX, \zGranula, \wEtykieta_\Granula, r$}
       \State $\wEtykieta_{\X} \gets$ array 1..$\nX$ of $\varnothing$ \Comment{array of labels for each data point}
@@ -1231,11 +1239,11 @@ Each data item $\wX_i$ is assigned to the granule $\Granula_j$, such that the va
  	\end{algorithmic}
  \end{algorithm}
 
-Two arrays of labels are compared: the first one is the array of labels $\wEtykieta_\X$ elaborated by the \MojAlg{} algorithm or the general agglomerative hierarchical clustering algorithm, and the second one is the array of expected labels $\wEtykieta_\X^{\text{a}}$ \ksremark{To oznaczenie trzeba będzie zmienić na coś sensowniejszego, ale na razie to tak zostawiam.}.
-Thus we get the multiclass classification problem and we use the confusion matrix $\mConfusionMatrix$ to measure the quality of clustering of either algorithm. 
-The expected labels are considered as the ground truth, while the labels elaborated by \MojAlg{} or the crisp agglomerative hierarchical clustering algorithm are considered as predicted labels.
+Two arrays of labels are compared: the first one is the array of labels $\wEtykieta_\X$ elaborated by the \MojAlg{} algorithm or the general agglomerative hierarchical clustering algorithm, and the second one is the array of expected labels $\wEtykietaExp_\X$.
+Thus we get the multiclass classification problem and we use the confusion matrix $\mConfusionMatrix \left(\wEtykieta_\X, \wEtykietaExp_\X\right)$ to measure the quality of clustering of either algorithm. 
+The expected labels $\wEtykietaExp_\X$ are considered as the ground truth, while the labels $\wEtykieta_\X$ elaborated by \MojAlg{} or the crisp agglomerative hierarchical clustering algorithm are considered as predicted labels.
 
-The total accuracy $\accuracy$ is elaborated from the confusion matrix $\mConfusionMatrix$ as follows.
+The total accuracy $\accuracy$ is elaborated from the confusion matrix $\mConfusionMatrix = \{\ConfusionMatrix_{ij}\}$ as
  \begin{align}
  	\accuracy = \frac{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{ii}}{\sum_{i=0}^{\nKlaster}\sum_{j=0}^{\nKlaster}\ConfusionMatrix_{ij}} 
  	 = \frac{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{ii}}{\nX},
@@ -1279,15 +1287,10 @@ Tab.
 present the maximal accuracy, recall, and precision for the single and complete linkage, respectively for all combinations of $\xi$ values and granule shapes, averaged for each original data size.
 The values are \num{1.0000} for all almost all datasets, data sizes, and numbers of granules.
 Only for some cases the values are slightly lower and for all cases except \blobs{} and 200 granules they are still higher than the crisp algorithm's results.
-0.9696
+However, it has to be highlighted that the results for the complete linkage\  (Tab. \ref{id:tab:acc-cl-strict}-\ref{id:tab:prec-cl-strict}) are poorer than for the single linkage.
+This is not a fault of the algorithm but it is caused by the geometrical relations between data points and the maximum distance used by the complete linkage approach.
+ 
 
-Fig. \ref{fig:corners:1000g}-\ref{fig:laguna:1000e} show the impact of the $\xi$ parameter's value and the number of granules on the results. For \SingleLinkage{}, the lower the value of $\xi$ the better. The results are usually better for larger numbers of granules though it depends on data shape and distribution. Fig. \ref{fig:crescents:5000e} shows an incorrect clustering for 100 granules while both the lower (50 granules) and higher (200 granules) with the same $\xi = 0.9$ value are clustered according to expectations. \zlremark{Zależność odwróconą mamy też dla \blobs{} -- może warto jednak pokazać ten wykres?} \ksremark{Tak, dajmy to.}
-
-The lower results of clusterization of the \laguna{} dataset are explained in Fig. \ref{fig:laguna-blue}. For smaller datasets, all clusters are clearly separated. For larger datasets the middle two clusters are joined, the datapoints in the middle of that joining might be classified as the other cluster than expected. Notably, \MojAlg{} performs better than the crisp \SingleLinkage{} algorithm, which tends to merge the two middle clusters into one.
-
-The impact of fuzzy relation type is the least pronounced. For each dataset, 100\% (or almost 100\% in \blobs{} and \laguna{} cases) accuracy can be achieved with any of the 3 relation types. However, there are differences when every parameter combination is taken into account: the total average accuracy is then highest for triangular relation and lowest for exponential relation. \ksremark{Czy to jest związane z tym, że trójkątna relacja może generować szum?} \zlremark{Tabela? Wykres?}
-
-Clustering of the \brightkite\ dataset is shown in Fig. \ref{fig:brightkite}. Since the dataset is unlabelled, the results can be evaluated visually. Clustering with the strict algorithm produces one big cluster consisting of most of the data and five small clusters representing singular points. Clustering with \MojAlg{} results in groups mostly split by continent, concentrated in areas of higher density of datapoints. It is considerably closer to the expected result compared to the strict algorithm.
 
  \begin{table}
 	\centering
@@ -1423,11 +1426,35 @@ Clustering of the \brightkite\ dataset is shown in Fig. \ref{fig:brightkite}. Si
 
 % % % % % % % % % % % % % % % % % % % % % 
 
+Fig. \ref{fig:corners:1000g}-\ref{fig:blobs:1000e} show the impact of the $\xi \in \{0.1, 0.5, 0.9\}$ parameter and the number of granules $\nGranula \in \{50, 100, 200\}$ on the results. 
+In these plots, the Gaussian fuzziness of granules is represented as ellipses at $\alpha$-cut 0.5.
+However, it never drops to zero because Gaussian fuzzy set has an infinite support. 
+
+
+The results show for 100 and 200 granules and $\xi \in \{0.1, 0.5\}$ the \MojAlg\ algorithm has successfully identified the clusters.
+However, for the \circles\ the algorithm succeeded also for  50 granules and $\xi \neq 0.9$, 
+for \crescents\ for all $\xi$'s in 50 granules,
+for \laguna\ for all $\xi$'s in 50 and 100 granules,
+We can see the problem occurs for lower numbers of granules and for higher values of the $\xi$ parameter. 
+Actually, that are two faces of the same phenomenon.
+If the number of granules are lower, the granules become more fuzzy.
+In such a case the fuzzy distances between fuzzy granules are indistinguishable and the search for a pair of the closest granules fails. 
+For higher values of $\xi$ the fuzziness of granules plays more important role in comparison of distances and causes the same problem with the indistinguishability.
+This implies a recommendation to avoid lower number of granules and higher values of $\xi$.
+
+The lower results of clusterization of the \laguna{} dataset are explained in Fig. \ref{fig:laguna-blue}. For smaller datasets, all clusters are clearly separated. For larger datasets, the middle two clusters are joined, the datapoints in the middle of that joining might be classified as the other cluster than expected. Notably, \MojAlg{} performs better than the crisp \SingleLinkage{} algorithm, which tends to merge the two middle clusters into one.
+
+The impact of fuzzy relation type is the least pronounced. For each dataset, 100\% (or almost 100\% in \blobs{} and \laguna{} cases) accuracy can be achieved with any of the 3 relation types. However, there are differences when every parameter combination is taken into account: the total average accuracy is then highest for triangular relation and lowest for exponential relation. \ksremark{Czy to jest związane z tym, że trójkątna relacja może generować szum?} \zlremark{Tabela? Wykres?}
+
+Clustering of the \brightkite\ dataset is shown in Fig. \ref{fig:brightkite}. Since the dataset is unlabelled, the results can be evaluated visually as the data represents continents. Clustering with the strict algorithm produces one big cluster consisting of most of the data and five small clusters representing singular points. Clustering with \MojAlg{} results in groups mostly split by continents, concentrated in areas of higher density of data points. It is considerably closer to the expected result compared to the strict algorithm.
+It is also important that all data points were used in clustering with the \MojAlg\ , whereas the crisp \AgglomerativeClustering\ algorithm failed to handle add data. 
+This is why Fig. \ref{fig:brightkite:strict-500000} presents the results elaborated by \AgglomerativeClustering\ for a random sample of data points and Fig. \ref{fig:brightkite:full-100} presents the results return by \MojAlg\ for the whole dataset.
+
+
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{\graf/corners1000g_s_monochrome_p_only.pdf}
-	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze \num{50000} i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
-   \caption{Results of clustering \MojAlg{} for the \corners{} dataset of size \num{1000} and gaussian relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
+    \caption{Results of clustering \MojAlg{} for the \corners{} dataset of size \num{1000} and Gaussian relation between fuzzy numbers, with \SingleLinkage{} connectivity. Expected number of clusters $\nKlaster = 4$.}
 	\label{fig:corners:1000g}
 \end{figure}
 
@@ -1435,7 +1462,7 @@ Clustering of the \brightkite\ dataset is shown in Fig. \ref{fig:brightkite}. Si
 	\centering
 	\includegraphics[width=\textwidth]{\graf/circles50000e_s_monochrome_p_only.png}
 	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze \num{50000} i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
-   \caption{Results of clustering \MojAlg{} for the \circles{} dataset of size \num{50000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
+   \caption{Results of clustering \MojAlg{} for the \circles{} dataset of size \num{50000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.  Expected number of clusters $\nKlaster = 2$.}
 	\label{fig:circles:50000e}
 \end{figure}
 
@@ -1443,7 +1470,7 @@ Clustering of the \brightkite\ dataset is shown in Fig. \ref{fig:brightkite}. Si
 	\centering
 	\includegraphics[width=\textwidth]{\graf/crescents5000e_s_monochrome_p_only.png}
 	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 5000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
-   \caption{Results of clustering \MojAlg{} for the \crescents{} dataset of size \num{5000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
+   \caption{Results of clustering \MojAlg{} for the \crescents{} dataset of size \num{5000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.  Expected number of clusters $\nKlaster = 2$.}
 	\label{fig:crescents:5000e}
 \end{figure}
 
@@ -1451,9 +1478,18 @@ Clustering of the \brightkite\ dataset is shown in Fig. \ref{fig:brightkite}. Si
 	\centering
 	\includegraphics[width=\textwidth]{\graf/laguna1000e_s_monochrome_p_only.pdf}
 	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
-   \caption{Results of clustering \MojAlg{} for the \laguna{} dataset of size \num{1000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.}
+   \caption{Results of clustering \MojAlg{} for the \laguna{} dataset of size \num{1000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.  Expected number of clusters $\nKlaster = 3$.}
 	\label{fig:laguna:1000e}
 \end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{\graf/blobs1000e_s.pdf}
+	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+	\caption{Results of clustering \MojAlg{} for the \blobs{} dataset of size \num{1000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.  Expected number of clusters $\nKlaster = 3$.}
+	\label{fig:blobs:1000e}
+\end{figure}
+\ksremark{Potrzebowalibyśmy wersji czarno-białej rys. \ref{fig:blobs:1000e}.}
 
 \begin{figure}
 	\centering
@@ -1494,9 +1530,24 @@ Clustering of the \brightkite\ dataset is shown in Fig. \ref{fig:brightkite}. Si
    \caption{Results of hierarchical clustering with the crisp agglomerative clustering algorithm and the \MojAlg{} algorithm for the \brightkite{} dataset.}
 	\label{fig:brightkite}
 \end{figure}
+\ksremark{Rys. \ref{fig:brightkite}: A czy mamy analogiczne wyniki dla \gowalla?}
+
 
 
 \section{Summary}
+
+The paper presents a novel granular algorithm for hierarchical agglomerative clustering \MojAlg. 
+Crisp agglomerative algorithm suffer from high computational complexity. 
+This feature makes them unsuitable for large data sets. 
+\MojAlg\ reduces the size of the input data without loosing information. 
+The original input data points are aggregated into information granules. 
+The algorithm applies granules based on \efn s.
+The \efn s enable arithmetic operations with\-out any need for any iterative procedures. 
+They are computationally efficient and avoid the fuzziness spread problem: the fuzziness of \efn s does not increase with the number of operations.
+All these features make the granular algorithm suitable to handle large dataset and simultaneously producing clusters analogous to those elaborated by crisp agglomerative clustering algorithms.
+
+
+The Python implementation of the \MojAlg\ algorithm is available from the public GitHub repository \repo.
 
 
 \bibliographystyle{plain} 
