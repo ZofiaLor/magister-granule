@@ -148,6 +148,8 @@
 \newcommand{\FR}[2]{\FRsymbol\left(#1,#2\right)}
 \newcommand{\ksR}[3]{#1\left(#2,#3\right)}
 
+\newcommand{\repo}{\url{https://github.com/ZofiaLor/magister-granule}}
+
 %
 %\newcommand{\AnnRef}{$\largecircle$}
 %\newcommand{\AnnLep}{$\largeblackcircle$}
@@ -620,6 +622,7 @@ The above formulae make the arithmetic with \efn s very efficient computationall
 For \efn s, the equality operator returns a fuzzy value from the interval $[0,1]$ that is defined as a $\tnorm$-similarity relation $S$:
 \begin{align}
 	\left(x_{\relS(p_x)} \eqS y_{\relS(p_y)}\right) = \relS_{\left(\max\{p_x, p_y\}\right)}(x,y).
+	\label{eq:eqS}
 \end{align}
 %
 The fuzzy operator $\lS$ is defined as:
@@ -629,16 +632,18 @@ The fuzzy operator $\lS$ is defined as:
       1 -  \left(x_{\relS(p_{x})} \eqS y_{\relS(p_{y})}\right) & : \  x \leqslant y \\
       0 & : \ x > y
    \end{cases}.
+   \label{eq:lS}
 \end{align}
 The fuzzy operator $\leqslantS$ is defined as:
 \begin{align}
-	\left(x_{\relS(p_{x})} \lS y_{\relS(p_{y})}\right) = 
+	\left(x_{\relS(p_{x})} \leqslantS y_{\relS(p_{y})}\right) = 
 	\begin{cases}
 		1 & x \leqslant y \\
 		\left(x_{\relS(p_{x})} \eqS y_{\relS(p_{y})}\right) & : \  x > y 		
 	\end{cases}.
+	\label{eq:leqslantS}
 \end{align}
-
+The symmetric operators are defined analogously \cite{id:Siminski2026Arithmetic}.
 
  
 
@@ -898,13 +903,8 @@ The hierarchical clustering algorithms have in general a high time complexity --
 This problem can be mitigated with granular computation.
 Instead of clustering the original data, first the data is granulated, and then the hierarchical clustering is applied to the granules.
 In our approach, the granules are represented as extensional fuzzy numbers. 
-%The proposed algorithm is called \MojAlg{} and consists of three main steps: 
-%\begin{enumerate}
-   %\item granulation of the original data using the fuzzy $c$-means algorithm FCM (line \ref{alg:MojAlg:fcm} in  Alg. \ref{alg:MojAlg}),
-   %\item transformation of the obtained results into granules with the required parameters (line \ref{alg:MojAlg:TransformToGranules} in Alg. \ref{alg:MojAlg}), and
-   %\item agglomerative hierarchical clustering of granules taking into account their fuzziness (line \ref{alg:MojAlg:MojHierAlg} in Alg. \ref{alg:MojAlg}).
-%\end{enumerate}
-\ksremark{\url{https://github.com/ZofiaLor/magister-granule}}
+ 
+
 
  \begin{algorithm}[]
     \caption{\MojAlg{} -- granular agglomerative hierarchical clustering}
@@ -925,7 +925,7 @@ In our approach, the granules are represented as extensional fuzzy numbers.
       \EndFor\label{alg:MojAlg:loop:end} 
       \State $n \gets \nGranula$ \Comment{each granule is a separate cluster}
       \While{$n > \nKlaster$}\label{alg:MojAlg:while:begin}\Comment{$O(\nGranula)$}  
-         \State $i,j \gets $ \Call{FindIndicesOfTheClosestGranules}{$\mDistance, \wPunkt, r, \xi$} \Comment{$O(\nGranula^2)$}
+         \State $i,j \gets $ \Call{FindIndicesOfTheClosestGranules}{$\mDistance, \wPunkt, r, \xi$} \Comment{$O(\nGranula^2)$}\label{alg:MojAlg:closest}
          \State $\wR \gets [\,]$ \Comment{for the merged cluster, create a new row $\wR$\ldots}
          \State $\wC \gets [\,]$ \Comment{\ldots{} and a new column $\wC$ for the distance matrix $\mDistance$} 
          \ForAll{granules $\Granula$ in $\zGranula$} \Comment{merge the found clusters into one}
@@ -939,19 +939,40 @@ In our approach, the granules are represented as extensional fuzzy numbers.
  	\end{algorithmic}
  \end{algorithm}
 
-In the first step (line \ref{alg:MojAlg:fcm} in Alg. \ref{alg:MojAlg}), the original data $\zX$ is clustered with the fuzzy $c$-means algorithm FCM. 
-FCM returns the matrix of centres $\mCentre$ of $\nGranula$ clusters and the matrix $\mMembership$ of memberships of data points to clusters.
-The obtained results are then transformed into granules with the \CtoG\ procedure (line \ref{alg:MojAlg:TransformToGranules} in Alg. \ref{alg:MojAlg}).
-Granules are represented with \efn s, which are defined by the following parameters: 
-the centre of the granule $\Centre_{\Klaster\Atrybut}$, which is equal to the centre of the cluster obtained from FCM, and 
-the fuzziness $p_{\Klaster\Atrybut}$, which is calculated based on the memberships $\mMembership$ of data points to clusters with the following formula:
+In the first step (line \ref{alg:MojAlg:fcm} in Alg. \ref{alg:MojAlg}), the original data $\zX$ is clustered with the fuzzy $c$-means algorithm FCM into $\nGranula$ clusters. 
+FCM returns the matrix of centres $\mCentre$ of   clusters and the matrix $\mMembership$ of memberships of data points to clusters.
+The obtained results are then transformed into a set of granules $\zGranula$ with the \CtoG\ procedure (line \ref{alg:MojAlg:TransformToGranules} in Alg. \ref{alg:MojAlg}).
+%
+Each attribute $\Atrybut$ in a granule $\Granula$ is represented with an \efn\ define by two parameters:
+the centre  $\Centre_{\Klaster\Atrybut}$ of the $\Atrybut$-th attribute in the $\Klaster$-th granule
+and 
+the fuzziness $p_{\Klaster\Atrybut}$ which is calculated based on the memberships $\mMembership$ of data points to clusters with the following formula:
  \begin{align}
- 	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m} (\X_{\Iteracja\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m}}}.
+ 	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{i = 1}^{\nX} \ClusterMembership_{\klaster i}^{m} (\X_{i\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{i = 1}^{\nX} \ClusterMembership_{\klaster i}^{m}}},
 \end{align} 
-Then (lines \ref{alg:MojAlg:loop:begin}--\ref{alg:MojAlg:loop:end}) two nested loops are responsible for elaboration of fuzzy distance between granules. 
+where 
+$\ClusterMembership_{\klaster i}$ stands for the membership values of the $i$-th data item $\wX_i$ to the $\Klaster$-th granule,
+$\X_{i \Atrybut}$ is the value of the $\Atrybut$-th attribute in the $i$-th data item $\wX$, 
+$\Centre_{\Klaster\Atrybut}$ is the value of the $\Atrybut$-th attribute in the $\Klaster$-th granule,
+and finally $m=2$ is the parameter.
+
+
+Two nested loops  (lines \ref{alg:MojAlg:loop:begin}--\ref{alg:MojAlg:loop:end}) are responsible for elaboration of fuzzy distance between granules. 
 The distances are stored in the distance matrix $\mDistance$. 
-The crucial part of the algorithm is the while loop (lines \ref{alg:MojAlg:while:begin}--\ref{alg:MojAlg:while:end}), which implements the agglomerative hierarchical clustering of granules.
-Each iteration of the loop merges the two closest granules into one, and updates the distance matrix $\mDistance$ according to the selected type of aggregation method in the \FuzzyAggregation{} procedure (line \ref{alg:MojAlg:aggregation}).
+The values in the matrix are \efn s.
+
+The crucial part of the algorithm is the  loop (lines \ref{alg:MojAlg:while:begin}--\ref{alg:MojAlg:while:end}) that implements the agglomerative hierarchical clustering of granules.
+In each iteration of the loop, the two closest granules are searched for in the distance matrix $\mDistance$ (line \ref{alg:MojAlg:closest}).
+The distances are \efn s. 
+Comparison operators 
+\eqref{eq:eqS},
+\eqref{eq:lS},
+\eqref{eq:leqslantS}
+ for the \efn s do not return true or false values, but values from $[0,1]$ interval. 
+To get the boolean value, the fuzzy interval value is thresholded with the $\xi$ parameter.
+Higher values of $\xi$ diminish the importance and influence of fuzziness on the results of comparison.
+
+Having found the closest granules, the algorithm merges them into one and updates the distance matrix $\mDistance$ according to the selected type of aggregation method in the \FuzzyAggregation{} procedure (line \ref{alg:MojAlg:aggregation}).
 In the granular single-linkage method, the fuzzy minimum operation is used, while in the granular complete-linkage method, the fuzzy maximum operation is used.
 Thus, each iteration reduces the number of granules by one (line \ref{alg:MojAlg:n}), until the expected number of clusters $\nKlaster$ is reached.
 
@@ -969,11 +990,15 @@ Finally, the overall time complexity of the \MojAlg{} algorithm is $O(\nX\nGranu
 \section{Experiments}
 
 The experiments aim at evaluating the performance of the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} in comparison to the general agglomerative hierarchical clustering algorithm in the perspective of the time complexity and the quality of clustering results. 
+The Python \ksremark{To jest pythonowa implementacja, ¿prawda?} implementation of the \MojAlg\ algorithm is available at the repository \repo\ \ksremark{Musimy zrobić nowe repozytorium z nazwą tożsamą z nazwą algorytmu}.
 
 \subsection{Datasets}
 
-Two groups of datasets are used in the experiments. The first one is synthetic labelled data in six shapes (\blobs, \circles, \corners, \crescents, \laguna and \spheres) and eight sizes (1000, 2000, 5000, 10000, 20000, 30000, 40000 and 50000 elements \ksremark{¿Czy tutaj są dobre wartości?}. The data is visualized in Fig.~\ref{fig:data-shapes}. 
-The second type are the real-life unlabelled 2D data \brightkite \footnote{\url{https://snap.stanford.edu/data/loc-brightkite.html}} (with \num{4491143} data items) and \gowalla \footnote{\url{https://snap.stanford.edu/data/loc-gowalla.html}} (with \num{6442890} data items) \cite{id:Cho2011Friendship}. 
+Two groups of datasets are used in the experiments. The first group are synthetic labelled dataset in six shapes (\blobs, \circles, \corners, \crescents, \laguna and \spheres) and eight sizes (1000, 2000, 5000, 10000, 20000, 30000, 40000 and 50000 elements \ksremark{¿Czy tutaj są dobre wartości?}. The data is visualized in Fig.~\ref{fig:data-shapes}.
+These dataset present non hyperellipsoid clusters.
+They cannot be correctly identified with the FCM family algorithms.
+
+The second type are the real-life unlabelled two dimensional data \brightkite \footnote{\url{https://snap.stanford.edu/data/loc-brightkite.html}} (with \num{4491143} data items) and \gowalla \footnote{\url{https://snap.stanford.edu/data/loc-gowalla.html}} (with \num{6442890} data items) \cite{id:Cho2011Friendship}. 
 In these two datesets, only the latitude and longitude columns are used for the experiments. 
 The data is visualized in Fig.~\ref{fig:gowalla-brightkite-shapes}.
 
