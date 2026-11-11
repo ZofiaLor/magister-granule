@@ -998,11 +998,11 @@ Finally, the overall time complexity of the \MojAlg{} algorithm is $O(\nX\nGranu
 \section{Experiments}
 
 The experiments aim at evaluating the performance of the proposed granular agglomerative hierarchical clustering algorithm \MojAlg{} in comparison to the general agglomerative hierarchical clustering algorithm in the perspective of the time complexity and the quality of clustering results. 
-The Python \ksremark{To jest pythonowa implementacja, ¿prawda?} implementation of the \MojAlg\ algorithm is available at the repository \repo\ \ksremark{Musimy zrobić nowe repozytorium z nazwą tożsamą z nazwą algorytmu}.
+The Python implementation of the \MojAlg\ algorithm is available at the repository \repo\ \ksremark{Musimy zrobić nowe repozytorium z nazwą tożsamą z nazwą algorytmu}.
 
 \subsection{Datasets}
 
-Two groups of datasets are used in the experiments. The first group are synthetic labelled dataset in six shapes (\blobs, \circles, \corners, \crescents, \laguna and \spheres) and eight sizes (1000, 2000, 5000, 10000, 20000, 30000, 40000 and 50000 elements \ksremark{¿Czy tutaj są dobre wartości?}. The data is visualized in Fig.~\ref{fig:data-shapes}.
+Two groups of datasets are used in the experiments. The first group are synthetic labelled dataset in six shapes (\blobs, \circles, \corners, \crescents, \laguna and \spheres) and eight sizes (1000, 2000, 5000, 10000, 20000, 30000, 40000 and 50000 elements). The data is visualized in Fig.~\ref{fig:data-shapes}.
 These dataset present non hyperellipsoid clusters.
 They cannot be correctly identified with the FCM family algorithms, however, they are easily recognisable in plots. 
 
@@ -1028,7 +1028,6 @@ In our experiments, we use the columns for the latitude and longitude.
     \caption{Visualization of \brightkite{} (left) and \gowalla{} (right) datasets.}
  	\label{fig:gowalla-brightkite-shapes}
  \end{figure}
- \ksremark{Będziemy potrzebowali czarno-białej wersji rys. \ref{fig:gowalla-brightkite-shapes}. Czy dałoby się, żeby punkty były mniejsze na tych rysunkach?}
 
 
 \subsection{Clustering time} 
@@ -1193,51 +1192,51 @@ The \abbrAgglomerativeClustering{} algorithm assigns each data item with a clust
 The assignment of original data points to clusters is based on the memberships of the data items to fuzzy granules and the memberships of fuzzy granules to clusters.
 This is why the assignment of data points with labels is not as straightforward.
 
-The procedure is presented in Alg. \ref{alg:similarity_membership}.
-The procedure takes as input the original data points $\zX$, the set of granules $\zGranula$ and labels of the granules $\wEtykieta_\Granula$.
-For each data item $\wX$ (line \ref{alg:similarity_membership:loop:x}), the procedure calculates its membership to each granule (line \ref{alg:similarity_membership:loop:g}).
-The data item is assigned to the granule with the highest membership value (line \ref{alg:similarity_membership:memb:max}).
-In case of granules based on triangular \efn s, it is possible that the membership of a data point to all granules is equal to 0.
-This is due to the finite support of triangular \efn s.
-The procedure returns the array of labels $\wEtykieta_\X$ for each data point (line \ref{alg:similarity_membership:return}).
+% The procedure is presented in Alg. \ref{alg:similarity_membership}.
+% The procedure takes as input the original data points $\zX$, the set of granules $\zGranula$ and labels of the granules $\wEtykieta_\Granula$.
+% For each data item $\wX$ (line \ref{alg:similarity_membership:loop:x}), the procedure calculates its membership to each granule (line \ref{alg:similarity_membership:loop:g}).
+% The data item is assigned to the granule with the highest membership value (line \ref{alg:similarity_membership:memb:max}).
+% In case of granules based on triangular \efn s, it is possible that the membership of a data point to all granules is equal to 0.
+% This is due to the finite support of triangular \efn s.
+% The procedure returns the array of labels $\wEtykieta_\X$ for each data point (line \ref{alg:similarity_membership:return}).
 
 \zlremark{To jest bardziej skomplikowany sposób, który był omawiany w pracy magisterskiej. Poza tym, że mogły pojawić się szumy, nie wprowadził on żadnych nowych informacji. Wszystkie tabele z wartościami wyników, które zostały w artykule, dotyczą prostszej metody, opisanej w następującym akapicie:} \ksremark{Zgubiłem się. Jak powinno być?}
 
-\begin{algorithm}[t]
-    \caption{Elaboration of the membership of a data point to a granule based on the $\tnorm$-similarity relation $\nPodobienstwo$}
- 	\label{alg:similarity_membership}
- 	\begin{algorithmic}[1]
- 		\Require $\zX$: original data points 
- 		\Require $\zGranula$: granules elaborated by \MojAlg{}
- 		\Require $\wEtykieta_{\Granula}$: array of $\nGranula$ labels elaborated for granules
- 		\Require $r$: relation 
- 		\Procedure{CalculateSimilarityMembership}{$\zX, \zGranula, \wEtykieta_\Granula, r$}
-      \State $\wEtykieta_{\X} \gets$ array 1..$\nX$ of $\varnothing$ \Comment{array of labels for each data point}
- 		\State $\zN \gets 0$ \Comment{noise: set of data not belonging to any granule}
-      \For{$\wX \in \zX$}\label{alg:similarity_membership:loop:x}
- 		\State $\Etykieta \gets 0$
- 		\State $\ClusterMembership_{max} \gets 0$
-      \For{$\Granula \in \zGranula$}\label{alg:similarity_membership:loop:g}
-      \State $\ClusterMembership \gets 1$ \Comment{initial membership of the data point to the granule}
-      \For{$\Atrybut \in \zAtrybut$} \Comment{for each attribute $\Atrybut$ of data point $\wX$ and granule $\Granula$}
- 		\State $\ClusterMembership \gets \ClusterMembership \tnorm (\Granula[\Atrybut] \eqS \wX[\Atrybut])$ \Comment{$\tnorm$  t-norm}
- 		\EndFor
- 		\If{$\ClusterMembership > \ClusterMembership_{max}$}
- 		\State $\ClusterMembership_{max} \gets \ClusterMembership$
-      \State $\Etykieta \gets \wEtykieta_\Granula[\Granula]$ \Comment{label of the granule $\Granula$}\label{alg:similarity_membership:memb:max}
- 		\EndIf
- 		\EndFor
- 		\If{$\ClusterMembership_{max} > 0$}
-      \State $\wEtykieta_{\X}\gets e$  \Comment{assign the label of  the data point}
- 		\Else \Comment{data item does not belong to any granule}
-      \State $\wEtykieta_{\X}\gets \varnothing$ \label{alg:similarity_membership:noise} 
- 		\State $\zN \gets \zN \cup \wX$
- 		\EndIf
- 		\EndFor
-      \State \Return $\wEtykieta_{\X}$ \Comment{vector of labels for each data point}\label{alg:similarity_membership:return}
- 		\EndProcedure
- 	\end{algorithmic}
- \end{algorithm}
+% \begin{algorithm}[t]
+%     \caption{Elaboration of the membership of a data point to a granule based on the $\tnorm$-similarity relation $\nPodobienstwo$}
+%  	\label{alg:similarity_membership}
+%  	\begin{algorithmic}[1]
+%  		\Require $\zX$: original data points 
+%  		\Require $\zGranula$: granules elaborated by \MojAlg{}
+%  		\Require $\wEtykieta_{\Granula}$: array of $\nGranula$ labels elaborated for granules
+%  		\Require $r$: relation 
+%  		\Procedure{CalculateSimilarityMembership}{$\zX, \zGranula, \wEtykieta_\Granula, r$}
+%       \State $\wEtykieta_{\X} \gets$ array 1..$\nX$ of $\varnothing$ \Comment{array of labels for each data point}
+%  		\State $\zN \gets 0$ \Comment{noise: set of data not belonging to any granule}
+%       \For{$\wX \in \zX$}\label{alg:similarity_membership:loop:x}
+%  		\State $\Etykieta \gets 0$
+%  		\State $\ClusterMembership_{max} \gets 0$
+%       \For{$\Granula \in \zGranula$}\label{alg:similarity_membership:loop:g}
+%       \State $\ClusterMembership \gets 1$ \Comment{initial membership of the data point to the granule}
+%       \For{$\Atrybut \in \zAtrybut$} \Comment{for each attribute $\Atrybut$ of data point $\wX$ and granule $\Granula$}
+%  		\State $\ClusterMembership \gets \ClusterMembership \tnorm (\Granula[\Atrybut] \eqS \wX[\Atrybut])$ \Comment{$\tnorm$  t-norm}
+%  		\EndFor
+%  		\If{$\ClusterMembership > \ClusterMembership_{max}$}
+%  		\State $\ClusterMembership_{max} \gets \ClusterMembership$
+%       \State $\Etykieta \gets \wEtykieta_\Granula[\Granula]$ \Comment{label of the granule $\Granula$}\label{alg:similarity_membership:memb:max}
+%  		\EndIf
+%  		\EndFor
+%  		\If{$\ClusterMembership_{max} > 0$}
+%       \State $\wEtykieta_{\X}\gets e$  \Comment{assign the label of  the data point}
+%  		\Else \Comment{data item does not belong to any granule}
+%       \State $\wEtykieta_{\X}\gets \varnothing$ \label{alg:similarity_membership:noise} 
+%  		\State $\zN \gets \zN \cup \wX$
+%  		\EndIf
+%  		\EndFor
+%       \State \Return $\wEtykieta_{\X}$ \Comment{vector of labels for each data point}\label{alg:similarity_membership:return}
+%  		\EndProcedure
+%  	\end{algorithmic}
+%  \end{algorithm}
 
 Two arrays of labels are compared: the first one is the array of labels $\wEtykieta_\X$ elaborated by the \MojAlg{} algorithm or the general agglomerative hierarchical clustering algorithm, and the second one is the array of expected labels $\wEtykietaExp_\X$.
 Thus we get the multiclass classification problem and we use the confusion matrix $\mConfusionMatrix \left(\wEtykieta_\X, \wEtykietaExp_\X\right)$ to measure the quality of clustering of either algorithm. 
@@ -1271,15 +1270,15 @@ The recall $\recall$ and precision $\precision$ are first calculated separately 
  \end{align}
  %
  
-\zlremark{Do wyrzucenia, jeśli nie opisujemy metody z alg. \ref{alg:similarity_membership}}
-In case if the noise set $\zN$ is not empty, two approaches are possible to calculate the metrics:
-\begin{enumerate}
-   \item The noise is not taken into account, and the metrics are calculated only for the data points that are not noise. 
-   \item The noise is considered as misclassified data.
-      To correct the value of the metric for noise, it should be multiplied by the percentage of non-noise points in relation to the total data.
-\end{enumerate}
-The noise set is not empty if the fuzzy relation produces a fuzzy set with a finite support. 
-In our research, this is the case of triangular \efn s (Fig. \ref{fig:S:t}).
+% \zlremark{Do wyrzucenia, jeśli nie opisujemy metody z alg. \ref{alg:similarity_membership}}
+% In case if the noise set $\zN$ is not empty, two approaches are possible to calculate the metrics:
+% \begin{enumerate}
+%    \item The noise is not taken into account, and the metrics are calculated only for the data points that are not noise. 
+%    \item The noise is considered as misclassified data.
+%       To correct the value of the metric for noise, it should be multiplied by the percentage of non-noise points in relation to the total data.
+% \end{enumerate}
+% The noise set is not empty if the fuzzy relation produces a fuzzy set with a finite support. 
+% In our research, this is the case of triangular \efn s (Fig. \ref{fig:S:t}).
  
 
 Tab. 
@@ -1446,9 +1445,9 @@ The lower results of clusterization of the \laguna{} dataset are explained in Fi
 
 The impact of fuzzy relation type is the least pronounced. For each dataset, 100\% (or almost 100\% in \blobs{} and \laguna{} cases) accuracy can be achieved with any of the 3 relation types. However, there are differences when every parameter combination is taken into account: the total average accuracy is then highest for triangular relation and lowest for exponential relation. \ksremark{Czy to jest związane z tym, że trójkątna relacja może generować szum?} \zlremark{Tabela? Wykres?}
 
-Clustering of the \brightkite\ dataset is shown in Fig. \ref{fig:brightkite}. Since the dataset is unlabelled, the results can be evaluated visually as the data represents continents. Clustering with the strict algorithm produces one big cluster consisting of most of the data and five small clusters representing singular points. Clustering with \MojAlg{} results in groups mostly split by continents, concentrated in areas of higher density of data points. It is considerably closer to the expected result compared to the strict algorithm.
-It is also important that all data points were used in clustering with the \MojAlg\ , whereas the crisp \AgglomerativeClustering\ algorithm failed to handle add data. 
-This is why Fig. \ref{fig:brightkite:strict-500000} presents the results elaborated by \AgglomerativeClustering\ for a random sample of data points and Fig. \ref{fig:brightkite:full-100} presents the results return by \MojAlg\ for the whole dataset.
+Clustering of the \brightkite\ and \gowalla\ datasets is shown in Fig. \ref{fig:brightkite} and in Fig. \ref{fig:gowalla} respectively. Since the dataset is unlabelled, the results can be evaluated visually as the data represents continents. Clustering with the strict algorithm produces one big cluster consisting of most of the data and five small clusters representing singular points for the \brightkite\ dataset and two big clusters and four small ones for the \gowalla\ dataset. Clustering with \MojAlg{} results in groups mostly split by continents, concentrated in areas of higher density of data points. It is considerably closer to the expected result compared to the strict algorithm.
+It is also important that all data points were used in clustering with the \MojAlg\ , whereas the crisp \AgglomerativeClustering\ algorithm failed to handle all data. \zlremark{O ile \AgglomerativeClustering\ wystarczy pamięci, to raczej powinien sobie poradzić z całością danych, tylko może mu to zająć kilkadziesiąt godzin. Próbka 500 000 danych jest na tyle duża, żeby zawierała te same docelowe klastry, co pełne dane, ale na tyle mała, żeby algorytm wykonał się w rozsądnym czasie.}
+This is why Fig. \ref{fig:brightkite:strict-500000} and Fig. \ref{fig:gowalla:strict-500000} present the results elaborated by \AgglomerativeClustering\ for a random sample of data points and Fig. \ref{fig:brightkite:full-100} and Fig. \ref{fig:gowalla:full-100} present the results return by \MojAlg\ for the whole dataset.
 
 
 \begin{figure}
@@ -1484,12 +1483,11 @@ This is why Fig. \ref{fig:brightkite:strict-500000} presents the results elabora
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{\graf/blobs1000e_s.pdf}
+	\includegraphics[width=\textwidth]{\graf/blobs1000e_s_monochrome.pdf}
 	%\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
 	\caption{Results of clustering \MojAlg{} for the \blobs{} dataset of size \num{1000} and exponential relation between fuzzy numbers, with \SingleLinkage{} connectivity.  Expected number of clusters $\nKlaster = 3$.}
 	\label{fig:blobs:1000e}
 \end{figure}
-\ksremark{Potrzebowalibyśmy wersji czarno-białej rys. \ref{fig:blobs:1000e}.}
 
 \begin{figure}
 	\centering
@@ -1530,7 +1528,26 @@ This is why Fig. \ref{fig:brightkite:strict-500000} presents the results elabora
    \caption{Results of hierarchical clustering with the crisp agglomerative clustering algorithm and the \MojAlg{} algorithm for the \brightkite{} dataset.}
 	\label{fig:brightkite}
 \end{figure}
-\ksremark{Rys. \ref{fig:brightkite}: A czy mamy analogiczne wyniki dla \gowalla?}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth]{\graf/gowalla_500000_strict_monochrome.png}
+		%\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
+      \caption{Clustering of a random sample of \num{500000} points with the strict algorithm.}
+      \label{fig:gowalla:strict-500000}
+	\end{subfigure}
+%	
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth]{\graf/gowalla_full_100_monochrome.png}
+		%\caption{Grupowanie algorytmem \MojAlg{} całości danych}
+      \caption{Clustering of the entire dataset with the \MojAlg{} algorithm with 100 granules, triangular fuzzy relation, $\xi=0.1$.}
+      \label{fig:gowalla:full-100}
+	\end{subfigure}
+
+   \caption{Results of hierarchical clustering with the crisp agglomerative clustering algorithm and the \MojAlg{} algorithm for the \gowalla{} dataset.}
+	\label{fig:gowalla}
+\end{figure}
 
 
 
