@@ -1094,6 +1094,7 @@ Operatory nierówności wyznaczane są w następujący sposób:
 \end{itemize}
 \end{itemize}
 
+
 \section{Plan rozwiązania}
 
 Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasową -- w przypadku algorytmu ogólnego aż do $O(n^{3})$. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(N)$).
@@ -1103,7 +1104,7 @@ Algorytm taki, nazwany \MojAlg, składa się z trzech głównych kroków:
 \begin{enumerate}
 	\item Granulacja oryginalnych danych przy pomocy algorytmy rozmytych $c$-średnich
 	\item Przekształcenie otrzymanych wyników w granule o potrzebnych parametrach
-	\item Aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia
+	\item Aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia \ksremark{Może jakaś specjalna nazwa dlatego etapu?}
 \end{enumerate}
 
 \subsection{Granulacja danych oryginalnych}
@@ -1164,6 +1165,7 @@ Minimum i maksimum wyznacza się przy pomocy operacji porównania. W przypadku r
 	\end{algorithmic}
 \end{algorithm}
 
+\ksremark{pseudokod \MojAlg}
 
 % TODO
 \chapter{Badania}
