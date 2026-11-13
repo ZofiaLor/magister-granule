@@ -28,8 +28,7 @@
    \usepackage[T1]{fontenc}
    \usepackage[utf8]{inputenc}
 %   \usepackage[tt=false]{libertine}
-	%\usepackage{lmodern}
-	\usepackage{gentium}
+	\usepackage{lmodern} 
 \fi
 
 %\usepackage{MnSymbol}
@@ -991,6 +990,9 @@ This makes the time complexity of the while loop $O(\nGranula^3)$.
 Finally, the overall time complexity of the \MojAlg{} algorithm is $O(\nX\nGranula + \nGranula^3)$, which is significantly lower than the time complexity of the general agglomerative hierarchical clustering algorithm $O(\nX^3)$, because $\nGranula \ll \nX$.
 
 
+The algorithm is deterministic if the granulation procedure is also deterministic.
+We use the FCM algorithm for granulation of input data. This step introduces randomness to the algorithm.
+
 % Wyjściem tego kroku jest zbiór granul $\zGranula$ -- obiektów posiadających listę $\Atrybut$-elementową liczb rozmytych, które z kolei zawierają informacje o wartościach $x$ i $p$. Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytych, które składają się na ich wymiary. Kształt jest więc parametrem dla operacji logicznych na nich wykonywanych. Złożoność czasowa tego kroku wynosi $O(\nX\nGranula)$
  
  %Liczby rozmyte stanowią rozszerzenie liczb ostrych, więc każda arytmetyczne i logiczna operacja rozmyta zwraca poprawny wynik również wtedy, gdy ich parametrami są liczby, dla których $p=0$. Implementacja operacji $=_\nPodobienstwo$ w przypadku, gdy obydwie liczby są ostre, wykonuje zwykłą, ostrą operację logiczną $=$, w przeciwnym razie wystąpiłoby dzielenie przez 0. Operacja zwraca 1, jeżeli liczby są równe, 0, jeżeli nie są zamiast wartości logicznych odpowiednio prawda lub fałsz.
@@ -1441,7 +1443,18 @@ In such a case the fuzzy distances between fuzzy granules are indistinguishable 
 For higher values of $\xi$ the fuzziness of granules plays more important role in comparison of distances and causes the same problem with the indistinguishability.
 This implies a recommendation to avoid lower number of granules and higher values of $\xi$.
 
+The \blobs\ dataset is an interesting case.
+The results (Fig. \ref{fig:blobs:1000e}) are not very successful. 
+Only for 50 granules the algorithm elaborates correct clusters. 
+But the problem here is not the algorithm itself (hierarchical agglomerative clustering) but the granulation procedure. 
+The dataset is composed of one huge cluster and two tiny clusters in the right upper and lower parts. 
+For larger number of granules, the granulation procedure does not locate any granule in within these tiny clusters. 
+In such a case the hierarchical agglomeration cannot address these groups of data.
+
+
 The lower results of clusterization of the \laguna{} dataset are explained in Fig. \ref{fig:laguna-blue}. For smaller datasets, all clusters are clearly separated. For larger datasets, the middle two clusters are joined, the datapoints in the middle of that joining might be classified as the other cluster than expected. Notably, \MojAlg{} performs better than the crisp \SingleLinkage{} algorithm, which tends to merge the two middle clusters into one.
+
+
 
 The impact of fuzzy relation type is the least pronounced. For each dataset, 100\% (or almost 100\% in \blobs{} and \laguna{} cases) accuracy can be achieved with any of the 3 relation types. However, there are differences when every parameter combination is taken into account: the total average accuracy is then highest for triangular relation and lowest for exponential relation. \ksremark{Czy to jest związane z tym, że trójkątna relacja może generować szum?} \zlremark{Tabela? Wykres?}
 
