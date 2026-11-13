@@ -1,0 +1,3037 @@
+% !TeX spellcheck = pl_PL
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                        %
+% Szablon pracy dyplomowej magisterskiej %
+% zgodny  z aktualnymi  przepisami  SZJK %
+%                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                        %
+%  (c) Krzysztof Simiński, 2018-2023     %
+%                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                        %
+% Najnowsza wersja szablonów jest        %
+% podstępna pod adresem                  %
+% github.com/ksiminski/polsl-aei-theses  %
+%                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+% Projekt LaTeXowy zapewnia odpowiednie formatowanie pracy,
+% zgodnie z wymaganiami Systemu zapewniania jakości kształcenia.
+% Proszę nie zmieniać ustawień formatowania (np. fontu,
+% marginesów, wytłuszczeń, kursywy itd. ).
+%
+% Projekt można kompilować na kilka sposobów.
+%
+% 1. kompilacja pdfLaTeX
+%
+% pdflatex main
+% bibtex   main
+% pdflatex main
+% pdflatex main
+%
+%
+% 2. kompilacja XeLaTeX
+%
+% Kompilatacja przy użyciu XeLaTeXa różni się tym, że na stronie
+% tytułowej używany jest font Calibri. Wymaga to jego uprzedniego
+% zainstalowania.
+%
+% xelatex main
+% bibtex  main
+% xelatex main
+% xelatex main
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% W przypadku pytań, uwag, proszę pisać na adres:   %
+%      krzysztof.siminski(małpa)polsl.pl            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Chcemy ulepszać szablony LaTeXowe prac dyplomowych.
+% Wypełniając ankietę spod poniższego adresu pomogą
+% Państwo nam to zrobić. Ankieta jest całkowicie
+% anonimowa. Dziękujemy!
+
+
+% https://docs.google.com/forms/d/e/1FAIpQLScyllVxNKzKFHfILDfdbwC-jvT8YL0RSTFs-s27UGw9CKn-fQ/viewform?usp=sf_link
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                             %
+% PERSONALIZACJA PRACY – DANE PRACY           %
+%                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Proszę wpisać swoje dane w poniższych definicjach.
+
+% TODO
+% dane autora
+\newcommand{\FirstNameAuthor}{Zofia}
+\newcommand{\SurnameAuthor}{Lorenc}
+\newcommand{\IdAuthor}{300306}   % numer albumu  (bez $\langle$ i $\rangle$)
+
+% drugi autor:
+%\newcommand{\FirstNameCoauthor}{Imię}   % Jeżeli jest drugi autor, to tutaj należy podać imię.
+%\newcommand{\SurnameCoauthor}{Nazwisko} % Jeżeli jest drugi autor, to tutaj należy podać nazwisko.
+%\newcommand{\IdCoauthor}{$\langle$wpisać właściwy$\rangle$}  % numer albumu drugiego autora (bez $\langle$ i $\rangle$)
+% Gdy nie ma drugiego autora, należy zostawić poniższe definicje puste, jak poniżej. Gdy jest drugi autor, należy zakomentować te linie.
+\newcommand{\FirstNameCoauthor}{} % Jeżeli praca ma tylko jednego autora, to dane drugiego autora zostają puste.
+\newcommand{\SurnameCoauthor}{}   % Jeżeli praca ma tylko jednego autora, to dane drugiego autora zostają puste.
+\newcommand{\IdCoauthor}{}  % Jeżeli praca ma tylko jednego autora, to dane drugiego autora zostają puste.
+%%%%%%%%%%
+
+\newcommand{\Supervisor}{dr hab. inż. Krzysztof Simiński}     % dane promotora (bez $\langle$ i $\rangle$)
+\newcommand{\Title}{Ziarnisty algorytm aglomeracyjnego grupowania hierarchicznego}           % tytuł pracy po polsku
+\newcommand{\TitleAlt}{Granular agglomerative hierarchical clustering algorithm}                     % thesis title in English
+\newcommand{\Program}{Informatyka}            % kierunek studiów  (bez $\langle$ i $\rangle$)
+\newcommand{\Specialisation}{Oprogramowanie Systemowe}     % specjalność  (bez $\langle$ i $\rangle$)
+\newcommand{\Departament}{ALGORYTMIKI I OPROGRAMOWANIA}        % katedra promotora  (bez $\langle$ i $\rangle$)
+
+% Jeżeli został wyznaczony promotor pomocniczy lub opiekun, proszę go/ją wpisać ...
+% \newcommand{\Consultant}{$\langle$stopień naukowy imię i nazwisko$\rangle$} % dane promotora pomocniczego, opiekuna (bez $\langle$ i $\rangle$)
+% ... w przeciwnym razie proszę zostawić puste miejsce jak poniżej:
+\newcommand{\Consultant}{} % brak promotowa pomocniczego / opiekuna
+
+% koniec fragmentu do modyfikacji
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                             %
+% KONIEC PERSONALIZACJI PRACY                 %
+%                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                             %
+% PROSZĘ NIE MODYFIKOWAĆ PONIŻSZYCH USTAWIEŃ! %
+%                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\documentclass[a4paper,twoside,12pt]{book}
+\usepackage[utf8]{inputenc}                                      
+\usepackage[T1]{fontenc}  
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+
+
+\usepackage[british,polish]{babel} 
+\usepackage{indentfirst}
+\usepackage{xurl}
+\usepackage{xstring}
+\usepackage{ifthen}
+
+
+
+\usepackage{ifxetex}
+
+\ifxetex
+	\usepackage{fontspec}
+	\defaultfontfeatures{Mapping=tex—text} % to support TeX conventions like ``——-''
+	\usepackage{xunicode} % Unicode support for LaTeX character names (accents, European chars, etc)
+	\usepackage{xltxtra} % Extra customizations for XeLaTeX
+\else
+	\usepackage{lmodern}
+\fi
+
+
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx} 
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{mathtools}
+\usepackage{geometry}
+\usepackage{subcaption}   % subfigures
+\usepackage[page]{appendix} % toc,
+\renewcommand{\appendixtocname}{Dodatki}
+\renewcommand{\appendixpagename}{Dodatki}
+\renewcommand{\appendixname}{Dodatek}
+
+\usepackage{csquotes}
+\usepackage[natbib=true,backend=bibtex,maxbibnames=99]{biblatex}  % kompilacja bibliografii BibTeXem
+%\usepackage[natbib=true,backend=biber,maxbibnames=99]{biblatex}  % kompilacja bibliografii Biberem
+\bibliography{biblio}
+
+\usepackage{ifmtarg}   % empty commands  
+
+\usepackage{setspace}
+\onehalfspacing
+
+
+\frenchspacing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% środowiska dla definicji, twierdzenia, przykładu
+\usepackage{amsthm}
+
+\newtheorem{Definition}{Definicja}
+\newtheorem{Example}{Przykład}
+\newtheorem{Theorem}{Twierdzenie}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% TODO LIST GENERATOR %%%%%%%%%
+
+\usepackage{color}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{brickred}      {cmyk}{0   , 0.89, 0.94, 0.28}
+
+\makeatletter \newcommand \kslistofremarks{\section*{Uwagi} \@starttoc{rks}}
+  \newcommand\l@uwagas[2]
+    {\par\noindent \textbf{#2:} %\parbox{10cm}
+{#1}\par} \makeatother
+
+
+\newcommand{\ksremark}[1]{%
+{%\marginpar{\textdbend}
+{\color{brickred}{[#1]}}}%
+\addcontentsline{rks}{uwagas}{\protect{KS: #1}}%
+}
+
+\newcommand{\zlremark}[1]{%
+	{%\marginpar{\textdbend}
+		{\color{green}{[#1]}}}%
+	\addcontentsline{rks}{uwagas}{\protect{ZL: #1}}%
+}
+
+\newcommand{\comma}{\ksremark{przecinek}}
+\newcommand{\nocomma}{\ksremark{bez przecinka}}
+\newcommand{\styl}{\ksremark{styl}}
+\newcommand{\ortografia}{\ksremark{ortografia}}
+\newcommand{\fleksja}{\ksremark{fleksja}}
+\newcommand{\pauza}{\ksremark{pauza `--', nie dywiz `-'}}
+\newcommand{\kolokwializm}{\ksremark{kolokwializm}}
+\newcommand{\cudzyslowy}{\ksremark{,,polskie cudzysłowy''}}
+
+\newcommand{\todo}[1]{%
+{%\marginpar{\textdbend}
+{\color{blue}{[#1]}}}%
+\addcontentsline{rks}{uwagas}{\protect{#1}}%
+}
+
+%%%%%%%%%%%%%% END OF TODO LIST GENERATOR %%%%%%%%%%%
+
+\newcommand{\printCoauthor}{%		
+    \StrLen{\FirstNameCoauthor}[\FNCoALen]
+    \ifthenelse{\FNCoALen > 0}%
+    {%
+		{\large\bfseries\Coauthor\par}
+	
+		{\normalsize\bfseries \LeftId: \IdCoauthor\par}
+    }%
+    {}
+} 
+
+%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\autor}{%		
+    \StrLen{\FirstNameCoauthor}[\FNCoALenXX]
+    \ifthenelse{\FNCoALenXX > 0}%
+    {\FirstNameAuthor\ \SurnameAuthor, \FirstNameCoauthor\ \SurnameCoauthor}%
+	{\FirstNameAuthor\ \SurnameAuthor}%
+}
+%%%%%%%%%%%%%%%%%%%%%
+
+\StrLen{\FirstNameCoauthor}[\FNCoALen]
+\ifthenelse{\FNCoALen > 0}%
+{%
+\author{\FirstNameAuthor\ \SurnameAuthor, \FirstNameCoauthor\ \SurnameCoauthor}
+}%
+{%
+\author{\FirstNameAuthor\ \SurnameAuthor}
+}%
+
+%%%%%%%%%%%% ZYWA PAGINA %%%%%%%%%%%%%%%
+% brak kapitalizacji zywej paginy
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LO]{\nouppercase{\it\rightmark}}
+\fancyhead[RE]{\nouppercase{\it\leftmark}}
+\fancyhead[LE,RO]{\it\thepage}
+
+
+\fancypagestyle{tylkoNumeryStron}{%
+   \fancyhf{} 
+   \fancyhead[LE,RO]{\it\thepage}
+}
+
+\fancypagestyle{bezNumeracji}{%
+   \fancyhf{} 
+   \fancyhead[LE,RO]{}
+}
+
+
+\fancypagestyle{NumeryStronNazwyRozdzialow}{%
+   \fancyhf{} 
+   \fancyhead[LE]{\nouppercase{\autor}}
+   \fancyhead[RO]{\nouppercase{\leftmark}} 
+   \fancyfoot[CE, CO]{\thepage}
+}
+
+
+%%%%%%%%%%%%% OBCE WTRETY  
+\newcommand{\obcy}[1]{\emph{#1}}
+\newcommand{\english}[1]{{\selectlanguage{british}\obcy{#1}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% polskie oznaczenia funkcji matematycznych
+\renewcommand{\tan}{\operatorname {tg}}
+\renewcommand{\log}{\operatorname {lg}}
+
+% jeszcze jakies drobiazgi
+
+\newcounter{stronyPozaNumeracja}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newcommand{\printOpiekun}[1]{%		
+
+    \StrLen{\Consultant}[\mystringlen]
+    \ifthenelse{\mystringlen > 0}%
+    {%
+       {\large{\bfseries OPIEKUN, PROMOTOR POMOCNICZY}\par}
+       
+       {\large{\bfseries \Consultant}\par}
+    }%
+    {}
+} 
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+% Proszę nie modyfikować poniższych definicji!
+\newcommand{\Author}{\FirstNameAuthor\ \MakeUppercase{\SurnameAuthor}} 
+\newcommand{\Coauthor}{\FirstNameCoauthor\ \MakeUppercase{\SurnameCoauthor}}
+\newcommand{\Type}{PRACA MAGISTERSKA}
+\newcommand{\Faculty}{Wydział Automatyki, Elektroniki i Informatyki} 
+\newcommand{\Polsl}{Politechnika Śląska}
+\newcommand{\Logo}{politechnika_sl_logo_bw_pion_pl.pdf}
+\newcommand{\LeftId}{Nr albumu}
+\newcommand{\LeftProgram}{Kierunek}
+\newcommand{\LeftSpecialisation}{Specjalność}
+\newcommand{\LeftSUPERVISOR}{PROWADZĄCY PRACĘ}
+\newcommand{\LeftDEPARTMENT}{KATEDRA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                             %
+% KONIEC USTAWIEŃ                             %
+%                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                             %
+% MOJE PAKIETY, USTAWIENIA ITD                %
+%                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Tutaj proszę umieszczać swoje pakiety, makra, ustawienia itd.
+
+\input{oznaczenia.tex}
+
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,}}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% listingi i fragmentu kodu źródłowego 
+% pakiet: listings lub minted
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+
+% biblioteka listings
+\usepackage{listings}
+\lstset{%
+morekeywords={string,exception,std,vector},% słowa kluczowe rozpoznawane przez pakiet listings
+language=C++,% C, Matlab, Python, SQL, TeX, XML, bash, ... – vide https://www.ctan.org/pkg/listings
+commentstyle=\textit,%
+identifierstyle=\texttt,%
+keywordstyle=\sffamily\bfseries, %\texttt, %
+%captionpos=b,%
+tabsize=3,%
+frame=lines,%
+numbers=left,%
+numberstyle=\tiny,%
+numbersep=5pt,%
+breaklines=true,%
+escapeinside={@*}{*@},%
+}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% pakiet minted
+%\usepackage{minted}
+
+% pakiet wymaga specjalnego kompilowania:
+% pdflatex -shell-escape main.tex
+% xelatex  -shell-escape main.tex
+
+%\usepackage[chapter]{minted} % [section]
+%%\usemintedstyle{bw}   % czarno-białe kody 
+%
+%\setminted % https://ctan.org/pkg/minted
+%{
+%%fontsize=\normalsize,%\footnotesize,
+%%captionpos=b,%
+%tabsize=3,%
+%frame=lines,%
+%framesep=2mm,
+%numbers=left,%
+%numbersep=5pt,%
+%breaklines=true,%
+%escapeinside=@@,%
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\dataset}[1]{`#1'}
+\newcommand{\iris}{\dataset{iris}}
+\newcommand{\blobs}{\dataset{blobs}}
+\newcommand{\circles}{\dataset{circles}}
+\newcommand{\corners}{\dataset{corners}}
+\newcommand{\crescents}{\dataset{crescents}}
+\newcommand{\laguna}{\dataset{laguna}}
+\newcommand{\spheres}{\dataset{spheres}}
+\newcommand{\gowalla}{\dataset{gowalla}}
+\newcommand{\brightkite}{\dataset{brightkite}}
+
+\newcommand{\procedura}[1]{\textsc{#1}}
+\newcommand{\PrimitiveClustering}{\procedura{Pri\-mi\-ti\-ve\-Clu\-s\-te\-r\-ing}}
+\newcommand{\SingleLinkage}{\procedura{Si\-ng\-le\-Lin\-ka\-ge}}
+\newcommand{\CompleteLinkage}{\procedura{Com\-ple\-te\-Lin\-ka\-ge}}
+\newcommand{\MojAlg}{\procedura{GrAgglo}}
+\newcommand{\MojHierAlg}{\procedura{FuzzyAgglo}}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+
+\floatname{algorithm}{Algorytm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                             %
+% KONIEC MOICH USTAWIEŃ                       %
+%                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+% \kslistofremarks
+
+\frontmatter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                             %
+% PROSZĘ NIE MODYFIKOWAĆ STRONY TYTUŁOWEJ!    %
+%                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%  STRONA TYTUŁOWA %%%%%%%%%%%%%%%%%%%
+\pagestyle{empty}
+{
+	\newgeometry{top=1.5cm,%
+	             bottom=2.5cm,%
+	             left=3cm,
+	             right=2.5cm}
+ 
+	\ifxetex 
+	  \begingroup
+	  \setsansfont{Calibri}
+	   
+	\fi 
+	 \sffamily
+	\begin{center}
+	\includegraphics[width=50mm]{\Logo}
+	 
+	
+	{\Large\bfseries\Type\par}
+	
+	\vfill  \vfill  
+			 
+	{\large\Title\par}
+	
+	\vfill  
+		
+	{\large\bfseries\Author\par}
+	
+	{\normalsize\bfseries \LeftId: \IdAuthor}
+
+	\printCoauthor
+	
+	\vfill  		
+ 
+	{\large{\bfseries \LeftProgram:} \Program\par} 
+	
+	{\large{\bfseries \LeftSpecialisation:} \Specialisation\par} 
+	 		
+	\vfill  \vfill 	\vfill 	\vfill 	\vfill 	\vfill 	\vfill  
+	 
+	{\large{\bfseries \LeftSUPERVISOR}\par}
+	
+	{\large{\bfseries \Supervisor}\par}
+				
+	{\large{\bfseries \LeftDEPARTMENT\ \Departament} \par}
+		
+	{\large{\bfseries \Faculty}\par}
+		
+	\vfill  \vfill  
+
+    	
+    \printOpiekun{\Consultant}
+    
+	\vfill  \vfill  
+		
+    {\large\bfseries  Gliwice \the\year}
+
+   \end{center}	
+       \ifxetex 
+       	  \endgroup
+       \fi
+	\restoregeometry
+}
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                             %
+% KONIEC STRONY TYTUŁOWEJ                     %
+%                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
+
+\cleardoublepage
+
+\rmfamily\normalfont
+\pagestyle{empty}
+
+
+%%% No to zaczynamy pisać pracę :-) %%%%
+
+% TODO
+\subsubsection*{Tytuł pracy} 
+\Title
+
+\subsubsection*{Streszczenie}
+Aglomeracyjne grupowanie hierarchiczne polega na iteracyjnym scalaniu najbliższych sobie grup danych aż do uzyskania z góry ustalonej ich liczby. Wadą tego algorytmu jest duża złożoność czasowa w zależności od liczby danych wejściowych. W pracy zaproponowany został rozmyty algorytm grupowania hierarchicznego, który algorytm standardowy rozszerza o wykorzystanie ziaren informacyjnych mających postać wielowymiarowych liczb rozmytych. Ziarna te wyznaczane są na podstawie wyników algorytmu rozmytych $c$-średnich o niskiej złożoności czasowej. Modyfikacja algorytmu ma na celu zmniejszenie czasu wykonywania grupowania. W pracy badany jest również wpływ wprowadzenia rozmycia danych na jakość grupowania.
+
+\subsubsection*{Słowa kluczowe} 
+grupowanie hierarchiczne, fuzzy C-means, obliczenia ziarniste, liczby rozmyte, Python
+
+\subsubsection*{Thesis title} 
+\begin{otherlanguage}{british}
+\TitleAlt
+\end{otherlanguage}
+
+\subsubsection*{Abstract} 
+\begin{otherlanguage}{british}
+In agglomerative hierarchical clustering, groups of data that are the closest to each other are iteratively merged until a predetermined number of clusters is reached. A drawback of this algorithm is its high time complexity based on the amount of input data. This paper proposes a fuzzy hierarchical clustering algorithm that extends the standard algorithm with the usage of information granules, represented by multidimensional fuzzy numbers. These granules are calculated based on fuzzy $c$-means algorithm's results, which has a low time complexity. The modification of the algorithm aims to decrease execution time of the clustering. The paper also examines the impact of introducing data fuzziness on clustering quality.
+\end{otherlanguage}
+\subsubsection*{Key words}  
+\begin{otherlanguage}{british}
+hierarchical clustering, fuzzy C-means, granular computing, fuzzy numbers, Python
+\end{otherlanguage}
+
+
+
+
+%%%%%%%%%%%%%%%%%% SPIS TRESCI %%%%%%%%%%%%%%%%%%%%%%
+% Add \thispagestyle{empty} to the toc file (main.toc), because \pagestyle{empty} doesn't work if the TOC has multiple pages
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{stronyPozaNumeracja}{\value{page}}
+\mainmatter
+\pagestyle{empty}
+
+\cleardoublepage
+
+\pagestyle{NumeryStronNazwyRozdzialow}
+
+%%%%%%%%%%%%%% wlasciwa tresc pracy %%%%%%%%%%%%%%%%%
+
+% TODO
+\chapter{Wstęp}
+
+%\begin{itemize}
+%\item wprowadzenie w problem/zagadnienie 
+%\item osadzenie problemu w dziedzinie 
+%\item cel pracy 
+%\item zakres pracy 
+%\item zwięzła charakterystyka rozdziałów 
+%\end{itemize}
+
+Grupowanie danych, nazywane też klasteryzacją, jest powszechnie wykorzystywane do analizy danych. Uogólniając, polega ono na znalezieniu takich klas (grup, klastrów) elementów, żeby elementy należące do tej samej klasy były do siebie jak najbardziej podobne według pewnej wybranej metryki, a należące do różnych klas -- niepodobne. Istnieje wiele rodzajów algorytmów klasteryzacyjnych, między innymi hierarchiczne, gęstościowe, grafowe. Wybór algorytmu zależy od charakteru danych, które mają zostać zgrupowane -- na przykład czy dane zawierają zaszumienie albo czy tworzą wyraźnie oddzielone grupy.
+
+W pracy rozważany będzie algorytm aglomeracyjnego grupowania hierarchicznego. Polega on na iteracyjnym łączeniu najbliższych sobie mniejszych klastrów (gdzie najmniejszym klastrem jest pojedynczy punkt danych) w większe, aż do uzyskania z góry określonej ich liczby. Złączanie odbywa się na podstawie wybranych metryk odległości klastrów. Problemem tej rodziny algorytmów jest ich wysoka złożoność czasowa w zależności od ilości danych wejściowych -- $O(n^3)$ w implementacji naiwnej, choć istnieją specjalizowane implementacje o lepszych złożonościach.  
+
+Do ulepszenia takiego algorytmu można wykorzystać obliczenia granularne. Jest to szeroka dziedzina pozwalająca na analizę danych na sposób zbliżony do ludzkiego pojmowania rzeczywistości. Bezpośrednio związanym z nią pojęciem jest ziarno informacyjne -- encja o pewnym znaczeniu, grupa podobnych obiektów. Ziarna mogą być reprezentowane jako na przykład zbiory rozmyte, czyli takie zbiory, do których dane mogą należeć w pewnym stopniu i każda dana może należeć do wielu zbiorów jednocześnie. Szczególnym przypadkiem zbioru rozmytego jest liczba rozmyta, która modeluje daną liczbę ostrą w pewnym przybliżeniu.
+%
+Takie zbiory mogą być uzyskane na przykład jako wynik działania algorytmu rozmytych $c$-średnich, który jest rodzajem algorytmu klasteryzacyjnego. Otrzymane w ten sposób rozmyte klastry mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą, jako że zarówno operacje arytmetyczne, jak i logiczne, muszą uwzględnić rozmycie klastrów. 
+
+%Istotną z punktu widzenia tej pracy kategorią algorytmów grupowania są algorytmy rozmyte, na przykład algorytm rozmytych $c$-średnich. Uzyskiwane za ich pomocą klastry są zbiorami rozmytymi, co oznacza, że dane mogą należeć do wielu grup jednocześnie, w pewnym stopniu. Klastry te mogą być ostatecznym wynikiem grupowania, jednak można je też wykorzystać jako krok pośredni -- dalej grupować je innymi algorytmami. Wymaga to jednak modyfikacji tych algorytmów, aby mogły działać zgodnie z logiką rozmytą. 
+
+Celem niniejszej pracy będzie opracowanie i przebadanie własności granularnego algorytmu aglomeracyjnego grupowania hierarchicznego, który operować będzie na ziarnach informacyjnych uzyskanych w wyniku grupowania danych algorytmem rozmytych $c$-średnich.
+
+Algorytm ten ma niższą złożoność czasową -- liniową w zależności od liczby danych -- powinien więc przyspieszyć proces grupowania. Jako że wprowadzone zostanie rozmycie danych, dopuszczalne jest obniżenie jakości grupowania.
+
+W pracy wykorzystano następującą notację: kursywą i małą literą oznacza się skalar bądź element zbioru $(\X)$, wielką literą kreśloną -- zbiór, w którym się znajduje $(\zX)$, kursywą i wielką literą -- liczebność zbioru $(\nX)$, pogrubieniem i małą literą -- wektory $(\wX)$, a pogrubieniem i wielką literą -- macierze $(\mX)$.
+
+W rozdziałach \ref{sec:analiza-tematu-grupowanie} i \ref{sec:analiza-tematu-ziarna} przedstawiono teoretyczną analizę zagadnień związanych z tematem. Rozdział \ref{sec:analiza-tematu-grupowanie} przedstawia algorytmy grupowania danych, w szczególności algorytm hierarchiczny oraz algorytm rozmytych $c$-średnich. W rozdziale \ref{sec:analiza-tematu-ziarna} opisano istotne dla rozwiązania elementy logiki rozmytej, w tym rozszerzalne liczby rozmyte. Rozdział \ref{sec:wlasne-rozwiazanie} zawiera omówienie własnej implementacji rozmytego algorytmu aglomeracyjnego grupowania hierarchicznego i konieczne kroki przygotowujące dane. W rozdziale \ref{sec:badania} analizowane jest działanie tego algorytmu. Przedstawione są wykorzystane dane oraz metodyki badania czasu i jakości grupowania, a następnie w oparciu o nie omawiane są wyniki grupowania.
+
+
+% TODO
+\chapter{Grupowanie danych}  % Analiza tematu
+\label{sec:analiza-tematu-grupowanie}
+% 
+
+Grupowanie jest wykorzystywane do analizy danych. Umożliwia znalezienie podobieństw między rozpatrywanymi obiektami i sklasyfikowanie ich. 
+Grupowanie (klasteryzacja) danych polega na przypisaniu elementów do klas o pewnym znaczeniu, gdzie elementy tej samej klasy są podobne do siebie nawzajem
+\cite{bib:fcm-for-optimizing,bib:clustering-alg-survey}, a równocześnie niepodobne do obiektów z innych grup. Algorytmy grupowania są algorytmami nienadzorowanymi -- mają jedynie informacje o podobieństwie między poszczególnymi elementami.
+
+ 
+
+Do głównych rodzin algorytmów grupowania zaliczane są \cite{bib:clustering-alg-survey}:
+\begin{itemize}
+	\item Algorytmy hierarchiczne: grupowanie polega na utworzeniu sekwencji zagnieżdżonych podziałów danych \cite{bib:hierarchical-clustering},
+	\item Algorytmy oparte na minimalizacji funkcji kryterialnej: związane z iteracyjnym wyznaczaniem środków klastrów do momentu spełnienia kryterium zatrzymania (na przykład: $k$-means, fuzzy $c$-means),
+	\item Algorytmy gęstościowe: obszary o dużej gęstości danych tworzą klastry, pozostałe uznawane są za szumy (na przykład: DBSCAN \cite{bib:dbscan-algorithm}, OPTICS \cite{bib:optics-algorithm}),
+	\item Algorytmy grafowe: dane uznawane są za wierzchołki grafów, a podobieństwa między nimi -- za krawędzie (na przykład algorytmy oparte na minimalnym drzewie rozpinającym), 
+	\item Inne algorytmy(na przykład: DBCLASD \cite{bib:dbclasd-algorithm}, CLIQUE \cite{bib:clique-algorithm}).
+\end{itemize}
+
+\section{Algorytmy grupowania hierarchicznego}
+
+%Ogólna idea działania algorytmu.
+%Typy algorytmu (single linkage, complete linkage...)
+
+Grupowanie hierarchiczne polega na utworzeniu sekwencji zagnieżdżonych podziałów danych \cite{bib:hierarchical-clustering}.
+
+Algorytm aglomeracyjnego grupowania hierarchicznego iteracyjnie scala mniejsze klastry danych w większe, zaczynając od klastrów jednoelementowych (każdy punkt danych jest klastrem), kończąc na jednym wspólnym klastrze. 
+Kolejne dwa klastry, które mają zostać scalone w danej iteracji, wybierane są na podstawie metryki odległości między nimi oraz łączności (ang. \english{linkage}). Przykładami tego typu algorytmów są SLINK \cite{bib:slink-algorithm} i BIRCH \cite{bib:birch-algorithm}.
+
+Odwrotnością algorytmu aglomeracyjnego jest algorytm deglomeracyjny (ang. \english{divisive}), w którym na początku wszystkie dane znajdują się w jednym klastrze, który jest iteracyjnie dzielony na mniejsze, aż do uzyskania klastrów wyłącznie jednoelementowych. Przykładem takiego algorytmu jest DIANA \cite{bib:diana-algorithm}.
+
+Proces hierarchicznego scalania (lub rozdzielania) klastrów można zwizualizować jako dendrogram (rys. \ref{fig:dendrogram-iris}). Wykres dendrogramu zazwyczaj przycina się, aby pokazywał tylko kilka ostatnich scaleń. Oś pozioma reprezentuje scalane klastry: jeżeli klastrem jest pojedynczy element, to reprezentuje go jego indeks, jeżeli zawiera więcej elementów -- jego liczebność podana w nawiasach. Oś pionowa odpowiada odległości między scalanymi klastrami.
+
+
+%\begin{algorithm}[t]
+%	\caption{tytuł}
+%	\label{alg:cascade_inference}
+%	\begin{algorithmic}[1]
+%		\Require $a$: parametr procedury
+%		\Procedure{nazwa}{$a$}
+%		\Comment{komentarz}
+%		\For{$i = 1$ to $\infty$} \label{alg:etykieta} \Comment{komentarz}
+%		\State instrukcja
+%		\If{warunek} 
+%		\State instrukcja
+%		\EndIf
+%		\While{warunek}
+%		\State \Call{funkcja}{parametr}  \Comment{wywołanie funkcji / procedury} 
+%		\EndWhile 
+%		\EndFor
+%		\State \Return wynik
+%		\EndProcedure
+%	\end{algorithmic}
+%\end{algorithm}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/dendrogram_iris.pdf}
+\caption{Dendrogram otrzymany na podstawie grupowania hierarchicznego o łączności \SingleLinkage{} przykładowego zbioru danych \iris.}
+\label{fig:dendrogram-iris}
+\end{figure}
+
+Często wybierana euklidesowa metryka odległości \cite{bib:hierarchical-overview} zdefiniowana jest jako
+\begin{align}
+	\Odleglosc_e \left(\wX_{i}, \wX_{j}\right) = \sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\X_{i\Atrybut} - \X_{j\Atrybut})^{2}},
+	\label{eq:odleglosc:euklidesowa}
+\end{align}
+gdzie $\nAtrybut$ to liczba atrybutów punktu danych $\wX$, 
+a $\X_{i\Atrybut}$ oznacza $\Atrybut$-ty atrybut $i$-tego punktu.
+%
+Metryka ta jest uszczegółowieniem metryki Minkowskiego
+\begin{align}
+\Odleglosc_m \left(\wX_{i}, \wX_{j}\right) = \left(\sum_{\Atrybut=0}^{\nAtrybut}|\X_{i\Atrybut} - \X_{j\Atrybut}|^{p}\right)^{1/p},
+\label{eq:odleglosc:minkowskiego}
+\end{align}
+dla $p=2$. Inną popularną metryką jest odległość Manhattan, również należąca do rodziny metryk Minkowskiego, dla $p=1$.
+
+Łączność określa, jak na podstawie odległości pomiędzy poszczególnymi punktami należącymi do klastrów wyznaczyć odległość pomiędzy tymi klastrami.
+%
+Do łączności zaimplementowanych w popularnych bibliotekach należą \english{single linkage} (najbliższe sąsiedztwo), \english{complete linkage} (najdalsze sąsiedztwo), \english{average linkage} (średnie sąsiedztwo) oraz metoda Warda (minimalna wariancja) \cite{bib:ward-linkage}.
+%
+Implementacje aglometacyjnego algorytmu hierarchicznego przedstawione są w \cite{bib:hierarchical-algorithms} Wykorzystywane one są przez bibliotekę \english{SciPy} języka Python \cite{bib:scipy-linkage}.
+
+%przepisać, przekopiować pseudokody?
+Algorytm naiwny (\PrimitiveClustering{}) może być wykorzystany dla każdej łączności, jednak jego wadą jest złożoność czasowa wynosząca $O(n^{3})$.
+Jego parametrami wejściowymi są lista etykiet danych oraz macierz podobieństwa między danymi. W algorytmie naiwnym, iteracyjnie wykonywane są trzy kroki:
+\begin{enumerate}
+	\item Znalezienie w macierzy podobieństwa minimalnej wartości -- znalezienie najbliższej sobie pary klastrów,
+	\item Scalenie odnalezionych klastrów,
+	\item Aktualizacja wartości podobieństw w macierzy według wybranej łączności.
+\end{enumerate}
+Pseudokod działania algorytmu przedstawia alg. \ref{alg:primitive_clustering}.
+
+\begin{algorithm}[t]
+	\caption{Naiwny algorytm aglomeracyjnego grupowania hierarchicznego \PrimitiveClustering{} \cite{bib:hierarchical-algorithms}}
+	\label{alg:primitive_clustering}
+	\begin{algorithmic}[1]
+		\Require $\wEtykieta$: etykiety elementów
+		\Require $\mDistance$: macierz podobieństwa między każdą parą elementów 
+		\Procedure{PrimitiveClustering}{$S, \mDistance$}
+		\State $N \gets $ liczba elementów
+		\State $L \gets [] $ \Comment{Lista wynikowa zawierająca trójki: para klastrów łączonych w danej iteracji i odległość między nimi}
+		\State $rozmiar \gets []$ \Comment{rozmiar klastrów o danych indeksach}
+		\For{$x$ in $\wEtykieta$}
+		\State $rozmiar[x] \gets 1$ \Comment{na początku wszystkie klastry są jednoelementowe}
+		\EndFor
+		\For{$i = 0$ to $N-2$} 
+		\State $(a,b) \gets \arg\min_{(\wEtykieta \times \wEtykieta) \setminus \Delta}\mDistance$ \Comment{Operacja $\arg\min$ na macierzy $\mDistance$, uwzględniająca elementy ze zbioru $\wEtykieta$ z wyłączeniem przekątnej głównej}
+		\State $\wEtykieta \gets \wEtykieta \setminus \{a, b\}$  \Comment{Klastry $a$ i $b$ usuwane są ze zbioru rozpatrywanych etykiet}
+		\State nowy element $n \notin \wEtykieta$  \Comment{Do zbioru etykiet dodawany jest nowy element, odpowiadający klastrowi powstałemu po złączeniu $a$ i $b$}
+		\For{$x$ in $S$}
+		\State $\mDistance[n, x] \gets \mDistance[x, n] \gets $ \Call{UpdateFormula}{...} \Comment{wzór dla odpowiedniej łączności, np. alg. \ref{alg:single_linkage}, alg. \ref{alg:complete_linkage}} 
+		\EndFor
+		\State $rozmiar[n] \gets rozmiar[a] + rozmiar[b]$
+		\State $S \gets S \cup n$
+		\EndFor
+		\State \Return $L$  \Comment{Zwracana lista zawiera zapis kolejnych scalań klastrów. }
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Algorytm ogólny \texttt{GENERAL\_LINKAGE()} zawiera dodatkową optymalizację w stosunku do algorytmu naiwnego: wykorzystywana jest kolejka priorytetowa zawierająca kandydatów na najbliższych sąsiadów klastrów, co pozwala ograniczyć czas poszukiwania minimum macierzy w kroku 1. Optymistyczna złożoność czasowa tego algorytmu wynosi $\Omega(n^{2})$, pesymistyczna -- nadal $O(n^{3})$.
+
+\subsection{Single Linkage}
+
+W algorytmie \SingleLinkage{} \cite{bib:hierarchical-clustering} odległość między klastrami jest równa minimalnej odległości między dwoma punktami należącymi do tych klastrów.
+Oznacza to, że w momencie złączenia klastrów $A_{1}$ i $A_{2}$ w jeden klaster $A$, odległość tego klastra do innego klastra $B$ zdefiniowana jest jako:
+\begin{align}
+\Odleglosc \left(A, B\right) = \min(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
+\end{align}
+
+Wzór ten można przedstawić również w postaci pseudokodu \ref{alg:single_linkage}, którym uzupełnić można algorytm \ref{alg:primitive_clustering}.
+
+\begin{algorithm}[t]
+	\caption{Funkcja aktualizacji odległości między klastrami dla łączności \SingleLinkage{}}
+	\label{alg:single_linkage}
+	\begin{algorithmic}[1]
+		\Require $d_{a, x}, d_{b, x}$: wartości odległości między klastrem $x$ a łączonymi w jeden klastrami $a$ i $b$
+		\Procedure{UpdateFormula}{$d_{a, x}, d_{b, x}$}
+		\State \Return $\min(d_{a, x}, d_{b, x})$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+%
+Przykład takiego przypisania ilustruje rys. \ref{fig:single-linkage-example}. Odległość klastra $B$ od klastra $A_{1}$ jest znana i wynosi $\Odleglosc(A_{1}, B)$, czyli jest ona najmniejszą odległością między dowolnymi dwoma elementami klastrów $B$ i $A_{1}$. Odległość klastra $B$ od klastra $A_{2}$ również jest znana i wynosi $\Odleglosc(A_{2}, B)$. Klastry $A_{1}$ i $A_{2}$ scalane są w jeden klaster $A$, należy więc obliczyć odległość nowopowstałego klastra od pozostałych. Zamiast porównywać wszystkie możliwe kombinacje elementów klastrów $A$ i $B$, wystarczy znaleźć minimum z dwóch wartości: $\Odleglosc(A_{1}, B)$ i $\Odleglosc(A_{2}, B)$. W tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$, czyli $\Odleglosc(A, B) = \Odleglosc(A_{2}, B)$
+
+%rysunek?
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/single_linkage_example.pdf}
+\caption{Ilustracja działania algorytmu \SingleLinkage{}. Odległość klastra $B$ od klastrów $A_{1}$ i $A_{2}$ jest znana. Po złączeniu $A_{1}$ i $A_{2}$ w klaster $A$, nowa odległość od klastra $B$ jest równa minimalnej z poprzednich dwóch -- w tym przypadku jest to odległość $\Odleglosc(A_{2}, B)$.}
+\label{fig:single-linkage-example}
+\end{figure}
+
+Algorytm ten jest wrażliwy na dane odstające, szumy. Pojedynczy punkt znajdujący się w dużej odległości od reszty danych zostanie uznany za osobny klaster. Dodatkowym efektem tego błędnego przypisania będzie złączenie dwóch innych klastrów. 
+
+Zachowanie to ilustruje rys. \ref{fig:single-linkage-noise-example}. Gdy dane nie zawierają znacznie odstających danych, algorytm wyznacza dwa klastry zgodnie z oczekiwaniami. Po dodaniu do nich pojedynczej danej o współrzędnej (10, 10), czyli w dużej odległości od reszty danych, dana ta klasyfikowana jest jako osobny klaster.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/single_linkage_noise_example.pdf}
+\caption{Ilustracja wpływu danych odstających na działanie algorytmu \SingleLinkage{}.}
+\label{fig:single-linkage-noise-example}
+\end{figure}
+
+Algorytm działa dobrze, gdy klastry są wyraźnie oddzielone od siebie. Jeżeli będą zbyt blisko siebie, możliwe jest, że zostaną połączone, jak pokazuje przykład na rys. \ref{fig:single-linkage-close-clusters-example}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/single_linkage_close_clusters_example.pdf}
+\caption{Ilustracja działania algorytmu \SingleLinkage{}, gdy klastry są zbyt zbliżone.}
+\label{fig:single-linkage-close-clusters-example}
+\end{figure}
+
+Dla \SingleLinkage{} wykorzystać można szybsze, dedykowane algorytmy, na przykład algorytm minimalnego drzewa rozpinającego (\texttt{MST\_LINKAGE()}) o złożoności $O(n^2)$ \cite{bib:hierarchical-algorithms}.
+
+\subsection{Complete Linkage}
+\label{sec:complete-linkage}
+
+Algorytm \CompleteLinkage{} jest odwrotnością \SingleLinkage{}: odległość między klastrami jest równa maksymalnej odległości między dwoma punktami należącymi do tych klastrów. W momencie złączenia dwóch klastrów w jeden, jego odległość od pozostałych klastrów określa się więc jako:
+\begin{align}
+\Odleglosc \left(A, B\right) = \max(\Odleglosc(A_{1}, B), \Odleglosc(A_{2}, B)).
+\end{align}
+
+Wzór również można przedstawić jako pseudokod \ref{alg:complete_linkage}, uzupełniający algorytm \ref{alg:primitive_clustering}.
+
+\begin{algorithm}[t]
+	\caption{Funkcja aktualizacji odległości między klastrami dla łączności \CompleteLinkage{}}
+	\label{alg:complete_linkage}
+	\begin{algorithmic}[1]
+		\Require $d_{a, x}, d_{b, x}$: wartości odległości między klastrem $x$ a łączonymi w jeden klastrami $a$ i $b$
+		\Procedure{UpdateFormula}{$d_{a, x}, d_{b, x}$}
+		\State \Return $\max(d_{a, x}, d_{b, x})$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+%
+Algorytm dobrze działa dla kulistych, gęstych klastrów. Pokazuje to rys. \ref{fig:complete-linkage-close-clusters-example}, gdzie algorytm \CompleteLinkage{} wywołano dla tych samych danych, co \SingleLinkage{} na rys. \ref{fig:single-linkage-close-clusters-example}. W przeciwieństwie do niego, \CompleteLinkage{} odnajduje oczekiwane klastry niemal idealnie.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/complete_linkage_close_clusters_example.pdf}
+\caption{Ilustracja działania algorytmu \CompleteLinkage{}, dla zbliżonych, gęstych klastrów.}
+\label{fig:complete-linkage-close-clusters-example}
+\end{figure}
+
+W porównaniu z \SingleLinkage{}, algorytm \CompleteLinkage{} zwraca jednak gorsze wyniki dla danych o innych kształtach \cite{bib:hierarchical-clustering, bib:sklearn-linkage-comparison}. Ilustruje to przykład na rys. \ref{fig:complete-linkage-non-globular-example}. W przykładzie oczekiwane jest, że każdy z dwóch wyraźnie oddzielonych od siebie okręgów zaklasyfikowany zostanie jako osobny klaster. Algorytm \CompleteLinkage{} nie wyznacza tych klastrów -- granica między klastrami wydaje się być wyznaczona bez względu na faktyczny kształt danych.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/complete_linkage_non_globular_example.pdf}
+\caption{Ilustracja działania algorytmu \CompleteLinkage{}, dla klastrów w kształcie dwóch okręgów.}
+\label{fig:complete-linkage-non-globular-example}
+\end{figure}
+
+\section{Algorytm rozmytych $c$ średnich}
+\label{sec:fcm}
+
+Algorytm rozmytych $c$ średnich (ang. \english{fuzzy $c$-means}, FCM) należy do rodziny algorytmów opartych na minimalizacji funkcji kryterialnej. Algorytm wyznacza klastry, dla których przynależność każdego punktu danych jest liczbą z przedziału $\left[ 0,1 \right]$. Wynikiem klasteryzacji FCM jest macierz środków klastrów $\mCentre$ oraz macierz przynależności $\mClusterMembership$. Złożoność czasowa ze względu na liczbę danych tego algorytmu wynosi $O(n)$ \cite{bib:fcm-kmeans-comparison}.
+
+Funkcja kryterialna algorytmu fuzzy c-means ma postać:
+\begin{align}
+	J(\mCentre, \mClusterMembership) = \sum_{\Iteracja=1}^{N} \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster}^{m} ||\wX_{\Iteracja} - \wCentre_{\klaster}||^{m},
+\end{align}
+%\sum_{\size=1}^{\nSize}  \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\size\klaster}^{m}
+%nie działa z \nSize ani \nLen
+gdzie $\wX_{\Iteracja}$ -- współrzędne $\Iteracja$-tego punktu danych, $\wCentre_{\klaster}$ -- współrzędne środka $\klaster$-tego klastra danych, $\ClusterMembership_{\Iteracja\klaster} \in \left[ 0,1 \right]$ -- wartość przynależności $\Iteracja$-tego punktu do $\klaster$-tego klastra. Parametr $m \in \left( 1,+\infty \right]$ jest współczynnikiem rozmycia algorytmu, najczęściej wykorzystuje się wartość 2 \cite{bib:implementation-of-fcm-pcm-algs,bib:scikit-fuzzy-cmeans-docs-fcm}.
+
+Dla każdego punktu, suma jego wartości przynależności do wszystkich klastrów wynosi 1:
+
+\begin{align}
+	\label{eq:cluster_mem_condition}
+	\forall \Iteracja \in [1, N] \sum_{\Klaster=1}^{\nKlaster}\ClusterMembership_{\Iteracja\klaster} = 1
+\end{align}
+
+Pseudokod algorytmu rozmytych $c$-średnich przedstawia alg. \ref{alg:fcm}.
+
+W każdej iteracji algorytmu obliczane są najpierw nowe współrzędne środków klastrów:
+\begin{align}
+	\label{eq:center_update}
+	\wCentre_{\klaster} = \frac{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m} \wX_{\Iteracja}}{\sum_{\Iteracja=1}^{N} \ClusterMembership_{\Iteracja\klaster}^{m}},
+\end{align}
+a następnie wartości elementów macierzy przynależności:
+\begin{align}
+	\label{eq:membership_update}
+	\ClusterMembership_{\Iteracja\klaster} = \frac{1}{\sum_{j=1}^{\nKlaster}\left( \frac{||\wX_{\Iteracja} - \wCentre_{\klaster}||}{||\wX_{\Iteracja} - \wCentre_{j}||} \right)^{\frac{2}{m - 1}}}.
+\end{align}
+Kroki powtarzane są do momentu spełnienia warunku zatrzymania, na przykład:
+\begin{align}
+	\label{eq:fcm_stop_contidion}
+	||\mClusterMembership^{(t)} - \mClusterMembership^{(t-1)}|| < \epsilon,
+\end{align}
+%
+gdzie $t$ -- numer iteracji, $\epsilon$ -- parametr tolerancji. Dodatkowym warunkiem zatrzymania może też być z góry określona maksymalna liczba iteracji \cite{bib:scikit-fuzzy-cmeans-docs-fcm, bib:skfuzzy-docs-fcm}.
+
+\begin{algorithm}[t]
+	\caption{Algorytm rozmytych $c$ średnich}
+	\label{alg:fcm}
+	\begin{algorithmic}[1]
+		\Require $\zX$: dane do klasteryzacji
+		\Require $\nKlaster$: liczba klastrów docelowych
+		\Require $m$: współczynnik rozmycia 
+		\Require $\nIteracja$: maksymalna liczba iteracji
+		\Require $\varepsilon$: tolerancja
+		\Procedure{FuzzyCMeans}{$\zX, \nKlaster, m, \nIteracja, \varepsilon$}
+		\State $\nX \gets $ liczba próbek
+		\State $\nAtrybut \gets $ liczba atrybutów \Comment{$\nX$ i $\nAtrybut$: wymiary $\zX$} 
+		\State $\wCentre \gets $ losowe wartości początkowe środków klastrów
+		\State $\mClusterMembership \gets $ losowe wartości początkowe przynależności punktów do klastrów, spełniające warunek ze wzoru \ref{eq:cluster_mem_condition}
+		\State $i\gets 1$
+		\State koniec $\gets$ false
+		\While{$i < \nIteracja$ $\land$ $\lnot$ koniec} 
+		\State aktualizacja wartości $\wCentre$ na podstawie wzoru \eqref{eq:center_update}
+		\State aktualizacja wartości $\mClusterMembership$ na podstawie wzoru \eqref{eq:membership_update}
+		\If{spełniony warunek \ref{eq:fcm_stop_contidion}}
+		\State  koniec $\gets$ true
+		\EndIf
+		\EndWhile
+		\State \Return $\wCentre, \mClusterMembership$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Algorytm rozmytych $c$-średnich stanowi podstawę dla wielu innych algorytmów. Należą do nich między innymi algorytm \english{possibilistic $c$-means} (PCM) \cite{bib:pcm-algorithm}, w którym warunek \eqref{eq:cluster_mem_condition} nie musi być spełniony, oraz \english{fuzzy $c$-ordered-means} (FCOM) \cite{bib:fcom-algorithm}, gdzie dane sortowane są według odległości od środków klastrów.
+
+\chapter{Obliczenia ziarniste}
+\label{sec:analiza-tematu-ziarna}
+
+Obliczenia ziarniste (granularne) pozwalają na analizę danych w bardziej zbliżony do ludzkiego sposób zrozumienia. 
+
+Przykładem ilustrującym ideę obliczeń granularnych w jednym wymiarze może być subiektywna ocena temperatur jako ,,zimne'' lub ,,ciepłe''. Temperaturę \SI{10}{\celsius} trudno jednoznacznie zaklasyfikować do jednej z tych dwóch kategorii, dla niektórych osób będzie ona ,,zimna'', dla niektórych ,,ciepła''. Temperatura \SI{20}{\celsius} dużo bardziej pasuje do kategorii ,,ciepła'' niż ,,zimna'', jednak w mniejszym stopniu, niż \SI{25}{\celsius}. Choć w uzyskaniu bardziej szczegółowych informacji może pomóc dodanie większej liczby kategorii, na przykład ,,umiarkowana'' i ,,gorąca'', to nie odzwierciedli ono subiektywnej oceny poszczególnych wartości.
+
+\section{Ziarna informacyjne}
+
+Jednym z podstawowych pojęć związanych z obliczeniami ziarnistymi są ziarna informacyjne. 
+Są one encjami o pewnej semantyce, kolekcjami obiektów o określonym w~pewien sposób podobieństwie \cite{bib:general-framework-information-granules,bib:designing-higher-order-information-granules}. Semantyką taką może być na przykład ,,ciepła'' lub ,,zimna'' temperatura.
+%
+W zależności od znaczenia i zastosowania ziaren, mogą one być reprezentowane na różne sposoby: jako zbiory klasyczne, przedziały liczb, zbiory rozmyte, zbiory cieniowane, zbiory przybliżone, czy funkcje prawdopodobieństwa \cite{bib:general-framework-information-granules}.
+%
+Ziarna informacyjne utworzyć można poprzez grupowanie danych. W przypadku ziaren reprezentowanych przez zbiory rozmyte, typowym algorytmem grupowania jest algorytm rozmytych $c$-średnich, opisanym w sekcji \ref{sec:fcm}.
+
+\section{Zbiory rozmyte}
+
+Zbiory klasyczne są pojęciem pierwotnym: obiekt $\X$ (liczba, punkt, dana itp.) należy do zbioru $\zA$ ($\X \in \zA$) lub do niego nie należy ($\X \notin \zA$). 
+
+W przypadku zbiorów rozmytych, obiekt $\X$ należy do zbioru $\zA$ z pewnym stopniem przynależności z przedziału $\left[ 0,1 \right]$, gdzie 0 oznacza całkowity brak przynależności, a 1 -- całkowitą przynależność \cite{bib:introduction-to-fuzzy-sets}. Zbiór rozmyty $\zA$ opisać można poprzez funkcję przynależności $\ClusterMembership_{\zA}: \zX \to \left[ 0,1 \right]$.
+
+Dla zbioru rozmytego można wyróżnić jego rdzeń oraz nośnik:
+
+\begin{Definition}
+	\cite{bib:introduction-to-fuzzy-sets} Rdzeń zbioru rozmytego $\zA$ to taki jego podzbiór $\zA_{C}$, dla którego $\ClusterMembership_{\zA_{C}} = 1$.
+\end{Definition}
+
+\begin{Definition}
+	\cite{bib:introduction-to-fuzzy-sets} Nośnik zbioru rozmytego $\zA$ to taki jego podzbiór $\zA_{S}$, dla którego $\ClusterMembership_{\zA_{S}} > 0$.
+\end{Definition}
+
+Graficzną interpretację tych charakterystyk przedstawiono na rys. \ref{fig:core-support-example}. Zbiór rozmyty może nie posiadać rdzenia ($\forall_{\X \in \zA}\;  \ClusterMembership(\X)_{\zA} < 1$), może mieć nieskończony nośnik ($\forall_{\X \in \zA}\;  \ClusterMembership(\X)_{\zA} > 0$).
+
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[scale=1.5, >=stealth]
+		
+		\draw[->, thick] (-0.2,0) -- (4.5,0) node[right] {};
+		\draw[->, thick] (0,-0.2) -- (0,2.5) node[above] {};
+		
+		\draw[gray, dashed, thick] (0,2) -- (2.0,2);
+		\node[left] at (0,2) {1};
+		\node[above left] at (0,2.2) {$\ClusterMembership$};
+		
+		\draw[very thick] (1,0) -- (2.0,2) -- (3.5,2) -- (3.9,0);
+		
+		\draw[Green, dashed, thick] (2.0,2) -- (2.0,-0.3);
+		\draw[Green, dashed, thick] (3.5,2) -- (3.5,-0.3);
+		
+		\draw[Green, thick, |<->|] (2.0,-0.2) -- (3.5,-0.2);
+		\node[below, Green] at (2.75,-0.2) {rdzeń};
+		
+		\draw[RoyalBlue, dashed, thick] (1,0) -- (1,-0.8);
+		\draw[RoyalBlue, dashed, thick] (3.9,0) -- (3.9,-0.8);
+		
+		\draw[RoyalBlue, thick, |<->|] (1,-0.7) -- (3.9,-0.7);
+		\node[below, RoyalBlue] at (2.45,-0.7) {nośnik};
+		
+	\end{tikzpicture}
+\caption{Wykres trapezowego zbioru rozmytego, ilustrujący jego rdzeń i nośnik.}
+\label{fig:core-support-example}
+\end{figure}
+
+\subsection{Operacje na zbiorach rozmytych}
+
+Podstawowymi operacjami na zbiorach klasycznych są iloczyn i suma. Ich odpowiednikami dla zbiorów rozmytych są odpowiednio t-norma ($\tnorm$) i s-norma ($\snorm$), które spełniają warunki określone w tabeli \ref{id:tab:tnorm-snorm}.
+
+\begin{table}
+\centering
+\caption{Warunki t-norm i s-norm}
+\label{id:tab:tnorm-snorm}
+\begin{tabular}{lll}
+\toprule
+	& t-norma & s-norma  \\
+\midrule
+	    warunki graniczne & $x \tnorm 1 = x, x \tnorm 0 = 0$ & $x \snorm 1 = 1, x \snorm 0 = x$ \\
+	    przemienność & $x \tnorm y = y \tnorm x$ & $x \snorm y = y \snorm x$ \\
+		monotoniczność & jeżeli $x \le u$ to $x \tnorm y \le u \tnorm y$,  & jeżeli $x \le u$ to $x \snorm y \le u \snorm y$,\\ 
+		& jeżeli $y \le r$ to $x \tnorm y \le x \tnorm r$ & jeżeli $y \le r$ to $x \snorm y \le x \snorm r$ \\
+	    łączność & $x \tnorm (y \tnorm z) = (x \tnorm y) \tnorm z$ & $x \snorm (y \snorm z) = (x \snorm y) \snorm z$ \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+Istnieje wiele t-norm i s-norm spełniających te warunki. W ramach tej pracy, najistotniejsze są:
+
+\begin{itemize}
+	\item t-norma i s-norma algebraiczna:
+	\begin{align}
+		\label{eq:algebraic-norms}
+		x \tnorm y &= xy \\
+		x \snorm y &= x + y - xy
+	\end{align}
+	\item t-norma i s-norma Łukasiewicza:
+	\begin{align}
+		x \tnorm y &= \max(x + y - 1, 0) \\
+		x \snorm y &= \min(x + y, 1)
+	\end{align}
+\end{itemize}
+
+Inną typową operacją na zbiorach rozmytych jest negacja. Musi ona spełniać warunki $\bar{0} = 1, \bar{1} = 0, x \le y \Rightarrow \bar{x} \ge \bar{y}$ \cite{bib:mathematics-fuzzy-sets-logic}. Najczęściej wykorzystywaną negacją jest negacja standardowa:
+\begin{align}
+	\bar{x} = 1 - x
+\end{align}
+
+Jest to negacja silna, czyli spełnia ona również warunek $\bar{\bar{x}} = x$.
+
+\section{Rozszerzalne liczby rozmyte}
+\label{sec:rozszerzalne-liczby-rozmyte}
+
+Rozszerzalne liczby rozmyte (ang. \english{extensional fuzzy numbers}) są uogólnieniem liczb rzeczywistych. Są to zbiory rozmyte, które modelują semantykę taką, jak ,,około 5'', ,,prawie 10'', ,,ponad 20'', czyli odpowiadają rzeczywistym liczbom ostrym z pewną tolerancją \cite{bib:arithmetics-extensional-fuzzy-numbers,bib:mathematics-fuzzy-sets-logic}. Definiowana jest dla nich rozmyta relacja $\ast$-podobieństwa $\nPodobienstwo$.
+
+\begin{Definition}
+\label{def:fuzzy-similarity}
+	\cite{bib:arithmetics-extensional-fuzzy-numbers} Rozmyta relacja $\ast$-podobieństwa $\nPodobienstwo(\X,\Y)$, gdzie $\ast$ jest lewostronnie ciągłą t-normą, spełnia warunki:
+	\begin{align}
+		\nPodobienstwo(\X,\X) & = 1 \\
+		\nPodobienstwo(\X,\Y) & = \nPodobienstwo(\Y,\X)\\
+		\nPodobienstwo(\X,\Y) & \ast \nPodobienstwo(\Y,\Z) \leqslant \nPodobienstwo(\X,\Z)
+	\end{align}
+\end{Definition}
+
+Rozszerzalne liczby rozmyte to liczby ostre rozszerzone o relację $\ast$-podobieństwa. Dla dowolnego $\Y \in \zRzeczywista$ liczbę rozmytą można przedstawić jako \cite{bib:arithmetics-extensional-fuzzy-numbers}:
+\begin{align}
+	\X_{\nPodobienstwo}(\Y) = \nPodobienstwo(\X, \Y)
+\end{align}
+
+Relacja $\nPodobienstwo$ zawiera zazwyczaj parametr $p$, który określa stopień rozmycia liczby. Im większa wartość tego parametru, tym większe rozmycie.
+
+\subsection{Kształty liczb rozmytych}
+\label{sec:ksztalty-liczb-rozmytych}
+
+Kształt rozszerzalnej liczby rozmytej określony jest przez relację $\ast$-podobieństwa. Może on być dowolny, o ile spełnia warunki określone w definicji \ref{def:fuzzy-similarity}. W pracy wykorzystywane są trzy kształty, opisane w \cite{bib:fuzzy-numbers-revisited-logic-operations}:
+
+\subsubsection{Liczby trójkątne}
+
+Dla liczb trójkątnych relacja $\ast$-podobieństwa $\nPodobienstwo_{t}$ definiowana jest jako:
+\begin{align}
+	\label{eq:similarity_t}
+	\nPodobienstwo_{t}(\X,\Y) = \max \left\{1 - \frac{|\X-\Y|}{p}, 0 \right\},
+\end{align}
+gdzie $p > 0$, a $\ast$ to t-norma Łukasiewicza.
+
+\subsubsection{Liczby wykładnicze}
+
+Dla liczb wykładniczych relacja $\ast$-podobieństwa $\nPodobienstwo_{e}$ definiowana jest jako:
+\begin{align}
+	\label{eq:similarity_e}
+	\nPodobienstwo_{e}(\X,\Y) = \exp \left(- \frac{|\X-\Y|}{p} \right),
+\end{align}
+gdzie $p > 0$, a $\ast$ to t-norma iloczynowa. 
+
+\subsubsection{Liczby gaussowskie}
+
+Dla liczb gaussowskich relacja $\ast$-podobieństwa $\nPodobienstwo_{g}$ definiowana jest jako:
+\begin{align}
+	\label{eq:similarity_g}
+	\nPodobienstwo_{g}(\X,\Y) = \exp \left(- \frac{(\X-\Y)^{2}}{2p^{2}} \right),
+\end{align}
+gdzie $p > 0$, a $\ast$ to t-norma iloczynowa.
+
+\subsection{Operacje arytmetyczne}
+
+Operacje arytmetyczne na rozszerzalnych liczbach rozmytych są proste obliczeniowo i nie zwiększają rozmycia. Wynikiem operacji arytmetycznej na rozszerzalnej liczbie lub liczbach rozmytych jest rozszerzalna liczba rozmyta.
+
+Operacje arytmetyczne jednoargumentowe można zapisać w ogólny sposób jako:
+\begin{align}
+	\label{eq:fuzzy-arithmetics-one-argument}
+	\mathbf{op}(\X_{\nPodobienstwo}) = \mathbf{op}(\X)_{\nPodobienstwo},
+\end{align}
+na przykład:
+\begin{align}
+	(\X_{\nPodobienstwo})^{2} = (\X^{2})_{\nPodobienstwo}.
+\end{align}
+
+Operacje arytmetyczne dwuargumentowe można zapisać jako:
+\begin{align}
+	\label{eq:fuzzy-arithmetics-two-arguments}
+	\X_{\nPodobienstwo_{\X}} \; \mathbf{op} \; \Y_{\nPodobienstwo_{\Y}} = (\X \; \mathbf{op} \; \Y)_{cl(\nPodobienstwo_{\X} \cup \nPodobienstwo_{\Y})},
+\end{align}
+gdzie $cl(\nPodobienstwo_{\X} \cup \nPodobienstwo_{\Y})$ jest domknięciem relacji $\nPodobienstwo_{\X}$ i $\nPodobienstwo_{\Y}$. Dla zdefiniowanych w podsekcji \ref{sec:ksztalty-liczb-rozmytych} kształtów ($\nPodobienstwo \in \{ \nPodobienstwo_{t}, \nPodobienstwo_{e}, \nPodobienstwo_{g}\}$) przyjąć można, że
+\begin{align}
+	cl(\nPodobienstwo(p_{\X}) \cup \nPodobienstwo(p_{\Y})) = \max\{p_{\X}, p_{\Y}\}.
+\end{align}
+
+Wzór na odległość euklidesową \eqref{eq:odleglosc:euklidesowa} można rozszerzyć, aby wykorzystywał rozszerzalne liczby rozmyte, w następujący sposób:  
+%
+\begin{align}
+	\Odleglosc_{fe} \left(\wGranula_{i}, \wGranula_{j}\right) = \left(\sqrt{\sum_{\Atrybut=0}^{\nAtrybut}(\Granula_{i\Atrybut} - \Granula_{j\Atrybut })^{2}}\right)_{\nPodobienstwo(\max(\Granula_{i0}, \Granula_{i1}, \dots, \Granula_{i\nAtrybut}, \Granula_{j0}, \Granula_{j1}, \dots, \Granula_{j\nAtrybut}))},
+	\label{eq:rozmyta:odleglosc:euklidesowa}
+\end{align}
+
+Przykładowo, odległość euklidesową między dwoma punktami, będącymi dwuwymiarowymi trójkątnymi liczbami rozmytymi, zapisać można jako:
+
+\begin{multline}
+	\Odleglosc ((5_{\nPodobienstwo_{t}(2,5)}, -2_{\nPodobienstwo_{t}(0,5)}), (8_{\nPodobienstwo_{t}(1,25)}, 2_{\nPodobienstwo_{t}(4)})) = \\
+	= \sqrt{(5_{\nPodobienstwo_{t}(2,5)} - 8_{\nPodobienstwo_{t}(1,25)})^{2} + (-2_{\nPodobienstwo_{t}(0,5)} - 2_{\nPodobienstwo_{t}(4)})^{2}} = 5_{\nPodobienstwo_{t}(4)}.
+\end{multline}
+
+\subsection{Operacje logiczne}
+Operacje porównania na rozszerzalnych liczbach rozmytych oparte są na operatorze równości rozmytej \cite{bib:fuzzy-numbers-revisited-logic-operations}:
+\begin{Definition}
+	Operator równości rozmytej $=_{\nPodobienstwo}: \zRozszerzalna \times \zRozszerzalna \to [0,1]$ zdefiniowany jest przy pomocy rozmytej relacji $\ast$-podobieństwa $\nPodobienstwo$:
+	\begin{align}
+		\label{eq:fuzzy-equality}
+		\left(\X_{\nPodobienstwo(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) = \nPodobienstwo_{\max\{p_{\X},p_{\Y}\}}(\X, \Y)
+	\end{align}
+\end{Definition}
+
+Przykładowo, dla liczb z relacją trójkątną:
+\begin{align}
+	\left(\X_{\nPodobienstwo_{t}(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo_{t}(p_{\Y})}\right) = \max \left\{1 - \frac{|\X-\Y|}{\max\{p_{\X},p_{\Y}\}}, 0 \right\}
+\end{align}
+
+Operatory nierówności wyznaczane są w następujący sposób:
+
+\begin{align}
+	\left(\X_{\nPodobienstwo(p_{\X})} <_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) = \left\{ \begin{array}{cl}
+	1 -  \left(\X_{\nPodobienstwo(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) & : \  \X \le \Y \\
+	0 & : \ \X > \Y
+	\end{array} \right.
+\end{align}
+
+\begin{align}
+	\left(\X_{\nPodobienstwo(p_{\X})} \le_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) = \left\{ \begin{array}{cl}
+	1 & : \  \X \le \Y \\
+	\left(\X_{\nPodobienstwo(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) & : \ \X > \Y
+	\end{array} \right.
+\end{align}
+
+\begin{align}
+	\left(\X_{\nPodobienstwo(p_{\X})} >_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) = \left\{ \begin{array}{cl}
+	1 -  \left(\X_{\nPodobienstwo(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) & : \  \X \ge \Y \\
+	0 & : \ \X < \Y
+	\end{array} \right.
+\end{align}
+
+\begin{align}
+	\left(\X_{\nPodobienstwo(p_{\X})} \ge_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) = \left\{ \begin{array}{cl}
+	1 & : \  \X \ge \Y \\
+	\left(\X_{\nPodobienstwo(p_{\X})} =_{\nPodobienstwo} \Y_{\nPodobienstwo(p_{\Y})}\right) & : \ \X < \Y
+	\end{array} \right.
+\end{align}
+
+
+% TODO
+
+% \chapter{[Tytuł rozdziału]} 
+
+% tekst
+
+% \chapter{[Tytuł podrozdziału]}
+
+% \chapter{[Tytuł podrozdziału]}
+
+% W całym dokumencie powinny znajdować się odniesienia do zawartych w nim ilustracji (rys. \ref{fig:2}).
+
+% \begin{figure}
+% \centering
+% \begin{tikzpicture}
+% \begin{axis}[
+%     y tick label style={
+%         /pgf/number format/.cd,
+%             fixed,   % po zakomentowaniu os rzednych jest indeksowana wykladniczo
+%             fixed zerofill, % 1.0 zamiast 1
+%             precision=1,
+%         /tikz/.cd
+%     },
+%     x tick label style={
+%         /pgf/number format/.cd,
+%             fixed,
+%             fixed zerofill,
+%             precision=2,
+%         /tikz/.cd
+%     }
+% ]
+% \addplot [domain=0.0:0.1] {rnd};
+% \end{axis} 
+% \end{tikzpicture}
+% \caption{Wykres przebiegu funkcji.} % Podpis jest zawsze POD rysunkiem.
+% \label{fig:2}
+% \end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%
+%% RYSUNEK Z PLIKU
+%
+%\begin{figure}
+%\centering
+%\includegraphics[width=0.5\textwidth]{./politechnika_sl_logo_bw_pion_pl.pdf}
+%\caption{Podpis rysunku zawsze pod rysunkiem.}
+%\label{fig:etykieta-rysunku}
+%\end{figure}
+%Rys. \ref{fig:etykieta-rysunku} przestawia …
+%%%%%%%%%%%%%%%%%%%%%
+%
+%%%%%%%%%%%%%%%%%%%%%
+%% WIELE RYSUNKÓW 
+%
+%\begin{figure}
+%\centering
+%\begin{subfigure}{0.4\textwidth}
+%    \includegraphics[width=\textwidth]{./politechnika_sl_logo_bw_pion_pl.pdf}
+%    \caption{Lewy górny rysunek.}
+%    \label{fig:lewy-gorny}
+%\end{subfigure}
+%\hfill
+%\begin{subfigure}{0.4\textwidth}
+%    \includegraphics[width=\textwidth]{./politechnika_sl_logo_bw_pion_pl.pdf}
+%    \caption{Prawy górny rysunek.}
+%    \label{fig:prawy-gorny}
+%\end{subfigure}
+%
+%\begin{subfigure}{0.4\textwidth}
+%    \includegraphics[width=\textwidth]{./politechnika_sl_logo_bw_pion_pl.pdf}
+%    \caption{Lewy dolny rysunek.}
+%    \label{fig:lewy-dolny}
+%\end{subfigure}
+%\hfill
+%\begin{subfigure}{0.4\textwidth}
+%    \includegraphics[width=\textwidth]{./politechnika_sl_logo_bw_pion_pl.pdf}
+%    \caption{Prawy dolny rysunek.}
+%    \label{fig:prawy-dolny}
+%\end{subfigure}
+%        
+%\caption{Wspólny podpis kilku rysunków.}
+%\label{fig:wiele-rysunkow}
+%\end{figure}
+%Rys. \ref{fig:wiele-rysunkow} przestawia wiele ważnych informacji, np. rys. \ref{fig:prawy-gorny} jest na prawo u góry.
+%%%%%%%%%%%%%%%%%%%%%
+
+
+% Tekst dokumentu powinien również zawierać odniesienia do tabel (tab. \ref{id:tab:wyniki}).
+
+% \begin{table}
+% \centering
+% \caption{Opis tabeli nad nią.}
+% \label{id:tab:wyniki}
+% \begin{tabular}{rrrrrrrr}
+% \toprule
+% 	         &                                     \multicolumn{7}{c}{metoda}                                      \\
+% 	         \cmidrule{2-8}
+% 	         &         &         &        \multicolumn{3}{c}{alg. 3}        & \multicolumn{2}{c}{alg. 4, $\gamma = 2$} \\
+% 	         \cmidrule(r){4-6}\cmidrule(r){7-8}
+% 	$\zeta$ &     alg. 1 &   alg. 2 & $\alpha= 1.5$ & $\alpha= 2$ & $\alpha= 3$ &   $\beta = 0.1$  &   $\beta = -0.1$ \\
+% \midrule
+% 	       0 &  8.3250 & 1.45305 &       7.5791 &    14.8517 &    20.0028 & 1.16396 &                       1.1365 \\
+% 	       5 &  0.6111 & 2.27126 &       6.9952 &    13.8560 &    18.6064 & 1.18659 &                       1.1630 \\
+% 	      10 & 11.6126 & 2.69218 &       6.2520 &    12.5202 &    16.8278 & 1.23180 &                       1.2045 \\
+% 	      15 &  0.5665 & 2.95046 &       5.7753 &    11.4588 &    15.4837 & 1.25131 &                       1.2614 \\
+% 	      20 & 15.8728 & 3.07225 &       5.3071 &    10.3935 &    13.8738 & 1.25307 &                       1.2217 \\
+% 	      25 &  0.9791 & 3.19034 &       5.4575 &     9.9533 &    13.0721 & 1.27104 &                       1.2640 \\
+% 	      30 &  2.0228 & 3.27474 &       5.7461 &     9.7164 &    12.2637 & 1.33404 &                       1.3209 \\
+% 	      35 & 13.4210 & 3.36086 &       6.6735 &    10.0442 &    12.0270 & 1.35385 &                       1.3059 \\
+% 	      40 & 13.2226 & 3.36420 &       7.7248 &    10.4495 &    12.0379 & 1.34919 &                       1.2768 \\
+% 	      45 & 12.8445 & 3.47436 &       8.5539 &    10.8552 &    12.2773 & 1.42303 &                       1.4362 \\
+% 	      50 & 12.9245 & 3.58228 &       9.2702 &    11.2183 &    12.3990 & 1.40922 &                       1.3724 \\
+% \bottomrule
+% \end{tabular}
+% \end{table}  
+
+\chapter{Rozmyty algorytm aglomeracyjnego grupowania hierarchicznego}
+\label{sec:wlasne-rozwiazanie}
+
+%\begin{itemize}
+%\item  Jak ja rozwiązuję problem?
+%\begin{itemize}
+%\item rozwiązanie zaproponowane przez dyplomanta
+%\item analiza teoretyczna rozwiązania
+%\item uzasadnienie wyboru zastosowanych metod, algorytmów, narzędzi
+%\end{itemize}
+%\end{itemize}
+
+%\section{Plan rozwiązania}
+
+Problemem algorytmów grupowania hierarchicznego jest ich duża złożoność czasowa -- w przypadku algorytmu ogólnego aż do $O(\nX^{3})$, gdzie $\nX$ to liczba danych. Zmniejszenie liczby danych poprzez zastosowanie wstępnej granulacji algorytmem rozmytych $c$-średnich może znacznie przyspieszyć jego działanie, jako że algorytm ten ma stałą złożoność czasową w zależności od liczby danych ($O(\nX)$).
+
+Zaproponowano rozmyty algorytm aglomeracyjnego grupowania hierarchicznego: \MojAlg{}. Składa się on z trzech głównych kroków:
+
+\begin{enumerate}
+	\item granulacja oryginalnych danych przy pomocy algorytmu rozmytych $c$-średnich (roz. \ref{sec:granulacja-danych-oryginalnych}),
+	\item przekształcenie otrzymanych wyników w granule o potrzebnych parametrach (roz. \ref{sec:przeksztalcenie-granul}),
+	\item aglomeracyjne grupowanie hierarchiczne granul z uwzględnieniem ich rozmycia: \MojHierAlg\ (roz. \ref{sec:rozmyte-grupowanie-hierarchiczne}).
+\end{enumerate}
+
+Złożoność czasowa tego algorytmu może zostać określona jako $O(\nX + \nX\nGranula + \nGranula^3)$, przy czym $\nGranula \ll \nX$ odpowiada liczbie granul.
+
+Implementacja algorytmu, skrypty pomocnicze pozwalające na analizę jego działania, badane dane syntetyczne oraz wyniki uzyskane na ich podstawie zamieszczono w repozytorium pod adresem \url{https://github.com/ZofiaLor/magister-granule}.
+
+\section{Granulacja danych oryginalnych}
+\label{sec:granulacja-danych-oryginalnych}
+
+W pierwszym kroku oryginalne dane są granulowane przez algorytm rozmytych $c$-średnich. Dane mają postać macierzy liczb rzeczywistych o wymiarach $\nX \times \nAtrybut$, gdzie $\nX$ -- liczba danych, $\nAtrybut$ -- liczba atrybutów. Wartość parametru rozmycia $m$ algorytmu określona jest na stałe jako 2. Liczba docelowych klastrów $\nKlaster$ jest jednym z parametrów badawczych i jest znacznie mniejsza od $\nX$. 
+
+Wyjściem tego kroku algorytmu będą struktury wyznaczone przez algorytm FCM, w szczególności wektor środków klastrów $\wCentre$ oraz macierz przynależności danych do klastrów $\mClusterMembership$.
+
+\section{Przekształcenie granul}
+\label{sec:przeksztalcenie-granul}
+
+Granule wykorzystywane do grupowania hierarchicznego mają postać wielowymiarowych rozszerzalnych liczb rozmytych. Dla każdego wymiaru musi zostać określona wartość ostra liczby $x$ oraz jej rozmycie $p$.
+
+Wartości ostre są tożsame ze środkami klastrów będących wynikiem algorytmu rozmytych $c$-średnich, czyli z wektorem $\wCentre$ (wzór \ref{eq:center_update}).
+
+Wartościom rozmycia nie odpowiada bezpośrednio żadna ze struktur zwracanych przez FCM. Dla każdego klastra $\Klaster$ i wymiaru (atrybutu) $\Atrybut$, rozmycie oblicza się jako następujące odchylenie standardowe:
+\begin{align}
+	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m} (\X_{\Iteracja\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{\Iteracja = 1}^{\nX} \ClusterMembership_{\klaster\Iteracja}^{m}}}.
+\end{align}
+
+Wyjściem tego kroku jest zbiór granul $\zGranula$ -- obiektów posiadających listę $\Atrybut$-elementową liczb rozmytych, które z kolei zawierają informacje o wartościach $x$ i $p$. Granule nie mają na stałe określonego kształtu rozszerzalnych liczb rozmytych, które składają się na ich wymiary. Kształt jest więc parametrem dla operacji logicznych na nich wykonywanych. Złożoność czasowa tego kroku wynosi $O(\nX\nGranula)$
+
+Liczby rozmyte stanowią rozszerzenie liczb ostrych, więc każda arytmetyczne i logiczna operacja rozmyta zwraca poprawny wynik również wtedy, gdy ich parametrami są liczby, dla których $p=0$. Implementacja operacji $=_\nPodobienstwo$ w przypadku, gdy obydwie liczby są ostre, wykonuje zwykłą, ostrą operację logiczną $=$, w przeciwnym razie wystąpiłoby dzielenie przez 0. Operacja zwraca 1, jeżeli liczby są równe, 0, jeżeli nie są zamiast wartości logicznych odpowiednio prawda lub fałsz.
+
+\section{Rozmyte grupowanie hierarchiczne}
+\label{sec:rozmyte-grupowanie-hierarchiczne}
+
+Zbiór granul $\zGranula$ oraz ich kształt są parametrami wejściowymi algorytmu rozmytego aglomeracyjnego grupowania hierarchicznego \MojHierAlg.
+%
+Na początku wyznaczane są rozmyte odległości euklidesowe (wzór \eqref{eq:rozmyta:odleglosc:euklidesowa})między każdą parą granul, przy pomocy operacji arytmetycznych określonych w sekcji \ref{sec:rozszerzalne-liczby-rozmyte} (alg. \ref{alg:fuzzy-distance}). Wynikiem obliczeń jest symetryczna macierz odległości $\mDistance$ o wymiarach $\nX \times \nX$, gdzie $\Distance_{ij} = \Distance_{ji} = \Distance(\wX_{i}, \wX_{j})$. Odległość danego elementu od samego siebie ($\Distance_{ii}$) nie jest wykorzystywana w algorytmie, jej wartość nie jest więc istotna.
+
+Grupowanie hierarchiczne \MojHierAlg{} ma postać zmodyfikowanego algorytmu naiwnego \PrimitiveClustering{}, o złożoności czasowej $O(\nGranula^{3})$. Zmieniony musi zostać sposób wyznaczania kolejnych minimalnych odległości w macierzy $\mDistance$ oraz, zależne od łączności, aktualizacje odległości do nowo scalonego klastra. 
+
+Minimum i maksimum wyznacza się przy pomocy operacji porównania. W przypadku rozszerzalnych liczb rozmytych, wynikami takich operacji są liczby z przedziału $[0, 1]$. W celu określenia, która z liczb rozmytych jest większa lub mniejsza, wprowadzony zostaje parametr progowy $\xi$, będący parametrem badawczym. Algorytmy rozmytego minimum i maksimum przedstawiają odpowiednio pseudokody \ref{alg:fuzzy-min} i \ref{alg:fuzzy-max}. Na podstawie alg. \ref{alg:fuzzy-min} można też utworzyć rozmytą funkcję $\arg\min$ (alg. \ref{alg:fuzzy-argmin}).
+
+Dla łączności \SingleLinkage{}, algorytm \MojHierAlg{} ma postać opisaną pseudokodem \ref{alg:fuzzy_single_linkage}. Ten sam algorytm dla łączności \CompleteLinkage{} jest niemal identyczny: należy jedynie podmienić wywołanie algorytmu rozmytego minimum (alg. \ref{alg:fuzzy-min}) w linii \ref{alg:lacznosc} na algorytm rozmytego maksimum (alg. \ref{alg:fuzzy-max}).
+
+\begin{algorithm}[t]
+	\caption{Minimum rozmyte}
+	\label{alg:fuzzy-min}
+	\begin{algorithmic}[1]
+		\Require $a, b$: porównywane rozszerzalne liczby rozmyte
+		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
+		\Require $\xi$: wartość progowa
+		\Procedure{FuzzyMinimum}{$a, b, r, \xi$}
+		\If{$(a <_{\nPodobienstwo_r} b) > \xi$}
+		\State \Return $a$
+		\Else
+		\State \Return $b$
+		\EndIf
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+	\caption{Maksimum rozmyte}
+	\label{alg:fuzzy-max}
+	\begin{algorithmic}[1]
+		\Require $a, b$: porównywane rozszerzalne liczby rozmyte
+		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
+		\Require $\xi$: wartość progowa
+		\Procedure{FuzzyMaximum}{$a, b, r, \xi$}
+		\If{$(a >_{\nPodobienstwo_r} b) > \xi$}
+		\State \Return $a$
+		\Else
+		\State \Return $b$
+		\EndIf
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+	\caption{Rozmyta funkcja $\arg\min$}
+	\label{alg:fuzzy-argmin}
+	\begin{algorithmic}[1]
+		\Require $\mX$: macierz liczb rozmytych, $\wPunkt$: wektor indeksów, dla których znajdowane jest minimum, $r$: typ relacji (trójkątna, wykładnicza, gaussowska), $\xi$: parametr porównania 
+		\Procedure{FuzzyArgMin}{$\mX, r, \xi$}
+		\State result $\gets \infty_{S(0)}$  \Comment{liczba rozmyta, dla której $x=\infty, p=0$}
+		\State $(w, k) \gets (0, 0)$  \Comment{Współrzędne (wiersz, kolumna) wartości minimalnej w przeszukiwanej części macierzy $\mX$}
+		\For{$i = 1$ to $|\wPunkt| - 1$}
+		\For{$j = i + 1$ to $|\wPunkt|$}
+		\State $p_w \gets \wPunkt[i]$
+		\State $p_k \gets \wPunkt[j]$
+		\If{($\mX[p_w][p_k] <_{\nPodobienstwo_r}$ result) > $\xi$}
+		\State result $\gets \mX[p_w][p_k]$
+		\State $(w, k) \gets (p_w, p_k)$
+		\EndIf
+		\EndFor
+		\EndFor
+		\State \Return $(w, k)$  \Comment{Współrzędne (wiersz, kolumna) wartości minimalnej w przeszukiwanej części macierzy $\mX$}
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+	\caption{Rozmyte odległości euklidesowe}
+	\label{alg:fuzzy-distance}
+	\begin{algorithmic}[1]
+		\Require $\mX$: macierz liczb rozmytych 
+		\Procedure{FuzzyDistance}{$\mX$}
+		\State result $\gets \infty_{S(0)}$  \Comment{liczba rozmyta, dla której $x=\infty, p=0$}
+		\State $\nX \gets |\zX|$ \Comment{liczba danych}
+		\State $\mDistance \gets $ macierz zerowa $\nX \times \nX$
+		\For{$i = 1$ to $\nX - 1$}
+		\For{$j = i + 1$ to $\nX$}
+		\State $\Distance_{ij} \gets 0_0$ \Comment{liczba rozmyta, dla której $x=0, p=0$}
+		\For{$k$ in $|\mX[i]|$} \Comment{dla każdego wymiaru liczby rozmytej}
+		\State $\Distance_{ij} \gets \Distance_{ij} + (\mX[i][k] - \mX[j][k])^2$ \Comment{Operacje arytmetyczne na liczbach rozmytych (wzór \eqref{eq:fuzzy-arithmetics-two-arguments})}
+		\EndFor
+		\State $\Distance_{ij} \gets \sqrt{\Distance_{ij}}$ \Comment{Operacja arytmetyczna na liczbie rozmytej (wzór \eqref{eq:fuzzy-arithmetics-one-argument})}
+		\State $\mDistance[i][j] \gets \mDistance[j][i] \gets \Distance_{ij}$ \Comment{macierz jest symetryczna względem przekątnej}
+		\EndFor
+		\EndFor
+		\State \Return $\mDistance$  \Comment{macierz rozmytych odległości między parami liczb rozmytych}
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+	\caption{Algorytm rozmytego aglomeracyjnego grupowania hierarchicznego \MojHierAlg{} (\SingleLinkage{})}
+	\label{alg:fuzzy_single_linkage}
+	\begin{algorithmic}[1]
+		\Require $\zX$: dane do klasteryzacji
+		\Require $\nKlaster$: docelowa liczba klastrów 
+		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
+		\Require $\xi$: wartość progowa
+		\Procedure{\MojHierAlg}{$\zX, \nKlaster, r, \xi$}
+		\State $\nX \gets |\zX|$ \Comment{liczba danych}
+		\State $\mDistance \gets $ \Call{FuzzyDistance}{$\zX$} \Comment{symetryczna macierz $\nX \times \nX$ rozmytych odległości euklidesowych między każdą parą danych}
+		\State $\wPunkt \gets [1, 2, ..., \nX-1, \nX]$ \Comment{wektor indeksów, które będą sprawdzane}
+		\State $\wEtykieta \gets [1, 2, ..., \nX-1, \nX]$ \Comment{etykiety}
+		\For{$i = 1$ to $\nX - \nKlaster$} 
+		\State $w, k \gets $ \Call{FuzzyArgMin}{$\mDistance, \wPunkt, r, \xi$} \Comment{znalezienie indeksów dwóch najbliższych klastrów}
+		\State $\wPunkt \gets \wPunkt \setminus {k}$ \Comment{nieużywane w dalszych iteracjach}
+		\For{$\Punkt \in \wPunkt$}
+		\State $\mDistance[w, \Punkt] = \mDistance[\Punkt, w] = $ \Call{FuzzyMinimum}{$\mDistance[w, \Punkt], \mDistance[k, \Punkt], r, \xi$} \Comment{przypisanie wynikające z łączności}\label{alg:lacznosc}
+		\EndFor
+		\State $\wEtykieta \gets$ \Call{scal}{$\wEtykieta, w, k$} \Comment{zamiana wszystkich etykiet o wartości $k$ na wartość $w$.}
+		\EndFor
+        \State $\wEtykieta \gets$ \Call{przemianuj}{$\wEtykieta$} \Comment{przemianowanie etykiet $\wEtykieta$ na kolejne liczby od 0.}
+	 	\State \Return $\wEtykieta$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\chapter{Badania}
+\label{sec:badania}
+
+Działanie algorytmu \MojAlg{} musi zostać zbadane pod kątem czasu wykonania oraz jakości grupowania, również w porównaniu z jego ostrym odpowiednikiem.
+
+\section{Zbiory danych}
+
+Pierwszym zbiorem danych są dane syntetyczne, które znajdują się w plikach \url{.data} zlokalizowanych w folderze \url{dane}, pogrupowanych w podfoldery według kształtów. 
+Dla każdego kształtu zbiory mają liczebność \num{1000}, \num{2000}, \num{5000}, \num{10000}, \num{20000}, \num{30000}, \num{40000} oraz \num{50000} wierszy.
+
+Dane mają postać współrzędnych punktów w dwóch lub trzech wymiarach -- każdy wiersz w pliku reprezentuje współrzędne jednego punktu, współrzędne oddzielone są znakami tabulacji. Taka liczba wymiarów pozwala na wizualizację całości danych w postaci wykresu. W zależności od kształtu, dla danego zbioru można na podstawie wykresu wyróżnić 2, 3 lub 4 wyraźnie odseparowane klastry.
+Wykresy danych przedstawiono na rys. \ref{fig:data-shapes}, a w tabeli \ref{id:tab:zbiory} -- dodatkowo ich charakterystykę (liczbę wymiarów i klastrów).
+
+Dane te nie posiadają etykiet. W sposób opisany w sekcji na stronie \pageref{sec:etykietowanie-danych} każdemu punktowi przypisano etykietę w postaci liczby całkowitej $[0, \nKlaster-1]$ i zapisano w folderze \url{dane_labelled} w analogicznym formacie.
+
+% czy 2011 to dobra data dla tych stron?
+Wykorzystano również zbiory danych \brightkite\ \cite{bib:brightkite} (\num{4491143} wierszy) oraz \gowalla\ \cite{bib:gowalla} (\num{6442890} wierszy).
+Dane przedstawiają informacje o logowaniach się użytkowników platform społecznościowych.
+Dane przycięto, aby zawierały jedynie kolumny ,,latitude'' oraz ,,longitude'' -- dwuwymiarowe współrzędne lokalizacji logowań. Dane nie są etykietowane i nie mają przypisanych klas. 
+%
+Analiza wykresów (rys. \ref{fig:gowalla-brightkite-shapes}) pozwala zauważyć kształty kontynentów -- można uznać je za docelowe klastry. 
+%
+Dane zawierają błędne współrzędne. W danych \brightkite{}, kolumna ,,latitude'' (szerokość geograficzna) zawiera wartości z przedziału $[\num{-163.193333}, \num{151.198}]$, podczas gdy dopuszczalnym przedziałem jest $[-90, 90]$. Dla danych \gowalla{} przedział ten wynosi $[-90, \num{405.658498}]$. Błędne współrzędne pozostawiono w zbiorze danych.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/data_shapes.pdf}
+\caption{Wykresy danych o różnych kształtach z folderu \texttt{dane} o rozmiarze 1000 punktów.}
+\label{fig:data-shapes}
+\end{figure}
+
+\begin{table}
+\centering
+\caption{Charakterystyka zbiorów danych dołączonych do projektu.}
+\label{id:tab:zbiory}
+\begin{tabular}{rrrrrrr}
+\toprule
+	& \blobs  & \circles & \corners  & \crescents  & \laguna  & \spheres  \\
+\midrule
+	    liczba klastrów & 3 & 2 & 4 & 2 & 3 & 2 \\
+	    liczba wymiarów & 2 & 2 & 2 & 2 & 2 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/gowalla_brightkite_shapes.png}
+\caption{Wykresy danych \brightkite i \gowalla.}
+\label{fig:gowalla-brightkite-shapes}
+\end{figure}
+
+\section{Metodyka badań}
+
+Algorytm \MojAlg{} (\ref{sec:wlasne-rozwiazanie}) zbadano pod kątem szybkości wykonania oraz jakości grupowania poprzez porównanie jego efektów z efektami ostrego algorytmu aglomeracyjnego grupowania hierarchicznego \SingleLinkage{} i \CompleteLinkage{}.
+
+\subsection{Czas grupowania}
+
+Aby znaleźć charakterystykę zależności czasu wykonania algorytmów od liczby danych, przygotowano dane o rozmiarach 500-\num{10000} z krokiem 500.
+W tym celu brane były początkowe podzbiory ze zbiorów danych o rozmiarze \num{10000}. Jako że nieistotne były wyniki grupowania, nie było konieczne losowe próbkowanie.
+
+Przyjęto też stałą maksymalną liczbę 80 iteracji algorytmu rozmytych $c$-średnich. Sekcja \ref{sec:wyniki-jakosc} pokazuje, że jest to wystarczająca wartość. Złożoność algorytmu jest liniowa w zależności od liczby iteracji \cite{bib:fcm-kmeans-comparison}. Algorytm wykonano też dla różnych liczności granul: 50, 100 oraz 200.
+
+Czas pojedynczego wykonania algorytmu ostrego zmierzono poprzez różnicę czasu rozpoczęcia i zakończenia grupowania hierarchicznego. Wykorzystany został algorytm \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} (łączność \SingleLinkage{}) oraz własna implementacja ostrego algorytmu grupowania, analogiczna do wersji rozmytej. Pozwoliło to na lepszy pogląd na wpływ granulacji na szybkość, jako że sama logika grupowania we własnej implementacji pozostała ta sama, co w algorytmie rozmytym. Algorytm biblioteczny ma z kolei najniższą złożoność czasową dla łączności \SingleLinkage{} (wykorzystuje algorytm minimalnego drzewa rozpinającego), można więc porównać czas wykonania \MojAlg{} z najlepszym możliwym czasem grupowania tych samych danych algorytmem ostrym. Do tego porównania wykorzystano oryginalne dane wejściowe, we wszystkich rozmiarach (1000-\num{50000}).
+W czasie pojedynczego wykonania algorytmu rozmytego zawarto czas wykonania algorytmu rozmytych $c$-średnich, utworzenia na jego podstawie listy granul oraz rozmytego grupowania hierarchicznego.
+
+Poszczególne pomiary czasu działania algorytmu dla dokładnie takich samych rozmiarów danych mogą różnić się o kilka milisekund. Wynika to między innymi z działania w tle innych procesów komputera, na którym przeprowadzane są badania. Typowym rozwiązaniem tego problemu jest kilkukrotne powtórzenie pomiarów dla tych samych danych i obliczenie średniej arytmetycznej wyników. Podczas badań pomiary powtórzono czterokrotnie, co wystarczyło do wyeliminowania odstających wyników.
+
+Wykonano również pomiary czasu wykonania algorytmu \MojAlg{} dla dużych liczebności danych: \num{50000}, \num{100000}, \num{500000}, \num{1000000}, \num{2000000}, \num{3000000}, \num{4000000}, \num{5000000} i \num{6000000}, dla liczebności granul 50, 100 i 200. Jako że dla tak dużych rozmiarów danych czas ten jest rzędu minut, nie mają znaczenia milisekundowe przekłamania wyników. Z tego powodu wystarczyło wykonać jeden pomiar dla każdego rozmiaru danych.
+
+\subsection{Jakość grupowania}
+
+Jakość zmierzono poprzez porówanie wyników algorytmu \MojAlg{} z oczekiwanymi przynależnościami punktów do klastrów, oznaczonymi etykietami. Jako miary jakości wykorzystano dokładność, trafność oraz precyzję.
+
+Pomiary wykonano dla wszystkich kształtów i rozmiarów danych. W przypadku algorytmu rozmytego, pomiary przeprowadzono również dla różnych łączności (\SingleLinkage{}, \CompleteLinkage{}), liczebności granul (50, 100, 200), typu relacji liczb rozmytych (trójkątne, wykładnicze, gaussowskie) oraz parametru $\xi \in \{ \num{0.05}, \num{0.10}, \num{0.15}, \ldots, \num{0.95} \}$. 
+
+Podobnie jak w przypadku pomiarów czasu grupowania, przyjęto stałą maksymalną liczbę 80 iteracji. Sparametryzowanie tej wartości oznaczałoby badanie działania bibliotecznej funkcji FCM, zamiast własnego algorytmu.
+
+Kolejność danych została przed pomiarem losowo zmieszana przy pomocy generatora liczb pseudolosowych o ustalonym ziarnie. Dzięki temu, przy każdym uruchomieniu kolejność ta jest identyczna, wystarczyły więc jednokrotne pomiary wyników działania algorytmu \MojAlg{} dla każdej kombinacji parametrów.
+
+\subsubsection{Etykietowanie danych}
+\label{sec:etykietowanie-danych}
+
+W celu przypisania etykiet do danych z folderu \texttt{dane}, przygotowano pomocniczy skrypt w pliku \texttt{label\_assignment.py}. W zależności od tego, czy dane są dwu- czy trójwymiarowe, przypisanie etykiet odbywa się na inny sposób.
+
+\paragraph{Dane dwuwymiarowe}
+
+Oznaczanie etykiet dla danych dwuwymiarowych wykorzystuje widżet \texttt{LassoSelector} biblioteki \texttt{matplotlib}. Dla każdego pliku z danymi dwuwymiarowymi, wyświetlono wykres połączony z obiektem klasy \texttt{SelectFromCollection} z przykładu \cite{bib:mplt-lasso}. Klasa ta między innymi umożliwia wyznaczenie indeksów i współrzędnych punktów zaznaczonych myszą na wykresie. 
+
+Każdemu punktowi domyślnie przypisano etykietę 0. Po zaznaczeniu zbioru punktów na wykresie naciśnięcie klawisza cyfry na klawiaturze powoduje przypisanie tym punktom etykiety o danym numerze i wyświetlenie w konsoli informacji, ilu punktom ją przypisano. Proces można powtarzać dowolną liczbę razy, można go zakończyć poprzez naciśnięcie klawisza ENTER i zamknięcie wykresu.
+
+W celu ostatecznej weryfikacji pojawia się drugi wykres, na którym każdej etykiecie odpowiada inny kolor. Po zamknięciu tego wykresu, plik z etykietami jest zapisywany w folderze \texttt{dane\_labelled}. Plik ma format zgodny z oryginalnym plikiem z danymi (każdy wiersz to oddzielone znakami tabulacji współrzędne jednego punktu), z dodaną dodatkową kolumną z etykietami punktów. 
+
+\paragraph{Dane trójwymiarowe}
+
+W przypadku danych trójwymiarowych skorzystano z faktu, że jedyne dane wykorzystywane w pracy, dla których należy znaleźć etykiety, to dane \spheres{}. Punkty otrzymane z tych danych tworzą dwie sfery: mniejsza, wewnętrzna sfera jest zamknięta w sześcianie o wymiarach $1 \times 1 \times 1$ jednostek, a punkty drugiej, większej sfery znajdują się poza tym sześcianem. Wszystkim punktom, których wszystkie współrzędne mają wartości mniejsze lub równe 1 przypisano etykietę 1, pozostałym -- 0. Dane z etykietami zostały zapisane w folderze \url{dane_labelled}, w takim samym formacie, jak dane dwuwymiarowe.
+
+\paragraph{Wyniki etykietowania}
+\label{sec:wyniki-etykietowania}
+
+Na wykresie \ref{fig:data-shapes-labels} przedstawiono wyniki etykietowania danych. Punkty oznaczone tym samym kolorem mają te same etykiety.
+
+W przypadku danych \laguna{} o liczebności \num{20000} i większej, dwa środkowe klastry przestają być wyraźnie oddzielone od siebie (rys. \ref{fig:laguna20000-labels}). Liczebności tych klastrów po podziale ich narzędziem \texttt{LassoSelector} nie są równe, jak w przypadku mniejszych zbiorów o tym samym kształcie -- różnice wynoszą nie więcej niż 18 punktów. Przy tak dużych zbiorach danych wpływ pojedynczych punktów jest marginalny, należy jednak uwzględnić tę niepewność w analizie wyników jakości grupowania.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/data_shapes_labels.pdf}
+\caption{Wykresy danych o różnych kształtach z folderu \texttt{dane\_labelled} o rozmiarze 1000 punktów, o etykietach oznaczonych kolorami.}
+\label{fig:data-shapes-labels}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/laguna20000_labelled.png}
+\caption{Wykres danych \laguna{} z folderu \texttt{dane\_labelled} o rozmiarze \num{20000} punktów, o etykietach oznaczonych kolorami.}
+\label{fig:laguna20000-labels}
+\end{figure}
+
+\subsubsection{Miara jakości}
+
+Wybranymi miarami jakości grupowania są dokładność $\accuracy$, trafność $\recall$ i precyzja $\precision$. 
+
+W przypadku dwuklasowym (klasy \english{positive} i \english{negative}), dokładność (ang. \english{accuracy}) jest definiowana jako:
+
+\begin{align}
+	\accuracy = \frac{TP + TN}{TP + FP + TN + FN},
+\end{align}
+gdzie:
+\begin{itemize}
+	\item TP -- liczba danych poprawnie zaklasyfikowanych do klasy \english{positive}
+	\item FP -- liczba danych niepoprawnie zaklasyfikowanych do klasy \english{positive}
+	\item TN -- liczba danych poprawnie zaklasyfikowanych do klasy \english{negative}
+	\item FN -- liczba danych niepoprawnie zaklasyfikowanych do klasy \english{negative}
+\end{itemize}
+
+Dokładność jest łatwo rozszerzalna na więcej klas: sumę liczb danych poprawnie zaklasyfikowanych do każdej klasy należy podzielić przez liczbę wszystkich danych.
+
+Trafność (czułość, ang. \english{recall}) definiowana jest jako:
+
+\begin{align}
+	\recall = \frac{TP}{TP + FN},
+\end{align}
+%
+czyli stosunek liczby danych poprawnie zaklasyfikowanych do klasy \english{positive} do wszystkich danych do niej należących.
+
+Precyzję (ang. \english{precision}) definiuje się jako:
+
+\begin{align}
+	\precision = \frac{TP}{TP + FP},
+\end{align}
+%
+czyli stosunek liczby danych poprawnie zaklasyfikowanych do klasy \english{positive} do wszystkich danych które zostały do niej zaklasyfikowane.
+
+Trafność i precyzję można rozszerzyć na wiele klas na różne sposoby. W badaniach wybrano metodę, w której najpierw obliczana jest wartość metryk cząstkowych dla każdej klasy z osobna (jedna klasa odpowiada klasie \english{positive}, wszystkie pozostałe -- \english{negative}), a następnie obliczana jest z nich średnia arytmetyczna. Oznacza to, że każda klasa ma jednakową wagę dla ostatecznego wyniku -- jeżeli będą miały różne liczności, to klasy zawierające małą liczbę danych będą mieć proporcjonalnie większy wpływ na wyniki trafności i precyzji, niż dokładności.
+
+\paragraph{Przynależność punktów do granul}
+
+Rozmyty algorytm grupowania jako wynik zwraca przynależność do klastrów granul, nie oryginalnych danych. Na potrzeby porównania konieczne jest określenie, do której granuli należy każdy punkt. Przynależność tą wyznaczano na dwa sposoby na podstawie
+(1)  macierzy przynależności do klastra wyznaczonego przez algorytm rozmytych $c$-średnich $\mClusterMembership$ i 
+(2)  wartości relacji $\ast$-podobieństwa $\nPodobienstwo$.
+
+Pierwsze podejście dla każdego punktu $i$, znajduje granulę, dla której wartość odpowiedniego wiersza w macierzy przynależności $\wClusterMembership_i$ jest maksymalna.
+
+Drugie podejście przedstawia pseudokod \ref{alg:similarity_membership}.
+Dla każdego punktu $i$, przynależność do granuli $j$ obliczana na podstawie wartości operacji $=_\nPodobienstwo$ (wzór \ref{eq:fuzzy-equality}) dla każdego wymiaru punktu i granuli. Operacja ta jest zależna od kształtu granul, dla liczb trójkątnych, wykładniczych i gaussowskich należy wykorzystać odpowiednio wzory \ref{eq:similarity_t}, \ref{eq:similarity_e} lub \ref{eq:similarity_g} uwzględniając, że dla liczby ostrej (współrzędnej oryginalnego punktu) $p = 0$. 
+
+Wyniki dla każdej współrzędnej łączone są t-normą algebraiczną (wzór \ref{eq:algebraic-norms}). Wreszcie określa się, że punkt należy do tej granuli, dla której wynik tego złączenia jest maksymalny.
+
+Należy uwzględnić, że rozszerzalne liczby rozmyte trójkątne mają skończony nośnik. Oznacza to, że punkt może nie należeć do żadnej granuli -- dla każdej z nich przynależność będzie zerowa. Punkt taki uznawany jest za szum i nie bierze udziału w wyznaczaniu wartości dokładności, trafności i precyzji, jednak odsetek punktów stanowiących szum jest w tym przypadku dodatkową miarą jakości.
+
+Rysunek \ref{fig:shape-dep} przedstawia przykład takiego przypisania punktów do granul, dla czytelności wykresów wyznaczono jedynie 10 granul. Wykresy dla liczb wykładniczych i gaussowskich są bardzo podobne, ponadto wszystkie punkty są przypisane do granuli. W przypadku liczb trójkątnych, duża część punktów stanowi szum.
+
+\begin{algorithm}[t]
+	\caption{Wyznaczenie przynależności punktu do granuli na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$}
+	\label{alg:similarity_membership}
+	\begin{algorithmic}[1]
+		\Require $\zX$: dane oryginalne
+		\Require $\zGranula$: granule wyznaczone przez algorytm \MojAlg{}
+		\Require $\wEtykieta_{\Granula}$: wektor o długości $\nGranula$ etykiet wyznaczonych dla wszystkich granul
+		\Require $r$: typ relacji (trójkątna, wykładnicza, gaussowska)
+		\Procedure{CalculateSimilarityMembership}{$\zX, \zGranula, \wEtykieta, r$}
+		\State $\wEtykieta_{\X} \gets \varnothing$ \Comment{etykiety punktów}
+		\State $szum \gets 0$ \Comment{liczba punktów nieprzynależących do żadnej granuli}
+		\For{$\X$ in $\nX$}
+		\State $\Etykieta \gets 0$
+		\State $\ClusterMembership_{max} \gets 0$
+		\For{$i=1$ to $\nGranula$}
+		\State $\ClusterMembership \gets (\zGranula[i][1] =_{\nPodobienstwo} \X[1])$
+		\For{$j=2$ to liczba wymiarów $\X$}
+		\State $\ClusterMembership \gets \ClusterMembership \tnorm (\zGranula[i][j] =_{\nPodobienstwo} \X[j])$ \Comment{$\tnorm$: t-norma}
+		\EndFor
+		\If{$\ClusterMembership > \ClusterMembership_{max}$}
+		\State $\ClusterMembership_{max} \gets \ClusterMembership$
+		\State $\Etykieta \gets i$
+		\EndIf
+		\EndFor
+		\If{$\ClusterMembership_{max} > 0$}
+		\State dodaj $i$ do $\wEtykieta_{\X}$
+		\Else \Comment{punkt nie przynależy do żadnej granuli -- jest szumem}
+		\State dodaj $-1$ do $\wEtykieta_{\X}$
+		\State $szum \gets szum + 1$
+		\EndIf
+		\EndFor
+		\State \Return $\wEtykieta_{\X}, szum$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.32\textwidth}
+		\includegraphics[width=\textwidth]{./img/shape_dep_t.pdf}
+		\caption{Liczby trójkątne}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.32\textwidth}
+		\includegraphics[width=\textwidth]{./img/shape_dep_e.pdf}
+		\caption{Liczby wykładnicze}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.32\textwidth}
+		\includegraphics[width=\textwidth]{./img/shape_dep_g.pdf}
+		\caption{Liczby gaussowskie}
+	\end{subfigure}
+	\caption{Przynależność punktów do granul w zależności od kształtu liczb rozmytych. 10 środków granul oznaczono kolorem czerwonym, punkty należące do różnych granul oznaczone są różnymi kolorami. Kolorem szarym oznaczono punkty stanowiące szum.}
+	\label{fig:shape-dep}
+\end{figure}
+
+\paragraph{Macierz pomyłek i obliczanie miar jakości}
+
+Wyznaczono macierz $\mConfusionMatrix$, w której wartość elementu $\ConfusionMatrix_{ij}$ jest równa liczbie punktów, dla których oczekiwana etykieta ma wartość $i$ i przynależących do klastra $j$ wyznaczonego przez algorytm \MojAlg{}:
+\begin{align}
+\ConfusionMatrix_{ij} = \sum_{k=0}^{N} [x_{k} \in i \wedge x_{k} \in j].
+\end{align}
+%
+Sposób wyznaczenia tej macierzy przedstawiono również na pseudokodzie \ref{alg:calc_l_matrix}.
+
+Numeracja klastrów wyznaczonych przez algorytm \MojAlg{} może być inna od oczekiwanych etykiet ze względu na różną kolejność ich wyznaczenia. Wykorzystując algorytm przedstawiony na pseudokodzie \ref{alg:perm_l_matrix}, wyznaczono taką permutację wierszy i kolumn macierzy $\mConfusionMatrix$, która maksymalizuje wartości na przekątnej. 
+
+\begin{algorithm}[t]
+	\caption{Wyznaczenie macierzy $\mConfusionMatrix$}
+	\label{alg:calc_l_matrix}
+	\begin{algorithmic}[1]
+		\Require $\mClusterMembership$: macierz $\nX \times \nX$ przynależności danych do klastrów
+		\Require $\wEtykieta_{r}$: wektor o długości $\nX$ etykiet wyznaczonych dla wszystkich punktów przez algorytm ostry
+		\Require $\wEtykieta_{g}$: wektor o długości $\nKlaster$ etykiet wyznaczonych dla wszystkich granul przez algorytm \MojAlg
+		\Procedure{CalculateLMatrix}{$\mClusterMembership, \wEtykieta_{r}, \wEtykieta_{g}$}
+		\State $\mConfusionMatrix \gets$ macierz zerowa $\nKlaster \times \nKlaster$
+		\For{$i = 1$ to $\nX$}
+		\State $\ClusterMembership \gets$ \Call{argmax}{$\mClusterMembership[i]$} \Comment{Indeks identyfikujący granulę, dla której przynależność punktu $i$-tego jest największa}
+		\State inkrementacja $\mConfusionMatrix[\wEtykieta_{r}[i]][\wEtykieta_{g}[\ClusterMembership]]$
+		\EndFor
+		\State \Return $\mConfusionMatrix$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+	\caption{Permutacja macierzy $\mConfusionMatrix$}
+	\label{alg:perm_l_matrix}
+	\begin{algorithmic}[1]
+		\Require $\mConfusionMatrix$: macierz $\nKlaster \times \nKlaster$, wyznaczona przez algorytm \ref{alg:calc_l_matrix}
+		\Procedure{PermuteLMatrix}{$\mConfusionMatrix$}
+		\For{$i = 1$ to $\nKlaster - 1$}
+		\State $(w, k) \gets$ $\arg\max$($\mConfusionMatrix$[i:][i:]) \Comment{Indeksy wiersza i kolumny, w których znajduje się maksymalna wartość podmacierzy $\mConfusionMatrix[i:][i:]$}
+		\State $w \gets w + i$
+		\State $k \gets k + i$
+		\State zamiana kolejnością wiersza $i$-tego i $w$-tego macierzy $\mConfusionMatrix$
+		\State zamiana kolejnością kolumny $i$-tej i $k$-tej macierzy $\mConfusionMatrix$
+		\EndFor
+		\State \Return $\mConfusionMatrix$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Z uzyskanej w ten sposób macierzy pomyłek, dokładność wyznaczana jest jako suma wartości na przekątnej macierzy podzielona przez całkowitą liczbę danych:
+\begin{align}
+\accuracy = \frac{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{ii}}{N}
+\end{align}
+lub
+\begin{align}
+\accuracy = \frac{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{ii}}{\sum_{i=0}^{\nKlaster}\sum_{j=0}^{\nKlaster}\ConfusionMatrix_{ij}},
+\end{align}
+gdzie $\nKlaster$ to liczba klastrów.
+
+Trafność ($\recall$) i precyzja ($\precision$) wyznaczane są najpierw osobno dla każdego klastra $\klaster$:
+%
+\begin{align}
+	\recall_{\klaster} = \frac{\ConfusionMatrix_{\klaster\klaster}}{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{\klaster i}},
+	\label{eq:recall}
+\end{align}
+%
+\begin{align}
+	\precision_{\klaster} = \frac{\ConfusionMatrix_{\klaster\klaster}}{\sum_{i=0}^{\nKlaster}\ConfusionMatrix_{i \klaster}}.
+	\label{eq:precision}
+\end{align}
+%
+Trafność i precyzja dla całości wyników otrzymywane są jako średnia arytmetyczna metryk częściowych:
+\begin{align}
+	\recall = \frac{\sum_{i=0}^{\nKlaster}\recall_{i}}{\nKlaster},
+\end{align}
+\begin{align}
+	\precision = \frac{\sum_{i=0}^{\nKlaster}\precision_{i}}{\nKlaster}.
+\end{align}
+%
+
+Sposób obliczenia metryk jakości przedstawia również pseudokod \ref{alg:calc_quality}.
+
+\begin{algorithm}[t]
+	\caption{Wyznaczenie dokładności, trafności i precyzji}
+	\label{alg:calc_quality}
+	\begin{algorithmic}[1]
+		\Require $\mConfusionMatrix$: macierz $\nKlaster \times \nKlaster$, otrzymana na podstawie algorytmu \ref{alg:perm_l_matrix}
+		\Require $\nX$: liczba danych
+		\Procedure{CalculateQualityMetrics}{$\mConfusionMatrix, \nX$}
+		\State $diag \gets 0$ \Comment{Suma wartości na przekątnej macierzy $\mConfusionMatrix$}
+		\State $\recall \gets 0$
+		\State $\precision \gets 0$
+		\State $suma\_\recall \gets $ sumy wartości dla każdego wiersza macierzy $\mConfusionMatrix$
+		\State $suma\_\precision \gets $ sumy wartości dla każdej kolumny macierzy $\mConfusionMatrix$
+		\For{$i = 1$ to $\nKlaster$}
+		\State $diag \gets diag + \mConfusionMatrix[i, i]$
+		\If {$suma\_\recall[i] > 0 $}
+			\State $\recall \gets \recall + \mConfusionMatrix[i, i] / suma\_\recall[i]$
+		\EndIf
+		\If {$suma\_\precision[i] > 0 $}
+			\State $\precision \gets \precision + \mConfusionMatrix[i, i] / suma\_\precision[i]$
+		\EndIf
+		\EndFor
+		\State $\accuracy \gets diag / \nX$
+		\State $\recall \gets \recall / \nKlaster$
+		\State $\precision \gets \precision / \nKlaster$
+		\State \Return $\accuracy, \recall, \precision$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Jeżeli dane zawierają szum, może on być interpretowany na dwa sposoby w kontekście wyznaczania metryk:
+
+\begin{enumerate}
+	\item Szum nie jest brany pod uwagę, analizowane są jedynie dane niebędące szumem.
+	\item Szum uznawany jest za błędną klasyfikację. Aby skorygować wartość metryki o szum, należy pomnożyć ją przez odsetek punktów niebędących szumem w stosunku do całości danych. Na przykład, jeżeli początkowa wartość metryki wynosi $80\%$, a $40\%$ danych stanowi szum, to ostateczna wartość tej metryki będzie równa $80\% * (100\% - 40\%) = 48\%$.
+\end{enumerate}
+
+Oprócz niezależnych procentowych średnich wartości metryk dokładności, trafności i precyzji istotne jest, jakie są wyniki działania \MojAlg{} w porównaniu z algorytmem ostrym. W tym celu wykorzystano algorytm \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} aby zgrupować dane oryginalne, a także środki klastrów (w liczebnościach 50, 100, 200) wyznaczonych przez algorytm rozmytych $c$-średnich, bez uwzględnienia rozmycia, czyli macierzy $\mClusterMembership$.
+
+Do wyznaczenia metryk jakości dla tych badań, również wykorzystano algorytmy \ref{alg:calc_l_matrix}, \ref{alg:perm_l_matrix} oraz \ref{alg:calc_quality}. W przypadku oryginalnych danych, wejściem algorytmu \ref{alg:calc_l_matrix} były etykiety wyznaczone przez algorytm \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring}. Dla środków klastrów algorytmu rozmytych $c$-średnich, najpierw wyznaczono przynależności punktów do tych klastrów na podstawie macierzy $\mClusterMembership$ (tak samo jak dla \MojAlg{}).
+ 
+\section{Wyniki}
+
+\subsection{Czas grupowania}
+\label{sec:wyniki-czas}
+
+Algorytm \MojAlg{}, który wykorzystuje wstępną granulację FCM, ma znacząco mniejszy czas wykonania w stosunku do własnej implementacji algorytmu ostrego.
+Charakterystykę czasu wykonania algorytmów w zależności od liczby danych przedstawiono na rys. \ref{fig:comparing-times}.
+
+\begin{figure}
+\centering
+\includegraphics{./img/comparing_times.pdf}
+\caption{Charakterystyka czasu wykonania własnych implementacji algorytmów ostrego i rozmytego dla różnej liczby granul od liczby danych wejściowych.}
+\label{fig:comparing-times}
+\end{figure}
+
+
+Dla obydwu algorytmów, złożoność czasowa grupowania hierarchicznego jest sześcienna i wynosi dla algorytmu ostrego $O(\nX^{3})$, dla rozmytego $O(\nGranula^{3})$, gdzie liczba ziaren $\nGranula$ jest stała i zdecydowanie mniejsza od liczby danych ($\nGranula \ll \nX$).
+Złożoność czasowa algorytmu rozmytych $c$-średnich wynosi $O(\nX)$ , więc jest on mniej wrażliwy na zwiększanie rozmiaru danych wejściowych.
+
+Porównano również czas wykonania algorytmu \MojAlg{} z algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}, dla złożoności \SingleLinkage{}. Wyniki przedstawiono na rys. \ref{fig:comparing-times-sklearn}.
+
+\begin{figure}
+\centering
+\includegraphics{./img/comparing_times_sklearn.pdf}
+\caption{Charakterystyka czasu wykonania algorytmu ostrego \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} i własnej implementacji algorytmu rozmytego dla różnej liczby granul od liczby danych wejściowych.}
+\label{fig:comparing-times-sklearn}
+\end{figure}
+
+Wykres pokazuje, że dla małych danych (do \num{10000} punktów), najkrócej wykonuje się algorytm biblioteczny -- klasteryzacja algorytmem rozmytych $c$-średnich trwa stosunkowo długo, mimo złożoności liniowej. Powyżej \num{10000} danych algorytm \MojAlg{} dla 50 granul wykonywany jest szybciej niż algorytm ostry. Od \num{40000} danych, jest on szybszy dla wszystkich badanych liczebności granul. Oznacza to, że mimo gorszej złożoności samego algorytmu hierarchicznego \MojHierAlg{}, całość algorytmu rozmytego jest lepsza pod względem czasu wykonania od algorytmu \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring}, powyżej pewnej liczności danych.
+
+Czasy wykonania algorytmu rozmytego \MojAlg{} na dużych danych przedstawia rys. \ref{fig:gowalla-times}. W przypadku 200 granul zauważyć można zaburzenie liniowości wyników. Spowodowane jest zbyt dużym wykorzystaniem pamięci: sama macierz $\mClusterMembership$ ma wymiary $\nX \times \nGranula$, czyli dla 4 milionów danych wejściowych zawiera ona 800 milionów liczb zmiennoprzecinkowych. Z tego samego powodu możliwe było wykonanie algorytmu na 6 milionach danych tylko dla 50 granul -- dla większej liczby nie wystarczyło pamięci.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/gowalla_times.pdf}
+\caption{Charakterystyka czasu wykonania algorytmu rozmytego dla różnej liczby granul od liczby danych wejściowych dla dużych danych.}
+\label{fig:gowalla-times}
+\end{figure}
+
+\subsection{Jakość grupowania}
+\label{sec:wyniki-jakosc}
+
+Na wykresach wyników grupowania hierarchicznego metodą rozmytą punkty szare odpowiadają współrzędnym oryginalnych danych. Wyjątkiem są wykresy danych \spheres, gdzie oryginalne punkty pominięto, aby zachować czytelność wykresu. Punkty kolorowe odpowiadają środkom granul, gdzie środki o tym samym kolorze należą do tego samego klastra. 
+Elipsy (elipsoidy dla \spheres) w kolorze różowym wizualizują rozmycie granul, gdzie długość każdej półosi jest równa dwukrotności rozmycia w danym wymiarze. Mnożnik ten został wybrany ze względu na dobrą czytelność wynikowych wykresów.
+
+Wszystkie wykresy zamieszczono w katalogu \texttt{img/granule\_visualization}, pogrupowane w podkatalogach według kształtu danych (\blobs{}, \circles{}, \corners{}, \crescents{}, \laguna{} i \spheres{}). Nazwa każdego pliku ma format \texttt{[kształt]\-[licz\-ba\_da\-nych]\-[re\-lac\-ja]\_[łącz\-ność].pdf}, gdzie ,,relacja'': \texttt{t} (trójkątna), \texttt{e} (wykładnicza) lub \texttt{g} (gaussowska), a ,,łączność'': \texttt{s} (\SingleLinkage{}) lub \texttt{c} (\CompleteLinkage{}).
+
+Dla niektórych wyników utworzono również wykresy na podstawie sumarycznej przynależności punktów do granul z danego klastra. Mają postać kilku podwykresów, gdzie punktami w kolorze niebieskim oznaczono dane oryginalne. Dla każdego podwykresu opisanego jako ,,Klaster $\Klaster$'', dla każdego punktu $\X$ wyznaczana jest suma $\sum_{\Granula = 0}^{\nGranula} \ClusterMembership_{\X\Granula} \cdot [ \Granula \in \Klaster ]$, gdzie zapis $[P]$ wartościowany jest do 1, gdy warunek $P$ jest spełniony, w przeciwnym razie do 0 (wartość $\ClusterMembership_{\X\Granula}$ jest wliczana do sumy, gdy granula $\Granula$ należy do klastra $\Klaster$). Wyższe wartości tej sumy oznaczają większą przynależność punktu do tego klastra. Im wyższa wartość sumy, tym ciemniejszy kolor punktu na wykresie.
+
+\subsubsection{Dane syntetyczne}
+\label{sec:wyniki-jakosc-generowane}
+
+Wyniki dokładności, trafności i precyzji otrzymane na podstawie ostrego algorytmu hierarchicznego \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} grupującego dane oryginalne i środki klastrów wyznaczonych przez algorytm rozmytych $c$-średnich przedstawiają odpowienio tabele \ref{id:tab:acc-sl-strict}, \ref{id:tab:rec-sl-strict} i \ref{id:tab:prec-sl-strict} dla łączności \SingleLinkage{} oraz \ref{id:tab:acc-cl-strict}, \ref{id:tab:rec-cl-strict} i \ref{id:tab:prec-cl-strict} dla łączności \CompleteLinkage{}.
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych algorytmem ostrym o łączności \SingleLinkage{}}
+\label{id:tab:acc-sl-strict}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{dokładność}\\
+            \cmidrule{2-5}
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
+\midrule
+	    \blobs\ & 0.9899 & 0.9999 & 0.9939 & 0.9696 \\
+		\circles\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\corners\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\crescents\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\laguna\ & 0.9125 & 0.9997 & 0.9998 & 0.9999 \\
+		\spheres\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych algorytmem ostrym o łączności \SingleLinkage{}}
+\label{id:tab:rec-sl-strict}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{trafność}\\
+            \cmidrule{2-5}
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
+\midrule
+	    \blobs\ & 0.8333 & 1.0000 & 0.9571 & 0.7487 \\
+		\circles\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\corners\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\crescents\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\laguna\ & 0.7084 & 0.9990 & 0.9995 & 0.9997 \\
+		\spheres\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych algorytmem ostrym o łączności \SingleLinkage{}}
+\label{id:tab:prec-sl-strict}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{precyzja}\\
+            \cmidrule{2-5}
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
+\midrule
+	    \blobs\ & 0.8295 & 0.9990 & 0.9392 & 0.7282 \\
+		\circles\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\corners\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\crescents\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+		\laguna\ & 0.8375 & 0.9996 & 0.9998 & 0.9998 \\
+		\spheres\ & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych algorytmem ostrym o łączności \CompleteLinkage{}}
+\label{id:tab:acc-cl-strict}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{dokładność}\\
+            \cmidrule{2-5}
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
+\midrule
+	    \blobs\ & 0.7261 & 0.9999 & 0.8956 & 0.7237 \\
+		\circles\ & 0.5620 & 0.5533 & 0.5330 & 0.5627 \\
+		\corners\ & 0.5265 & 0.4818 & 0.5053 & 0.5130 \\
+		\crescents\ & 0.7986 & 0.8012 & 0.8032 & 0.7822 \\
+		\laguna\ & 0.4508 & 0.4875 & 0.4653 & 0.4664 \\
+		\spheres\ & 0.5852 & 0.5712 & 0.5650 & 0.6615 \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych algorytmem ostrym o łączności \CompleteLinkage{}}
+\label{id:tab:rec-cl-strict}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{trafność}\\
+            \cmidrule{2-5}
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
+\midrule
+	    \blobs\ & 0.7825 & 1.0000 & 0.8822 & 0.9041 \\
+		\circles\ & 0.4900 & 0.4940 & 0.4876 & 0.5071 \\
+		\corners\ & 0.5265 & 0.4818 & 0.5053 & 0.5130 \\
+		\crescents\ & 0.7986 & 0.8012 & 0.8033 & 0.7822 \\
+		\laguna\ & 0.5447 & 0.6026 & 0.4856 & 0.5072 \\
+		\spheres\ & 0.5473 & 0.3729 & 0.4805 & 0.5897 \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych algorytmem ostrym o łączności \CompleteLinkage{}}
+\label{id:tab:prec-cl-strict}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{precyzja}\\
+            \cmidrule{2-5}
+	kształt & \multicolumn{1}{c}{dane oryginalne} &  \multicolumn{1}{c}{50 granul} & \multicolumn{1}{c}{100 granul} & \multicolumn{1}{c}{200 granul} \\
+\midrule
+	    \blobs\ & 0.6054 & 0.9990 & 0.8753 & 0.6591 \\
+		\circles\ & 0.4881 & 0.4948 & 0.4880 & 0.5052 \\
+		\corners\ & 0.4956 & 0.4779 & 0.4631 & 0.4828 \\
+		\crescents\ & 0.8372 & 0.8072 & 0.8285 & 0.8093 \\
+		\laguna\ & 0.3984 & 0.4302 & 0.3561 & 0.3804 \\
+		\spheres\ & 0.5143 & 0.4480 & 0.4891 & 0.5324 \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\paragraph{Kształt danych}
+
+Średnią dokładność grupowania danych w zależności od ich kształtu dla łączności \SingleLinkage{} i \CompleteLinkage{} przedstawiono w tabeli \ref{id:tab:acc-ksztalt}, trafność -- w tabeli \ref{id:tab:rec-ksztalt}, a precyzję -- w tabeli \ref{id:tab:prec-ksztalt}.
+
+W przypadku \SingleLinkage{}, najlepszą średnią dokładność, trafność i precyzję zaobserwowano dla danych \circles{}. Dane \corners\ mają najgorszą dokładność, a dane \blobs\ -- najgorszą trafność i precyzję. 
+
+Co istotne, dla większości plików wejściowych, za wyjątkiem niektórych danych \blobs{} i \laguna{}, maksymalne wartości wszystkich metryk jakości wynosi 100\%. Oznacza to, że istnieje przynajmniej jedna taka kombinacja parametrów (typu relacji, liczby granul, parametru $\xi$), dla których grupowanie przebiega w pełni zgodnie z oczekiwaniami.
+
+%Wyniki przeanalizowano również na podstawie wykresów.
+
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności}
+\label{id:tab:acc-ksztalt}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{2}{c}{dokładność}\\
+            \cmidrule{2-3}
+	kształt &  \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	    \blobs\  & 0.9874 & 0.8758 \\
+		\circles\ & 0.9982 & 0.5738 \\
+		\corners\  & 0.9485 & 0.5167 \\
+		\crescents\  & 0.9943 & 0.7977 \\
+		\laguna\  & 0.9876 & 0.4685 \\
+		\spheres\  & 0.9876 & 0.7056 \\
+\bottomrule
+\end{tabular}
+\end{table}
+%
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności}
+\label{id:tab:rec-ksztalt}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{2}{c}{trafność}\\
+            \cmidrule{2-3}
+	kształt & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	    \blobs\  & 0.8846 & 0.8968 \\
+		\circles\ & 0.9971 & 0.4970 \\
+		\corners\  & 0.9485 & 0.5167 \\
+		\crescents\  & 0.9943 & 0.7977 \\
+		\laguna\  & 0.9625 & 0.5571 \\
+		\spheres\  & 0.9512 & 0.4086 \\
+\bottomrule
+\end{tabular}
+\end{table}  
+%
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności}
+\label{id:tab:prec-ksztalt}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{2}{c}{precyzja}\\
+            \cmidrule{2-3}
+	kształt & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	    \blobs\  & 0.8727 & 0.8325 \\
+		\circles\ & 0.9984 & 0.4947 \\
+		\corners\  & 0.9523 & 0.4840 \\
+		\crescents\  & 0.9964 & 0.8207 \\
+		\laguna\  & 0.9812 & 0.4003 \\
+		\spheres\  & 0.9480 & 0.4442 \\
+\bottomrule
+\end{tabular}
+\end{table}  
+%
+\subparagraph{\blobs{}}
+Wykresy wyników grupowania danych \blobs\  (rys. \ref{fig:blobs1000e}) pokazują, że wysoka dokładność uzyskana dla nich z macierzy pomyłek nie przekłada się na zgodność wyników z oczekiwaniami.
+Ze względu na dużą dysproporcję danych pomiędzy trzema klastrami ($48:1:1$), algorytm rozmytych $c$-średnich często traktuje dwa mniejsze z nich jako szum i nie tworzy dla nich granul. Zawierają one jednak jedynie 4\% danych, dlatego dokładność grupowania pozostaje wysoka. 
+Trafność i precyzja lepiej odzwierciedlają zgodność z oczekiwaniami -- są znacznie niższe od dokładności. Mniejsze klastry mają tę samą wagę, co większy klaster, dlatego niepoprawne grupowania wyraźnie wpływają na wartość metryki.
+Jako że błędy wynikają z klasteryzacji FCM, wyniki uzyskane dla grupowania samych środków granul są bardzo zbliżone do uzyskanych przy pomocy \MojAlg{}.
+
+Jak pokazuje tabela \ref{id:tab:blobs-max-quality}, dla niektórych liczebności danych nie istnieje kombinacja parametrów, dla której wartości metryk jakości wynoszą 100\%. W tych przypadkach granule wyznaczane są w poprawnych miejscach, natomiast pojedyncze punkty oryginalnych danych zostają przypisane do niepoprawnej granuli. Dla tych liczebności, wartości metryk otrzymane przez algorytm ostry również nie osiągają 100\%.
+
+\begin{table}
+\centering
+\caption{Maksymalne wartości metryk jakości dla danych \blobs{} przy łączności \SingleLinkage{}.}
+\label{id:tab:blobs-max-quality}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{3}{c}{jakość}\\
+            \cmidrule{2-4}
+	rozmiar danych & \multicolumn{1}{c}{dokładność} &  \multicolumn{1}{c}{trafność} & \multicolumn{1}{c}{precyzja} \\
+\midrule
+	    1000  & 1.0000 & 1.0000 & 1.0000 \\
+		2000 & 1.0000 & 1.0000 & 1.0000 \\
+		5000  & 0.9998 & 0.9999 & 0.9967 \\
+		\num{10000}  & 1.0000 & 1.0000 & 1.0000 \\
+		\num{20000}  & 1.0000 & 1.0000 & 1.0000 \\
+		\num{30000}  & 0.9999 & 1.0000 & 0.9989 \\
+		\num{40000}  & 1.0000 & 1.0000 & 1.0000 \\
+		\num{50000}  & 0.9998 & 1.0000 & 0.9997 \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\subparagraph{\circles{}}
+Dane \circles\ (rys. \ref{fig:circles50000e}) mają najwyższe wyniki dokładności, trafności i precyzji. Dla mniejszej liczby ($\nGranula = 50$) rozmyte odległości między granulami położonymi na zewnętrznym okręgu są większe niż między okręgiem zewnętrznym a wewnętrznym, jedyne błędy grupowania pojawiają się dla tej liczebności granul, dla wysokich wartości parametru $\xi$ ($\xi \in \{\num{0.9}, \num{0.95}\}$). W znacznej większości przypadków, dokładność grupowania wynosi 100\%, tak jak dla grupowania ostrego. Okrąg zewnętrzny jest też bardziej liczny niż wewnętrzny (proporcja 7:3). Dysproporcja ta nie jest jednak tak duża, jak w przypadku \blobs{}, algorytm rozmytych $c$-średnich tworzy granule w równomiernych odstępach.
+
+\subparagraph{\corners{}}
+Klastry dla danych \corners\  mają nierównomierną gęstość, przez co algorytm rozmytych $c$-średnich tworzy więcej granul bliżej środka układu współrzędnych (rys. \ref{fig:corners1000g}).
+Odległości między granulami położonymi na ,,ramionach'' i w ,,środkach'' klastrów są na tyle duże, że rozmyte odległości ,,środków'' różnych klastrów mogą być od nich mniejsze. Algorytm \MojAlg{} osiąga więc średnio gorsze wyniki niż algorytm ostry, choć wiele kombinacji parametrów pozwala na uzyskanie 100-procentowej dokładności.
+Wszystkie klastry mają tę samą liczebność, wartości dokładności, trafności i precyzji są zbliżone do siebie.
+
+\subparagraph{\crescents{}}
+Dane \crescents\  tworzą dwa klastry o identycznej liczebności i gęstości, dzięki czemu dokładność, trafność i precyzja ich grupowania są prawie najlepsze (rys. \ref{fig:crescents5000e}). Ze względu na bliskie położenie końców łuków, błędy wciąż mogą się pojawić -- koniec jednego łuku złączony zostaje z łukiem drugim. Dzieje się tak tylko dla bardzo wysokich wartości parametru $\xi$ -- $\num{0.9}$ i $\num{0.95}$.
+
+\subparagraph{\laguna{}}
+Dla danych \laguna\, błędy mogą pojawić się, gdy pojedyncze granule utworzone zostają w większej odległości od środkowego klastra, do którego oczekiwane jest, że powinny należeć. Punkt taki może wtedy zostać zakwalifikowany, jako osobny klaster, co na rysunku \ref{fig:laguna1000e} pokazuje przykład dla 50 granul i $\xi=\num{0.9}$. Podobny błąd przedstawia wykres dla 200 granul i $\xi=\num{0.9}$ -- pewna grupa punktów na otaczającym okręgu jest na tyle oddalona od pozostałych, że zostaje uznana za osobny klaster, jeden ze środkowych klastrów jest łączony z pozostałą częścią okręgu. 
+
+Powyżej liczebności \num{20000} punktów włącznie, dokładność nigdy nie osiąga $100\%$ (tab. \ref{id:tab:laguna-max-quality}), jednak najczęściej wynosi powyżej $\num{99.9}\%$. Jak zaznaczono w sekcji dotyczącej etykietowania danych (sekcja na stronie \pageref{sec:wyniki-etykietowania}), środkowe klastry są na tyle zbliżone do siebie, że na podstawie wykresu nie można definitywnie określić, które punkty pomiędzy nimi należą do którego z nich. Pojedyncze punkty mogą więc być klasyfikowane niepoprawnie z punktu widzenia przypisanych do nich etykiet. 
+
+Ilustrują to wykresy \ref{fig:laguna1000-blue} oraz \ref{fig:laguna40000-blue}. Na rys. \ref{fig:laguna1000-blue} punktów jest jedynie 1000 i wszystkie klastry są wyraźnie oddzielone od siebie. Każdy punkt wyraźnie należy do granul jednego klastra. Na rys. \ref{fig:laguna40000-blue} punktów jest \num{40000}. Klastry środkowe (o numerach 1 i 2) pokrywają się w pobliżu współrzędnych (0, 0). Punkty w bliskim otoczeniu tych współrzędnych przynależą więc w podobnym stopniu do klastra 1 i klastra 2. Ponadto, punkty położone na zewnątrz klastrów 1 i 2 są położone blisko otaczającego je okręgu, oznaczonego jako klaster 0. Można zauważyć ich wysoki stopień przynależności do tego klastra.
+
+Dzięki temu nałożeniu się klastrów, jakość grupowania tych danych jest lepsza, gdy wykorzystany zostanie algorytm \MojAlg{}, niż gdy zgrupowane zostaną dane oryginalne. Bez wstępnej klasteryzacji algorytmem rozmytych $c$-średnich, środkowe klastry są łączone ze sobą.
+
+Proporcja danych wynosi 8:1:1 (otaczający okrąg ma większą liczebność), jednak jakość grupowania jest na tyle wysoka, że zarówno dokładność, jak i trafność i precyzja mają podobne wartości.
+
+\begin{table}
+\centering
+\caption{Maksymalne wartości metryk jakości dla danych \laguna{} przy łączności \SingleLinkage{}.}
+\label{id:tab:laguna-max-quality}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{3}{c}{jakość}\\
+            \cmidrule{2-4}
+	rozmiar danych & \multicolumn{1}{c}{dokładność} &  \multicolumn{1}{c}{trafność} & \multicolumn{1}{c}{precyzja} \\
+\midrule
+	    1000  & 1.0000 & 1.0000 & 1.0000 \\
+		2000 & 1.0000 & 1.0000 & 1.0000 \\
+		5000  & 1.0000 & 1.0000 & 1.0000 \\
+		\num{10000}  & 1.0000 & 1.0000 & 1.0000 \\
+		\num{20000}  & 0.9999 & 0.9997 & 0.9998 \\
+		\num{30000}  & 0.9999 & 0.9998 & 0.9999 \\
+		\num{40000}  & 0.9999 & 0.9998 & 0.9998 \\
+		\num{50000}  & 0.9997 & 0.9990 & 0.9997 \\
+\bottomrule
+\end{tabular}
+\end{table}  
+
+\subparagraph{\spheres{}}
+W przypadku danych \spheres\  (rys. \ref{fig:spheres5000g}) można zauważyć, że wyniki poprawiają się wraz ze zwiększeniem liczby granul i zmniejszeniem wartości parametru $\xi$. Proporcja liczebności klastrów wynosi 9:1, trafność i precyzja są o około 4 punkty procentowe mniejsze od dokładności.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/blobs1000e_s.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \blobs\  o~rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+\label{fig:blobs1000e}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/circles50000e_s.png}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze \num{50000} i euklidesowej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+\label{fig:circles50000e}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/corners1000g_s.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \corners\  o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+\label{fig:corners1000g}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/crescents5000e_s.png}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 5000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+\label{fig:crescents5000e}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/laguna1000e_s.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+\label{fig:laguna1000e}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/laguna1000_blue.png}
+\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze 1000.}
+\label{fig:laguna1000-blue}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/laguna40000_blue.png}
+\caption{Przynależność punktów do klastrów dla danych \laguna{} o rozmiarze \num{40000}.}
+\label{fig:laguna40000-blue}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/spheres5000g_s.pdf}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 5000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \SingleLinkage{}.}
+\label{fig:spheres5000g}
+\end{figure}
+
+\subparagraph{\CompleteLinkage{}}
+Najlepsze wyniki dla łączności \CompleteLinkage{} uzyskano dla danych \blobs{}. Inaczej jest w przypadku najgorszych wyników: dane \laguna\ mają najgorszą dokładność i precyzję, a dane \spheres\ -- najgorszą trafność. Wszystkie wyniki są znacznie gorsze od uzyskanych dla \SingleLinkage{}, za wyjątkiem trafności dla danych \blobs{}.
+%
+Jak widać na wykresach danych \blobs{} (rys. \ref{fig:blobs1000tc}), podobnie jak dla łączności \SingleLinkage{}, jeżeli granule zostaną wyznaczone przez algorytm rozmytych $c$-średnich we wszystkich trzech docelowych klastrach, to grupowanie \MojHierAlg{} przebiega poprawnie. Z kolei jeżeli granule utworzone zostaną tylko w największym z klastrów, to wyznaczone zostają w nim trzy klastry o podobnych liczebnościach. W takich przypadkach dokładność, trafność i precyzja grupowania będą niższe, niż dla \SingleLinkage{}, gdzie prawie wszystkie granule przypisywane są do tego samego klastra.
+
+Mimo różnic w wartościach miar jakości, wnioski dla grupowania danych \circles{} (rys. \ref{fig:circles1000gc}), \corners{} (rys. \ref{fig:corners1000ec}), \crescents{} (rys. \ref{fig:crescents1000tc}), \laguna{} (rys. \ref{fig:laguna1000gc}) i \spheres{} (rys. \ref{fig:spheres1000ec}) są podobne. Algorytm \CompleteLinkage{}, jak opisano w podsekcji \ref{sec:complete-linkage}, dobrze znajduje gęste, kuliste klastry. Wymienione dane mają inne kształty, widać, że znalezione przez algorytm klastry są w przybliżeniu owalne lub elipsoidalne. Kształt danych wydaje się nie być brany pod uwagę przez algorytm.
+
+Wyniki te należy też analizować w porównaniu z wynikami algorytmu ostrego (tabele \ref{id:tab:acc-cl-strict}, \ref{id:tab:rec-cl-strict} i \ref{id:tab:prec-cl-strict}). Dla kształtów danych \blobs{} oraz \spheres{} nastąpiła znacząca poprawa dokładności, trafności i precyzji. Dla pozostałych danych wyniki są zbliżone do wyników algorytmu ostrego.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/blobs1000t_c.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \blobs\  o~rozmiarze 1000 i trójkątnej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:blobs1000tc}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/circles1000g_c.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \circles\ o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:circles1000gc}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/corners1000e_c.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \corners\  o rozmiarze 1000 i wykładniczej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:corners1000ec}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/crescents1000t_c.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \crescents\  o rozmiarze 1000 i trójkątnej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:crescents1000tc}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/laguna1000g_c.pdf}
+\caption{Efekty wykonania grupowania \MojAlg\ dla danych \laguna\  o rozmiarze 1000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:laguna1000gc}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/spheres1000e_c.pdf}
+\caption{Efekty wykonania grupowania hierarchicznego granul dla danych \spheres\  o rozmiarze 5000 i gaussowskiej relacji między liczbami rozmytymi, przy łączności \CompleteLinkage{}.}
+\label{fig:spheres1000ec}
+\end{figure}
+
+\subparagraph{Przynależność określona na podstawie relacji $\ast$-podobieństwa}
+Wyniki dla pomiarów, gdzie przynależność punktów do granul określono na podstawie relacji $\ast$-podobieństwa przedstawiono w tabelach \ref{id:tab:acc-ksztalt-shape-dep}, \ref{id:tab:rec-ksztalt-shape-dep} i \ref{id:tab:prec-ksztalt-shape-dep}. Dodatkowo, gdy szum nie jest uwzględniany, dla każdego pliku wejściowego istnieje taka kombinacja parametrów, dla której wartości metryk wynoszą 100\%. Dla relacji trójkątnej, tylko pewien podzbiór punktów najbliżej środków granul będzie uwzględniony, jest więc mniejsza szansa na niezgodne z oczekiwaniami przypisanie do granuli. Jak pokazuje rys. \ref{fig:shape-dep}, wiąże się to jednak z utratą dużego odsetka informacji.
+
+Gdy szum nie jest uwzględniany w obliczaniu metryk, ich wartości są zbliżone do metryk dla przynależności określonej na podstawie macierzy $\mClusterMembership$ (tabele \ref{id:tab:acc-ksztalt}, \ref{id:tab:rec-ksztalt} i \ref{id:tab:prec-ksztalt}), natomiast gdy jest on uwzględniony, wyniki są niższe o nawet kilkanaście punktów procentowych.
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
+\label{id:tab:acc-ksztalt-shape-dep}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{dokładność}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	kształt & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	    \blobs\  & 0.9900 & 0.8755 & 0.8639 & 0.7609 \\
+		\circles\ & 0.9982 & 0.5596 & 0.8136 & 0.4623 \\
+		\corners\  & 0.9488 & 0.5248 & 0.7700 & 0.4285 \\
+		\crescents\  & 0.9943 & 0.7869 & 0.8188 & 0.6522 \\
+		\laguna\  & 0.9870 & 0.4748 & 0.7995 & 0.3827 \\
+		\spheres\  & 0.9871 & 0.6665 & 0.7806 & 0.5485 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
+\label{id:tab:rec-ksztalt-shape-dep}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{trafność}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	kształt & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	    \blobs\  & 0.8585 & 0.8508 & 0.7474 & 0.7435 \\
+		\circles\ & 0.9971 & 0.4976 & 0.8125 & 0.4056 \\
+		\corners\  & 0.9485 & 0.5229 & 0.7699 & 0.4277 \\
+		\crescents\  & 0.9943 & 0.7868 & 0.8188 & 0.6521 \\
+		\laguna\  & 0.9629 & 0.5566 & 0.7769 & 0.4513 \\
+		\spheres\  & 0.9512 & 0.4083 & 0.7450 & 0.3251 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych w zależności od ich kształtu i wykorzystanej łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
+\label{id:tab:prec-ksztalt-shape-dep}
+\begin{tabular}{l S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{precyzja}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	kształt & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	    \blobs\  & 0.8525 & 0.8278 & 0.7412 & 0.7179 \\
+		\circles\ & 0.9984 & 0.4949 & 0.8138 & 0.4034 \\
+		\corners\  & 0.9524 & 0.4894 & 0.7740 & 0.4006 \\
+		\crescents\  & 0.9962 & 0.8105 & 0.8207 & 0.6718 \\
+		\laguna\  & 0.9768 & 0.4077 & 0.7920 & 0.3277 \\
+		\spheres\  & 0.9477 & 0.4151 & 0.7418 & 0.3411 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subparagraph{Podsumowanie}
+
+Podobnie jak w przypadku algorytmu ostrego, \MojAlg{} osiąga znacznie lepsze wyniki jakości grupowania wykorzystując łączność \SingleLinkage{} niż \CompleteLinkage{}. W większości przypadków, algorytm rozmyty jest w stanie osiągnąć te same, a nawet lepsze wyniki niż algorytm ostry. 
+
+Poprawa w szczególności zachodzi w sytuacji, gdy oczekiwane klastry zaczynają się pokrywać i istnieją punkty bliskie różnym grupom, na przykład dla danych \laguna{} o dużych liczebnościach. Dla algorytmu ostrego, punkt taki może spowodować złączenie różnych klastrów, co pokazano na rys. \ref{fig:single-linkage-close-clusters-example}. W przypadku algorytmu rozmytego granule są uogólnieniem grupy danych, co eliminuje takie pojedyncze punkty. Ponadto, algorytm rozmytych $c$-średnich wyznacza granule bliżej środków klastrów, co dodatkowo pomaga w poprawnym grupowaniu.
+
+Z drugiej strony, algorytm FCM może wprowadzić błędy w fazie przygotowania danych, jak pokazał przypadek danych \blobs{}. Algorytm może błędnie wyznaczyć granule, gdy dane są bardzo niezrównoważone pod względem liczebności klastrów.
+
+\paragraph{Liczba ziaren}
+
+Średnią dokładność, trafność i precyzję grupowania danych w zależności od liczby granul przedstawiono odpowiednio w tabelach \ref{id:tab:acc-gn}, \ref{id:tab:rec-gn} i \ref{id:tab:prec-gn}. W przypadku łączności \SingleLinkage{} najlepsze wyniki osiągane są dla 100 granul, a dla \CompleteLinkage{} -- dla 50.
+
+Dla danych takich, jak \circles{} (rys. \ref{fig:circles50000e}) czy \crescents{} (rys. \ref{fig:crescents5000e}), gdzie klastry mają podobną liczebność i gęstość, zwiększenie liczby granul powoduje ich zagęszczenie, przy równomiernym rozłożeniu.
+
+Inaczej jest w przypadku danych \blobs{} (rys. \ref{fig:blobs1000e}). Dla większych liczebności granul, możliwe jest, że algorytm rozmytych $c$-średnich nie wyznaczy ani jednego środka granuli w dwóch mniejszych klastrach, przez co niemożliwe jest poprawne grupowanie. Tak samo dzieje się, gdy pogrupowane zostaną same środki granul, bez uwzględnienia rozmycia. Jak można odczytać z rys. \ref{fig:blobs1000-blue}, w takim przypadku większość punktów zostanie zaklasyfikowane do tego samego klastra. 
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./img/blobs1000_blue.png}
+\caption{Przynależność punktów do klastrów dla danych \blobs{} o rozmiarze 1000.}
+\label{fig:blobs1000-blue}
+\end{figure}
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych w zależności od liczby granul i~łączności}
+\label{id:tab:acc-gn}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{2}{c}{dokładność}\\
+            \cmidrule{2-3}
+	liczba granul & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	50 & 0.9792 & 0.6768 \\
+	100 & 0.9872 & 0.6606 \\
+	200 & 0.9853 & 0.6317 \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych w zależności od liczby granul i~łączności}
+\label{id:tab:rec-gn}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{2}{c}{trafność}\\
+            \cmidrule{2-3}
+	liczba granul & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	50 & 0.9639 & 0.6270 \\
+	100 & 0.9700 & 0.6161 \\
+	200 & 0.9352 & 0.5937 \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych w zależności od liczby granul i~łączności}
+\label{id:tab:prec-gn}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{2}{c}{precyzja}\\
+            \cmidrule{2-3}
+	liczba granul & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	50 & 0.9658 & 0.6062 \\
+	100 & 0.9698 & 0.5859 \\
+	200 & 0.9389 & 0.5460 \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+\subparagraph{Podsumowanie}
+
+Choć wydawać by się mogło, że zwiększenie liczby granul, a tym samym liczby grupowanych danych, powinno poprawić jakość grupowania, wyniki klasteryzacji algorytmem 
+\MojAlg\
+%rozmytych $c$-średnich 
+są lepsze, gdy liczba granul jest mniejsza -- 50 lub 100. Gdy klastry mają kulisty kształt (\blobs{}, \laguna{}), granule wyznaczane są w ich środku, a im jest ich więcej, tym bardziej zagęszczone są w środku klastrów, co może powodować błędy obliczania przynależności danych bardziej oddalonych od tego centrum. Dodatkowo, w przypadku badanych danych, dla większej liczby granul bardziej prawdopodobne było błędne wyznaczenie granul przez algorytm FCM.
+
+\paragraph{Typu liczb rozmytych}
+
+Średnią dokładność grupowania danych w zależności od typu relacji między granulami dla różnych łączności przedstawiono w tabeli \ref{id:tab:acc-rt}, trafność -- w tabeli \ref{id:tab:rec-rt}, a precyzję -- w tabeli \ref{id:tab:prec-rt}.
+Wyniki w zależności od typu relacji są zbliżone, jednak najlepszą dokładność, trafność i precyzję odnotowano dla relacji trójkątnej i łączności \SingleLinkage{}. Wiąże się to ze skończonym nośnikiem liczb rozmytych.
+Jako że większość kształtów danych zawiera dysproporcje w liczebności, średnie wartości trafności i precyzji są niższe od odpowiadającym im wartościom dokładności.
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych w zależności od typu relacji i łączności}
+\label{id:tab:acc-rt}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{2}{c}{dokładność}\\
+            \cmidrule{2-3}
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	trójkątna & 0.9952 & 0.6513 \\
+	wykładnicza & 0.9780 & 0.6570 \\
+	gaussowska & 0.9785 & 0.6608 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych w zależności od typu relacji i~łączności}
+\label{id:tab:rec-rt}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{2}{c}{trafność}\\
+            \cmidrule{2-3}
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	trójkątna & 0.9776 & 0.6123 \\
+	wykładnicza & 0.9476 & 0.6117 \\
+	gaussowska & 0.9438 & 0.6130 \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych w zależności od typu relacji i~łączności}
+\label{id:tab:prec-rt}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{2}{c}{precyzja}\\
+            \cmidrule{2-3}
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	trójkątna & 0.9762 & 0.5784 \\
+	wykładnicza & 0.9517 & 0.5790 \\
+	gaussowska & 0.9466 & 0.5807 \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+Wyniki dla pomiarów, gdzie przynależność punktów do granul określono na podstawie relacji $\ast$-podobieństwa przedstawiono w tabelach \ref{id:tab:acc-rt-shape-dep}, \ref{id:tab:rec-rt-shape-dep} i \ref{id:tab:prec-rt-shape-dep}. Dla relacji wykładniczej i gaussowskiej nie występuje szum, dlatego wyniki nie różnią się, gdy zostanie uwzględniony. Gdy szumu nie ma, lub nie jest uwzględniony, wartości metryk są bardzo zbliżone do metryk dla przynależności określonej na podstawie macierzy $\mClusterMembership$. 
+
+W przypadku relacji trójkątnej, szum stanowi przeciętnie około 47\% danych -- wyniki, gdy zostaje on uwzględniony, są niemal o połowę niższe. 
+
+\begin{table}
+\centering
+\caption{Dokładność grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
+\label{id:tab:acc-rt-shape-dep}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{dokładność}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	trójkątna & 0.9965 & 0.6265 & 0.4669 & 0.2999 \\
+	wykładnicza & 0.9779 & 0.6570 & 0.9779 & 0.6570 \\
+	gaussowska & 0.9783 & 0.6607 & 0.9783 & 0.6607 \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+\begin{table}
+\centering
+\caption{Trafność grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
+\label{id:tab:rec-rt-shape-dep}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{trafność}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	trójkątna & 0.9671 & 0.5907 & 0.4461 & 0.2818 \\
+	wykładnicza & 0.9465 & 0.6092 & 0.9465 & 0.6092 \\
+	gaussowska & 0.9426 & 0.6116 & 0.9426 & 0.6116 \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+\begin{table}
+\centering
+\caption{Precyzja grupowania hierarchicznego danych w zależności od typu relacji i łączności, gdy przynależność określana jest na podstawie relacji $\ast$-podobieństwa}
+\label{id:tab:prec-rt-shape-dep}
+\begin{tabular}{r S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+\toprule
+            & \multicolumn{4}{c}{precyzja}\\
+            \cmidrule{2-5}
+			& \multicolumn{2}{c}{bez szumu} & \multicolumn{2}{c}{z szumem}\\
+            \cmidrule{2-5}
+	typ relacji & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} & \multicolumn{1}{c}{\SingleLinkage{}} &   \multicolumn{1}{c}{\CompleteLinkage{}} \\
+\midrule
+	trójkątna & 0.9659 & 0.5635 & 0.4457 & 0.2721 \\
+	wykładnicza & 0.9507 & 0.5789 & 0.9507 & 0.5789 \\
+	gaussowska & 0.9454 & 0.5804 & 0.9454 & 0.5804 \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+\subparagraph{Podsumowanie}
+
+Najwyższe wartość metryk jakości przy grupowaniu algorytmem \SingleLinkage{} uzyskuje się dla relacji trójkątnej, choć relacja wykładnicza i gaussowska również ma wysokie wyniki. Wybór typu relacji ma za to duże znaczenie, gdy na jej podstawie określa się przynależność punktów do granul -- relacja trójkątna powoduje wtedy, że istotna część danych oryginalnych może nie zostać w ogóle przypisana do żadnej grupy. Dla danych, które zostały zaklasyfikowane, wartości metryk są za to wyższe, niż dla pozostałych relacji, dla których wszystkie dane są zgrupowane.
+
+
+\paragraph{Parametr $\xi$}
+
+Średnią dokładność, trafność i precyzję grupowania danych w zależności od parametru $\xi$ przedstawiono na rys. \ref{fig:xi-acc}.
+
+Dla \SingleLinkage{}, najwyższą dokładność i precyzję -- odpowiednio \num{99.7745}\% i \num{98.1348}\% -- osiągnięto dla $\xi=\num{0.05}$, najwyższą trafność -- \num{98.3582}\% -- dla $\xi=\num{0.1}$. Wartości metryk spadają wraz ze wzrostem wartości parametru. Powyżej $\xi=\num{0.8}$ następuje gwałtowne załamanie na wykresie wyników.
+
+Zależność dokładności jest przeciwna dla \CompleteLinkage{}: najlepsze wyniki -- \num{67.1215}\% -- osiągnięto dla $\xi=\num{0.9}$. Trafność i precyzja nie wpisują się w tą zależność -- ich wartości wahają się odpowiednio około 60-61\% i 58\%. Najwyższa wartość trafności wynosi \num{61.7007}\% dla $\xi=\num{0.65}$, a precyzji -- \num{58.4605}\% dla $\xi=\num{0.7}$.
+% 
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.48\textwidth}
+		\includegraphics[width=\textwidth]{./img/xi_acc_sl.pdf}
+		\caption{\SingleLinkage}
+		\label{fig:xi-acc-sl}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.48\textwidth}
+		\includegraphics[width=\textwidth]{./img/xi_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\label{fig:xi-acc-cl}
+	\end{subfigure}
+	
+%	\begin{subfigure}{0.4\textwidth}
+%		%    \includegraphics[width=\textwidth]{sciezka}
+%		tutaj rysunek
+%		\caption{Lewy dolny rysunek.}
+%		\label{fig:lewy-dolny}
+%	\end{subfigure}
+%	\hfill
+%	\begin{subfigure}{0.4\textwidth}
+%		%    \includegraphics[width=\textwidth]{sciezka}
+%		tutaj rysunek
+%		\caption{Prawy dolny rysunek.}
+%		\label{fig:prawy-dolny}
+%	\end{subfigure}
+	
+	\caption{Zależność dokładności, trafności i precyzji grupowania od wartości parametru $\xi$.}
+	\label{fig:xi-acc}
+\end{figure}
+
+\subparagraph{Podsumowanie}
+Eksperymenty sugerują, że dla  łączności \SingleLinkage{} najlepiej używać małych wartości parametru $\xi \approx \num{0.1}$, a dla \CompleteLinkage{} -- dużych $\xi \approx \num{0.9}$.
+
+\paragraph{Kombinacja parametrów}
+
+Wyniki pomiarów przeanalizowano też biorąc pod uwagę złożenie wpływu różnych parametrów -- kształtu, liczby granul, typu relacji, parametru $\xi$ -- przy ich uśrednieniu dla wszystkich liczebności danych oryginalnych.
+
+W tej sekcji zamieszczono wykresy złożonych zależności dla miary dokładności. W większości przypadków, trafność i precyzja posiadają na tyle podobne zależności, że nie jest konieczne dodatkowe opisywanie ich -- wnioski byłyby identyczne. Wszystkie wykresy zamieszczono w katalogu \texttt{img/complex}, pogrupowane w podkatalogach według kształtu danych (\blobs{}, \circles{}, \corners{}, \crescents{}, \laguna{} i \spheres{}). Nazwa każdego pliku wskazuje na metrykę, łączność i sposób określenia przynależności danych do granul:
+
+\begin{enumerate}
+	\item metryka: dokładność (\texttt{acc}), trafność (\texttt{rec}), precyzja (\texttt{prec}),
+	\item łączność: \SingleLinkage{} (\texttt{sl}), \CompleteLinkage{} (\texttt{cl}),
+	\item przynależność danych do granul: na podstawie macierzy przynależności $\mClusterMembership$ (brak oznaczenia), na podstawie relacji $\ast$-podobieństwa (\texttt{shape\_dep}).
+\end{enumerate}
+
+\subparagraph{\blobs{}}
+
+Jak pokazuje rys. \ref{fig:blobs-complex}, dla dokładności grupowania danych \blobs{} zdecydowanie największe znaczenie ma liczba granul. Najlepsze wyniki -- około 100\% niezależnie od innych parametrów -- uzyskiwane są dla 50 granul. Dla takiej liczebności algorytm rozmytych $c$-średnich zazwyczaj tworzył granule we wszystkich trzech oczekiwanych klastrach.
+
+Mniejsze znaczenie ma parametr $\xi$, jednak da się zauważyć spadek dokładności dla większych jego wartości dla \SingleLinkage{} i wzrost dokładności dla \CompleteLinkage{}, co jest zgodne z ogólną tendencją, przedstawioną na rys. \ref{fig:xi-acc}. Typ relacji nie ma wyraźnego wpływu na jakość grupowania. 
+
+Jeżeli granule znalezione przez algorytm rozmytych $c$-średnich znajdą się we wszystkich trzech klastrach, to grupowanie \MojHierAlg{} przebiega poprawnie. W przeciwnym razie w centralnym klastrze, pojedyncze granule uznane zostaną za należące do innego klastra, jako że algorytm musi wyznaczyć trzy grupy (rys. \ref{fig:blobs1000e}). Parametr $\xi$ i typ relacji mogą wtedy wpłynąć na to, ile punktów danych oryginalnych znajdzie się w tych nieprawidłowych klastrach, co prowadzi do fluktuacji dokładności. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/blobs_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/blobs_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \blobs{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:blobs-complex}
+\end{figure}
+
+\subparagraph{\circles{}}
+
+Wykresy dla danych \circles{} (rys. \ref{fig:circles-complex}) uwydatniają wpływ łączności na jakość grupowania.
+
+W przypadku łączności \SingleLinkage{}, dokładność jest niemal zawsze równa 100\%. Spada ona dla wysokich ($\ge \num{0.9}$) wartości parametru $\xi$. Najniższe wartości są osiągane dla relacji wykładniczej, wyższe dla gaussowskiej. Dla relacji trójkątnej, wyniki pozostają na poziomie 100\% nawet dla $\xi=\num{0.95}$.
+
+Algorytm dla łączności \CompleteLinkage{} nie odnajduje poprawnie klastrów, co widać na rys. \ref{fig:circles1000gc}. Badane parametry nie mają znacznego wpływu na jakość.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/circles_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/circles_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \circles{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:circles-complex}
+\end{figure}
+
+\subparagraph{\corners{}}
+
+Podobnie jak w przypadku \circles{}, grupowanie danych \corners{} przy łączności \CompleteLinkage{} nie zwraca poprawnych wyników. Rys. \ref{fig:corners-complex} pokazuje, że przez to pozostałe parametry nie mają zauważalnego wpływu na jakość grupowania.
+
+Dla łączności \SingleLinkage{} największe znaczenie ma parametr $\xi$. Dokładność zmniejsza się wraz ze wzrostem wartości tego parametru. Ponadto, znaczenie ma też liczba granul i typ relacji. Dokładność wcześniej zaczyna spadać dla mniejszej liczebności granul, najpierw dla relacji gaussowskiej, potem wykładniczej, na końcu trójkątnej. Dla relacji trójkątnej i większych liczebności granul -- 100 i 200 -- średnia dokładność zostaje na poziomie 100\% nawet dla $\xi=\num{0.95}$.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/corners_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/corners_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \corners{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:corners-complex}
+\end{figure}
+
+\subparagraph{\crescents{}}
+
+Wnioski dla danych \crescents{} są bardzo podobne do wniosków dla danych \circles{}. Jak pokazuje rys. \ref{fig:crescents-complex}, dla łączności \SingleLinkage{} średnia dokładność spada poniżej 100\% dopiero dla wysokich ($\ge \num{0.9}$) wartości $\xi$, najbardziej dla relacji wykładniczej. W przypadku \CompleteLinkage{}, również można zauważyć spadek dokładności dla tej relacji i wysokiego $\xi$, jednak nie ma jasnego wpływu badanych parametrów na jakość grupowania.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/crescents_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/crescents_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \crescents{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:crescents-complex}
+\end{figure}
+
+\subparagraph{\laguna{}}
+
+Przy łączności \SingleLinkage{} dokładność spada wraz ze wzrostem wartości $\xi$ -- rys. \ref{fig:laguna-complex}. Najszybciej jakość zmniejsza się dla dużej liczebności granul -- 200. Ma to związek z nieprawidłową przynależnością punktów do granul na zewnątrz dwóch wewnętrznych klastrów, jak widać na rys. \ref{fig:laguna40000-blue}. Tak jak w przypadku innych kształtów danych, najniższe wyniki są uzyskiwane dla relacji wykładniczej.
+
+Obliczanie przynależności może też wpływać na wyniki dla \CompleteLinkage{}. Dla tej łączności znowu nie można jasno określić wpływu parametrów na dokładność grupowania, natomiast zauważyć można, że dla większych liczebności granul wyniki są bardziej zróżnicowane, natomiast dla 50 granul są one bliższe średniej.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/laguna_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/laguna_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \laguna{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:laguna-complex}
+\end{figure}
+
+\subparagraph{\spheres{}}
+
+Wyniki dla danych \spheres{} (rys. \ref{fig:spheres-complex}) przedstawiają inne zależności od wcześniej opisanych danych. 
+
+Przy łączności \SingleLinkage{}, dokładność zmniejsza się wraz ze wzrostem parametru $\xi$, jednak najgorsze wyniki otrzymywane są dla najmniejszej liczebności granul -- 50. Gdy jest ich mniej, granule na zewnętrznej sferze mogą być znacznie oddalone od siebie nawzajem, przez co sfera wewnętrzna łączona jest z zewnętrzną, a pojedyncza granula ze sfery zewnętrznej zostaje uznana za osobny klaster (rys. \ref{fig:spheres5000g}).
+
+Dla \CompleteLinkage{} można zauważyć wzrost średniej dokładności grupowania wraz ze wzrostem parametru $\xi$, szczególnie dla 50 granul. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/spheres_complex_acc_sl.pdf}
+		\caption{\SingleLinkage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/spheres_complex_acc_cl.pdf}
+		\caption{\CompleteLinkage}
+	\end{subfigure}
+	
+	\caption{Zależność dokładności grupowania danych \spheres{} od liczby granul, typu relacji i wartości parametru $\xi$.}
+	\label{fig:spheres-complex}
+\end{figure}
+
+\subparagraph{Podsumowanie}
+Łączność \SingleLinkage{} jest znacznie lepszym wyborem podczas grupowania badanych danych niż \CompleteLinkage{}. Dla tej łączności, niezależnie od kształtu danych, najlepsze wyniki uzyskuje się dla niskich wartości parametru progowego $\xi$. Najlepiej wykorzystywać też relację trójkątną -- z nielicznymi wyjątkami przy danych \blobs{}, wyniki są najwyższe dla tego kształtu granul, przy zwiększaniu parametru $\xi$ jakość najpóźniej spada dla tej relacji.
+
+Wnioski dotyczące optymalnej liczby granul zależą od kształtu danych. Gdy klastry danych układają się w kształt kulisty -- \blobs{}, \laguna{} -- lepsze są małe liczby granul ($\nGranula = 50$), co poprawia jakość klasteryzacji algorytmem rozmytych $c$-średnich. Dla pozostałych badanych kształtów lepiej wybierać większe liczby, dzięki czemu granule rozkładają się bardziej równomiernie.
+
+Przy grupowaniu danych algorytmem o łączności \CompleteLinkage{}, w większości przypadków nie widać jasnego wpływu parametrów na wyniki, za wyjątkiem grupowania danych \blobs{}. Dla tych danych najlepsze wyniki uzyskiwane są dla małej liczby granul ($\nGranula = 50$), wysokiej wartości $\xi$ oraz relacji wykładniczej.
+
+\subsubsection{Dane \brightkite{} i \gowalla}
+
+Ze względu na brak etykiet danych \brightkite{} i \gowalla{}, jakość grupowania można ocenić wizualnie, na podstawie wykresów -- odpowiednio rys. \ref{fig:brightkite-strict-fuzzy} i \ref{fig:gowalla-strict-fuzzy}.
+
+Podczas grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} wykorzystano losową próbkę \num{500000} współrzędnych, jako że algorytm ten nie nadaje się do grupowania bardzo dużych ilości danych. Jako parametry grupowania \MojAlg{} wybrano na podstawie wyników przedstawionych na stronie \pageref{sec:wyniki-jakosc-generowane} i dalszych, relację trójkątną, 100 granul i $\xi=\num{0.1}$. W obydwu przypadkach jako docelową liczbę klastrów wybrano 6 -- jeden klaster to jeden kontynent.
+
+Grupowanie ostre algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} nie odnajduje oczekiwanych klastrów. W przypadku danych \brightkite{}, wszystkie kontynenty zostały połączone w jeden klaster, zaś elementy odstające -- wyspy, ocean, błędne współrzędne -- to pozostałe 5 klastrów. W przypadku danych \gowalla{} grupowanie jest lepsze -- Ameryki stanowią osobny klaster niż reszta kontynentów -- jednak wciąż 4 klastry odpowiadają wyłącznie danym odstającym.
+
+Wyniki grupowania algorytmem \MojAlg{} są dużo bliższe oczekiwaniom. Wstępna granulacja FCM pozwoliła na eliminację szumów (w tym błędnych współrzędnych), na które wrażliwy jest algorytm grupowania hierarchicznego. Zauważyć można, że duży wpływ na rozmieszczenie granul ma zagęszczenie danych -- najwięcej granul powstało we współrzędnych odpowiadająch Europie i Ameryce Północnej. Zarówno w przypadku danych \brightkite{}, jak i \gowalla{}, Europa i Azja zostały uznane za jeden klaster. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/brightkite_500000_strict.png}
+		\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/brightkite_full_100.png}
+		\caption{Grupowanie algorytmem \MojAlg{} całości danych}
+	\end{subfigure}
+	
+	\caption{Wyniki grupowania hierarchicznego algorytmem ostrym \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} i algorytmem \MojAlg{} danych \brightkite{}}
+	\label{fig:brightkite-strict-fuzzy}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/gowalla_500000_strict.png}
+		\caption{Grupowanie ostre próbki losowej \num{500000} punktów}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{./img/gowalla_full_100.png}
+		\caption{Grupowanie algorytmem \MojAlg{} całości danych}
+	\end{subfigure}
+	
+	\caption{Wyniki grupowania hierarchicznego algorytmem ostrym \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} i algorytmem \MojAlg{} danych \gowalla{}}
+	\label{fig:gowalla-strict-fuzzy}
+\end{figure}
+
+%
+% 
+%
+%Rozdział przedstawia przeprowadzone badania. Jest to zasadnicza część i~musi wyraźnie dominować w~pracy.
+%Badania i analizę wyników należy przeprowadzić, tak jak jest przyjęte w środowisku naukowym (na przykład korzystanie z danych benchmarkowych, walidacja krzyżowa, zapewnienie powtarzalności testów itd). 
+%
+%\section{Metodyka badań}
+%
+%\begin{itemize}
+%\item opis metodyki badań
+%\item opis stanowiska badawczego (opis interfejsu aplikacji badawczych -- w~załączniku)
+%\end{itemize}
+%
+%
+%\section{Zbiory danych}
+%
+%\begin{itemize}
+%\item opis danych
+%\end{itemize}
+%
+%
+%\section{Wyniki}
+%
+%\begin{itemize}
+%\item prezentacja wyników, opracowanie i poszerzona dyskusja  wyników, wnioski
+%\end{itemize}
+%
+% 
+%\begin{table}
+%\centering
+%\caption{Opis tabeli nad nią.}
+%\label{id:tab:wyniki}
+%\begin{tabular}{rrrrrrrr}
+%\toprule
+%	         &                                     \multicolumn{7}{c}{metoda}                                      \\
+%	         \cmidrule{2-8}
+%	         &         &         &        \multicolumn{3}{c}{alg. 3}        & \multicolumn{2}{c}{alg. 4, $\gamma = 2$} \\
+%	         \cmidrule(r){4-6}\cmidrule(r){7-8}
+%	$\zeta$ &     alg. 1 &   alg. 2 & $\alpha= 1.5$ & $\alpha= 2$ & $\alpha= 3$ &   $\beta = 0.1$  &   $\beta = -0.1$ \\
+%\midrule
+%	       0 &  8.3250 & 1.45305 &       7.5791 &    14.8517 &    20.0028 & 1.16396 &                       1.1365 \\
+%	       5 &  0.6111 & 2.27126 &       6.9952 &    13.8560 &    18.6064 & 1.18659 &                       1.1630 \\
+%	      10 & 11.6126 & 2.69218 &       6.2520 &    12.5202 &    16.8278 & 1.23180 &                       1.2045 \\
+%	      15 &  0.5665 & 2.95046 &       5.7753 &    11.4588 &    15.4837 & 1.25131 &                       1.2614 \\
+%	      20 & 15.8728 & 3.07225 &       5.3071 &    10.3935 &    13.8738 & 1.25307 &                       1.2217 \\
+%	      25 &  0.9791 & 3.19034 &       5.4575 &     9.9533 &    13.0721 & 1.27104 &                       1.2640 \\
+%	      30 &  2.0228 & 3.27474 &       5.7461 &     9.7164 &    12.2637 & 1.33404 &                       1.3209 \\
+%	      35 & 13.4210 & 3.36086 &       6.6735 &    10.0442 &    12.0270 & 1.35385 &                       1.3059 \\
+%	      40 & 13.2226 & 3.36420 &       7.7248 &    10.4495 &    12.0379 & 1.34919 &                       1.2768 \\
+%	      45 & 12.8445 & 3.47436 &       8.5539 &    10.8552 &    12.2773 & 1.42303 &                       1.4362 \\
+%	      50 & 12.9245 & 3.58228 &       9.2702 &    11.2183 &    12.3990 & 1.40922 &                       1.3724 \\
+%\bottomrule
+%\end{tabular}
+%\end{table}  
+%
+%
+% 
+%\begin{figure}
+%\centering
+%\begin{tikzpicture}
+%\begin{axis}[
+%    y tick label style={
+%        /pgf/number format/.cd,
+%            fixed,   % po zakomentowaniu os rzednych jest indeksowana wykladniczo
+%            fixed zerofill, % 1.0 zamiast 1
+%            precision=1,
+%        /tikz/.cd
+%    },
+%    x tick label style={
+%        /pgf/number format/.cd,
+%            fixed,
+%            fixed zerofill,
+%            precision=2,
+%        /tikz/.cd
+%    }
+%]
+%\addplot [domain=0.0:0.1] {rnd};
+%\end{axis} 
+%\end{tikzpicture}
+%\caption{Podpis rysunku po rysunkiem.}
+%\label{fig:2}
+%\end{figure}
+%
+%
+%\begin{figure}
+%\begin{lstlisting}
+%if (_nClusters < 1)
+%	throw std::string ("unknown number of clusters");
+%if (_nIterations < 1 and _epsilon < 0)
+%	throw std::string ("You should set a maximal number of iteration or minimal difference -- epsilon.");
+%if (_nIterations > 0 and _epsilon > 0)
+%	throw std::string ("Both number of iterations and minimal epsilon set -- you should set either number of iterations or minimal epsilon.");
+%\end{lstlisting}
+%\caption{Przykład pseudokodu}
+%\end{figure}
+
+
+% TODO
+
+\chapter{Podsumowanie}
+
+%\begin{itemize}
+%\item Jaki problem rozwiązałæm?
+%\item Jak ten problem rozwiązałæm?
+%\item Jakie są dobre i słabe strony mojego rozwiązania?
+%\item Czy mogę sformułować jakieś rekomendacje?
+%\end{itemize}
+
+% \begin{itemize}
+% \item syntetyczny opis wykonanych prac
+% \item wnioski
+% \item możliwość rozwoju, kontynuacji prac, potencjalne nowe kierunki
+% \item Czy cel pracy zrealizowany? 
+% \end{itemize}
+
+Do analizy danych powszechnie wykorzystuje się algorytmy grupowania. Polegają one na wyznaczeniu takich grup danych, aby wszystkie dane przypisane do tej samej grupy były do siebie jak najbardziej podobne pod względem wybranej metryki, a dane przypisane do różnych grup -- jak najbardziej niepodobne.
+%
+Algorytmy takie mogą być na przykład oparte na minimalizacji pewnej funkcji kryterialnej bądź wykorzystywać zagęszczenie danych w pewnym obszarze do wyznaczenia klastrów. W pracy skupiono się na aglomeracyjnym algorytmie hierarchicznym, który polega na tworzeniu sekwencji zagnieżdżonych podziałów danych poprzez łączenie mniejszych klastrów w większe. Wadą tego algorytmu jest jego duża złożoność czasowa: sześcienna dla implementacji ogólnej. Choć istnieją specjalizowane implementacje o niższych złożonościach (kwadratowych), to pozostają one na tyle wysokie, że algorytm jest problematyczny do wykorzystania dla dużych liczebności danych.
+
+W pracy do przyspieszenia działania aglomeracyjnego algorytmu hierarchicznego wykorzystano obliczenia granularne.
+Jest to dziedzina, która również stosowana jest do analizy danych. Polega na analizowaniu ich na sposób podobny do ludzkiego postrzegania rzeczywistości. Związanym z nią pojęciem jest granula informacyjna, będące encją o pewnej semantyce. W pracy granule realizowane są przy pomocy liczb rozmytych, czyli takich liczb, które modelują pewne ostre wartości liczbowe w jakimś przybliżeniu.
+
+W pracy zaproponowany został autorski algorytm \MojAlg{}, który wykonuje grupowanie hierarchiczne na granulach informacyjnych, zamiast na oryginalnych liczbach ostrych. 
+Krokiem przygotowawczym algorytmu jest zgrupowanie danych wejściowych (współrzędnych punktów) w granule. Wykorzystano do tego algorytm rozmytych $c$-średnich FCM, który ma mniejszą -- liniową -- złożoność czasową niż algorytm hierarchiczny. Algorytm ten grupuje dane w klastry rozmyte, czyli takie, do których każdy punkt należy w pewnym stopniu, określonym jako liczba z przedziału $[0, 1]$. Następnie klastry te przekształcane są w granule: wielowymiarowe ekstensjonalne liczby rozmyte, gdzie dla każdego wymiaru wyróżnić można środek i rozmycie granuli (ziaren informacyjnych). Wykorzystano trzy kształty ziaren: trójkątne, wykładnicze i gaussowskie, definiowane przez odpowiednie rozmyte relacje $\ast$-podobieństwa.
+Właściwe aglomeracyjne grupowanie hierarchiczne algorytmu \MojAlg{} wykorzystuje ogólną implementację o złożoności sześciennej dostosowaną do operowania na granulach.  Modyfikacje algorytmu w stosunku do standardowej, ostrej wersji, dotyczą operacji arytmetycznych i logicznych. Odległości euklidesowe między granulami również mają postać liczb rozmytych, które są następnie porównywane. Jako że wynikiem porównań liczb rozmytych jest wartość z przedziału $[0, 1]$, wprowadzony został dodatkowy parametr progowy $\xi$, określający, dla jakiej wartości operacja logiczna będzie ewaluowana jako prawda. Zaimplementowano dwie łączności grupowania hierarchicznego: \SingleLinkage{} oraz \CompleteLinkage{}.
+
+W pracy przebadano własności zaproponowanego algorytmu -- jego złożoność czasową oraz jakość grupowania.
+%
+Porównano czas wykonania algorytmu \MojAlg{} z czasem wykonania ostrego algorytmu hierarchicznego o analogicznej implementacji %do \MojHierAlg{} 
+dla różnych liczebności danych. Odnotowano znaczne zmniejszenie czasu wykonania -- przykładowo, dla 5000 danych algorytm \MojAlg{} wykonywał się 1-4 sekundy (w zależności od liczby granul), a algorytm ostry -- około 100 sekund. Możliwe było też wykonanie algorytmu na bardzo dużych danych -- kilku milionach punktów -- w czasie rzędu kilkudziesięciu minut. Ponadto, algorytm jest też szybszy od optymalnego algorytmu bibliotecznego powyżej pewnej liczby danych. Jego złożoność czasowa jest liniowa w zależności od liczby danych wejściowych -- choć właściwe grupowanie hierarchiczne nadal ma złożoność sześcienną, to wykorzystuje ono granule informacyjne, których jest znacznie mniej niż danych wejściowych. Udało się więc osiągnąć główny cel pracy -- znacznie zmniejszono czas wykonywania algorytmu hierarchicznego dla dużych liczebności danych.
+W zamian za przyspieszenie algorytmu dopuszczono pogorszenie jakości grupowania. Pomiary dokładności, trafności i precyzji algorytmu \MojAlg{} pokazały jednak, że w większości przypadków jego wyniki nie odbiegają od wyników algorytmu ostrego, a nawet mogą być lepsze.
+%
+Algorytm badano dla różnych kombinacji parametrów: liczby granul, kształtu granul i parametru progowego $\xi$, dla obydwu zaimplementowanych łączności. Dla wszystkich parametrów, średnie wartości metryk jakości są zbliżone do wyników tych samych metryk dla algorytmu ostrego. Ponadto w większości przypadków można znaleźć taką kombinację tych parametrów, dla których wyniki są lepsze niż dla algorytmu ostrego.
+%
+Analiza grupowania \MojAlg{} %dla danych \brightkite{} i \gowalla{} 
+pokazuje również, że granulacja danych wejściowych algorytmem rozmytych $c$-średnich pozwala na wyeliminowanie z danych elementów odstających, na które bardzo wrażliwy jest algorytm hierarchiczny. 
+
+Implementację algorytmu \MojAlg{} oraz skrypty wykorzystane do badań jego działania zamieszczono w repozytorium pod adresem \url{https://github.com/ZofiaLor/magister-granule}.
+
+Algorytm \MojAlg{} może w prosty sposób zostać rozszerzony o inne metryki odległości. Dzięki zastosowaniu ogólnej implementacji, łatwo można też dodać inne opcje łączności, takie jak łączność średnia lub Warda. Ponadto, implementację granul rozszerzyć można o inne kształty ziaren poprzez zastosowanie innych rozmytych relacji $\ast$-podobieństwa.
+
+
+
+\backmatter
+
+\cleardoublepage
+\phantomsection
+%\bibliographystyle{plplain}  % bibtex
+%\bibliography{biblio} % bibtex
+\addcontentsline{toc}{chapter}{Bibliografia}
+\printbibliography           % biblatex
+
+\begin{appendices}
+
+%% TODO
+\chapter{Dokumentacja techniczna}
+
+\section*{Implementacja}
+
+Całość projektu zaimplementowano w języku Python\footnote{\url{https://www.python.org/}, dostęp 26.04.2026} w wersji 3.12. Jest to jeden z najczęściej wykorzystywanych języków programowania, szczególnie w projektach związanych z analizą danych. Język posiada wiele bibliotek, które implementują większość potrzebnych funkcjonalności.
+
+Biblioteka \texttt{scikit-fuzzy-c-means} dostarcza implementację algorytmu rozmytych $c$-średnich. Środki klastrów inicjalizowane są metodą \texttt{K-Means++}.
+Inną biblioteką, która również dostarcza tej implementacji, jest \texttt{scikit-fuzzy}. Oprócz tego, posiada ona bardziej rozwinięte API, umożliwiające wykonywanie różnych operacji na zbiorach rozmytych. Działanie algorytmu rozmytych $c$-średnich jest identyczne dla obydwu bibliotek, ostatecznie wybrano prostszą bibliotekę \texttt{scikit-fuzzy-c-means}.
+
+Pozostałymi wykorzystanymi w projekcie bibliotekami są: \texttt{matplotlib} (wykresy danych), \texttt{scikit-learn} (aglomeracyjny algorytm hierarchiczny), \texttt{scipy} (dendrogram), \texttt{numpy} (obliczenia macierzowe, wykorzystywana też przez \texttt{scikit-learn} i \texttt{scipy}) i \texttt{pandas} (ramki danych).
+
+Implementację algorytmu \MojAlg{} oraz skrypty wykorzystane do badań jego działania zamieszczono w repozytorium pod adresem \url{https://github.com/ZofiaLor/magister-granule}.
+
+\subsection*{Uruchamianie}
+
+Do badań przedstawionych w rozdziale \ref{sec:badania} wykorzystano skrypty pomocnicze. 
+
+\subsubsection*{Pomiar czasu}
+
+Pomiaru czasu można dokonać przy pomocy skryptu \lstinline|measure_time.py|. Dla każdej liczebności danych wykonywana jest określona parametrem liczba pomiarów czasu wykonania algorytmu \MojAlg{} oraz algorytmu ostrego, po czym obliczana jest ich średnia arytmetyczna. Wyniki mają postać ramki danych zawierającej pomiary w milisekundach oraz wykresu ilustrującego zależność czasu wykonania algorytmów od liczby danych.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\lstinline|python measure_time.py [-h] [-r REPEATS] [-l] [-t] [-p] [-f {blobs,circles,corners,crescents,laguna,spheres}]|,
+
+\noindent gdzie:
+
+\begin{itemize}
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-r REPEATS| (alternatywnie: \lstinline|--repeats REPEATS|) -- parametr (liczba całkowita) odpowiadający liczbie powtórzeń każdego z pomiarów czasu; domyślnie wartość 4,
+	\item \lstinline|-l| (alternatywnie: \lstinline|--library_function|) -- użycie funkcji \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn} zamiast własnej implementacji ostrego algorytmu hierarchicznego, porównywanego z algorytmem \MojAlg{}. Pomiary zostaną wtedy wykonane na większych liczebnościach danych,
+	\item \lstinline|-t| (alternatywnie: \lstinline|--save_times|) -- zapisanie wyników do pliku .csv, wywołanie bez przełącznika powoduje wypisanie pomiarów do konsoli,
+	\item \lstinline|-p| (alternatywnie: \lstinline|--save_plot|) -- zapisanie wykresu do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresu na ekranie,
+	\item \lstinline|-f {blobs,circles,corners,crescents,laguna,spheres}| (alternatywnie: \lstinline|--filename {blobs,circles,corners,crescents,laguna,spheres}|) -- wybór danych do pomiaru. Domyślnie wartość 'corners'.
+\end{itemize}
+
+\subsubsection*{Pomiar jakości}
+
+Pomiaru jakości grupowania można dokonać przy pomocy skryptu \lstinline|measure_quality.py|. Dla wybranych lub wszystkich danych mierzona jest dokładność, trafność i precyzja grupowania. Pomiary wykonywane są dla różnych liczebności granul, typów relacji i wartości parametru $\xi$. Gdy mierzone są wszystkie dane, wyniki zapisywane są w pliku .csv, w przeciwnym razie wypisywane są w konsoli.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\lstinline|python measure_quality.py [-h] [-f FILENAME] [-l {sl,single,cl,complete}] [-r] [--strict]|,
+
+\noindent gdzie:
+
+\begin{itemize}
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-f FILENAME| (alternatywnie: \lstinline|--filename FILENAME|) -- wybór konkretnego pliku z danymi do pomiaru (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykonywane są pomiary na wszystkich plikach,
+	\item \lstinline|-l {sl,single,cl,complete}| (alternatywnie: \lstinline|--linkage {sl,single,cl,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,sl'' i ,,single'' to łączność \SingleLinkage{}, a ,,cl'' i ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
+	\item \lstinline|-r| (alternatywnie: \lstinline|--relation_dependent|) -- obliczanie przynależności punktów do granul na podstawie relacji $\ast$-podobieństwa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$,
+	\item \lstinline|--strict| -- dodatkowe pomiary metryk jakości dla grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
+\end{itemize}
+
+\subsubsection*{Wykresy grupowania granul}
+
+Wykresy wyników grupowania \MojAlg{} można uzyskać przy pomocy skryptu \lstinline|plot_granules.py|. Każdy wykres składa się z 9 podwykresów, zawierających wyniki dla różnych liczebności granul i wartości parametru $\xi$. Dla każdego pliku tworzone są 3 takie wykresy, dla każdego typu relacji.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\lstinline|python plot_granules.py [-h] [-f FILENAME] [-l {single,complete}] [-p]|,
+
+\noindent gdzie:
+
+\begin{itemize}
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-f FILENAME| (alternatywnie: \lstinline|--filename FILENAME|) -- wybór konkretnego pliku z danymi do zgrupowania i przedstawienia na wykresie (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000). Jeżeli konkretny plik nie zostanie podany, wykresy tworzone są dla wszystkich plików,
+	\item \lstinline|-l {single,complete}| (alternatywnie: \lstinline|--linkage {single,complete}|) -- łączność grupowania hierarchicznego, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
+	\item \lstinline|-p| (alternatywnie: \lstinline|--save_plot|) -- zapisanie wykresów do pliku .pdf, wywołanie bez przełącznika powoduje wyświetlenie wykresów na ekranie, jeżeli są one tworzone tylko dla jednego pliku. Gdy wykresy generowane są dla wszystkich plików, są one zapisywane do .pdf niezależnie od obecności przełącznika.
+\end{itemize}
+
+\subsubsection*{Analiza wyników}
+
+Skrypt \lstinline|accuracy_analysis.py| służy do analizy wyników pomiarów wykonanych przy pomocy skryptu \lstinline|measure_quality.py|. Do jego działania wymagane jest więc uprzednie wykonanie pomiarów dla wszystkich plików, przy wybranej konfiguracji łączności i obliczania przynależności punktów do granul. Możliwa jest analiza wpływu poszczególnych parametrów grupowania na wyniki.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\lstinline|python accuracy_analysis.py [-h] [-l {single,complete}] [-s] [-d] [-r] [-g] [-x] [-c] [--strict]|,
+
+\noindent gdzie:
+
+\begin{itemize}
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-l {single,complete}| (alternatywnie: \lstinline|--linkage {single,complete}|) -- analiza wyników grupowania przy danej łączności, gdzie ,,single'' to łączność \SingleLinkage{}, a ,,complete'' -- \CompleteLinkage{}. Domyślnie wartość ,,single'',
+	\item \lstinline|-s| (alternatywnie: \lstinline|--shape_dependent|) -- analiza wyników grupowania, dla których przynależność punktów do granul obliczona była na podstawie relacji $\ast$-po\-dob\-ień\-st\-wa $\nPodobienstwo$, zamiast na podstawie macierzy przynależności $\mClusterMembership$ (w wynikach występować może szum),
+	\item \lstinline|-d| (alternatywnie: \lstinline|--data_shape|) -- analiza wpływu kształtu danych (na przykład \blobs{}, \circles{}) na jakość grupowania,
+	\item \lstinline|-r| (alternatywnie: \lstinline|--relation_type|) -- analiza wpływu typu relacji (trójkątna, wykładnicza, gaussowska) na jakość grupowania,
+	\item \lstinline|-g| (alternatywnie: \lstinline|--granule_number|) -- analiza wpływu liczby granul generowanych przez algorytm FCM na jakość grupowania,
+	\item \lstinline|-x| (alternatywnie: \lstinline|--xi|) -- analiza wpływu parametru progowego $\xi$ na jakość grupowania,
+	\item \lstinline|-c| (alternatywnie: \lstinline|--complex|) -- analiza wpływu kombinacji parametrów (kształtu danych, typu relacji, liczby granul oraz parametru $\xi$) na jakość grupowania,
+	\item \lstinline|--strict| -- dodatkowa analiza wyników jakości dla grupowania ostrego algorytmem \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
+\end{itemize}
+
+\subsubsection*{Wykresy przynależności}
+
+Skrypt \lstinline|membership_plots.py| pozwala na utworzenie wykresów przynależnosci punktów do granul, na przykład \ref{fig:blobs1000-blue}.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\lstinline|python membership_plots.py [-h] [-n NUM_GRANULES] filename|,
+
+\noindent gdzie:
+
+\begin{itemize}
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-n NUM_GRANULES| (alternatywnie: \lstinline|--num_granules NUM_GRANULES|) -- liczba granul generowanych przez algorytm FCM, domyślnie 100,
+	\item \lstinline|filename|  -- nazwa pliku z danymi do zgrupowania i przedstawienia na wykresie (na przykład ,,blobs1000'' -- dane \blobs{} o rozmiarze 1000).
+\end{itemize}
+
+\subsubsection*{Analiza dużych danych}
+
+Skrypt \lstinline|large_data_analysis.py| przeznaczony jest do analizy dwuwymiarowych danych o dużych rozmiarach (w ramach pracy wykorzystano go dla danych \brightkite{} i \gowalla{}). Pozwala on na pomiar czasu wykonania algorytmu \MojAlg{} przy określonym kroku oraz na przedstawienie na wykresie wyników grupowania danych przez algorytm \MojAlg{} oraz przez algorytm ostry \texttt{Ag\-glo\-me\-ra\-ti\-ve\-Clu\-s\-te\-ring} biblioteki \texttt{scikit-learn}.
+
+Wywołanie skryptu z linii poleceń ma następującą składnię:
+
+\lstinline|python large_data_analysis.py [-h] [-c N_CLUSTERS] [-s SIZE] [-f] {time,plot} filename|,
+
+\noindent gdzie:
+
+\begin{itemize}
+	\item \lstinline|-h| (alternatywnie: \lstinline|--help|) -- wyświetlenie pomocy w języku angielskim i zamknięcie programu,
+	\item \lstinline|-n NUM_CLUSTERS| (alternatywnie: \lstinline|--num_clusters NUM_CLUSTERS|) -- liczba klastrów do wyznaczenia przez algorytm hierarchiczny, domyślnie 6,
+	\item \lstinline|-s SIZE| (alternatywnie: \lstinline|--size SIZE| lub \lstinline|--step SIZE|) -- w zależności od wyboru trybu rozmiar kroku kolejnych pomiarów czasu lub rozmiar danych do zgrupowania i przedstawienia na wykresie dla algorytmu ostrego,
+	\item \lstinline|-f| (alternatywnie: \lstinline|--flip_coordinates|) -- zamiana kolejnością wymiarów danych na potrzeby przedstawienia ich na wykresie,
+	\item \lstinline|filename|  -- ścieżka do pliku z danymi,
+	\item \lstinline|{time,plot}| -- wybór trybu działania skryptu (,,time'': pomiar czasu, ,,plot'': wykresy wyników grupowania).
+\end{itemize}
+
+% TODO
+
+
+
+% TODO
+\chapter{Spis skrótów i symboli}
+
+\begin{itemize}
+	\item[$\Atrybut$] atrybut (wymiar) danych
+	\item[$\accuracy$] dokładność (ang. \english{accuracy}) 
+	\item[$\klaster$] klaster 
+	\item[$\Odleglosc$] odległość między danymi
+	\item[FCM] algorytm rozmytych $c$-średnich (\english{fuzzy $c$-means})
+	\item[$\Granula$] granula, ziarno informacyjne
+	\item[$\mConfusionMatrix$] macierz pomyłek
+	\item[$\precision$] precyzja (ang. \english{precision})
+	\item[$p$] rozmycie rozszerzalnej liczby rozmytej
+	\item[$\recall$] trafność, czułość (ang. \english{recall})
+	\item[$\nPodobienstwo$] rozmyta relacja $\ast$-podobieństwa 
+	\item[$\mCentre$] macierz środków klastrów FCM
+	\item[$\mClusterMembership$] macierz stopni przyleżności do zbioru rozmytego
+	\item[$\xi$] parametr progowy rozmytego grupowania hierarchicznego
+\end{itemize}
+
+%% TODO
+%\chapter{Lista dodatkowych plików, uzupełniających tekst pracy (jeżeli dotyczy)} 
+%
+%W systemie do pracy dołączono dodatkowe pliki zawierające:
+%\begin{itemize}
+%\item źródła programu,
+%\item zbiory danych użyte w~eksperymentach,
+%\item film pokazujący działanie opracowanego oprogramowania lub zaprojektowanego i wykonanego urządzenia,
+%\item itp.
+%\end{itemize}
+
+
+\listoffigures
+\addcontentsline{toc}{chapter}{Spis rysunków}
+\listoftables
+\addcontentsline{toc}{chapter}{Spis tabel}
+
+\end{appendices}
+
+\end{document}
+
+
+%% Finis coronat opus.
+
