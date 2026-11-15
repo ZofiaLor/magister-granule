@@ -1183,6 +1183,25 @@ This is why the assignment of data points with labels is not as straightforward 
 
 \zlremark{To jest bardziej skomplikowany sposób, który był omawiany w pracy magisterskiej. Poza tym, że mogły pojawić sie szumy, nie wprowadził on żadnych nowych inFORmacji. Wszystkie tabele z wartościami wyników, które zostały w artykule, dotycza prostszej metody, opisanej w nastepujacym akapicie:} \ksremark{Zgubiłem sie. Jak powinno być?}
 
+Each data item $\wX_i$ is assigned to the granule $\Granula_j$, such that the value of $\ClusterMembership_{ij} = \max{\wClusterMembership_i}$. The procedure is presented in Alg. \ref{alg:similarity_membership}.
+
+\begin{algorithm}[!t]
+    \caption{Elaboration of the membership of a data point to a granule based on the $\mClusterMembership$ matrix}
+ 	\label{alg:similarity_membership}
+ 	\begin{algorithmic}[1]
+ 		\REQUIRE $\zX$: original data points 
+ 		\REQUIRE $\zGranula$: granules elaborated by \MojAlg{}
+ 		\REQUIRE $\wEtykieta_{\Granula}$: array of $\nGranula$ labels elaborated for granules
+ 		\REQUIRE $\mClusterMembership$: cluster membership matrix of the FCM algorithm 
+      \STATE $\wEtykieta_{\X} \gets \{\}$ \COMMENT{empty array of labels for each data point}
+      \FOR{each row (point) $\wR \in \mClusterMembership$} %\COMMENT{FOR each row of the membership matrix, i.e. for each original point}\label{alg:similarity_membership:loop:x}
+ 		\STATE $\C \gets \arg\max{\wR}$ \COMMENT{index of the granule in which the point has the highest membership}
+ 		\STATE append $\wEtykieta_{\Granula}[\C]$ to $\wEtykieta_{\X}$ \COMMENT{that granule's label becomes the point's label}
+ 	  \ENDFOR
+      \RETURN $\wEtykieta_{\X}$ \COMMENT{vector of labels for each data point}
+ 	\end{algorithmic}
+ \end{algorithm}
+
 % \begin{algorithm}[t]
 %     \caption{Elaboration of the membership of a data point to a granule based on the $\tnorm$-similarity relation $\nPodobienstwo$}
 %  	\label{alg:similarity_membership}
