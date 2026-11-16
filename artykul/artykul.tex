@@ -263,14 +263,14 @@ This technique is not complicated, however it has a high time complexity, which 
 This may be a bottleneck in enormous data sets. 
 
 This problem can be addressed with granular computing. 
-Granular computing (GrC) is a paradigm of data analysis with inFORmative granules. 
+Granular computing (GrC) is a paradigm of data analysis with informative granules. 
 The data are gathered in granules and the granules are an input of further algorithms. 
 The representation of granules heavily depends on the application. 
 Commonly sets, fuzzy sets, rough sets, intervals and many other are used for granules. 
 
-UnFORtunately, the application of fuzzy sets as a representation of granules is not straightforward  for mathematical operations. 
+Unfortunately, the application of fuzzy sets as a representation of granules is not straightforward  for mathematical operations. 
 Commonly, Zadeh's extension principle is used to elaborate the results, which causes three main problems \cite{id:Siminski2026Arithmetic}. 
-First, for some fuzzy sets (eg. Gaussian fuzzy sets), iterative numerical procedures are needed because the operations cannot be presented with closed-FORm FORmulae. 
+First, for some fuzzy sets (eg. Gaussian fuzzy sets), iterative numerical procedures are needed because the operations cannot be presented with closed-form formulae. 
 Second, for certain fuzzy sets and operations (eg. multiplication with triangular fuzzy sets), the fuzzy set resulting from an operation does not preserve the properties of the operands, meaning that the set of fuzzy numbers with operations is not complete. 
 Finally, multiple arithmetical operations cause a spread of fuzziness; the more operations are run, the more fuzzy the result becomes, eventually moving even beyond reasonable interpretability.
 
@@ -343,16 +343,16 @@ However, there are some limitations of these algorithms, eg. SLINK cannot handle
 In contrast, the FCM algorithm has a time complexity of $O(n)$, which is significantly lower.
 
 \subsection{Granular computing}
-Lofti Zadeh introduced a new paradigm of computation based on inFORmative granules \cite{id:Zadeh1979Fuzzy}.
+Lofti Zadeh introduced a new paradigm of computation based on informative granules \cite{id:Zadeh1979Fuzzy}.
 This is an abstraction that fills the gap between numbers and human concepts. 
 Humans commonly do not operate on numbers in every day life. 
 %We simply operate on concepts that can be described with numbers. 
-Zadeh named these concepts inFORmative granules. 
+Zadeh named these concepts informative granules. 
 %
 The main idea of granular computing (GrC) is to provide ideas, methods, algorithms, and techniques to make computer work in a way that is similar to human cognition \cite{id:Zadeh1997Toward}.
 The next step dreamt by Zadeh were computers calculating with words \cite{id:Zadeh2002Computing,id:Piegat2015Computing}.
 
-An inFORmative granule is a collection of similar items with a clear significance. 
+An informative granule is a collection of similar items with a clear significance. 
 This definition is very general. 
 It does not define the similarity of the items nor the significance. 
 These notions are specified in an application they are used FOR. 
@@ -369,11 +369,11 @@ soft sets \cite{id:Xia2022New},
 if-then rules \cite{id:Siminski2021GrNFS},
 \efn s \cite{id:Siminski2026Arithmetic}.  
 
-The next level of abstraction over inFORmative granules is the triarchic theory of GrC based on three perspectives mutually intertwined:
+The next level of abstraction over informative granules is the triarchic theory of GrC based on three perspectives mutually intertwined:
 philosophical, methodological, and computational  \cite{id:Yao2016triarchic}.
 This is a base of the three-way decision approach \cite{id:Yao2009Three,id:Yao2011Superiority,id:Siminski20233WDNFS,id:Ptas2026Art,id:Siminski2026Towards}.
 
-In our approach, we represents inFORmative granules with \efn s.
+In our approach, we represents informative granules with \efn s.
  
 
 \subsubsection{\Efn s}
@@ -516,21 +516,21 @@ A one-argument arithmetical operation $\op$ on \efn s based on a $\tnorm$-simila
 \begin{align}
 	\op(x_{S}) = \op(x)_{S},
 \end{align}
-FOR example 
+for example 
 \begin{align}
 	-\left(x_{S}\right) & = \left(-x\right)_{S} \\
-	\left(x_{S}\right)^{-1} & = \left(1/x\right)_{S}, \qquad \text{FOR } x_S \neq 0_S
+	\left(x_{S}\right)^{-1} & = \left(1/x\right)_{S}, \qquad \text{for } x_S \neq 0_S
 \end{align}
 A two-argument arithmetical operation $\op$ on \efn s is defined as \cite{id:Siminski2026Arithmetic}:
 \begin{align}
 	x_{S(p_x)} \op y_{S(p_y)} = (x \op y)_{\max\{p_x,p_y\}},
 \end{align}
-FOR example
+for example
 \begin{align}
 	x_{S(p_x)} + y_{S(p_y)} & = (x+y)_{S(\max(p_x, p_y))} \\
 	x_{S(p_x)} \cdot y_{S(p_y)} & = (x\cdot y)_{S(\max(p_x, p_y))} 
 \end{align}
-The above FORmulae make the arithmetic with \efn s very efficient computationally.
+The above formulae make the arithmetic with \efn s very efficient computationally.
 
 %FOR a fuzzy $\tnorm$-similarity $S_t$
 %
@@ -566,7 +566,7 @@ The above FORmulae make the arithmetic with \efn s very efficient computationall
 	%x_{S(p_x)} \; \mathbf{op} \; y_{S(p_y)} = (x \; \mathbf{op} \; y)_{\max\{p_x,p_y\}}.
 %\end{align}
 
-FOR \efn s, the equality operator returns a fuzzy value from the interval $[0,1]$ that is defined as a $\tnorm$-similarity relation $S$:
+For \efn s, the equality operator returns a fuzzy value from the interval $[0,1]$ that is defined as a $\tnorm$-similarity relation $S$:
 \begin{align}
 	\left(x_{\relS(p_x)} \eqS y_{\relS(p_y)}\right) = \relS_{\left(\max\{p_x, p_y\}\right)}(x,y).
 	\label{eq:eqS}
@@ -921,12 +921,12 @@ In our approach, the granules are represented as extensional fuzzy numbers.
 
 In the first step (line \ref{alg:MojAlg:fcm} in Alg. \ref{alg:MojAlg}), the original data $\zX$ is clustered with the fuzzy $c$-means algorithm FCM into $\nGranula$ clusters. 
 FCM returns the matrix of centres $\mCentre$ of   clusters and the matrix $\mMembership$ of memberships of data points to clusters.
-The obtained results are then transFORmed into a set of granules $\zGranula$ with the \CtoG\ procedure (line \ref{alg:MojAlg:TransFORmToGranules} in Alg. \ref{alg:MojAlg}).
+The obtained results are then transformed into a set of granules $\zGranula$ with the \CtoG\ procedure (line \ref{alg:MojAlg:TransFORmToGranules} in Alg. \ref{alg:MojAlg}).
 %
 Each attribute $\Atrybut$ in a granule $\Granula$ is represented with an \efn\ define by two parameters:
 the centre  $\Centre_{\Klaster\Atrybut}$ of the $\Atrybut$-th attribute in the $\Klaster$-th granule
 and 
-the fuzziness $p_{\Klaster\Atrybut}$ which is calculated based on the memberships $\mMembership$ of data points to clusters with the following FORmula:
+the fuzziness $p_{\Klaster\Atrybut}$ which is calculated based on the memberships $\mMembership$ of data points to clusters with the following formula:
  \begin{align}
  	p_{\Klaster \Atrybut} = \sqrt{\frac{\sum_{i = 1}^{\nX} \ClusterMembership_{\klaster i}^{m} (\X_{i\Atrybut} - \Centre_{\Klaster\Atrybut})^{2}}{\sum_{i = 1}^{\nX} \ClusterMembership_{\klaster i}^{m}}},
 \end{align} 
@@ -1171,7 +1171,27 @@ Our approach is expected to elaborate the same or similar clustering results as 
 The \abbrAgglomerativeClustering{} algorithm assigns each data item with a cluster label.
 \MojAlg{} clusters fuzzy granules instead of the original crisp data. 
 The assignment of original data points to clusters is based on the memberships of the data items to fuzzy granules and the memberships of fuzzy granules to clusters.
-This is why the assignment of data points with labels is not as straightforward .
+This is why the assignment of data points with labels is not as straightforward.
+The procedure is presented in Alg. \ref{alg:similarity_membership:short}.
+Each data item $\wX_i$ is assigned to the $j$-th granule such that the value of $\ClusterMembership_{ij} = \max{\wClusterMembership_i}$. 
+
+\begin{algorithm}[]
+\caption{Elaboration of the labels of the data items}
+\label{alg:similarity_membership:short}
+\begin{algorithmic}[1]
+	\REQUIRE $\zX$: original data points 
+	\REQUIRE $\zGranula$: granules elaborated by \MojAlg{}
+	\REQUIRE $\wEtykieta_{\Granula}$: array of $\nGranula$ labels elaborated for granules
+	\REQUIRE $\mClusterMembership$: cluster membership matrix of the FCM algorithm 
+
+	\STATE $\wEtykieta_{\X} \gets \varnothing$ \COMMENT{empty array of $\nX$ labels for data points}
+	\FOR{each data item $\wX \in \zX$} 
+	\STATE $\Granula \gets$ granule to which $\wX$ has the highest membership in $\mClusterMembership$
+	\STATE $\wEtykieta_{\X}[\wX] \gets \wEtykieta_{\Granula}[\Granula]$ \COMMENT{granule's label becomes the point's label}
+	\ENDFOR
+	\RETURN $\wEtykieta_{\X}$ \COMMENT{vector of labels for each data point}
+\end{algorithmic}
+\end{algorithm}
 
 % The procedure is presented in Alg. \ref{alg:similarity_membership}.
 % The procedure takes as input the original data points $\zX$, the set of granules $\zGranula$ and labels of the granules $\wEtykieta_\Granula$.
@@ -1180,27 +1200,9 @@ This is why the assignment of data points with labels is not as straightforward 
 % In case of granules based on triangular \efn s, it is possible that the membership of a data point to all granules is equal to 0.
 % This is due to the finite support of triangular \efn s.
 % The procedure returns the array of labels $\wEtykieta_\X$ for each data point (line \ref{alg:similarity_membership:return}).
+ 
 
-\zlremark{To jest bardziej skomplikowany sposób, który był omawiany w pracy magisterskiej. Poza tym, że mogły pojawić sie szumy, nie wprowadził on żadnych nowych inFORmacji. Wszystkie tabele z wartościami wyników, które zostały w artykule, dotycza prostszej metody, opisanej w nastepujacym akapicie:} \ksremark{Zgubiłem sie. Jak powinno być?}
 
-Each data item $\wX_i$ is assigned to the granule $\Granula_j$, such that the value of $\ClusterMembership_{ij} = \max{\wClusterMembership_i}$. The procedure is presented in Alg. \ref{alg:similarity_membership}.
-
-\begin{algorithm}[!t]
-    \caption{Elaboration of the membership of a data point to a granule based on the $\mClusterMembership$ matrix}
- 	\label{alg:similarity_membership}
- 	\begin{algorithmic}[1]
- 		\REQUIRE $\zX$: original data points 
- 		\REQUIRE $\zGranula$: granules elaborated by \MojAlg{}
- 		\REQUIRE $\wEtykieta_{\Granula}$: array of $\nGranula$ labels elaborated for granules
- 		\REQUIRE $\mClusterMembership$: cluster membership matrix of the FCM algorithm 
-      \STATE $\wEtykieta_{\X} \gets \{\}$ \COMMENT{empty array of labels for each data point}
-      \FOR{each row (point) $\wR \in \mClusterMembership$} %\COMMENT{FOR each row of the membership matrix, i.e. for each original point}\label{alg:similarity_membership:loop:x}
- 		\STATE $\C \gets \arg\max{\wR}$ \COMMENT{index of the granule in which the point has the highest membership}
- 		\STATE append $\wEtykieta_{\Granula}[\C]$ to $\wEtykieta_{\X}$ \COMMENT{that granule's label becomes the point's label}
- 	  \ENDFOR
-      \RETURN $\wEtykieta_{\X}$ \COMMENT{vector of labels for each data point}
- 	\end{algorithmic}
- \end{algorithm}
 
 % \begin{algorithm}[t]
 %     \caption{Elaboration of the membership of a data point to a granule based on the $\tnorm$-similarity relation $\nPodobienstwo$}
@@ -1420,13 +1422,13 @@ However, it never drops to zero because Gaussian fuzzy set has an infinite suppo
 
 The results show for 100 and 200 granules and $\xi \in \{0.1, 0.5\}$ the \MojAlg\ algorithm has successfully identified the clusters.
 However, for the \circles\ the algorithm succeeded also for  50 granules and $\xi \neq 0.9$, 
-FOR \crescents\ for all $\xi$'s in 50 granules,
-FOR \laguna\ for all $\xi$'s in 50 and 100 granules,
+for \crescents\ for all $\xi$'s in 50 granules,
+for \laguna\ for all $\xi$'s in 50 and 100 granules,
 We can see the problem occurs for lower numbers of granules and for higher values of the $\xi$ parameter. 
 Actually, that are two faces of the same phenomenon.
 If the number of granules are lower, the granules become more fuzzy.
 In such a case the fuzzy distances between fuzzy granules are indistinguishable and the search for a pair of the closest granules fails. 
-FOR higher values of $\xi$ the fuzziness of granules plays more important role in comparison of distances and causes the same problem with the indistinguishability.
+For higher values of $\xi$ the fuzziness of granules plays more important role in comparison of distances and causes the same problem with the indistinguishability.
 This implies a recommendation to avoid lower number of granules and higher values of $\xi$.
 
 The \blobs\ dataset is an interesting case.
@@ -1434,7 +1436,7 @@ The results (Fig. \ref{fig:blobs:1000e}) are not very successful.
 Only for 50 granules the algorithm elaborates correct clusters. 
 But the problem here is not the algorithm itself (hierarchical agglomerative clustering) but the granulation procedure. 
 The dataset is composed of one huge cluster and two tiny clusters in the right upper and lower parts. 
-FOR larger number of granules, the granulation procedure does not locate any granule in within these tiny clusters. 
+For larger number of granules, the granulation procedure does not locate any granule in within these tiny clusters. 
 In such a case the hierarchical agglomeration cannot address these groups of data.
 
 
@@ -1442,7 +1444,7 @@ The lower results of clusterization of the \laguna{} dataset are explained in Fi
 
 
 
-The impact of fuzzy relation type is the least pronounced. for each dataset, 100\% (or almost 100\% in \blobs{} and \laguna{} cases) accuracy can be achieved with any of the 3 relation types. However, there are differences when every parameter combination is taken into account: the total average accuracy is then highest for triangular relation and lowest for exponential relation. \ksremark{Czy to jest zwiazane z tym, że trójkatna relacja może generować szum?} \zlremark{Tabela? Wykres?}
+The impact of fuzzy relation type is the least pronounced. for each dataset, 100\% (or almost 100\% in \blobs{} and \laguna{} cases) accuracy can be achieved with any of the 3 relation types. However, there are differences when every parameter combination is taken into account: the total average accuracy is then highest for triangular relation and lowest for exponential relation. \zlremark{Tabela? Wykres?}
 
 Clustering of the \brightkite\ and \gowalla\ datasets is shown in Fig. \ref{fig:brightkite} and in Fig. \ref{fig:gowalla} respectively. Since the dataset is unlabelled, the results can be evaluated visually as the data represents continents. Clustering with the strict algorithm produces one big cluster consisting of most of the data and five small clusters representing singular points for the \brightkite\ dataset and two big clusters and four small ones for the \gowalla\ dataset. Clustering with \MojAlg{} results in groups mostly split by continents, concentrated in areas of higher density of data points. It is considerably closer to the expected result compared to the strict algorithm.
 It is also important that all data points were used in clustering with the \MojAlg\ , whereas the crisp \AgglomerativeClustering\ algorithm may need significantly longer time due to high memory requirements. %failed to handle all data. \zlremark{O ile \AgglomerativeClustering\ wystarczy pamieci, to raczej powinien sobie poradzić z całościa danych, tylko może mu to zajać kilkadziesiat godzin. Próbka 500 000 danych jest na tyle duża, żeby zawierała te same docelowe klastry, co pełne dane, ale na tyle mała, żeby algorytm wykonał sie w rozsadnym czasie.}
@@ -1583,8 +1585,8 @@ This is why Fig. \ref{fig:brightkite}(a) and Fig. \ref{fig:gowalla}(a) present t
 The paper presents a novel granular algorithm for hierarchical agglomerative clustering \MojAlg. 
 Crisp agglomerative algorithm suffer from high computational complexity. 
 This feature makes them unsuitable for large data sets. 
-\MojAlg\ reduces the size of the input data without loosing inFORmation. 
-The original input data points are aggregated into inFORmation granules. 
+\MojAlg\ reduces the size of the input data without loosing information. 
+The original input data points are aggregated into information granules. 
 The algorithm applies granules based on \efn s.
 The \efn s enable arithmetic operations with\-out any need for any iterative procedures. 
 They are computationally efficient and avoid the fuzziness spread problem: the fuzziness of \efn s does not increase with the number of operations.
